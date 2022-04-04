@@ -17,6 +17,17 @@
 #define RLD_RLD(regval)             (BITS(0,11) & ((uint32_t)(regval) << 0))
 
 /*!
+    \brief      enable write access to FWDGT_PSC and FWDGT_RLD
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void fwdgt_write_enable(void)
+{
+    FWDGT_CTL = FWDGT_WRITEACCESS_ENABLE;
+}
+
+/*!
     \brief      disable write access to FWDGT_PSC and FWDGT_RLD
     \param[in]  none
     \param[out] none

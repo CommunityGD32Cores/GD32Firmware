@@ -63,6 +63,8 @@
 #define FWDGT_FLAG_RUD              FWDGT_STAT_RUD                            /*!< FWDGT counter reload value update flag */
 
 /* function declarations */
+/* enable write access to FWDGT_PSC and FWDGT_RLD */
+void fwdgt_write_enable(void);
 /* disable write access to FWDGT_PSC and FWDGT_RLD */
 void fwdgt_write_disable(void);
 /* start the free watchdog timer counter */

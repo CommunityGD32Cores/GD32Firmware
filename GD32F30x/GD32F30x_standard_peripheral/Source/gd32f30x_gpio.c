@@ -419,8 +419,8 @@ void gpio_ethernet_phy_select(uint32_t enet_sel)
       \arg        GPIO_USART2_FULL_REMAP: USART2 full remapping
       \arg        GPIO_TIMER0_PARTIAL_REMAP: TIMER0 partial remapping 
       \arg        GPIO_TIMER0_FULL_REMAP: TIMER0 full remapping
+      \arg        GPIO_TIMER1_PARTIAL_REMAP0: TIMER1 partial remapping
       \arg        GPIO_TIMER1_PARTIAL_REMAP1: TIMER1 partial remapping
-      \arg        GPIO_TIMER1_PARTIAL_REMAP2: TIMER1 partial remapping
       \arg        GPIO_TIMER1_FULL_REMAP: TIMER1 full remapping
       \arg        GPIO_TIMER2_PARTIAL_REMAP: TIMER2 partial remapping
       \arg        GPIO_TIMER2_FULL_REMAP: TIMER2 full remapping

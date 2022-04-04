@@ -6,7 +6,7 @@
 /*
     Copyright (C) 2017 GigaDevice
 
-    2017-02-10, V1.0.1, firmware for GD32F30x
+    2017-02-10, V1.0.2, firmware for GD32F30x
 */
 
 #include "gd32f30x_usart.h"
@@ -79,7 +79,7 @@ void usart_baudrate_set(uint32_t usart_periph, uint32_t baudval)
     udiv = (uclk+baudval/2U)/baudval;
     intdiv = udiv & 0xfff0U;
     fradiv = udiv & 0xfU;
-    USART_BAUD(usart_periph) |= ((USART_BAUD_FRADIV | USART_BAUD_INTDIV) & (intdiv | fradiv));
+    USART_BAUD(usart_periph) = ((USART_BAUD_FRADIV | USART_BAUD_INTDIV) & (intdiv | fradiv));
 }
 
 /*!
@@ -473,10 +473,11 @@ void usart_synchronous_clock_config(uint32_t usart_periph, uint32_t clen, uint32
     
     /* read USART_CTL1 register */
     ctl = USART_CTL1(usart_periph);
+    ctl &= ~(USART_CTL1_CLEN | USART_CTL1_CPH | USART_CTL1_CPL);
     /* set CK length, CK phase, CK polarity */
     ctl |= (USART_CTL1_CLEN & clen) | (USART_CTL1_CPH & cph) | (USART_CTL1_CPL & cpl);
 
-    USART_CTL1(usart_periph) |= ctl;
+    USART_CTL1(usart_periph) = ctl;
 }
 
 /*!

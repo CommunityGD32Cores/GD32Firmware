@@ -6,7 +6,7 @@
 /*
     Copyright (C) 2017 GigaDevice
 
-    2017-02-10, V1.0.2, firmware for GD32F30x
+    2017-02-10, V1.0.1, firmware for GD32F30x
 */
 
 #include "gd32f30x_fmc.h"
@@ -378,59 +378,6 @@ fmc_state_enum fmc_halfword_program(uint32_t address, uint16_t data)
     }else{
         fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT);
   
-        if(FMC_READY == fmc_state){
-            /* set the PG bit to start program */
-            FMC_CTL0 |= FMC_CTL0_PG;
-            REG16(address) = data;
-            /* wait for the FMC ready */
-            fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT);
-            /* reset the PG bit */
-            FMC_CTL0 &= ~FMC_CTL0_PG;
-        } 
-    }
-    /* return the FMC state */
-    return fmc_state;
-}
-
-/*!
-    \brief      program a word at the corresponding address without erasing
-    \param[in]  address: address to program
-    \param[in]  data: word to program
-    \param[out] none
-    \retval     fmc_state
-*/
-fmc_state_enum fmc_word_reprogram(uint32_t address, uint32_t data)
-{
-    fmc_state_enum fmc_state = FMC_READY;
-    if(FMC_BANK0_SIZE < FMC_SIZE){
-        if(FMC_BANK0_END_ADDRESS > address){
-            fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT); 
-            FMC_WSEN |= FMC_WSEN_BPEN;
-            if(FMC_READY == fmc_state){
-                /* set the PG bit to start program */
-                FMC_CTL0 |= FMC_CTL0_PG;
-                REG32(address) = data;
-                /* wait for the FMC ready */
-                fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT);
-                /* reset the PG bit */
-                FMC_CTL0 &= ~FMC_CTL0_PG;
-            }
-        }else{
-            fmc_state = fmc_bank1_ready_wait(FMC_TIMEOUT_COUNT); 
-            FMC_WSEN |= FMC_WSEN_BPEN;
-            if(FMC_READY == fmc_state){
-                /* set the PG bit to start program */
-                FMC_CTL1 |= FMC_CTL1_PG;
-                REG16(address) = data;
-                /* wait for the FMC ready */
-                fmc_state = fmc_bank1_ready_wait(FMC_TIMEOUT_COUNT);
-                /* reset the PG bit */
-                FMC_CTL1 &= ~FMC_CTL1_PG;
-            }
-        }
-    }else{
-        fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT);
-        FMC_WSEN |= FMC_WSEN_BPEN;
         if(FMC_READY == fmc_state){
             /* set the PG bit to start program */
             FMC_CTL0 |= FMC_CTL0_PG;

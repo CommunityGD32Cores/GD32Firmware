@@ -777,8 +777,8 @@ typedef enum
 #define RCU_CKUSB_CKPLL_DIV1            CFG0_USBPSC(1)                      /*!< USBD/USBFS prescaler select CK_PLL/1 */
 #define RCU_CKUSB_CKPLL_DIV2_5          CFG0_USBPSC(2)                      /*!< USBD/USBFS prescaler select CK_PLL/2.5 */
 #define RCU_CKUSB_CKPLL_DIV2            CFG0_USBPSC(3)                      /*!< USBD/USBFS prescaler select CK_PLL/2 */
-#define RCU_CKUSB_CKPLL_DIV3            (USBPSC_2 |CFG0_USBPSC(0))          /*!< USBD/USBFS prescaler select CK_PLL/3.5 */
-#define RCU_CKUSB_CKPLL_DIV3_5          (USBPSC_2 |CFG0_USBPSC(1))          /*!< USBD/USBFS prescaler select CK_PLL/3 */
+#define RCU_CKUSB_CKPLL_DIV3            (USBPSC_2 |CFG0_USBPSC(0))          /*!< USBD/USBFS prescaler select CK_PLL/3 */
+#define RCU_CKUSB_CKPLL_DIV3_5          (USBPSC_2 |CFG0_USBPSC(1))          /*!< USBD/USBFS prescaler select CK_PLL/3.5 */
 #define RCU_CKUSB_CKPLL_DIV4            (USBPSC_2 |CFG0_USBPSC(2))          /*!< USBD/USBFS prescaler select CK_PLL/4 */
 
 /* CKOUT0 Clock source selection */

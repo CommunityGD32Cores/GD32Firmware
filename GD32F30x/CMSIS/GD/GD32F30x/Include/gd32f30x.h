@@ -81,6 +81,7 @@
 #define __MPU_PRESENT             1        /*!< GD32F30x do not provide MPU                              */
 #define __NVIC_PRIO_BITS          4        /*!< GD32F30x uses 4 bits for the priority levels             */
 #define __Vendor_SysTickConfig    0        /*!< set to 1 if different sysTick config is used             */
+#define __FPU_PRESENT             0        /*!< FPU present                                              */
 /* define interrupt number */
 typedef enum IRQn
 {
@@ -122,7 +123,7 @@ typedef enum IRQn
     TIMER0_BRK_IRQn              = 24,     /*!< TIMER0 break interrupts                                  */
     TIMER0_UP_IRQn               = 25,     /*!< TIMER0 update interrupts                                 */
     TIMER0_TRG_CMT_IRQn          = 26,     /*!< TIMER0 trigger and commutation interrupts                */
-    TIMER0_Channel_IRQn          = 27,     /*!< TIMER0 channel capture compare interrupts                */
+    TIMER0_CC_IRQn               = 27,     /*!< TIMER0 capture compare interrupts                        */
     TIMER1_IRQn                  = 28,     /*!< TIMER1 interrupt                                         */
     TIMER2_IRQn                  = 29,     /*!< TIMER2 interrupt                                         */
     TIMER3_IRQn                  = 30,     /*!< TIMER3 interrupts                                        */
@@ -141,7 +142,7 @@ typedef enum IRQn
     TIMER7_BRK_IRQn              = 43,     /*!< TIMER7 break interrupts                                  */
     TIMER7_UP_IRQn               = 44,     /*!< TIMER7 update interrupts                                 */
     TIMER7_TRG_CMT_IRQn          = 45,     /*!< TIMER7 trigger and commutation interrupts                */
-    TIMER7_Channel_IRQn          = 46,     /*!< TIMER7 channel capture compare interrupts                */
+    TIMER7_CC_IRQn               = 46,     /*!< TIMER7 capture compare interrupts                        */
     ADC2_IRQn                    = 47,     /*!< ADC2 global interrupt                                    */
     EXMC_IRQn                    = 48,     /*!< EXMC global interrupt                                    */
     SDIO_IRQn                    = 49,     /*!< SDIO global interrupt                                    */
@@ -166,7 +167,7 @@ typedef enum IRQn
     TIMER0_BRK_TIMER8_IRQn       = 24,     /*!< TIMER0 break and TIMER8 interrupts                       */
     TIMER0_UP_TIMER9_IRQn        = 25,     /*!< TIMER0 update and TIMER9 interrupts                      */
     TIMER0_TRG_CMT_TIMER10_IRQn  = 26,     /*!< TIMER0 trigger and commutation and TIMER10 interrupts    */
-    TIMER0_Channel_IRQn          = 27,     /*!< TIMER0 channel capture compare interrupts                */
+    TIMER0_CC_IRQn               = 27,     /*!< TIMER0 Capture Compare interrupts                        */
     TIMER1_IRQn                  = 28,     /*!< TIMER1 interrupt                                         */
     TIMER2_IRQn                  = 29,     /*!< TIMER2 interrupt                                         */
     TIMER3_IRQn                  = 30,     /*!< TIMER3 interrupts                                        */
@@ -185,7 +186,7 @@ typedef enum IRQn
     TIMER7_BRK_TIMER11_IRQn      = 43,     /*!< TIMER7 break and TIMER11 interrupts                      */
     TIMER7_UP_TIMER12_IRQn       = 44,     /*!< TIMER7 update and TIMER12 interrupts                     */
     TIMER7_TRG_CMT_TIMER13_IRQn  = 45,     /*!< TIMER7 trigger and commutation and TIMER13 interrupts    */
-    TIMER7_Channel_IRQn          = 46,     /*!< TIMER7 channel capture compare interrupts                */
+    TIMER7_CC_IRQn               = 46,     /*!< TIMER7 capture compare interrupts                        */
     ADC2_IRQn                    = 47,     /*!< ADC2 global interrupt                                    */
     EXMC_IRQn                    = 48,     /*!< EXMC global interrupt                                    */
     SDIO_IRQn                    = 49,     /*!< SDIO global interrupt                                    */
@@ -210,7 +211,7 @@ typedef enum IRQn
     TIMER0_BRK_TIMER8_IRQn       = 24,     /*!< TIMER0 break and TIMER8 interrupts                       */
     TIMER0_UP_TIMER9_IRQn        = 25,     /*!< TIMER0 update and TIMER9 interrupts                      */
     TIMER0_TRG_CMT_TIMER10_IRQn  = 26,     /*!< TIMER0 trigger and commutation  and TIMER10 interrupts   */
-    TIMER0_Channel_IRQn          = 27,     /*!< TIMER0 channel capture compare interrupts                */
+    TIMER0_CC_IRQn               = 27,     /*!< TIMER0 capture compare interrupts                        */
     TIMER1_IRQn                  = 28,     /*!< TIMER1 interrupt                                         */
     TIMER2_IRQn                  = 29,     /*!< TIMER2 interrupt                                         */
     TIMER3_IRQn                  = 30,     /*!< TIMER3 interrupts                                        */
@@ -229,7 +230,7 @@ typedef enum IRQn
     TIMER7_BRK_TIMER11_IRQn      = 43,     /*!< TIMER7 break and TIMER11 interrupts                      */
     TIMER7_UP_TIMER12_IRQn       = 44,     /*!< TIMER7 update and TIMER12 interrupts                     */
     TIMER7_TRG_CMT_TIMER13_IRQn  = 45,     /*!< TIMER7 trigger and commutation and TIMER13 interrupts    */
-    TIMER7_Channel_IRQn          = 46,     /*!< TIMER7 channel capture compare interrupts                */
+    TIMER7_CC_IRQn               = 46,     /*!< TIMER7 capture compare interrupts                        */
     EXMC_IRQn                    = 48,     /*!< EXMC global interrupt                                    */
     TIMER4_IRQn                  = 50,     /*!< TIMER4 global interrupt                                  */
     SPI2_IRQn                    = 51,     /*!< SPI2 global interrupt                                    */
@@ -260,6 +261,7 @@ typedef enum IRQn
 
 /* enum definitions */
 typedef enum {DISABLE = 0, ENABLE = !DISABLE} EventStatus, ControlStatus;
+typedef enum {FALSE = 0, TRUE = !FALSE} bool;
 typedef enum {RESET = 0, SET = !RESET} FlagStatus;
 typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrStatus;
 

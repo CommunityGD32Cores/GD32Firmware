@@ -6,7 +6,7 @@
 /*
     Copyright (C) 2017 GigaDevice
 
-    2017-02-10, V1.0.2, firmware for GD32F30x
+    2017-02-10, V1.0.1, firmware for GD32F30x
 */
 
 #ifndef GD32F30X_FMC_H
@@ -104,7 +104,6 @@
 
 /* FMC_WSEN */
 #define FMC_WSEN_WSEN              BIT(0)                         /*!< FMC wait state enable bit */
-#define FMC_WSEN_BPEN              BIT(1)                         /*!< FMC bit program enable bit */
 
 /* FMC_PID */
 #define FMC_PID_PID                BITS(0,31)                     /*!< product ID bits */
@@ -294,8 +293,6 @@ fmc_state_enum fmc_bank1_erase(void);
 fmc_state_enum fmc_word_program(uint32_t address, uint32_t data);
 /* FMC program a half word at the corresponding address */
 fmc_state_enum fmc_halfword_program(uint32_t address, uint16_t data);
-/* FMC reprogram a word at the corresponding address without erasing */
-fmc_state_enum fmc_word_reprogram(uint32_t address, uint32_t data);
 
 /* FMC option bytes programming functions */
 /* unlock the option byte operation */

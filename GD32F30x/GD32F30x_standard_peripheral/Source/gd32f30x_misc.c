@@ -57,6 +57,9 @@ void nvic_irq_enable(uint8_t nvic_irq, uint8_t nvic_irq_pre_priority,
         temp_pre=4U;
         temp_sub=0x0U;
     }else{
+        nvic_priority_group_set(NVIC_PRIGROUP_PRE2_SUB2);
+        temp_pre=2U;
+        temp_sub=0x2U;
     }
     /* get the temp_priority to fill the NVIC->IP register */
     temp_priority = (uint32_t)nvic_irq_pre_priority << (0x4U - temp_pre);
