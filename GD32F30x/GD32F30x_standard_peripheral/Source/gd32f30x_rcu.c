@@ -1,24 +1,64 @@
 /*!
     \file  gd32f30x_rcu.c
     \brief RCU driver
+
+    \version 2017-02-10, V1.0.0, firmware for GD32F30x
+    \version 2018-10-10, V1.1.0, firmware for GD32F30x
+    \version 2018-12-25, V2.0.0, firmware for GD32F30x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2017-02-10, V1.0.1, firmware for GD32F30x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "gd32f30x_rcu.h"
 
 /* define clock source */
-#define SEL_IRC8M                   ((uint16_t)0U)
-#define SEL_HXTAL                   ((uint16_t)1U)
-#define SEL_PLL                     ((uint16_t)2U)
+#define SEL_IRC8M                   ((uint16_t)0U)  /* IRC8M is selected as CK_SYS */
+#define SEL_HXTAL                   ((uint16_t)1U)  /* HXTAL is selected as CK_SYS */
+#define SEL_PLL                     ((uint16_t)2U)  /* PLL is selected as CK_SYS */
 
 /* define startup timeout count */
-#define OSC_STARTUP_TIMEOUT         ((uint32_t)0xFFFFFU)
-#define LXTAL_STARTUP_TIMEOUT       ((uint32_t)0x3FFFFFFU)
+#define OSC_STARTUP_TIMEOUT         ((uint32_t)0x000FFFFFU)
+#define LXTAL_STARTUP_TIMEOUT       ((uint32_t)0x03FFFFFFU)
+
+/* ADC clock prescaler offset */
+#define RCU_ADC_PSC_OFFSET          ((uint32_t)14U)
+
+/* RCU IRC8M adjust value mask and offset*/
+#define RCU_IRC8M_ADJUST_MASK       ((uint8_t)0x1FU)
+#define RCU_IRC8M_ADJUST_OFFSET     ((uint32_t)3U)
+
+/* RCU PLL1 clock multiplication factor offset */
+#define RCU_CFG1_PLL1MF_OFFSET      ((uint32_t)8U)
+/* RCU PREDV1 division factor offset*/
+#define RCU_CFG1_PREDV1_OFFSET      ((uint32_t)4U)
+
 
 /*!
     \brief      deinitialize the RCU
@@ -370,9 +410,11 @@ void rcu_ckout0_config(uint32_t ckout0_src)
 /*!
     \brief      configure the main PLL clock 
     \param[in]  pll_src: PLL clock source selection
+                only one parameter can be selected which is shown as below:
       \arg        RCU_PLLSRC_IRC8M_DIV2: IRC8M/2 clock selected as source clock of PLL
       \arg        RCU_PLLSRC_HXTAL_IRC48M: HXTAL or IRC48M selected as source clock of PLL
     \param[in]  pll_mul: PLL clock multiplication factor
+                only one parameter can be selected which is shown as below:
       \arg        RCU_PLL_MULx (XD series x = 2..63, CL series x = 2..14, 16..63, 6.5)
     \param[out] none
     \retval     none
@@ -393,6 +435,7 @@ void rcu_pll_config(uint32_t pll_src, uint32_t pll_mul)
 /*!
     \brief      configure the PLL clock source preselection
     \param[in]  pll_presel: PLL clock source preselection
+                only one parameter can be selected which is shown as below:
       \arg        RCU_PLLPRESRC_HXTAL: HXTAL selected as PLL source clock
       \arg        RCU_PLLPRESRC_IRC48M: CK_PLL selected as PREDV0 input source clock
     \param[out] none
@@ -437,9 +480,11 @@ void rcu_predv0_config(uint32_t predv0_div)
 /*!
     \brief      configure the PREDV0 division factor and clock source
     \param[in]  predv0_source: PREDV0 input clock source selection
+                only one parameter can be selected which is shown as below:
       \arg        RCU_PREDV0SRC_HXTAL_IRC48M: HXTAL or IRC48M selected as PREDV0 input source clock
       \arg        RCU_PREDV0SRC_CKPLL1: CK_PLL1 selected as PREDV0 input source clock
     \param[in]  predv0_div: PREDV0 division factor
+                only one parameter can be selected which is shown as below:
       \arg        RCU_PREDV0_DIVx, x = 1..16
     \param[out] none
     \retval     none
@@ -460,6 +505,7 @@ void rcu_predv0_config(uint32_t predv0_source, uint32_t predv0_div)
 /*!
     \brief      configure the PREDV1 division factor
     \param[in]  predv1_div: PREDV1 division factor
+                only one parameter can be selected which is shown as below:
       \arg        RCU_PREDV1_DIVx, x = 1..16
     \param[out] none
     \retval     none
@@ -480,7 +526,8 @@ void rcu_predv1_config(uint32_t predv1_div)
 /*!
     \brief      configure the PLL1 clock 
     \param[in]  pll_mul: PLL clock multiplication factor
-      \arg        RCU_PLL1_MULx (x = 8..16, 20)
+                only one parameter can be selected which is shown as below:
+      \arg        RCU_PLL1_MULx (x = 8..14,16,20)
     \param[out] none
     \retval     none
 */
@@ -493,7 +540,8 @@ void rcu_pll1_config(uint32_t pll_mul)
 /*!
     \brief      configure the PLL2 clock 
     \param[in]  pll_mul: PLL clock multiplication factor
-      \arg        RCU_PLL2_MULx (x = 8..16, 18..32, 40)
+                only one parameter can be selected which is shown as below:
+      \arg        RCU_PLL2_MULx (x = 8..14,16,20,18..32,40)
     \param[out] none
     \retval     none
 */
@@ -507,6 +555,7 @@ void rcu_pll2_config(uint32_t pll_mul)
 /*!
     \brief      configure the ADC prescaler factor
     \param[in]  adc_psc: ADC prescaler factor
+                only one parameter can be selected which is shown as below:
       \arg        RCU_CKADC_CKAPB2_DIV2: ADC prescaler select CK_APB2/2
       \arg        RCU_CKADC_CKAPB2_DIV4: ADC prescaler select CK_APB2/4
       \arg        RCU_CKADC_CKAPB2_DIV6: ADC prescaler select CK_APB2/6
@@ -536,13 +585,13 @@ void rcu_adc_clock_config(uint32_t adc_psc)
         case RCU_CKADC_CKAPB2_DIV4:
         case RCU_CKADC_CKAPB2_DIV6:
         case RCU_CKADC_CKAPB2_DIV8:
-            reg0 |= (adc_psc << 14);
+            reg0 |= (adc_psc << RCU_ADC_PSC_OFFSET);
             break;
 
         case RCU_CKADC_CKAPB2_DIV12:
         case RCU_CKADC_CKAPB2_DIV16:
             adc_psc &= ~BIT(2);
-            reg0 |= (adc_psc << 14 | RCU_CFG0_ADCPSC_2);
+            reg0 |= ((adc_psc << RCU_ADC_PSC_OFFSET) | RCU_CFG0_ADCPSC_2);
             break;
 
         case RCU_CKADC_CKAHB_DIV5:
@@ -550,7 +599,7 @@ void rcu_adc_clock_config(uint32_t adc_psc)
         case RCU_CKADC_CKAHB_DIV10:
         case RCU_CKADC_CKAHB_DIV20:
             adc_psc &= ~BITS(2,3);
-            reg0 |= (adc_psc << 14);
+            reg0 |= (adc_psc << RCU_ADC_PSC_OFFSET);
             reg1 |= RCU_CFG1_ADCPSC_3;
             break;
          
@@ -565,7 +614,8 @@ void rcu_adc_clock_config(uint32_t adc_psc)
 
 /*!
     \brief      configure the USBD/USBFS prescaler factor
-    \param[in]  adc_div: USB prescaler factor
+    \param[in]  usb_psc: USB prescaler factor
+                only one parameter can be selected which is shown as below:
       \arg        RCU_CKUSB_CKPLL_DIV1_5: USBD/USBFS prescaler select CK_PLL/1.5
       \arg        RCU_CKUSB_CKPLL_DIV1: USBD/USBFS prescaler select CK_PLL/1
       \arg        RCU_CKUSB_CKPLL_DIV2_5: USBD/USBFS prescaler select CK_PLL/2.5
@@ -742,7 +792,7 @@ FlagStatus rcu_interrupt_flag_get(rcu_int_flag_enum int_flag)
 
 /*!
     \brief      clear the interrupt flags
-    \param[in]  int_flag_clear: clock stabilization and stuck interrupt flags clear, refer to rcu_int_flag_clear_enum
+    \param[in]  int_flag: clock stabilization and stuck interrupt flags clear, refer to rcu_int_flag_clear_enum
                 only one parameter can be selected which is shown as below:
       \arg        RCU_INT_FLAG_IRC40KSTB_CLR: IRC40K stabilization interrupt flag clear
       \arg        RCU_INT_FLAG_LXTALSTB_CLR: LXTAL stabilization interrupt flag clear
@@ -756,34 +806,14 @@ FlagStatus rcu_interrupt_flag_get(rcu_int_flag_enum int_flag)
     \param[out] none
     \retval     none
 */
-void rcu_interrupt_flag_clear(rcu_int_flag_clear_enum int_flag_clear)
+void rcu_interrupt_flag_clear(rcu_int_flag_clear_enum int_flag)
 {
-    RCU_REG_VAL(int_flag_clear) |= BIT(RCU_BIT_POS(int_flag_clear));
+    RCU_REG_VAL(int_flag) |= BIT(RCU_BIT_POS(int_flag));
 }
 
 /*!
     \brief      enable the stabilization interrupt
-    \param[in]  stab_int: clock stabilization interrupt, refer to rcu_int_enum
-                Only one parameter can be selected which is shown as below:
-      \arg        RCU_INT_IRC40KSTB: IRC40K stabilization interrupt enable
-      \arg        RCU_INT_LXTALSTB: LXTAL stabilization interrupt enable
-      \arg        RCU_INT_IRC8MSTB: IRC8M stabilization interrupt enable
-      \arg        RCU_INT_HXTALSTB: HXTAL stabilization interrupt enable
-      \arg        RCU_INT_PLLSTB: PLL stabilization interrupt enable
-      \arg        RCU_INT_PLL1STB: PLL1 stabilization interrupt enable(CL series only)
-      \arg        RCU_INT_PLL2STB: PLL2 stabilization interrupt enable(CL series only)
-      \arg        RCU_INT_IRC48MSTB: IRC48M stabilization interrupt enable
-    \param[out] none
-    \retval     none
-*/
-void rcu_interrupt_enable(rcu_int_enum stab_int)
-{
-    RCU_REG_VAL(stab_int) |= BIT(RCU_BIT_POS(stab_int));
-}
-
-/*!
-    \brief      disable the stabilization interrupt
-    \param[in]  stab_int: clock stabilization interrupt, refer to rcu_int_enum
+    \param[in]  interrupt clock stabilization interrupt, refer to rcu_int_enum
                 only one parameter can be selected which is shown as below:
       \arg        RCU_INT_IRC40KSTB: IRC40K stabilization interrupt enable
       \arg        RCU_INT_LXTALSTB: LXTAL stabilization interrupt enable
@@ -796,9 +826,29 @@ void rcu_interrupt_enable(rcu_int_enum stab_int)
     \param[out] none
     \retval     none
 */
-void rcu_interrupt_disable(rcu_int_enum stab_int)
+void rcu_interrupt_enable(rcu_int_enum interrupt)
 {
-    RCU_REG_VAL(stab_int) &= ~BIT(RCU_BIT_POS(stab_int));
+    RCU_REG_VAL(interrupt) |= BIT(RCU_BIT_POS(interrupt));
+}
+
+/*!
+    \brief      disable the stabilization interrupt
+    \param[in]  interrupt clock stabilization interrupt, refer to rcu_int_enum
+                only one parameter can be selected which is shown as below:
+      \arg        RCU_INT_IRC40KSTB: IRC40K stabilization interrupt enable
+      \arg        RCU_INT_LXTALSTB: LXTAL stabilization interrupt enable
+      \arg        RCU_INT_IRC8MSTB: IRC8M stabilization interrupt enable
+      \arg        RCU_INT_HXTALSTB: HXTAL stabilization interrupt enable
+      \arg        RCU_INT_PLLSTB: PLL stabilization interrupt enable
+      \arg        RCU_INT_PLL1STB: PLL1 stabilization interrupt enable(CL series only)
+      \arg        RCU_INT_PLL2STB: PLL2 stabilization interrupt enable(CL series only)
+      \arg        RCU_INT_IRC48MSTB: IRC48M stabilization interrupt enable
+    \param[out] none
+    \retval     none
+*/
+void rcu_interrupt_disable(rcu_int_enum interrupt)
+{
+    RCU_REG_VAL(interrupt) &= ~BIT(RCU_BIT_POS(interrupt));
 }
 
 /*!
@@ -1104,6 +1154,7 @@ void rcu_hxtal_clock_monitor_disable(void)
 /*!
     \brief      set the IRC8M adjust value
     \param[in]  irc8m_adjval: IRC8M adjust value, must be between 0 and 0x1F
+      \arg        0x00 - 0x1F
     \param[out] none
     \retval     none
 */
@@ -1114,7 +1165,7 @@ void rcu_irc8m_adjust_value_set(uint32_t irc8m_adjval)
     reg = RCU_CTL;
     /* reset the IRC8MADJ bits and set according to irc8m_adjval */
     reg &= ~RCU_CTL_IRC8MADJ;
-    RCU_CTL = (reg | ((irc8m_adjval & 0x1FU) << 3));
+    RCU_CTL = (reg | ((irc8m_adjval & RCU_IRC8M_ADJUST_MASK) << RCU_IRC8M_ADJUST_OFFSET));
 }
 
 /*!
@@ -1196,8 +1247,8 @@ uint32_t rcu_clock_freq_get(rcu_clock_freq_enum clock)
             predv0sel = (RCU_CFG1 & RCU_CFG1_PREDV0SEL);
             /* source clock use PLL1 */
             if(RCU_PREDV0SRC_CKPLL1 == predv0sel){
-                predv1 = ((RCU_CFG1 & RCU_CFG1_PREDV1) >> 4) + 1U;
-                pll1mf = (uint32_t)((RCU_CFG1 & RCU_CFG1_PLL1MF) >> 8) + 2U;
+                predv1 = ((RCU_CFG1 & RCU_CFG1_PREDV1) >> RCU_CFG1_PREDV1_OFFSET) + 1U;
+                pll1mf = (uint32_t)((RCU_CFG1 & RCU_CFG1_PLL1MF) >> RCU_CFG1_PLL1MF_OFFSET) + 2U;
                 if(17U == pll1mf){
                     pll1mf = 20U;
                 }

@@ -1,12 +1,39 @@
 /*!
     \file  gd32f30x_exmc.c
     \brief EXMC driver
+
+    \version 2017-02-10, V1.0.0, firmware for GD32F30x
+    \version 2018-10-10, V1.1.0, firmware for GD32F30x
+    \version 2018-12-25, V2.0.0, firmware for GD32F30x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2017-02-10, V1.0.1, firmware for GD32F30x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "gd32f30x_exmc.h"
@@ -17,15 +44,15 @@
 #define BANK0_SNTCFG_RESET                ((uint32_t)0x0FFFFFFFU)
 #define BANK0_SNWTCFG_RESET               ((uint32_t)0x0FFFFFFFU)
 
-/* EXMC bank1/2 register reset mask*/
+/* EXMC bank1/2 register reset mask */
 #define BANK1_2_NPCTL_RESET               ((uint32_t)0x00000018U)
-#define BANK1_2_NPINTEN_RESET             ((uint32_t)0x00000040U)
+#define BANK1_2_NPINTEN_RESET             ((uint32_t)0x00000042U)
 #define BANK1_2_NPCTCFG_RESET             ((uint32_t)0xFCFCFCFCU)
 #define BANK1_2_NPATCFG_RESET             ((uint32_t)0xFCFCFCFCU)
 
-/* EXMC bank3 register reset mask*/
+/* EXMC bank3 register reset mask */
 #define BANK3_NPCTL_RESET                 ((uint32_t)0x00000018U)
-#define BANK3_NPINTEN_RESET               ((uint32_t)0x00000040U)
+#define BANK3_NPINTEN_RESET               ((uint32_t)0x00000043U)
 #define BANK3_NPCTCFG_RESET               ((uint32_t)0xFCFCFCFCU)
 #define BANK3_NPATCFG_RESET               ((uint32_t)0xFCFCFCFCU)
 #define BANK3_PIOTCFG3_RESET              ((uint32_t)0xFCFCFCFCU)
@@ -67,6 +94,7 @@
 /*!
     \brief      deinitialize EXMC NOR/SRAM region
     \param[in]  exmc_norsram_region: select the region of bank0
+                only one parameter can be selected which is shown as below:
       \arg        EXMC_BANK0_NORSRAM_REGIONx(x=0..3)
     \param[out] none
     \retval     none
@@ -81,6 +109,46 @@ void exmc_norsram_deinit(uint32_t exmc_norsram_region)
     }
     EXMC_SNTCFG(exmc_norsram_region) = BANK0_SNTCFG_RESET;
     EXMC_SNWTCFG(exmc_norsram_region) = BANK0_SNWTCFG_RESET;
+}
+
+/*!
+    \brief      initialize exmc_norsram_parameter_struct with the default values
+    \param[in]  none
+    \param[out] exmc_norsram_init_struct: the initialized struct exmc_norsram_parameter_struct pointer
+    \retval     none
+*/
+void exmc_norsram_struct_para_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct)
+{
+    /* configure the structure with default values */
+    exmc_norsram_init_struct->norsram_region = EXMC_BANK0_NORSRAM_REGION0;
+    exmc_norsram_init_struct->address_data_mux = ENABLE;
+    exmc_norsram_init_struct->memory_type = EXMC_MEMORY_TYPE_SRAM;
+    exmc_norsram_init_struct->databus_width = EXMC_NOR_DATABUS_WIDTH_8B;
+    exmc_norsram_init_struct->burst_mode = DISABLE;
+    exmc_norsram_init_struct->nwait_polarity = EXMC_NWAIT_POLARITY_LOW;
+    exmc_norsram_init_struct->wrap_burst_mode = DISABLE;
+    exmc_norsram_init_struct->nwait_config = EXMC_NWAIT_CONFIG_BEFORE;
+    exmc_norsram_init_struct->memory_write = ENABLE;
+    exmc_norsram_init_struct->nwait_signal = ENABLE;
+    exmc_norsram_init_struct->extended_mode = DISABLE;
+    exmc_norsram_init_struct->asyn_wait = DISABLE;
+    exmc_norsram_init_struct->write_mode = EXMC_ASYN_WRITE;
+
+    /* read/write timing configure */
+    exmc_norsram_init_struct->read_write_timing->asyn_address_setuptime = 0xFU;
+    exmc_norsram_init_struct->read_write_timing->asyn_address_holdtime = 0xFU;
+    exmc_norsram_init_struct->read_write_timing->asyn_data_setuptime = 0xFFU;
+    exmc_norsram_init_struct->read_write_timing->bus_latency = 0xFU;
+    exmc_norsram_init_struct->read_write_timing->syn_clk_division = EXMC_SYN_CLOCK_RATIO_16_CLK;
+    exmc_norsram_init_struct->read_write_timing->syn_data_latency = EXMC_DATALAT_17_CLK;
+    exmc_norsram_init_struct->read_write_timing->asyn_access_mode = EXMC_ACCESS_MODE_A;
+
+    /* write timing configure, when extended mode is used */
+    exmc_norsram_init_struct->write_timing->asyn_address_setuptime = 0xFU;
+    exmc_norsram_init_struct->write_timing->asyn_address_holdtime = 0xFU;
+    exmc_norsram_init_struct->write_timing->asyn_data_setuptime = 0xFFU;
+    exmc_norsram_init_struct->write_timing->bus_latency = 0xFU;
+    exmc_norsram_init_struct->write_timing->asyn_access_mode = EXMC_ACCESS_MODE_A;
 }
 
 /*!
@@ -161,70 +229,9 @@ void exmc_norsram_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct)
 }
 
 /*!
-    \brief      initialize the struct exmc_norsram_parameter_struct
-    \param[in]  none
-    \param[out] exmc_norsram_init_struct: the initialized struct exmc_norsram_parameter_struct pointer
-    \retval     none
-*/
-void exmc_norsram_parameter_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct)
-{
-    /* configure the structure with default value */
-    exmc_norsram_init_struct->norsram_region = EXMC_BANK0_NORSRAM_REGION0;
-    exmc_norsram_init_struct->address_data_mux = ENABLE;
-    exmc_norsram_init_struct->memory_type = EXMC_MEMORY_TYPE_SRAM;
-    exmc_norsram_init_struct->databus_width = EXMC_NOR_DATABUS_WIDTH_8B;
-    exmc_norsram_init_struct->burst_mode = DISABLE;
-    exmc_norsram_init_struct->nwait_polarity = EXMC_NWAIT_POLARITY_LOW;
-    exmc_norsram_init_struct->wrap_burst_mode = DISABLE;
-    exmc_norsram_init_struct->nwait_config = EXMC_NWAIT_CONFIG_BEFORE;
-    exmc_norsram_init_struct->memory_write = ENABLE;
-    exmc_norsram_init_struct->nwait_signal = ENABLE;
-    exmc_norsram_init_struct->extended_mode = DISABLE;
-    exmc_norsram_init_struct->asyn_wait = DISABLE;
-    exmc_norsram_init_struct->write_mode = EXMC_ASYN_WRITE;
-
-    /* read/write timing configure */
-    exmc_norsram_init_struct->read_write_timing->asyn_address_setuptime = 0xFU;
-    exmc_norsram_init_struct->read_write_timing->asyn_address_holdtime = 0xFU;
-    exmc_norsram_init_struct->read_write_timing->asyn_data_setuptime = 0xFFU;
-    exmc_norsram_init_struct->read_write_timing->bus_latency = 0xFU;
-    exmc_norsram_init_struct->read_write_timing->syn_clk_division = EXMC_SYN_CLOCK_RATIO_16_CLK;
-    exmc_norsram_init_struct->read_write_timing->syn_data_latency = EXMC_DATALAT_17_CLK;
-    exmc_norsram_init_struct->read_write_timing->asyn_access_mode = EXMC_ACCESS_MODE_A;
-
-    /* write timing configure, when extended mode is used */
-    exmc_norsram_init_struct->write_timing->asyn_address_setuptime = 0xFU;
-    exmc_norsram_init_struct->write_timing->asyn_address_holdtime = 0xFU;
-    exmc_norsram_init_struct->write_timing->asyn_data_setuptime = 0xFFU;
-    exmc_norsram_init_struct->write_timing->bus_latency = 0xFU;
-    exmc_norsram_init_struct->write_timing->asyn_access_mode = EXMC_ACCESS_MODE_A;
-}
-
-/*!
-    \brief      CRAM page size configure
-    \param[in]  exmc_norsram_region: specifie the region of NOR/PSRAM bank
-      \arg        EXMC_BANK0_NORSRAM_REGIONx(x=0..3)
-    \param[in]  page_size: CRAM page size
-      \arg        EXMC_CRAM_AUTO_SPLIT: the clock is generated only during synchronous access
-      \arg        EXMC_CRAM_PAGE_SIZE_128_BYTES: page size is 128 bytes
-      \arg        EXMC_CRAM_PAGE_SIZE_256_BYTES: page size is 256 bytes
-      \arg        EXMC_CRAM_PAGE_SIZE_512_BYTES: page size is 512 bytes
-      \arg        EXMC_CRAM_PAGE_SIZE_1024_BYTES: page size is 1024 bytes
-    \param[out] none
-    \retval     none
-*/
-void exmc_norsram_page_size_config(uint32_t exmc_norsram_region, uint32_t page_size)
-{
-    /* reset the bits */
-    EXMC_SNCTL(exmc_norsram_region) &= ~EXMC_SNCTL_CPS;
-
-    /* set the CPS bits */
-    EXMC_SNCTL(exmc_norsram_region) |= page_size;
-}
-
-/*!
     \brief      enable EXMC NOR/PSRAM bank region
     \param[in]  exmc_norsram_region: specifie the region of NOR/PSRAM bank
+                only one parameter can be selected which is shown as below:
       \arg        EXMC_BANK0_NORSRAM_REGIONx(x=0..3)
     \param[out] none
     \retval     none
@@ -237,6 +244,7 @@ void exmc_norsram_enable(uint32_t exmc_norsram_region)
 /*!
     \brief      disable EXMC NOR/PSRAM bank region
     \param[in]  exmc_norsram_region: specifie the region of NOR/PSRAM Bank
+                only one parameter can be selected which is shown as below:
       \arg        EXMC_BANK0_NORSRAM_REGIONx(x=0..3)
     \param[out] none
     \retval     none
@@ -249,6 +257,7 @@ void exmc_norsram_disable(uint32_t exmc_norsram_region)
 /*!
     \brief      deinitialize EXMC NAND bank
     \param[in]  exmc_nand_bank: select the bank of NAND
+                only one parameter can be selected which is shown as below:
       \arg        EXMC_BANKx_NAND(x=1..2)
     \param[out] none
     \retval     none
@@ -260,6 +269,32 @@ void exmc_nand_deinit(uint32_t exmc_nand_bank)
     EXMC_NPINTEN(exmc_nand_bank) = BANK1_2_NPINTEN_RESET;
     EXMC_NPCTCFG(exmc_nand_bank) = BANK1_2_NPCTCFG_RESET;
     EXMC_NPATCFG(exmc_nand_bank) = BANK1_2_NPATCFG_RESET;
+}
+
+/*!
+    \brief      initialize exmc_norsram_parameter_struct with the default values
+    \param[in]  none
+    \param[out] the initialized struct exmc_norsram_parameter_struct pointer
+    \retval     none
+*/
+void exmc_nand_struct_para_init(exmc_nand_parameter_struct* exmc_nand_init_struct)
+{
+    /* configure the structure with default values */
+    exmc_nand_init_struct->nand_bank = EXMC_BANK1_NAND;
+    exmc_nand_init_struct->wait_feature = DISABLE;
+    exmc_nand_init_struct->databus_width = EXMC_NAND_DATABUS_WIDTH_8B;
+    exmc_nand_init_struct->ecc_logic = DISABLE;
+    exmc_nand_init_struct->ecc_size = EXMC_ECC_SIZE_256BYTES;
+    exmc_nand_init_struct->ctr_latency = 0x0U;
+    exmc_nand_init_struct->atr_latency = 0x0U;
+    exmc_nand_init_struct->common_space_timing->setuptime = 0xFCU;
+    exmc_nand_init_struct->common_space_timing->waittime = 0xFCU;
+    exmc_nand_init_struct->common_space_timing->holdtime = 0xFCU;
+    exmc_nand_init_struct->common_space_timing->databus_hiztime = 0xFCU;
+    exmc_nand_init_struct->attribute_space_timing->setuptime = 0xFCU;
+    exmc_nand_init_struct->attribute_space_timing->waittime = 0xFCU;
+    exmc_nand_init_struct->attribute_space_timing->holdtime = 0xFCU;
+    exmc_nand_init_struct->attribute_space_timing->databus_hiztime = 0xFCU;
 }
 
 /*!
@@ -306,34 +341,9 @@ void exmc_nand_init(exmc_nand_parameter_struct* exmc_nand_init_struct)
 }
 
 /*!
-    \brief      initialize the struct exmc_norsram_parameter_struct
-    \param[in]  none
-    \param[out] the initialized struct exmc_norsram_parameter_struct pointer
-    \retval     none
-*/
-void exmc_nand_parameter_init(exmc_nand_parameter_struct* exmc_nand_init_struct)
-{
-    /* configure the structure with default value */
-    exmc_nand_init_struct->nand_bank = EXMC_BANK1_NAND;
-    exmc_nand_init_struct->wait_feature = DISABLE;
-    exmc_nand_init_struct->databus_width = EXMC_NAND_DATABUS_WIDTH_8B;
-    exmc_nand_init_struct->ecc_logic = DISABLE;
-    exmc_nand_init_struct->ecc_size = EXMC_ECC_SIZE_256BYTES;
-    exmc_nand_init_struct->ctr_latency = 0x0U;
-    exmc_nand_init_struct->atr_latency = 0x0U;
-    exmc_nand_init_struct->common_space_timing->setuptime = 0xfcU;
-    exmc_nand_init_struct->common_space_timing->waittime = 0xfcU;
-    exmc_nand_init_struct->common_space_timing->holdtime = 0xfcU;
-    exmc_nand_init_struct->common_space_timing->databus_hiztime = 0xfcU;
-    exmc_nand_init_struct->attribute_space_timing->setuptime = 0xfcU;
-    exmc_nand_init_struct->attribute_space_timing->waittime = 0xfcU;
-    exmc_nand_init_struct->attribute_space_timing->holdtime = 0xfcU;
-    exmc_nand_init_struct->attribute_space_timing->databus_hiztime = 0xfcU;
-}
-
-/*!
     \brief      enable NAND bank
     \param[in]  exmc_nand_bank: specifie the NAND bank
+                only one parameter can be selected which is shown as below:
       \arg        EXMC_BANKx_NAND(x=1,2)
     \param[out] none
     \retval     none
@@ -346,6 +356,7 @@ void exmc_nand_enable(uint32_t exmc_nand_bank)
 /*!
     \brief      disable NAND bank
     \param[in]  exmc_nand_bank: specifie the NAND bank
+                only one parameter can be selected which is shown as below:
       \arg        EXMC_BANKx_NAND(x=1,2)
     \param[out] none
     \retval     none
@@ -353,37 +364,6 @@ void exmc_nand_enable(uint32_t exmc_nand_bank)
 void exmc_nand_disable(uint32_t exmc_nand_bank)
 {
     EXMC_NPCTL(exmc_nand_bank) &= (~EXMC_NPCTL_NDBKEN);
-}
-
-/*!
-    \brief      enable or disable the EXMC NAND ECC function
-    \param[in]  exmc_nand_bank: specifie the NAND bank
-      \arg        EXMC_BANKx_NAND(x=1,2)
-    \param[in]  newvalue: ENABLE or DISABLE
-    \param[out] none
-    \retval     none
-*/
-void exmc_nand_ecc_config(uint32_t exmc_nand_bank, ControlStatus newvalue)
-{
-    if (ENABLE == newvalue){
-        /* enable the selected NAND bank ECC function */
-        EXMC_NPCTL(exmc_nand_bank) |= EXMC_NPCTL_ECCEN;
-    }else{
-        /* disable the selected NAND bank ECC function */
-        EXMC_NPCTL(exmc_nand_bank) &= (~EXMC_NPCTL_ECCEN);
-    }
-}
-
-/*!
-    \brief      get the EXMC ECC value
-    \param[in]  exmc_nand_bank: specifie the NAND bank
-      \arg        EXMC_BANKx_NAND(x=1,2)
-    \param[out] none
-    \retval     the error correction code(ECC) value
-*/
-uint32_t exmc_ecc_get(uint32_t exmc_nand_bank)
-{
-    return (EXMC_NECC(exmc_nand_bank));
 }
 
 /*!
@@ -400,6 +380,32 @@ void exmc_pccard_deinit(void)
     EXMC_NPCTCFG3 = BANK3_NPCTCFG_RESET;
     EXMC_NPATCFG3 = BANK3_NPATCFG_RESET;
     EXMC_PIOTCFG3 = BANK3_PIOTCFG3_RESET;
+}
+
+/*!
+    \brief      initialize exmc_pccard_parameter_struct parameter with the default values
+    \param[in]  none
+    \param[out] the initialized struct exmc_pccard_parameter_struct pointer
+    \retval     none
+*/
+void exmc_pccard_struct_para_init(exmc_pccard_parameter_struct* exmc_pccard_init_struct)
+{
+    /* configure the structure with default values */
+    exmc_pccard_init_struct->wait_feature = DISABLE;
+    exmc_pccard_init_struct->ctr_latency = 0x0U;
+    exmc_pccard_init_struct->atr_latency = 0x0U;
+    exmc_pccard_init_struct->common_space_timing->setuptime = 0xFCU;
+    exmc_pccard_init_struct->common_space_timing->waittime = 0xFCU;
+    exmc_pccard_init_struct->common_space_timing->holdtime = 0xFCU;
+    exmc_pccard_init_struct->common_space_timing->databus_hiztime = 0xFCU;
+    exmc_pccard_init_struct->attribute_space_timing->setuptime = 0xFCU;
+    exmc_pccard_init_struct->attribute_space_timing->waittime = 0xFCU;
+    exmc_pccard_init_struct->attribute_space_timing->holdtime = 0xFCU;
+    exmc_pccard_init_struct->attribute_space_timing->databus_hiztime = 0xFCU;
+    exmc_pccard_init_struct->io_space_timing->setuptime = 0xFCU;
+    exmc_pccard_init_struct->io_space_timing->waittime = 0xFCU;
+    exmc_pccard_init_struct->io_space_timing->holdtime = 0xFCU;
+    exmc_pccard_init_struct->io_space_timing->databus_hiztime = 0xFCU;
 }
 
 /*!
@@ -442,32 +448,6 @@ void exmc_pccard_init(exmc_pccard_parameter_struct* exmc_pccard_init_struct)
 }
 
 /*!
-    \brief      initialize the struct exmc_pccard_parameter_struct
-    \param[in]  none
-    \param[out] the initialized struct exmc_pccard_parameter_struct pointer
-    \retval     none
-*/
-void exmc_pccard_parameter_init(exmc_pccard_parameter_struct* exmc_pccard_init_struct)
-{
-    /* configure the structure with default value */
-    exmc_pccard_init_struct->wait_feature = DISABLE;
-    exmc_pccard_init_struct->ctr_latency = 0x0U;
-    exmc_pccard_init_struct->atr_latency = 0x0U;
-    exmc_pccard_init_struct->common_space_timing->setuptime = 0xFCU;
-    exmc_pccard_init_struct->common_space_timing->waittime = 0xFCU;
-    exmc_pccard_init_struct->common_space_timing->holdtime = 0xFCU;
-    exmc_pccard_init_struct->common_space_timing->databus_hiztime = 0xFCU;
-    exmc_pccard_init_struct->attribute_space_timing->setuptime = 0xFCU;
-    exmc_pccard_init_struct->attribute_space_timing->waittime = 0xFCU;
-    exmc_pccard_init_struct->attribute_space_timing->holdtime = 0xFCU;
-    exmc_pccard_init_struct->attribute_space_timing->databus_hiztime = 0xFCU;
-    exmc_pccard_init_struct->io_space_timing->setuptime = 0xFCU;
-    exmc_pccard_init_struct->io_space_timing->waittime = 0xFCU;
-    exmc_pccard_init_struct->io_space_timing->holdtime = 0xFCU;
-    exmc_pccard_init_struct->io_space_timing->databus_hiztime = 0xFCU;
-}
-
-/*!
     \brief      enable PC Card Bank
     \param[in]  none
     \param[out] none
@@ -490,12 +470,113 @@ void exmc_pccard_disable(void)
 }
 
 /*!
-    \brief      check EXMC flag is set or not
+    \brief      configure CRAM page size
+    \param[in]  exmc_norsram_region: specifie the region of NOR/PSRAM bank
+                only one parameter can be selected which is shown as below:
+      \arg        EXMC_BANK0_NORSRAM_REGIONx(x=0..3)
+    \param[in]  page_size: CRAM page size
+                only one parameter can be selected which is shown as below:
+      \arg        EXMC_CRAM_AUTO_SPLIT: the clock is generated only during synchronous access
+      \arg        EXMC_CRAM_PAGE_SIZE_128_BYTES: page size is 128 bytes
+      \arg        EXMC_CRAM_PAGE_SIZE_256_BYTES: page size is 256 bytes
+      \arg        EXMC_CRAM_PAGE_SIZE_512_BYTES: page size is 512 bytes
+      \arg        EXMC_CRAM_PAGE_SIZE_1024_BYTES: page size is 1024 bytes
+    \param[out] none
+    \retval     none
+*/
+void exmc_norsram_page_size_config(uint32_t exmc_norsram_region, uint32_t page_size)
+{
+    /* reset the bits */
+    EXMC_SNCTL(exmc_norsram_region) &= ~EXMC_SNCTL_CPS;
+
+    /* set the CPS bits */
+    EXMC_SNCTL(exmc_norsram_region) |= page_size;
+}
+
+/*!
+    \brief      enable or disable the EXMC NAND ECC function
+    \param[in]  exmc_nand_bank: specifie the NAND bank
+                only one parameter can be selected which is shown as below:
+      \arg        EXMC_BANKx_NAND(x=1,2)
+    \param[in]  newvalue: ENABLE or DISABLE
+    \param[out] none
+    \retval     none
+*/
+void exmc_nand_ecc_config(uint32_t exmc_nand_bank, ControlStatus newvalue)
+{
+    if (ENABLE == newvalue){
+        /* enable the selected NAND bank ECC function */
+        EXMC_NPCTL(exmc_nand_bank) |= EXMC_NPCTL_ECCEN;
+    }else{
+        /* disable the selected NAND bank ECC function */
+        EXMC_NPCTL(exmc_nand_bank) &= (~EXMC_NPCTL_ECCEN);
+    }
+}
+
+/*!
+    \brief      get the EXMC ECC value
+    \param[in]  exmc_nand_bank: specifie the NAND bank
+                only one parameter can be selected which is shown as below:
+      \arg        EXMC_BANKx_NAND(x=1,2)
+    \param[out] none
+    \retval     the error correction code(ECC) value
+*/
+uint32_t exmc_ecc_get(uint32_t exmc_nand_bank)
+{
+    return (EXMC_NECC(exmc_nand_bank));
+}
+
+/*!
+    \brief      enable EXMC interrupt
+    \param[in]  exmc_bank: specifies the NAND bank,PC card bank
+                only one parameter can be selected which is shown as below:
+      \arg        EXMC_BANK1_NAND: the NAND bank1
+      \arg        EXMC_BANK2_NAND: the NAND bank2
+      \arg        EXMC_BANK3_PCCARD: the PC card bank
+    \param[in]  interrupt: EXMC interrupt flag
+                only one parameter can be selected which are shown as below:
+      \arg        EXMC_NAND_PCCARD_INT_FLAG_RISE: rising edge interrupt and flag
+      \arg        EXMC_NAND_PCCARD_INT_FLAG_LEVEL: high-level interrupt and flag
+      \arg        EXMC_NAND_PCCARD_INT_FLAG_FALL: falling edge interrupt and flag
+    \param[out] none
+    \retval     none
+*/
+void exmc_interrupt_enable(uint32_t exmc_bank,uint32_t interrupt)
+{
+    /* NAND bank1,bank2 or PC card bank3 */
+    EXMC_NPINTEN(exmc_bank) |= interrupt;
+}
+
+/*!
+    \brief      disable EXMC interrupt
     \param[in]  exmc_bank: specifies the NAND bank , PC card bank
+                only one parameter can be selected which is shown as below:
+      \arg        EXMC_BANK1_NAND: the NAND bank1
+      \arg        EXMC_BANK2_NAND: the NAND bank2
+      \arg        EXMC_BANK3_PCCARD: the PC card bank
+    \param[in]  interrupt: EXMC interrupt flag
+                only one parameter can be selected which are shown as below:
+      \arg        EXMC_NAND_PCCARD_INT_FLAG_RISE: rising edge interrupt and flag
+      \arg        EXMC_NAND_PCCARD_INT_FLAG_LEVEL: high-level interrupt and flag
+      \arg        EXMC_NAND_PCCARD_INT_FLAG_FALL: falling edge interrupt and flag
+    \param[out] none
+    \retval     none
+*/
+void exmc_interrupt_disable(uint32_t exmc_bank,uint32_t interrupt)
+{
+    /* NAND bank1,bank2 or PC card bank3 */
+    EXMC_NPINTEN(exmc_bank) &= (~interrupt);
+}
+
+/*!
+    \brief      get EXMC flag status
+    \param[in]  exmc_bank: specifies the NAND bank , PC card bank
+                only one parameter can be selected which is shown as below:
       \arg        EXMC_BANK1_NAND: the NAND bank1
       \arg        EXMC_BANK2_NAND: the NAND bank2
       \arg        EXMC_BANK3_PCCARD: the PC Card bank
-    \param[in]  flag: specify get which flag
+    \param[in]  flag: EXMC status and flag
+                only one parameter can be selected which are shown as below:
       \arg        EXMC_NAND_PCCARD_FLAG_RISE: interrupt rising edge status
       \arg        EXMC_NAND_PCCARD_FLAG_LEVEL: interrupt high-level status
       \arg        EXMC_NAND_PCCARD_FLAG_FALL: interrupt falling edge status
@@ -520,12 +601,14 @@ FlagStatus exmc_flag_get(uint32_t exmc_bank,uint32_t flag)
 }
 
 /*!
-    \brief      clear EXMC flag
+    \brief      clear EXMC flag status
     \param[in]  exmc_bank: specifie the NAND bank , PCCARD bank
+                only one parameter can be selected which is shown as below:
       \arg        EXMC_BANK1_NAND: the NAND bank1
       \arg        EXMC_BANK2_NAND: the NAND bank2
       \arg        EXMC_BANK3_PCCARD: the PC card bank
-    \param[in]  flag: specify get which flag
+    \param[in]  flag: EXMC status and flag
+                only one parameter can be selected which are shown as below:
       \arg        EXMC_NAND_PCCARD_FLAG_RISE: interrupt rising edge status
       \arg        EXMC_NAND_PCCARD_FLAG_LEVEL: interrupt high-level status
       \arg        EXMC_NAND_PCCARD_FLAG_FALL: interrupt falling edge status
@@ -540,27 +623,29 @@ void exmc_flag_clear(uint32_t exmc_bank,uint32_t flag)
 }
 
 /*!
-    \brief      check EXMC interrupt flag is set or not
+    \brief      get EXMC interrupt flag
     \param[in]  exmc_bank: specifies the NAND bank , PC card bank
+                only one parameter can be selected which is shown as below:
       \arg        EXMC_BANK1_NAND: the NAND bank1
       \arg        EXMC_BANK2_NAND: the NAND bank2
       \arg        EXMC_BANK3_PCCARD: the PC card bank
-    \param[in]  interrupt_source: specify get which interrupt flag
-      \arg        EXMC_NAND_PCCARD_INT_FLAG_RISE: interrupt source of rising edge
-      \arg        EXMC_NAND_PCCARD_INT_FLAG_LEVEL: interrupt source of high-level
-      \arg        EXMC_NAND_PCCARD_INT_FLAG_FALL: interrupt source of falling edge
+    \param[in]  interrupt: EXMC interrupt flag
+                only one parameter can be selected which are shown as below:
+      \arg        EXMC_NAND_PCCARD_INT_FLAG_RISE: rising edge interrupt and flag
+      \arg        EXMC_NAND_PCCARD_INT_FLAG_LEVEL: high-level interrupt and flag
+      \arg        EXMC_NAND_PCCARD_INT_FLAG_FALL: falling edge interrupt and flag
     \param[out] none
     \retval     FlagStatus: SET or RESET
 */
-FlagStatus exmc_interrupt_flag_get(uint32_t exmc_bank,uint32_t interrupt_source)
+FlagStatus exmc_interrupt_flag_get(uint32_t exmc_bank,uint32_t interrupt)
 {
     uint32_t status = 0x00000000U,interrupt_enable = 0x00000000U,interrupt_state = 0x00000000U;
 
     /* NAND bank1,bank2 or PC card bank3 */
     status = EXMC_NPINTEN(exmc_bank);
-    interrupt_state = (status & (interrupt_source >> INTEN_INTS_OFFSET));
+    interrupt_state = (status & (interrupt >> INTEN_INTS_OFFSET));
 
-    interrupt_enable = (status & interrupt_source);
+    interrupt_enable = (status & interrupt);
 
     if ((interrupt_enable) && (interrupt_state)){
         /* interrupt flag is set */
@@ -574,56 +659,20 @@ FlagStatus exmc_interrupt_flag_get(uint32_t exmc_bank,uint32_t interrupt_source)
 /*!
     \brief      clear EXMC interrupt flag
     \param[in]  exmc_bank: specifies the NAND bank , PC card bank
+                only one parameter can be selected which is shown as below:
       \arg        EXMC_BANK1_NAND: the NAND bank1
       \arg        EXMC_BANK2_NAND: the NAND bank2
       \arg        EXMC_BANK3_PCCARD: the PC card bank
-    \param[in]  interrupt_source: specify get which interrupt flag
-      \arg        EXMC_NAND_PCCARD_INT_FLAG_RISE: interrupt source of rising edge
-      \arg        EXMC_NAND_PCCARD_INT_FLAG_LEVEL: interrupt source of high-level
-      \arg        EXMC_NAND_PCCARD_INT_FLAG_FALL: interrupt source of falling edge
+    \param[in]  interrupt: EXMC interrupt flag
+                only one parameter can be selected which are shown as below:
+      \arg        EXMC_NAND_PCCARD_INT_FLAG_RISE: rising edge interrupt and flag
+      \arg        EXMC_NAND_PCCARD_INT_FLAG_LEVEL: high-level interrupt and flag
+      \arg        EXMC_NAND_PCCARD_INT_FLAG_FALL: falling edge interrupt and flag
     \param[out] none
     \retval     none
 */
-void exmc_interrupt_flag_clear(uint32_t exmc_bank,uint32_t interrupt_source)
+void exmc_interrupt_flag_clear(uint32_t exmc_bank,uint32_t interrupt)
 {
     /* NAND bank1,bank2 or PC card bank3 */
-    EXMC_NPINTEN(exmc_bank) &= ~(interrupt_source >> INTEN_INTS_OFFSET);
-}
-
-/*!
-    \brief      enable EXMC interrupt
-    \param[in]  exmc_bank: specifies the NAND bank,PC card bank
-      \arg        EXMC_BANK1_NAND: the NAND bank1
-      \arg        EXMC_BANK2_NAND: the NAND bank2
-      \arg        EXMC_BANK3_PCCARD: the PC card bank
-    \param[in]  interrupt_source: specify get which interrupt flag
-      \arg        EXMC_NAND_PCCARD_INT_RISE: interrupt source of rising edge
-      \arg        EXMC_NAND_PCCARD_INT_LEVEL: interrupt source of high-level
-      \arg        EXMC_NAND_PCCARD_INT_FALL: interrupt source of falling edge
-    \param[out] none
-    \retval     none
-*/
-void exmc_interrupt_enable(uint32_t exmc_bank,uint32_t interrupt_source)
-{
-    /* NAND bank1,bank2 or PC card bank3 */
-    EXMC_NPINTEN(exmc_bank) |= interrupt_source;
-}
-
-/*!
-    \brief      disable EXMC interrupt
-    \param[in]  exmc_bank: specifies the NAND bank , PC card bank
-      \arg        EXMC_BANK1_NAND: the NAND bank1
-      \arg        EXMC_BANK2_NAND: the NAND bank2
-      \arg        EXMC_BANK3_PCCARD: the PC card bank
-    \param[in]  interrupt_source: specify get which interrupt flag
-      \arg        EXMC_NAND_PCCARD_INT_RISE: interrupt source of rising edge
-      \arg        EXMC_NAND_PCCARD_INT_LEVEL: interrupt source of high-level
-      \arg        EXMC_NAND_PCCARD_INT_FALL: interrupt source of falling edge
-    \param[out] none
-    \retval     none
-*/
-void exmc_interrupt_disable(uint32_t exmc_bank,uint32_t interrupt_source)
-{
-    /* NAND bank1,bank2 or PC card bank3 */
-    EXMC_NPINTEN(exmc_bank) &= (~interrupt_source);
+    EXMC_NPINTEN(exmc_bank) &= ~(interrupt >> INTEN_INTS_OFFSET);
 }

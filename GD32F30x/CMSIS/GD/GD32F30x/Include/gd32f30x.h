@@ -1,18 +1,45 @@
 /*!
-    \file  gd32f30x.h
-    \brief general definitions for GD32F30x
+    \file  gd32f30x_it.h
+    \brief the header file of the ISR
+
+    \version 2017-02-10, V1.0.0, firmware for GD32F30x
+    \version 2018-10-10, V1.1.0, firmware for GD32F30x
+    \version 2018-12-25, V2.0.0, firmware for GD32F30x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2017-02-10, V1.0.1, firmware for GD32F30x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F30X_H
 #define GD32F30X_H
 
-#ifdef cplusplus
+#ifdef __cplusplus
  extern "C" {
 #endif 
 
@@ -38,7 +65,7 @@
  
 /* define startup timeout value of high speed crystal oscillator (HXTAL) */
 #if !defined  (HXTAL_STARTUP_TIMEOUT)
-#define HXTAL_STARTUP_TIMEOUT   ((uint16_t)0x0800)
+#define HXTAL_STARTUP_TIMEOUT   ((uint16_t)0xFFFF)
 #endif /* high speed crystal oscillator startup timeout */
 
 /* define value of internal 48MHz RC oscillator (IRC48M) in Hz */
@@ -78,10 +105,10 @@
 
 /* configuration of the Cortex-M4 processor and core peripherals */
 #define __CM4_REV                 0x0001   /*!< Core revision r0p1                                       */
-#define __MPU_PRESENT             1        /*!< GD32F30x do not provide MPU                              */
+#define __MPU_PRESENT             1        /*!< GD32F30x provide MPU                                     */
 #define __NVIC_PRIO_BITS          4        /*!< GD32F30x uses 4 bits for the priority levels             */
 #define __Vendor_SysTickConfig    0        /*!< set to 1 if different sysTick config is used             */
-#define __FPU_PRESENT             0        /*!< FPU present                                              */
+#define __FPU_PRESENT             1        /*!< FPU present                                              */
 /* define interrupt number */
 typedef enum IRQn
 {
@@ -101,11 +128,11 @@ typedef enum IRQn
     RTC_IRQn                     = 3,      /*!< RTC through EXTI line interrupt                          */
     FMC_IRQn                     = 4,      /*!< FMC interrupt                                            */
     RCU_CTC_IRQn                 = 5,      /*!< RCU and CTC interrupt                                    */
-    EXTI0_IRQn                   = 6,      /*!< EXTI line 0 interrupts                                   */
-    EXTI1_IRQn                   = 7,      /*!< EXTI line 1 interrupts                                   */
-    EXTI2_IRQn                   = 8,      /*!< EXTI line 2 interrupts                                   */
-    EXTI3_IRQn                   = 9,      /*!< EXTI line 3 interrupts                                   */
-    EXTI4_IRQn                   = 10,     /*!< EXTI line 4 interrupts                                   */
+    EXTI0_IRQn                   = 6,      /*!< EXTI line 0 interrupt                                    */
+    EXTI1_IRQn                   = 7,      /*!< EXTI line 1 interrupt                                    */
+    EXTI2_IRQn                   = 8,      /*!< EXTI line 2 interrupt                                    */
+    EXTI3_IRQn                   = 9,      /*!< EXTI line 3 interrupt                                    */
+    EXTI4_IRQn                   = 10,     /*!< EXTI line 4 interrupt                                    */
     DMA0_Channel0_IRQn           = 11,     /*!< DMA0 channel0 interrupt                                  */
     DMA0_Channel1_IRQn           = 12,     /*!< DMA0 channel1 interrupt                                  */
     DMA0_Channel2_IRQn           = 13,     /*!< DMA0 channel2 interrupt                                  */
@@ -117,16 +144,16 @@ typedef enum IRQn
 #ifdef GD32F30X_HD
     USBD_HP_CAN0_TX_IRQn         = 19,     /*!< CAN0 TX interrupts                                       */
     USBD_LP_CAN0_RX0_IRQn        = 20,     /*!< CAN0 RX0 interrupts                                      */
-    CAN0_RX1_IRQn                = 21,     /*!< CAN0 RX1 interrupts                                      */
-    CAN0_EWMC_IRQn               = 22,     /*!< CAN0 EWMC interrupts                                     */
+    CAN0_RX1_IRQn                = 21,     /*!< CAN0 RX1 interrupt                                       */
+    CAN0_EWMC_IRQn               = 22,     /*!< CAN0 EWMC interrupt                                      */
     EXTI5_9_IRQn                 = 23,     /*!< EXTI[9:5] interrupts                                     */
-    TIMER0_BRK_IRQn              = 24,     /*!< TIMER0 break interrupts                                  */
-    TIMER0_UP_IRQn               = 25,     /*!< TIMER0 update interrupts                                 */
-    TIMER0_TRG_CMT_IRQn          = 26,     /*!< TIMER0 trigger and commutation interrupts                */
-    TIMER0_CC_IRQn               = 27,     /*!< TIMER0 capture compare interrupts                        */
+    TIMER0_BRK_IRQn              = 24,     /*!< TIMER0 break interrupt                                   */
+    TIMER0_UP_IRQn               = 25,     /*!< TIMER0 update interrupt                                  */
+    TIMER0_TRG_CMT_IRQn          = 26,     /*!< TIMER0 trigger and commutation interrupt                 */
+    TIMER0_Channel_IRQn          = 27,     /*!< TIMER0 channel capture compare interrupt                 */
     TIMER1_IRQn                  = 28,     /*!< TIMER1 interrupt                                         */
     TIMER2_IRQn                  = 29,     /*!< TIMER2 interrupt                                         */
-    TIMER3_IRQn                  = 30,     /*!< TIMER3 interrupts                                        */
+    TIMER3_IRQn                  = 30,     /*!< TIMER3 interrupt                                         */
     I2C0_EV_IRQn                 = 31,     /*!< I2C0 event interrupt                                     */
     I2C0_ER_IRQn                 = 32,     /*!< I2C0 error interrupt                                     */
     I2C1_EV_IRQn                 = 33,     /*!< I2C1 event interrupt                                     */
@@ -139,10 +166,10 @@ typedef enum IRQn
     EXTI10_15_IRQn               = 40,     /*!< EXTI[15:10] interrupts                                   */
     RTC_Alarm_IRQn               = 41,     /*!< RTC alarm interrupt                                      */
     USBD_WKUP_IRQn               = 42,     /*!< USBD Wakeup interrupt                                    */
-    TIMER7_BRK_IRQn              = 43,     /*!< TIMER7 break interrupts                                  */
-    TIMER7_UP_IRQn               = 44,     /*!< TIMER7 update interrupts                                 */
-    TIMER7_TRG_CMT_IRQn          = 45,     /*!< TIMER7 trigger and commutation interrupts                */
-    TIMER7_CC_IRQn               = 46,     /*!< TIMER7 capture compare interrupts                        */
+    TIMER7_BRK_IRQn              = 43,     /*!< TIMER7 break interrupt                                   */
+    TIMER7_UP_IRQn               = 44,     /*!< TIMER7 update interrupt                                  */
+    TIMER7_TRG_CMT_IRQn          = 45,     /*!< TIMER7 trigger and commutation interrupt                 */
+    TIMER7_Channel_IRQn          = 46,     /*!< TIMER7 channel capture compare interrupt                 */
     ADC2_IRQn                    = 47,     /*!< ADC2 global interrupt                                    */
     EXMC_IRQn                    = 48,     /*!< EXMC global interrupt                                    */
     SDIO_IRQn                    = 49,     /*!< SDIO global interrupt                                    */
@@ -161,16 +188,16 @@ typedef enum IRQn
 #ifdef GD32F30X_XD
     USBD_HP_CAN0_TX_IRQn         = 19,     /*!< CAN0 TX interrupts                                       */
     USBD_LP_CAN0_RX0_IRQn        = 20,     /*!< CAN0 RX0 interrupts                                      */
-    CAN0_RX1_IRQn                = 21,     /*!< CAN0 RX1 interrupts                                      */
-    CAN0_EWMC_IRQn               = 22,     /*!< CAN0 EWMC interrupts                                     */
+    CAN0_RX1_IRQn                = 21,     /*!< CAN0 RX1 interrupt                                       */
+    CAN0_EWMC_IRQn               = 22,     /*!< CAN0 EWMC interrupt                                      */
     EXTI5_9_IRQn                 = 23,     /*!< EXTI[9:5] interrupts                                     */
-    TIMER0_BRK_TIMER8_IRQn       = 24,     /*!< TIMER0 break and TIMER8 interrupts                       */
-    TIMER0_UP_TIMER9_IRQn        = 25,     /*!< TIMER0 update and TIMER9 interrupts                      */
-    TIMER0_TRG_CMT_TIMER10_IRQn  = 26,     /*!< TIMER0 trigger and commutation and TIMER10 interrupts    */
-    TIMER0_CC_IRQn               = 27,     /*!< TIMER0 Capture Compare interrupts                        */
+    TIMER0_BRK_TIMER8_IRQn       = 24,     /*!< TIMER0 break and TIMER8 interrupt                        */
+    TIMER0_UP_TIMER9_IRQn        = 25,     /*!< TIMER0 update and TIMER9 interrupt                       */
+    TIMER0_TRG_CMT_TIMER10_IRQn  = 26,     /*!< TIMER0 trigger and commutation and TIMER10 interrupt     */
+    TIMER0_Channel_IRQn          = 27,     /*!< TIMER0 channel capture compare interrupt                 */
     TIMER1_IRQn                  = 28,     /*!< TIMER1 interrupt                                         */
     TIMER2_IRQn                  = 29,     /*!< TIMER2 interrupt                                         */
-    TIMER3_IRQn                  = 30,     /*!< TIMER3 interrupts                                        */
+    TIMER3_IRQn                  = 30,     /*!< TIMER3 interrupt                                         */
     I2C0_EV_IRQn                 = 31,     /*!< I2C0 event interrupt                                     */
     I2C0_ER_IRQn                 = 32,     /*!< I2C0 error interrupt                                     */
     I2C1_EV_IRQn                 = 33,     /*!< I2C1 event interrupt                                     */
@@ -183,10 +210,10 @@ typedef enum IRQn
     EXTI10_15_IRQn               = 40,     /*!< EXTI[15:10] interrupts                                   */
     RTC_Alarm_IRQn               = 41,     /*!< RTC alarm interrupt                                      */
     USBD_WKUP_IRQn               = 42,     /*!< USBD wakeup interrupt                                    */
-    TIMER7_BRK_TIMER11_IRQn      = 43,     /*!< TIMER7 break and TIMER11 interrupts                      */
-    TIMER7_UP_TIMER12_IRQn       = 44,     /*!< TIMER7 update and TIMER12 interrupts                     */
-    TIMER7_TRG_CMT_TIMER13_IRQn  = 45,     /*!< TIMER7 trigger and commutation and TIMER13 interrupts    */
-    TIMER7_CC_IRQn               = 46,     /*!< TIMER7 capture compare interrupts                        */
+    TIMER7_BRK_TIMER11_IRQn      = 43,     /*!< TIMER7 break and TIMER11 interrupt                       */
+    TIMER7_UP_TIMER12_IRQn       = 44,     /*!< TIMER7 update and TIMER12 interrupt                      */
+    TIMER7_TRG_CMT_TIMER13_IRQn  = 45,     /*!< TIMER7 trigger and commutation and TIMER13 interrupt     */
+    TIMER7_Channel_IRQn          = 46,     /*!< TIMER7 channel capture compare interrupt                 */
     ADC2_IRQn                    = 47,     /*!< ADC2 global interrupt                                    */
     EXMC_IRQn                    = 48,     /*!< EXMC global interrupt                                    */
     SDIO_IRQn                    = 49,     /*!< SDIO global interrupt                                    */
@@ -203,18 +230,18 @@ typedef enum IRQn
 #endif /* GD32F30X_XD */
 
 #ifdef GD32F30X_CL
-    CAN0_TX_IRQn                 = 19,     /*!< CAN0 TX interrupts                                       */
-    CAN0_RX0_IRQn                = 20,     /*!< CAN0 RX0 interrupts                                      */
-    CAN0_RX1_IRQn                = 21,     /*!< CAN0 RX1 interrupts                                      */
-    CAN0_EWMC_IRQn               = 22,     /*!< CAN0 EWMC interrupts                                     */
+    CAN0_TX_IRQn                 = 19,     /*!< CAN0 TX interrupt                                        */
+    CAN0_RX0_IRQn                = 20,     /*!< CAN0 RX0 interrupt                                       */
+    CAN0_RX1_IRQn                = 21,     /*!< CAN0 RX1 interrupt                                       */
+    CAN0_EWMC_IRQn               = 22,     /*!< CAN0 EWMC interrupt                                      */
     EXTI5_9_IRQn                 = 23,     /*!< EXTI[9:5] interrupts                                     */
-    TIMER0_BRK_TIMER8_IRQn       = 24,     /*!< TIMER0 break and TIMER8 interrupts                       */
-    TIMER0_UP_TIMER9_IRQn        = 25,     /*!< TIMER0 update and TIMER9 interrupts                      */
-    TIMER0_TRG_CMT_TIMER10_IRQn  = 26,     /*!< TIMER0 trigger and commutation  and TIMER10 interrupts   */
-    TIMER0_CC_IRQn               = 27,     /*!< TIMER0 capture compare interrupts                        */
+    TIMER0_BRK_TIMER8_IRQn       = 24,     /*!< TIMER0 break and TIMER8 interrupt                        */
+    TIMER0_UP_TIMER9_IRQn        = 25,     /*!< TIMER0 update and TIMER9 interrupt                       */
+    TIMER0_TRG_CMT_TIMER10_IRQn  = 26,     /*!< TIMER0 trigger and commutation and TIMER10 interrupt     */
+    TIMER0_Channel_IRQn          = 27,     /*!< TIMER0 channel capture compare interrupt                 */
     TIMER1_IRQn                  = 28,     /*!< TIMER1 interrupt                                         */
     TIMER2_IRQn                  = 29,     /*!< TIMER2 interrupt                                         */
-    TIMER3_IRQn                  = 30,     /*!< TIMER3 interrupts                                        */
+    TIMER3_IRQn                  = 30,     /*!< TIMER3 interrupt                                         */
     I2C0_EV_IRQn                 = 31,     /*!< I2C0 event interrupt                                     */
     I2C0_ER_IRQn                 = 32,     /*!< I2C0 error interrupt                                     */
     I2C1_EV_IRQn                 = 33,     /*!< I2C1 event interrupt                                     */
@@ -227,10 +254,10 @@ typedef enum IRQn
     EXTI10_15_IRQn               = 40,     /*!< EXTI[15:10] interrupts                                   */
     RTC_ALARM_IRQn               = 41,     /*!< RTC alarm interrupt                                      */
     USBFS_WKUP_IRQn              = 42,     /*!< USBFS wakeup interrupt                                   */
-    TIMER7_BRK_TIMER11_IRQn      = 43,     /*!< TIMER7 break and TIMER11 interrupts                      */
-    TIMER7_UP_TIMER12_IRQn       = 44,     /*!< TIMER7 update and TIMER12 interrupts                     */
-    TIMER7_TRG_CMT_TIMER13_IRQn  = 45,     /*!< TIMER7 trigger and commutation and TIMER13 interrupts    */
-    TIMER7_CC_IRQn               = 46,     /*!< TIMER7 capture compare interrupts                        */
+    TIMER7_BRK_TIMER11_IRQn      = 43,     /*!< TIMER7 break and TIMER11 interrupt                       */
+    TIMER7_UP_TIMER12_IRQn       = 44,     /*!< TIMER7 update and TIMER12 interrupt                      */
+    TIMER7_TRG_CMT_TIMER13_IRQn  = 45,     /*!< TIMER7 trigger and commutation and TIMER13 interrupt     */
+    TIMER7_Channel_IRQn          = 46,     /*!< TIMER7 channel capture compare interrupt                 */
     EXMC_IRQn                    = 48,     /*!< EXMC global interrupt                                    */
     TIMER4_IRQn                  = 50,     /*!< TIMER4 global interrupt                                  */
     SPI2_IRQn                    = 51,     /*!< SPI2 global interrupt                                    */
@@ -261,7 +288,6 @@ typedef enum IRQn
 
 /* enum definitions */
 typedef enum {DISABLE = 0, ENABLE = !DISABLE} EventStatus, ControlStatus;
-typedef enum {FALSE = 0, TRUE = !FALSE} bool;
 typedef enum {RESET = 0, SET = !RESET} FlagStatus;
 typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrStatus;
 
@@ -324,7 +350,7 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrStatus;
 #include "gd32f30x_libopt.h"
 #endif /* USE_STDPERIPH_DRIVER */
 
-#ifdef cplusplus
+#ifdef __cplusplus
 }
 #endif
 #endif 

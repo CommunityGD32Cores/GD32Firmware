@@ -1,12 +1,39 @@
 /*!
     \file  gd32f30x_gpio.h
     \brief definitions for the GPIO
+
+    \version 2017-02-10, V1.0.0, firmware for GD32F30x
+    \version 2018-10-10, V1.1.0, firmware for GD32F30x
+    \version 2018-12-25, V2.0.0, firmware for GD32F30x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2017-02-10, V1.0.1, firmware for GD32F30x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F30X_GPIO_H
@@ -250,7 +277,7 @@
 #define AFIO_PCF0_TIMER3_REMAP           BIT(12)             /*!< TIMER3 remapping */
 #define AFIO_PCF0_CAN_REMAP              BITS(13,14)         /*!< CAN remapping */
 #define AFIO_PCF0_PD01_REMAP             BIT(15)             /*!< port D0/port D1 mapping on OSC_IN/OSC_OUT */
-#define AFIO_PCF0_TIMER4CH3_REMAP        BIT(16)             /*!< TIMER4 channel3 internal remapping */
+#define AFIO_PCF0_TIMER4CH3_IREMAP       BIT(16)             /*!< TIMER4 channel3 internal remapping */
 #define AFIO_PCF0_ADC0_ETRGINS_REMAP     BIT(17)             /*!< ADC 0 external trigger inserted conversion remapping */
 #define AFIO_PCF0_ADC0_ETRGREG_REMAP     BIT(18)             /*!< ADC 0 external trigger regular conversion remapping */
 #define AFIO_PCF0_ADC1_ETRGINS_REMAP     BIT(19)             /*!< ADC 1 external trigger inserted conversion remapping */
@@ -389,65 +416,74 @@ typedef FlagStatus bit_status;
 #define GPIO_PIN_15                      BIT(15)                   /*!< GPIO pin 15 */
 #define GPIO_PIN_ALL                     BITS(0,15)                /*!< GPIO pin all */
 
+/* AFIO remap mask */
+#define PCF0_USART2_REMAP(regval)       (BITS(4,5) & ((uint32_t)(regval) << 4))                           /*!< USART2 remapping */        
+#define PCF0_TIMER0_REMAP(regval)       (BITS(6,7) & ((uint32_t)(regval) << 6))                           /*!< TIMER0 remapping */
+#define PCF0_TIMER1_REMAP(regval)       (BITS(8,9) & ((uint32_t)(regval) << 8))                           /*!< TIMER1 remapping */
+#define PCF0_TIMER2_REMAP(regval)       (BITS(10,11) & ((uint32_t)(regval) << 10))                        /*!< TIMER2 remapping */
+#define PCF0_CAN_REMAP(regval)          (BITS(13,14) & ((uint32_t)(regval) << 13))                        /*!< CAN remapping */
+#define PCF0_SWJ_CFG(regval)            (BITS(24,26) & ((uint32_t)(regval) << 24))                        /*!< serial wire JTAG configuration */
+#define PCF1_CTC_REMAP(regval)          (BITS(11,12) & ((uint32_t)(regval) << 11))                        /*!< CTC remapping */
+
 /* GPIO remap definitions */
-#define GPIO_SPI0_REMAP                  ((uint32_t)0x00000001U)   /*!< SPI0 remapping */
-#define GPIO_I2C0_REMAP                  ((uint32_t)0x00000002U)   /*!< I2C0 remapping */
-#define GPIO_USART0_REMAP                ((uint32_t)0x00000004U)   /*!< USART0 remapping */
-#define GPIO_USART1_REMAP                ((uint32_t)0x00000008U)   /*!< USART1 remapping */
-#define GPIO_USART2_PARTIAL_REMAP        ((uint32_t)0x00140010U)   /*!< USART2 partial remapping */
-#define GPIO_USART2_FULL_REMAP           ((uint32_t)0x00140030U)   /*!< USART2 full remapping */
-#define GPIO_TIMER0_PARTIAL_REMAP        ((uint32_t)0x00160040U)   /*!< TIMER0 partial remapping */
-#define GPIO_TIMER0_FULL_REMAP           ((uint32_t)0x001600C0U)   /*!< TIMER0 full remapping */
-#define GPIO_TIMER1_PARTIAL_REMAP0       ((uint32_t)0x00180100U)   /*!< TIMER1 partial remapping */
-#define GPIO_TIMER1_PARTIAL_REMAP1       ((uint32_t)0x00180200U)   /*!< TIMER1 partial remapping */
-#define GPIO_TIMER1_FULL_REMAP           ((uint32_t)0x00180300U)   /*!< TIMER1 full remapping */
-#define GPIO_TIMER2_PARTIAL_REMAP        ((uint32_t)0x001A0800U)   /*!< TIMER2 partial remapping */
-#define GPIO_TIMER2_FULL_REMAP           ((uint32_t)0x001A0C00U)   /*!< TIMER2 full remapping */
-#define GPIO_TIMER3_REMAP                ((uint32_t)0x00001000U)   /*!< TIMER3 remapping */
-#define GPIO_PD01_REMAP                  ((uint32_t)0x00008000U)   /*!< PD01 remapping */
+#define GPIO_SPI0_REMAP                  AFIO_PCF0_SPI0_REMAP                                             /*!< SPI0 remapping */
+#define GPIO_I2C0_REMAP                  AFIO_PCF0_I2C0_REMAP                                             /*!< I2C0 remapping */
+#define GPIO_USART0_REMAP                AFIO_PCF0_USART0_REMAP                                           /*!< USART0 remapping */
+#define GPIO_USART1_REMAP                AFIO_PCF0_USART1_REMAP                                           /*!< USART1 remapping */
+#define GPIO_USART2_PARTIAL_REMAP        ((uint32_t)0x00140000U | PCF0_USART2_REMAP(1))                   /*!< USART2 partial remapping */
+#define GPIO_USART2_FULL_REMAP           ((uint32_t)0x00140000U | PCF0_USART2_REMAP(3))                   /*!< USART2 full remapping */
+#define GPIO_TIMER0_PARTIAL_REMAP        ((uint32_t)0x00160000U | PCF0_TIMER0_REMAP(1))                   /*!< TIMER0 partial remapping */
+#define GPIO_TIMER0_FULL_REMAP           ((uint32_t)0x00160000U | PCF0_TIMER0_REMAP(3))                   /*!< TIMER0 full remapping */
+#define GPIO_TIMER1_PARTIAL_REMAP0       ((uint32_t)0x00180000U | PCF0_TIMER1_REMAP(1))                   /*!< TIMER1 partial remapping */
+#define GPIO_TIMER1_PARTIAL_REMAP1       ((uint32_t)0x00180000U | PCF0_TIMER1_REMAP(2))                   /*!< TIMER1 partial remapping */
+#define GPIO_TIMER1_FULL_REMAP           ((uint32_t)0x00180000U | PCF0_TIMER1_REMAP(3))                   /*!< TIMER1 full remapping */
+#define GPIO_TIMER2_PARTIAL_REMAP        ((uint32_t)0x001A0000U | PCF0_TIMER2_REMAP(2))                   /*!< TIMER2 partial remapping */
+#define GPIO_TIMER2_FULL_REMAP           ((uint32_t)0x001A0000U | PCF0_TIMER2_REMAP(3))                   /*!< TIMER2 full remapping */
+#define GPIO_TIMER3_REMAP                AFIO_PCF0_TIMER3_REMAP                                           /*!< TIMER3 remapping */
+#define GPIO_PD01_REMAP                  AFIO_PCF0_PD01_REMAP                                             /*!< PD01 remapping */
 #if (defined(GD32F30X_HD) || defined(GD32F30X_XD))
-#define GPIO_CAN_PARTIAL_REMAP           ((uint32_t)0x001D4000U)   /*!< CAN partial remapping(only for GD32F30X_HD devices and GD32F30X_XD devices) */
-#define GPIO_CAN_FULL_REMAP              ((uint32_t)0x001D6000U)   /*!< CAN full remapping(only for GD32F30X_HD devices and GD32F30X_XD devices) */
+#define GPIO_CAN_PARTIAL_REMAP           ((uint32_t)0x001D0000U | PCF0_CAN_REMAP(2))                      /*!< CAN partial remapping(only for GD32F30X_HD devices and GD32F30X_XD devices) */
+#define GPIO_CAN_FULL_REMAP              ((uint32_t)0x001D0000U | PCF0_CAN_REMAP(3))                      /*!< CAN full remapping(only for GD32F30X_HD devices and GD32F30X_XD devices) */
 #endif /* GD32F30X_HD||GD32F30X_XD */
 #if (defined(GD32F30X_CL) || defined(GD32F30X_HD))
-#define GPIO_TIMER4CH3_IREMAP            ((uint32_t)0x00200001U)   /*!< TIMER4 channel3 internal remapping(only for GD32F30X_CL devices and GD32F30X_HD devices) */
+#define GPIO_TIMER4CH3_IREMAP            ((uint32_t)0x00200000U | (AFIO_PCF0_TIMER4CH3_IREMAP >> 16))     /*!< TIMER4 channel3 internal remapping(only for GD32F30X_CL devices and GD32F30X_HD devices) */
 #endif /* GD32F30X_CL||GD32F30X_HD */
 #if (defined(GD32F30X_HD) || defined(GD32F30X_XD))
-#define GPIO_ADC0_ETRGINS_REMAP          ((uint32_t)0x00200002U)   /*!< ADC0 external trigger inserted conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices) */
-#define GPIO_ADC0_ETRGREG_REMAP          ((uint32_t)0x00200004U)   /*!< ADC0 external trigger regular conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices) */
-#define GPIO_ADC1_ETRGINS_REMAP          ((uint32_t)0x00200008U)   /*!< ADC1 external trigger inserted conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices) */
-#define GPIO_ADC1_ETRGREG_REMAP          ((uint32_t)0x00200010U)   /*!< ADC1 external trigger regular conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices) */
+#define GPIO_ADC0_ETRGINS_REMAP          ((uint32_t)0x00200000U | (AFIO_PCF0_ADC0_ETRGINS_REMAP >> 16))   /*!< ADC0 external trigger inserted conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices) */
+#define GPIO_ADC0_ETRGREG_REMAP          ((uint32_t)0x00200000U | (AFIO_PCF0_ADC0_ETRGREG_REMAP >> 16))   /*!< ADC0 external trigger regular conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices) */
+#define GPIO_ADC1_ETRGINS_REMAP          ((uint32_t)0x00200000U | (AFIO_PCF0_ADC1_ETRGINS_REMAP >> 16))   /*!< ADC1 external trigger inserted conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices) */
+#define GPIO_ADC1_ETRGREG_REMAP          ((uint32_t)0x00200000U | (AFIO_PCF0_ADC1_ETRGREG_REMAP >> 16))   /*!< ADC1 external trigger regular conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices) */
 #endif /* GD32F30X_HD||GD32F30X_XD */
-#define GPIO_SWJ_NONJTRST_REMAP          ((uint32_t)0x00300100U)   /*!< full SWJ(JTAG-DP + SW-DP),but without NJTRST */
-#define GPIO_SWJ_SWDPENABLE_REMAP        ((uint32_t)0x00300200U)   /*!< JTAG-DP disabled and SW-DP enabled */
-#define GPIO_SWJ_DISABLE_REMAP           ((uint32_t)0x00300400U)   /*!< JTAG-DP disabled and SW-DP disabled */
+#define GPIO_SWJ_NONJTRST_REMAP          ((uint32_t)0x00300000U | (PCF0_SWJ_CFG(1) >> 16))                /*!< full SWJ(JTAG-DP + SW-DP),but without NJTRST */
+#define GPIO_SWJ_SWDPENABLE_REMAP        ((uint32_t)0x00300000U | (PCF0_SWJ_CFG(2) >> 16))                /*!< JTAG-DP disabled and SW-DP enabled */
+#define GPIO_SWJ_DISABLE_REMAP           ((uint32_t)0x00300000U | (PCF0_SWJ_CFG(4) >> 16))                /*!< JTAG-DP disabled and SW-DP disabled */
 #ifdef GD32F30X_CL
-#define GPIO_CAN0_PARTIAL_REMAP          ((uint32_t)0x001D4000U)   /*!< CAN0 partial remapping(only for GD32F30X_CL devices) */
-#define GPIO_CAN0_FULL_REMAP             ((uint32_t)0x001D6000U)   /*!< CAN0 full remapping(only for GD32F30X_CL devices) */
-#define GPIO_ENET_REMAP                  ((uint32_t)0x00200020U)   /*!< ENET remapping(only for GD32F30X_CL devices) */
-#define GPIO_CAN1_REMAP                  ((uint32_t)0x00200040U)   /*!< CAN1 remapping(only for GD32F30X_CL devices) */
-#define GPIO_SPI2_REMAP                  ((uint32_t)0x00201100U)   /*!< SPI2 remapping(only for GD32F30X_CL devices) */
-#define GPIO_TIMER1ITR0_REMAP            ((uint32_t)0x00202000U)   /*!< TIMER1 internal trigger 0 remapping(only for GD32F30X_CL devices) */
-#define GPIO_PTP_PPS_REMAP               ((uint32_t)0x00204000U)   /*!< ethernet PTP PPS remapping(only for GD32F30X_CL devices) */
+#define GPIO_CAN0_PARTIAL_REMAP          ((uint32_t)0x001D0000U | PCF0_CAN_REMAP(2))                      /*!< CAN0 partial remapping(only for GD32F30X_CL devices) */
+#define GPIO_CAN0_FULL_REMAP             ((uint32_t)0x001D0000U | PCF0_CAN_REMAP(3))                      /*!< CAN0 full remapping(only for GD32F30X_CL devices) */
+#define GPIO_ENET_REMAP                  ((uint32_t)0x00200000U | (AFIO_PCF0_ENET_REMAP >> 16))           /*!< ENET remapping(only for GD32F30X_CL devices) */
+#define GPIO_CAN1_REMAP                  ((uint32_t)0x00200000U | (AFIO_PCF0_CAN1_REMAP >> 16))           /*!< CAN1 remapping(only for GD32F30X_CL devices) */
+#define GPIO_SPI2_REMAP                  ((uint32_t)0x00200000U | (AFIO_PCF0_SPI2_REMAP >> 16))           /*!< SPI2 remapping(only for GD32F30X_CL devices) */
+#define GPIO_TIMER1ITR0_REMAP            ((uint32_t)0x00200000U | (AFIO_PCF0_TIMER1ITR0_REMAP >> 16))     /*!< TIMER1 internal trigger 0 remapping(only for GD32F30X_CL devices) */
+#define GPIO_PTP_PPS_REMAP               ((uint32_t)0x00200000U | (AFIO_PCF0_PTP_PPS_REMAP >> 16))        /*!< ethernet PTP PPS remapping(only for GD32F30X_CL devices) */
 #endif /* GD32F30X_CL */
-#define GPIO_TIMER8_REMAP                ((uint32_t)0x80000020U)   /*!< TIMER8 remapping */
-#define GPIO_TIMER9_REMAP                ((uint32_t)0x80000040U)   /*!< TIMER9 remapping */
-#define GPIO_TIMER10_REMAP               ((uint32_t)0x80000080U)   /*!< TIMER10 remapping */
-#define GPIO_TIMER12_REMAP               ((uint32_t)0x80000100U)   /*!< TIMER12 remapping */
-#define GPIO_TIMER13_REMAP               ((uint32_t)0x80000200U)   /*!< TIMER13 remapping */
-#define GPIO_EXMC_NADV_REMAP             ((uint32_t)0x80000400U)   /*!< EXMC_NADV connect/disconnect */
-#define GPIO_CTC_REMAP0                  ((uint32_t)0x801B0800U)   /*!< CTC remapping(PD15)*/
-#define GPIO_CTC_REMAP1                  ((uint32_t)0x801B1000U)   /*!< CTC remapping(PF0) */
+#define GPIO_TIMER8_REMAP                ((uint32_t)0x80000000U | AFIO_PCF1_TIMER8_REMAP)                 /*!< TIMER8 remapping */
+#define GPIO_TIMER9_REMAP                ((uint32_t)0x80000000U | AFIO_PCF1_TIMER9_REMAP)                /*!< TIMER9 remapping */
+#define GPIO_TIMER10_REMAP               ((uint32_t)0x80000000U | AFIO_PCF1_TIMER10_REMAP)                /*!< TIMER10 remapping */
+#define GPIO_TIMER12_REMAP               ((uint32_t)0x80000000U | AFIO_PCF1_TIMER12_REMAP)                /*!< TIMER12 remapping */
+#define GPIO_TIMER13_REMAP               ((uint32_t)0x80000000U | AFIO_PCF1_TIMER13_REMAP)                /*!< TIMER13 remapping */
+#define GPIO_EXMC_NADV_REMAP             ((uint32_t)0x80000000U | AFIO_PCF1_EXMC_NADV)                    /*!< EXMC_NADV connect/disconnect */
+#define GPIO_CTC_REMAP0                  ((uint32_t)0x801B0000U | PCF1_CTC_REMAP(1))                      /*!< CTC remapping(PD15) */
+#define GPIO_CTC_REMAP1                  ((uint32_t)0x801B0000U | PCF1_CTC_REMAP(2))                      /*!< CTC remapping(PF0) */
 
 #ifdef GD32F30X_CL
 /* ethernet MII or RMII PHY selection */
-#define GPIO_ENET_PHY_MII                ((uint32_t)0x00000000U)   /*!< configure ethernet MAC for connection with an MII PHY */
-#define GPIO_ENET_PHY_RMII               AFIO_PCF0_ENET_PHY_SEL    /*!< configure ethernet MAC for connection with an RMII PHY */
+#define GPIO_ENET_PHY_MII                ((uint32_t)0x00000000U)                                          /*!< configure ethernet MAC for connection with an MII PHY */
+#define GPIO_ENET_PHY_RMII               AFIO_PCF0_ENET_PHY_SEL                                           /*!< configure ethernet MAC for connection with an RMII PHY */
 #endif /* GD32F30X_CL */
 
 /* I/O compensation cell enable/disable */
-#define GPIO_COMPENSATION_ENABLE         AFIO_CPSCTL_CPS_EN        /*!< I/O compensation cell is enable */
-#define GPIO_COMPENSATION_DISABLE        ((uint32_t)0x00000000U)   /*!< I/O compensation cell is disable */
+#define GPIO_COMPENSATION_ENABLE         AFIO_CPSCTL_CPS_EN                                               /*!< I/O compensation cell is enable */
+#define GPIO_COMPENSATION_DISABLE        ((uint32_t)0x00000000U)                                          /*!< I/O compensation cell is disable */
 
 /* function declarations */
 /* reset GPIO port */
@@ -474,9 +510,16 @@ uint16_t gpio_input_port_get(uint32_t gpio_periph);
 FlagStatus gpio_output_bit_get(uint32_t gpio_periph, uint32_t pin);
 /* get GPIO port output status */
 uint16_t gpio_output_port_get(uint32_t gpio_periph);
+/* configure GPIO pin remap */
+void gpio_pin_remap_config(uint32_t remap, ControlStatus newvalue);
 
-/* lock GPIO pin bit */
-void gpio_pin_lock(uint32_t gpio_periph, uint32_t pin);
+#ifdef GD32F30X_CL
+/* select ethernet MII or RMII PHY */
+void gpio_ethernet_phy_select(uint32_t enet_sel);
+#endif /* GD32F30X_CL */
+
+/* select GPIO pin exti sources */
+void gpio_exti_source_select(uint8_t output_port, uint8_t output_pin);
 
 /* configure GPIO pin event output */
 void gpio_event_output_config(uint8_t output_port, uint8_t output_pin);
@@ -485,17 +528,8 @@ void gpio_event_output_enable(void);
 /* disable GPIO pin event output */
 void gpio_event_output_disable(void);
 
-/* select GPIO pin exti sources */
-void gpio_exti_source_select(uint8_t output_port, uint8_t output_pin);
-
-#ifdef GD32F30X_CL
-/* select ethernet MII or RMII PHY */
-void gpio_ethernet_phy_select(uint32_t enet_sel);
-#endif /* GD32F30X_CL */
-
-/* configure GPIO pin remap */
-void gpio_pin_remap_config(uint32_t gpio_remap, ControlStatus newvalue);
-
+/* lock GPIO pin bit */
+void gpio_pin_lock(uint32_t gpio_periph, uint32_t pin);
 /* configure the I/O compensation cell */
 void gpio_compensation_config(uint32_t compensation); 
 /* check the I/O compensation cell is ready or not */

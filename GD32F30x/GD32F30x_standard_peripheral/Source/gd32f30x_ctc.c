@@ -1,17 +1,50 @@
 /*!
     \file  gd32f30x_ctc.c
     \brief CTC driver
+
+    \version 2017-02-10, V1.0.0, firmware for GD32F30x
+    \version 2018-10-10, V1.1.0, firmware for GD32F30x
+    \version 2018-12-25, V2.0.0, firmware for GD32F30x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2017-02-10, V1.0.1, firmware for GD32F30x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "gd32f30x_ctc.h"
 
 #define CTC_FLAG_MASK            ((uint32_t)0x00000700U)
+
+/* CTC register bit offset */
+#define CTC_TRIMVALUE_OFFSET     ((uint32_t)8U)
+#define CTC_TRIM_VALUE_OFFSET    ((uint32_t)8U)
+#define CTC_REFCAP_OFFSET        ((uint32_t)16U)
+#define CTC_LIMIT_VALUE_OFFSET   ((uint32_t)16U)
 
 /*!
     \brief      reset CTC clock trim controller
@@ -26,44 +59,7 @@ void ctc_deinit(void)
     rcu_periph_reset_disable(RCU_CTCRST);
 }
 
-/*!
-    \brief      configure the IRC48M trim value
-    \param[in]  ctc_trim_value: 8-bit IRC48M trim value
-    \param[out] none
-    \retval     none
-*/
-void ctc_irc48m_trim_value_config(uint8_t ctc_trim_value)
-{
-    /* clear TRIMVALUE bits */
-    CTC_CTL0 &= (~(uint32_t)CTC_CTL0_TRIMVALUE);
-    /* set TRIMVALUE bits */
-    CTC_CTL0 |= ((uint32_t)ctc_trim_value << 8);
-}
 
-/*!
-    \brief      generate software reference source sync pulse
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-void ctc_software_refsource_pulse_generate(void)
-{
-    CTC_CTL0 |= (uint32_t)CTC_CTL0_SWREFPUL;
-}
-
-/*!
-    \brief      configure hardware automatically trim mode
-    \param[in]  ctc_hardmode:
-      \arg        CTC_HARDWARE_TRIM_MODE_ENABLE: hardware automatically trim mode enable
-      \arg        CTC_HARDWARE_TRIM_MODE_DISABLE: hardware automatically trim mode disable
-    \param[out] none
-    \retval     none
-*/
-void ctc_hardware_trim_mode_config(uint32_t ctc_hardmode)
-{
-    CTC_CTL0 &= (uint32_t)(~CTC_CTL0_AUTOTRIM);
-    CTC_CTL0 |= (uint32_t)ctc_hardmode;
-}
 
 /*!
     \brief      enable CTC trim counter
@@ -88,37 +84,80 @@ void ctc_counter_disable(void)
 }
 
 /*!
+    \brief      configure the IRC48M trim value
+    \param[in]  ctc_trim_value: 8-bit IRC48M trim value
+      \arg        0x00 - 0x3F
+    \param[out] none
+    \retval     none
+*/
+void ctc_irc48m_trim_value_config(uint8_t trim_value)
+{
+    /* clear TRIMVALUE bits */
+    CTC_CTL0 &= (~(uint32_t)CTC_CTL0_TRIMVALUE);
+    /* set TRIMVALUE bits */
+    CTC_CTL0 |= ((uint32_t)trim_value << CTC_TRIM_VALUE_OFFSET);
+}
+
+/*!
+    \brief      generate software reference source sync pulse
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void ctc_software_refsource_pulse_generate(void)
+{
+    CTC_CTL0 |= (uint32_t)CTC_CTL0_SWREFPUL;
+}
+
+/*!
+    \brief      configure hardware automatically trim mode
+    \param[in]  hardmode:
+                only one parameter can be selected which is shown as below:
+      \arg        CTC_HARDWARE_TRIM_MODE_ENABLE: hardware automatically trim mode enable
+      \arg        CTC_HARDWARE_TRIM_MODE_DISABLE: hardware automatically trim mode disable
+    \param[out] none
+    \retval     none
+*/
+void ctc_hardware_trim_mode_config(uint32_t hardmode)
+{
+    CTC_CTL0 &= (uint32_t)(~CTC_CTL0_AUTOTRIM);
+    CTC_CTL0 |= (uint32_t)hardmode;
+}
+/*!
     \brief      configure reference signal source polarity
-    \param[in]  ctc_polarity:
+    \param[in]  polarity:
+                only one parameter can be selected which is shown as below:
       \arg        CTC_REFSOURCE_POLARITY_FALLING: reference signal source polarity is falling edge
       \arg        CTC_REFSOURCE_POLARITY_RISING: reference signal source polarity is rising edge
     \param[out] none
     \retval     none
 */
-void ctc_refsource_polarity_config(uint32_t ctc_polarity)
+void ctc_refsource_polarity_config(uint32_t polarity)
 {
     CTC_CTL1 &= (uint32_t)(~CTC_CTL1_REFPOL);
-    CTC_CTL1 |= (uint32_t)ctc_polarity;
+    CTC_CTL1 |= (uint32_t)polarity;
 }
 
 /*!
     \brief      select reference signal source
-    \param[in]  ctc_refs:
+    \param[in]  refs:
+                only one parameter can be selected which is shown as below:
       \arg        CTC_REFSOURCE_GPIO: GPIO is selected
-      \arg        CTC_REFSOURCE_LXTAL: LXTAL is clock selected
-      \arg        CTC_REFSOURCE_USBSOF: USBSOF is selected
+      \arg        CTC_REFSOURCE_LXTAL: LXTAL is selected
+      \arg        CTC_REFSOURCE_USBSOF: USBD_SOF or USBFS_SOF is selected
     \param[out] none
     \retval     none
 */
-void ctc_refsource_signal_select(uint32_t ctc_refs)
+void ctc_refsource_signal_select(uint32_t refs)
 {
     CTC_CTL1 &= (uint32_t)(~CTC_CTL1_REFSEL);
-    CTC_CTL1 |= (uint32_t)ctc_refs;
+    CTC_CTL1 |= (uint32_t)refs;
 }
 
 /*!
     \brief      configure reference signal source prescaler
-    \param[in]  ctc_prescaler:
+    \param[in]  prescaler:
+                only one parameter can be selected which is shown as below:
       \arg        CTC_REFSOURCE_PSC_OFF: reference signal not divided
       \arg        CTC_REFSOURCE_PSC_DIV2: reference signal divided by 2
       \arg        CTC_REFSOURCE_PSC_DIV4: reference signal divided by 4
@@ -130,34 +169,36 @@ void ctc_refsource_signal_select(uint32_t ctc_refs)
     \param[out] none
     \retval     none
 */
-void ctc_refsource_prescaler_config(uint32_t ctc_prescaler)
+void ctc_refsource_prescaler_config(uint32_t prescaler)
 {
     CTC_CTL1 &= (uint32_t)(~CTC_CTL1_REFPSC);
-    CTC_CTL1 |= (uint32_t)ctc_prescaler;
+    CTC_CTL1 |= (uint32_t)prescaler;
 }
 
 /*!
     \brief      configure clock trim base limit value
-    \param[in]  ctc_limit_value: 8-bit clock trim base limit value
+    \param[in]  limit_value: 8-bit clock trim base limit value
+      \arg        0x00 - 0xFF
     \param[out] none
     \retval     none
 */
-void ctc_clock_limit_value_config(uint8_t ctc_limit_value)
+void ctc_clock_limit_value_config(uint8_t limit_value)
 {
     CTC_CTL1 &= (uint32_t)(~CTC_CTL1_CKLIM);
-    CTC_CTL1 |= (uint32_t)((uint32_t)ctc_limit_value << 16);
+    CTC_CTL1 |= (uint32_t)((uint32_t)limit_value << CTC_LIMIT_VALUE_OFFSET);
 }
 
 /*!
     \brief      configure CTC counter reload value
-    \param[in]  ctc_reload_value: 16-bit CTC counter reload value
+    \param[in]  reload_value: 16-bit CTC counter reload value
+      \arg        0x0000 - 0xFFFF
     \param[out] none
     \retval     none
 */
-void ctc_counter_reload_value_config(uint16_t ctc_reload_value)
+void ctc_counter_reload_value_config(uint16_t reload_value)
 {
     CTC_CTL1 &= (uint32_t)(~CTC_CTL1_RLVALUE);
-    CTC_CTL1 |= (uint32_t)ctc_reload_value;
+    CTC_CTL1 |= (uint32_t)reload_value;
 }
 
 /*!
@@ -169,7 +210,7 @@ void ctc_counter_reload_value_config(uint16_t ctc_reload_value)
 uint16_t ctc_counter_capture_value_read(void)
 {
     uint16_t capture_value = 0U;
-    capture_value = (uint16_t)((CTC_STAT & CTC_STAT_REFCAP)>> 16);
+    capture_value = (uint16_t)((CTC_STAT & CTC_STAT_REFCAP)>> CTC_REFCAP_OFFSET);
     return (capture_value);
 }
 
@@ -212,13 +253,14 @@ uint16_t ctc_counter_reload_value_read(void)
 uint8_t ctc_irc48m_trim_value_read(void)
 {
     uint8_t trim_value = 0U;
-    trim_value = (uint8_t)((CTC_CTL0 & CTC_CTL0_TRIMVALUE) >> 8);
+    trim_value = (uint8_t)((CTC_CTL0 & CTC_CTL0_TRIMVALUE) >> CTC_TRIMVALUE_OFFSET);
     return (trim_value);
 }
 
 /*!
     \brief      enable the CTC interrupt
-    \param[in]  ctc_interrupt: CTC interrupt enable
+    \param[in]  interrupt: CTC interrupt enable
+                one or more parameters can be selected which are shown as below:
       \arg        CTC_INT_CKOK: clock trim OK interrupt enable
       \arg        CTC_INT_CKWARN: clock trim warning interrupt enable
       \arg        CTC_INT_ERR: error interrupt enable
@@ -226,14 +268,15 @@ uint8_t ctc_irc48m_trim_value_read(void)
     \param[out] none
     \retval     none
 */
-void ctc_interrupt_enable(uint32_t ctc_interrupt)
+void ctc_interrupt_enable(uint32_t interrupt)
 {
-    CTC_CTL0 |= (uint32_t)ctc_interrupt; 
+    CTC_CTL0 |= (uint32_t)interrupt; 
 }
 
 /*!
     \brief      disable the CTC interrupt
-    \param[in]  ctc_interrupt: CTC interrupt enable source
+    \param[in]  interrupt: CTC interrupt enable source
+                one or more parameters can be selected which are shown as below:
       \arg        CTC_INT_CKOK: clock trim OK interrupt enable
       \arg        CTC_INT_CKWARN: clock trim warning interrupt enable
       \arg        CTC_INT_ERR: error interrupt enable
@@ -241,14 +284,15 @@ void ctc_interrupt_enable(uint32_t ctc_interrupt)
     \param[out] none
     \retval     none
 */
-void ctc_interrupt_disable(uint32_t ctc_interrupt)
+void ctc_interrupt_disable(uint32_t interrupt)
 {
-    CTC_CTL0 &= (uint32_t)(~ctc_interrupt); 
+    CTC_CTL0 &= (uint32_t)(~interrupt); 
 }
 
 /*!
     \brief      get CTC interrupt flag
-    \param[in]  ctc_interrupt: the CTC interrupt flag
+    \param[in]  int_flag: the CTC interrupt flag
+                only one parameter can be selected which is shown as below:
       \arg        CTC_INT_FLAG_CKOK: clock trim OK interrupt
       \arg        CTC_INT_FLAG_CKWARN: clock trim warning interrupt 
       \arg        CTC_INT_FLAG_ERR: error interrupt 
@@ -259,18 +303,21 @@ void ctc_interrupt_disable(uint32_t ctc_interrupt)
     \param[out] none
     \retval     FlagStatus: SET or RESET
 */
-FlagStatus ctc_interrupt_flag_get(uint32_t ctc_interrupt)
+FlagStatus ctc_interrupt_flag_get(uint32_t int_flag)
 {
-    uint32_t interrupt = 0U, intenable = 0U;
-
-    if(ctc_interrupt & CTC_FLAG_MASK){
+    uint32_t interrupt_flag = 0U, intenable = 0U;
+    
+    /* check whether the interrupt is enabled */
+    if(RESET != (int_flag & CTC_FLAG_MASK)){
         intenable = CTC_CTL0 & CTC_CTL0_ERRIE;
     }else{
-        intenable = CTC_CTL0 & ctc_interrupt;
+        intenable = CTC_CTL0 & int_flag;
     }
-    interrupt = CTC_STAT & ctc_interrupt;
+    
+    /* get interrupt flag status */
+    interrupt_flag = CTC_STAT & int_flag;
 
-    if(interrupt && intenable){
+    if(interrupt_flag && intenable){
         return SET;
     }else{
         return RESET;
@@ -279,7 +326,8 @@ FlagStatus ctc_interrupt_flag_get(uint32_t ctc_interrupt)
 
 /*!
     \brief      clear CTC interrupt flag
-    \param[in]  ctc_interrupt: the CTC interrupt flag
+    \param[in]  int_flag: the CTC interrupt flag
+                only one parameter can be selected which is shown as below:
       \arg        CTC_INT_FLAG_CKOK: clock trim OK interrupt
       \arg        CTC_INT_FLAG_CKWARN: clock trim warning interrupt 
       \arg        CTC_INT_FLAG_ERR: error interrupt 
@@ -290,18 +338,19 @@ FlagStatus ctc_interrupt_flag_get(uint32_t ctc_interrupt)
     \param[out] none
     \retval     none
 */ 
-void ctc_interrupt_flag_clear(uint32_t ctc_interrupt)
+void ctc_interrupt_flag_clear(uint32_t int_flag)
 {
-    if(ctc_interrupt & CTC_FLAG_MASK){
+    if(RESET != (int_flag & CTC_FLAG_MASK)){
         CTC_INTC |= CTC_INTC_ERRIC;
     }else{
-        CTC_INTC |= ctc_interrupt;
+        CTC_INTC |= int_flag;
     }
 }
 
 /*!
     \brief      get CTC flag
-    \param[in]  ctc_flag: the CTC flag
+    \param[in]  flag: the CTC flag
+                only one parameter can be selected which is shown as below: 
       \arg        CTC_FLAG_CKOK: clock trim OK flag
       \arg        CTC_FLAG_CKWARN: clock trim warning flag 
       \arg        CTC_FLAG_ERR: error flag 
@@ -312,9 +361,9 @@ void ctc_interrupt_flag_clear(uint32_t ctc_interrupt)
     \param[out] none
     \retval     FlagStatus: SET or RESET
 */
-FlagStatus ctc_flag_get(uint32_t ctc_flag)
+FlagStatus ctc_flag_get(uint32_t flag)
 {
-    if(RESET != (CTC_STAT & ctc_flag)){
+    if(RESET != (CTC_STAT & flag)){
         return SET;
     }else{
         return RESET;
@@ -323,7 +372,8 @@ FlagStatus ctc_flag_get(uint32_t ctc_flag)
 
 /*!
     \brief      clear CTC flag
-    \param[in]  ctc_flag: the CTC flag
+    \param[in]  flag: the CTC flag
+                only one parameter can be selected which is shown as below:
       \arg        CTC_FLAG_CKOK: clock trim OK flag
       \arg        CTC_FLAG_CKWARN: clock trim warning flag 
       \arg        CTC_FLAG_ERR: error flag 
@@ -334,11 +384,11 @@ FlagStatus ctc_flag_get(uint32_t ctc_flag)
     \param[out] none
     \retval     none
 */
-void ctc_flag_clear(uint32_t ctc_flag)
+void ctc_flag_clear(uint32_t flag)
 {
-    if(ctc_flag & CTC_FLAG_MASK){
+    if(RESET != (flag & CTC_FLAG_MASK)){
         CTC_INTC |= CTC_INTC_ERRIC;
     }else{
-        CTC_INTC |= ctc_flag;
+        CTC_INTC |= flag;
     }
 }

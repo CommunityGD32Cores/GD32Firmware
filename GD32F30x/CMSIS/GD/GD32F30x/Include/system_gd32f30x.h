@@ -30,7 +30,6 @@
    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
    POSSIBILITY OF SUCH DAMAGE.
    ---------------------------------------------------------------------------*/
-
 /* This file refers the CMSIS standard, some adjustments are made according to GigaDevice chips */
 
 #ifndef SYSTEM_GD32F30X_H

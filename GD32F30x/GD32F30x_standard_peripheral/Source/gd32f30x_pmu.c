@@ -1,13 +1,41 @@
 /*!
     \file  gd32f30x_pmu.c
     \brief PMU driver
+
+   \version 2017-02-10, V1.0.0, firmware for GD32F30x
+   \version 2018-10-10, V1.1.0, firmware for GD32F30x
+   \version 2018-12-25, V2.0.0, firmware for GD32F30x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2017-02-10, V1.0.0, firmware for GD32F30x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
+
 
 #include "gd32f30x_pmu.h"
 
@@ -54,9 +82,9 @@ void pmu_lvd_select(uint32_t lvdt_n)
     \brief      select LDO output voltage
                 this bit set by software when the main PLL closed, before closing PLL, change the system clock to IRC16M or HXTAL
     \param[in]  ldo_output:
-      \arg        PMU_LDOVS_LOW: low-driver mode enable in deep-sleep mode
-      \arg        PMU_LDOVS_MID: low-driver mode disable in deep-sleep mode
-      \arg        PMU_LDOVS_HIGH: low-driver mode disable in deep-sleep mode
+      \arg        PMU_LDOVS_LOW: LDO output voltage low mode
+      \arg        PMU_LDOVS_MID: LDO output voltage mid mode
+      \arg        PMU_LDOVS_HIGH: LDO output voltage high mode
     \param[out] none
     \retval     none
 */
@@ -64,6 +92,18 @@ void pmu_ldo_output_select(uint32_t ldo_output)
 {
     PMU_CTL &= ~PMU_CTL_LDOVS;
     PMU_CTL |= ldo_output;
+}
+
+/*!
+    \brief      disable PMU lvd
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void pmu_lvd_disable(void)
+{
+    /* disable LVD */
+    PMU_CTL &= ~PMU_CTL_LVDEN;
 }
 
 /*!
@@ -82,28 +122,6 @@ void pmu_highdriver_switch_select(uint32_t highdr_switch)
     }
     PMU_CTL &= ~PMU_CTL_HDS;
     PMU_CTL |= highdr_switch;
-}
-
-/*!
-    \brief      enable low-driver mode in deep-sleep mode
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-void pmu_lowdriver_mode_enable(void)
-{
-    PMU_CTL |= PMU_CTL_LDEN;
-}
-
-/*!
-    \brief      disable low-driver mode in deep-sleep mode
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-void pmu_lowdriver_mode_disable(void)
-{
-    PMU_CTL &= ~PMU_CTL_LDEN;
 }
 
 /*!
@@ -130,15 +148,25 @@ void pmu_highdriver_mode_disable(void)
 }
 
 /*!
-    \brief      disable PMU lvd
+    \brief      enable low-driver mode in deep-sleep mode
     \param[in]  none
     \param[out] none
     \retval     none
 */
-void pmu_lvd_disable(void)
+void pmu_lowdriver_mode_enable(void)
 {
-    /* disable LVD */
-    PMU_CTL &= ~PMU_CTL_LVDEN;
+    PMU_CTL |= PMU_CTL_LDEN;
+}
+
+/*!
+    \brief      disable low-driver mode in deep-sleep mode
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void pmu_lowdriver_mode_disable(void)
+{
+    PMU_CTL &= ~PMU_CTL_LDEN;
 }
 
 /*!
@@ -158,8 +186,8 @@ void pmu_lowpower_driver_config(uint32_t mode)
 /*!
     \brief      driver mode when use normal power LDO
     \param[in]  mode:
-      \arg        PMU_NORMALDR_NORMALPWR:  normal driver when use low power LDO
-      \arg        PMU_LOWDR_NORMALPWR:  low-driver mode enabled when LDEN is 11 and use low power LDO
+      \arg        PMU_NORMALDR_NORMALPWR:  normal driver when use normal power LDO
+      \arg        PMU_LOWDR_NORMALPWR:  low-driver mode enabled when LDEN is 11 and use normal power LDO
     \param[out] none
     \retval     none
 */
@@ -252,6 +280,50 @@ void pmu_to_standbymode(uint8_t standbymodecmd)
 }
 
 /*!
+    \brief      enable backup domain write
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void pmu_backup_write_enable(void)
+{
+    PMU_CTL |= PMU_CTL_BKPWEN;
+}
+
+/*!
+    \brief      disable backup domain write
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void pmu_backup_write_disable(void)
+{
+    PMU_CTL &= ~PMU_CTL_BKPWEN;
+}
+
+/*!
+    \brief      enable wakeup pin
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void pmu_wakeup_pin_enable(void)
+{
+    PMU_CS |= PMU_CS_WUPEN;
+}
+
+/*!
+    \brief      disable wakeup pin
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void pmu_wakeup_pin_disable(void)
+{
+    PMU_CS &= ~PMU_CS_WUPEN;
+}
+
+/*!
     \brief      clear flag bit
     \param[in]  flag_reset:
       \arg        PMU_FLAG_RESET_WAKEUP: reset wakeup flag
@@ -295,48 +367,4 @@ FlagStatus pmu_flag_get(uint32_t flag)
     }else{
         return  RESET;
     }
-}
-
-/*!
-    \brief      enable backup domain write
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-void pmu_backup_write_enable(void)
-{
-    PMU_CTL |= PMU_CTL_BKPWEN;
-}
-
-/*!
-    \brief      disable backup domain write
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-void pmu_backup_write_disable(void)
-{
-    PMU_CTL &= ~PMU_CTL_BKPWEN;
-}
-
-/*!
-    \brief      enable wakeup pin
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-void pmu_wakeup_pin_enable(void)
-{
-    PMU_CS |= PMU_CS_WUPEN;
-}
-
-/*!
-    \brief      disable wakeup pin
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-void pmu_wakeup_pin_disable(void)
-{
-    PMU_CS &= ~PMU_CS_WUPEN;
 }
