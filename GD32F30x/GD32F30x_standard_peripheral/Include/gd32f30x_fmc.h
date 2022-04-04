@@ -64,6 +64,8 @@ OF SUCH DAMAGE.
 
 #define OB_SPC                     REG16((OB) + 0x00U)            /*!< option byte security protection value */
 #define OB_USER                    REG16((OB) + 0x02U)            /*!< option byte user value*/
+#define OB_DATA1                   REG16((OB) + 0x04U)            /*!< option byte data1 value*/
+#define OB_DATA2                   REG16((OB) + 0x06U)            /*!< option byte data2 value*/
 #define OB_WP0                     REG16((OB) + 0x08U)            /*!< option byte write protection 0 */
 #define OB_WP1                     REG16((OB) + 0x0AU)            /*!< option byte write protection 1 */
 #define OB_WP2                     REG16((OB) + 0x0CU)            /*!< option byte write protection 2 */

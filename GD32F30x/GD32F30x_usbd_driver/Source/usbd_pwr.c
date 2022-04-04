@@ -84,11 +84,19 @@ static void  lowpower_mode_exit (void)
 {
     /* restore system clock */
 
+#ifdef LPM_ENABLED
+    /* enable HSI */
+    rcu_osci_on(RCU_IRC8M);
+
+    /* wait till HSI is ready */
+    while(RESET == rcu_flag_get(RCU_FLAG_IRC8MSTB));
+#else
     /* enable HSE */
     rcu_osci_on(RCU_HXTAL);
 
     /* wait till HSE is ready */
     while(RESET == rcu_flag_get(RCU_FLAG_HXTALSTB));
+#endif
 
     /* enable PLL */
     rcu_osci_on(RCU_PLL_CK);
@@ -153,18 +161,22 @@ void  usbd_suspend (void)
     \param[out] none
     \retval     none
 */
-void  usbd_remote_wakeup_active(void)
+void usbd_remote_wakeup_active(void)
 {
     resume_mcu();
 
 #ifdef LPM_ENABLED
-    USBD_REG_SET(USBD_CTL, USBD_REG_GET(USBD_CTL) | CTL_L1RSREQ);
+    if(1 == L1_remote_wakeup){
+        USBD_REG_SET(USBD_CTL, USBD_REG_GET(USBD_CTL) | CTL_L1RSREQ);
 
-    L1_resume = 1U;
-#else
-    g_remote_wakeup_on = 1U;
-
-    g_ESOF_count = 15U;
-    USBD_REG_SET(USBD_CTL, USBD_REG_GET(USBD_CTL) | CTL_RSREQ);
+        L1_resume = 1U;
+    }
 #endif /* LPM_ENABLED */
+
+    if(1 == usb_device_dev.remote_wakeup){
+        g_remote_wakeup_on = 1U;
+
+        g_ESOF_count = 15U;
+        USBD_REG_SET(USBD_CTL, USBD_REG_GET(USBD_CTL) | CTL_RSREQ);
+    }
 }

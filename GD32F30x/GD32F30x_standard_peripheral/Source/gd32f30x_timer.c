@@ -502,7 +502,7 @@ FlagStatus timer_interrupt_flag_get(uint32_t timer_periph, uint32_t interrupt)
 */
 void timer_interrupt_flag_clear(uint32_t timer_periph, uint32_t interrupt)
 {
-    TIMER_INTF(timer_periph) &= (~(uint32_t)interrupt);
+    TIMER_INTF(timer_periph) = (~(uint32_t)interrupt);
 }
 
 /*!
@@ -556,7 +556,7 @@ FlagStatus timer_flag_get(uint32_t timer_periph, uint32_t flag)
 */
 void timer_flag_clear(uint32_t timer_periph, uint32_t flag)
 {
-    TIMER_INTF(timer_periph) &= (~(uint32_t)flag);
+    TIMER_INTF(timer_periph) = (~(uint32_t)flag);
 }
 
 /*!
@@ -1382,7 +1382,7 @@ void timer_channel_input_struct_para_init(timer_ic_parameter_struct* icpara)
       \arg        TIMER_CH_2: TIMER channel2(TIMERx(x=0..4,7))
       \arg        TIMER_CH_3: TIMER channel3(TIMERx(x=0..4,7))
      \param[in]  icpara: TIMER channel intput parameter struct
-                 icpolarity: TIMER_IC_POLARITY_RISING,TIMER_IC_POLARITY_FALLING,TIMER_IC_POLARITY_BOTH_EDGE
+                 icpolarity: TIMER_IC_POLARITY_RISING,TIMER_IC_POLARITY_FALLING
                  icselection: TIMER_IC_SELECTION_DIRECTTI,TIMER_IC_SELECTION_INDIRECTTI,TIMER_IC_SELECTION_ITS
                  icprescaler: TIMER_IC_PSC_DIV1,TIMER_IC_PSC_DIV2,TIMER_IC_PSC_DIV4,TIMER_IC_PSC_DIV8
                  icfilter: 0~15
@@ -1905,7 +1905,7 @@ void timer_external_trigger_as_external_clock_config(uint32_t timer_periph, uint
         /* reset the CH1CAPFLT bit */
         TIMER_CHCTL0(timer_periph) &= (~(uint32_t)TIMER_CHCTL0_CH1CAPFLT);
         /* set the CH1CAPFLT bit */
-        TIMER_CHCTL0(timer_periph) |= (uint32_t)(extfilter << 8U);
+        TIMER_CHCTL0(timer_periph) |= (uint32_t)(extfilter << 12U);
         /* set the CH1EN bit */
         TIMER_CHCTL2(timer_periph) |= (uint32_t)TIMER_CHCTL2_CH1EN;
     }else{
@@ -1922,7 +1922,7 @@ void timer_external_trigger_as_external_clock_config(uint32_t timer_periph, uint
         /* reset the CH0CAPFLT bit */
         TIMER_CHCTL0(timer_periph) &= (~(uint32_t)TIMER_CHCTL0_CH0CAPFLT);
         /* reset the CH0CAPFLT bit */
-        TIMER_CHCTL0(timer_periph) |= (uint32_t)extfilter;
+        TIMER_CHCTL0(timer_periph) |= (uint32_t)(extfilter << 4U);
         /* set the CH0EN bit */
         TIMER_CHCTL2(timer_periph) |= (uint32_t)TIMER_CHCTL2_CH0EN;
     }

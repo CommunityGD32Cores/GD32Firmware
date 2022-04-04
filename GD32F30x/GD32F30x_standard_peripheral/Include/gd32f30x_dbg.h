@@ -67,10 +67,10 @@ OF SUCH DAMAGE.
 #define DBG_CTL0_CAN0_HOLD       BIT(14)                    /*!< debug CAN0 kept when core is halted */
 #define DBG_CTL0_I2C0_HOLD       BIT(15)                    /*!< hold I2C0 smbus when core is halted */
 #define DBG_CTL0_I2C1_HOLD       BIT(16)                    /*!< hold I2C1 smbus when core is halted */
-#define DBG_CTL0_TIMER4_HOLD     BIT(17)                    /*!< hold TIMER4 counter when core is halted */
-#define DBG_CTL0_TIMER5_HOLD     BIT(18)                    /*!< hold TIMER5 counter when core is halted */
-#define DBG_CTL0_TIMER6_HOLD     BIT(19)                    /*!< hold TIMER6 counter when core is halted */
-#define DBG_CTL0_TIMER7_HOLD     BIT(20)                    /*!< hold TIMER7 counter when core is halted */
+#define DBG_CTL0_TIMER7_HOLD     BIT(17)                    /*!< hold TIMER7 counter when core is halted */
+#define DBG_CTL0_TIMER4_HOLD     BIT(18)                    /*!< hold TIMER4 counter when core is halted */
+#define DBG_CTL0_TIMER5_HOLD     BIT(19)                    /*!< hold TIMER5 counter when core is halted */
+#define DBG_CTL0_TIMER6_HOLD     BIT(20)                    /*!< hold TIMER6 counter when core is halted */
 #ifdef GD32F30X_CL
 #define DBG_CTL0_CAN1_HOLD       BIT(21)                    /*!< debug CAN1 kept when core is halted */
 #endif /* GD32F30X_CL */
@@ -110,10 +110,10 @@ typedef enum
     DBG_CAN0_HOLD              = DBG_REGIDX_BIT(DBG_IDX_CTL0, 14U),                   /*!< debug CAN0 kept when core is halted */
     DBG_I2C0_HOLD              = DBG_REGIDX_BIT(DBG_IDX_CTL0, 15U),                   /*!< hold I2C0 smbus when core is halted */
     DBG_I2C1_HOLD              = DBG_REGIDX_BIT(DBG_IDX_CTL0, 16U),                   /*!< hold I2C1 smbus when core is halted */
-    DBG_TIMER4_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL0, 17U),                   /*!< hold TIMER4 counter when core is halted */
-    DBG_TIMER5_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL0, 18U),                   /*!< hold TIMER5 counter when core is halted */
-    DBG_TIMER6_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL0, 19U),                   /*!< hold TIMER6 counter when core is halted */
-    DBG_TIMER7_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL0, 20U),                   /*!< hold TIMER7 counter when core is halted */
+    DBG_TIMER7_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL0, 17U),                   /*!< hold TIMER7 counter when core is halted */
+    DBG_TIMER4_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL0, 18U),                   /*!< hold TIMER4 counter when core is halted */
+    DBG_TIMER5_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL0, 19U),                   /*!< hold TIMER5 counter when core is halted */
+    DBG_TIMER6_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL0, 20U),                   /*!< hold TIMER6 counter when core is halted */
 #ifdef GD32F30X_CL
     DBG_CAN1_HOLD              = DBG_REGIDX_BIT(DBG_IDX_CTL0, 21U),                   /*!< debug CAN1 kept when core is halted */
 #endif /* GD32F30X_CL */

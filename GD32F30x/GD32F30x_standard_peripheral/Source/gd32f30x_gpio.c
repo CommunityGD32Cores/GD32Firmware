@@ -348,7 +348,7 @@ uint16_t gpio_output_port_get(uint32_t gpio_periph)
       \arg        GPIO_CAN0_PARTIAL_REMAP: CAN0 partial remapping(only for GD32F30X_CL devices)
       \arg        GPIO_CAN0_FULL_REMAP: CAN0 full remapping(only for GD32F30X_CL devices)
       \arg        GPIO_PD01_REMAP: PD01 remapping
-      \arg        GPIO_TIMER4CH3_IREMAP: TIMER4 channel3 internal remapping(only for GD32F30X_CL devices and GD32F30X_HD devices)
+      \arg        GPIO_TIMER4CH3_IREMAP: TIMER4 channel3 internal remapping
       \arg        GPIO_ADC0_ETRGINS_REMAP: ADC0 external trigger inserted conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices)
       \arg        GPIO_ADC0_ETRGREG_REMAP: ADC0 external trigger regular conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices)
       \arg        GPIO_ADC1_ETRGINS_REMAP: ADC1 external trigger inserted conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices)
@@ -358,7 +358,7 @@ uint16_t gpio_output_port_get(uint32_t gpio_periph)
       \arg        GPIO_SWJ_NONJTRST_REMAP: full SWJ(JTAG-DP + SW-DP),but without NJTRST
       \arg        GPIO_SWJ_SWDPENABLE_REMAP: JTAG-DP disabled and SW-DP enabled
       \arg        GPIO_SWJ_DISABLE_REMAP: JTAG-DP disabled and SW-DP disabled
-      \arg        GPIO_SPI2_REMAP: SPI2 remapping(only for GD32F30X_CL devices) 
+      \arg        GPIO_SPI2_REMAP: SPI2 remapping 
       \arg        GPIO_TIMER1ITR0_REMAP: TIMER1 internal trigger 0 remapping(only for GD32F30X_CL devices)
       \arg        GPIO_PTP_PPS_REMAP: ethernet PTP PPS remapping(only for GD32F30X_CL devices) 
       \arg        GPIO_TIMER8_REMAP: TIMER8 remapping

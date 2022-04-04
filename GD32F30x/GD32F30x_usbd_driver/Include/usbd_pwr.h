@@ -41,6 +41,11 @@ OF SUCH DAMAGE.
 
 #include "usbd_core.h"
 
+#ifdef LPM_ENABLED
+extern __IO uint32_t L1_remote_wakeup;
+#endif
+extern usbd_core_handle_struct usb_device_dev;
+
 /* function declarations */
 /* USB wakeup first operation is to wakeup mcu */
 void  resume_mcu (void);

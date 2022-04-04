@@ -130,7 +130,7 @@ void  usbd_isr (void)
         besl = (USBD_REG_GET(USBD_LPMCS) & LPMCS_BLSTAT) >> 4;
 
         /* read BREMOTEWAKE bit from subendpoint0 register which corresponding to bRemoteWake bit in LPM request */
-        L1_remote_wakeup = (USBD_REG_GET(USBD_LPMCS) & LPMCS_REMWK) >> 8;
+        L1_remote_wakeup = (USBD_REG_GET(USBD_LPMCS) & LPMCS_REMWK) >> 3;
 
         /* process USB device core layer suspend routine */
         /* enter USB model in suspend and system in low power mode (DEEP_SLEEP mode) */

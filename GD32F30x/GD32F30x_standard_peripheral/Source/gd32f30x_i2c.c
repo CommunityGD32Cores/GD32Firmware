@@ -5,6 +5,7 @@
     \version 2017-02-10, V1.0.0, firmware for GD32F30x
     \version 2018-10-10, V1.1.0, firmware for GD32F30x
     \version 2018-12-25, V2.0.0, firmware for GD32F30x
+    \version 2019-04-16, V2.0.1, firmware for GD32F30x
 */
 
 /*
@@ -42,6 +43,7 @@ OF SUCH DAMAGE.
 #define I2CCLK_MIN                    ((uint32_t)0x00000002U)             /*!< i2cclk minimum value */
 #define I2C_FLAG_MASK                 ((uint32_t)0x0000FFFFU)             /*!< i2c flag mask */
 #define I2C_ADDRESS_MASK              ((uint32_t)0x000003FFU)             /*!< i2c address mask */
+#define I2C_ADDRESS2_MASK         ((uint32_t)0x000000FEU)             /*!< the second i2c address mask */
 
 /* I2C register bit offset */
 #define STAT1_PECV_OFFSET             ((uint32_t)8U)                      /* bit offset of PECV in I2C_STAT1 */
@@ -265,22 +267,28 @@ void i2c_master_addressing(uint32_t i2c_periph, uint32_t addr, uint32_t trandire
 }
 
 /*!
-    \brief      dual-address mode switch
+    \brief      enable dual-address mode
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  dualaddr:
-                only one parameter can be selected which is shown as below:
-      \arg        I2C_DUADEN_DISABLE: disable dual-address mode  
-      \arg        I2C_DUADEN_ENABLE: enable dual-address mode
+    \param[in]  addr: the second address in dual-address mode
     \param[out] none
     \retval     none
 */
-void i2c_dualaddr_enable(uint32_t i2c_periph, uint32_t dualaddr)
+void i2c_dualaddr_enable(uint32_t i2c_periph, uint32_t addr)
 {
-    if(I2C_DUADEN_ENABLE == dualaddr){
-        I2C_SADDR1(i2c_periph) |= I2C_SADDR1_DUADEN;
-    }else{
-        I2C_SADDR1(i2c_periph) &= ~(I2C_SADDR1_DUADEN);
-    }
+    /* configure address */
+    addr = addr & I2C_ADDRESS2_MASK;
+    I2C_SADDR1(i2c_periph) = (I2C_SADDR1_DUADEN | addr);
+}
+
+/*!
+    \brief      disable dual-address mode
+    \param[in]  i2c_periph: I2Cx(x=0,1) 
+    \param[out] none
+    \retval     none
+*/
+void i2c_dualaddr_disable(uint32_t i2c_periph)
+{
+    I2C_SADDR1(i2c_periph) &= ~(I2C_SADDR1_DUADEN);
 }
 
 /*!

@@ -430,7 +430,7 @@ void can_time_trigger_mode_disable(uint32_t can_periph)
       \arg        tx_efid: 0x00000000 - 0x1FFFFFFF
       \arg        tx_ff: CAN_FF_STANDARD, CAN_FF_EXTENDED
       \arg        tx_ft: CAN_FT_DATA, CAN_FT_REMOTE
-      \arg        tx_dlenc: 1 - 7
+      \arg        tx_dlen: 0 - 8
       \arg        tx_data[]: 0x00 - 0xFF
     \param[out] none
     \retval     mailbox_number
@@ -582,7 +582,7 @@ void can_transmission_stop(uint32_t can_periph, uint8_t mailbox_number)
       \arg        rx_efid: 0x00000000 - 0x1FFFFFFF
       \arg        rx_ff: CAN_FF_STANDARD, CAN_FF_EXTENDED
       \arg        rx_ft: CAN_FT_DATA, CAN_FT_REMOTE
-      \arg        rx_dlenc: 1 - 7
+      \arg        rx_dlen: 0 - 8
       \arg        rx_data[]: 0x00 - 0xFF
       \arg        rx_fi: 0 - 27
     \retval     none
@@ -987,9 +987,5 @@ FlagStatus can_interrupt_flag_get(uint32_t can_periph, can_interrupt_flag_enum f
 */
 void can_interrupt_flag_clear(uint32_t can_periph, can_interrupt_flag_enum flag)
 {
-    if (flag == CAN_INT_FLAG_RFO1){
-        CAN_REG_VALS(can_periph, flag) &= ~BIT(CAN_BIT_POS0(flag));
-    } else {
-        CAN_REG_VALS(can_periph, flag) |= BIT(CAN_BIT_POS0(flag));
-    }
+    CAN_REG_VALS(can_periph, flag) |= BIT(CAN_BIT_POS0(flag));
 }
