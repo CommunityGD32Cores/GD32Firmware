@@ -410,7 +410,7 @@ typedef enum
     RCU_INT_FLAG_PLLSTB    = RCU_REGIDX_BIT(IDX_INT, 4U),         /*!< PLL stabilization interrupt flag */
     RCU_INT_FLAG_IRC28MSTB = RCU_REGIDX_BIT(IDX_INT, 5U),         /*!< IRC28M stabilization interrupt flag */
     RCU_INT_FLAG_CKM       = RCU_REGIDX_BIT(IDX_INT, 7U),         /*!< CKM interrupt flag */
-    RCU_INT_FLAG_IRC48MSTB = RCU_REGIDX_BIT(IDX_ADDCTL, 6U)       /*!< IRC48M stabilization interrupt flag */
+    RCU_INT_FLAG_IRC48MSTB = RCU_REGIDX_BIT(IDX_ADDINT, 6U)       /*!< IRC48M stabilization interrupt flag */
 }rcu_int_flag_enum;
 
 /* clock stabilization and stuck interrupt flags clear */
@@ -423,7 +423,7 @@ typedef enum
     RCU_INT_FLAG_PLLSTB_CLR    = RCU_REGIDX_BIT(IDX_INT, 20U),    /*!< PLL stabilization interrupt flags clear */
     RCU_INT_FLAG_IRC28MSTB_CLR = RCU_REGIDX_BIT(IDX_INT, 21U),    /*!< IRC28M stabilization interrupt flags clear */
     RCU_INT_FLAG_CKM_CLR       = RCU_REGIDX_BIT(IDX_INT, 23U),    /*!< CKM interrupt flags clear */
-    RCU_INT_FLAG_IRC48MSTB_CLR = RCU_REGIDX_BIT(IDX_ADDCTL, 22U)  /*!< IRC48M stabilization interrupt flag clear */
+    RCU_INT_FLAG_IRC48MSTB_CLR = RCU_REGIDX_BIT(IDX_ADDINT, 22U)  /*!< IRC48M stabilization interrupt flag clear */
 }rcu_int_flag_clear_enum;
 
 /* clock stabilization interrupt enable or disable */

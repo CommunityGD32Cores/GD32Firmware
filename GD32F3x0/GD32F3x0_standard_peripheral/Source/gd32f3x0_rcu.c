@@ -1012,9 +1012,9 @@ void rcu_voltage_key_unlock(void)
     \param[in]  dsvol: deep sleep mode voltage
                 only one parameter can be selected which is shown as below:
       \arg        RCU_DEEPSLEEP_V_1_0: the core voltage is 1.0V
-      \arg        RCU_DEEPSLEEP_V_0_9: the core voltage is 0.9V
-      \arg        RCU_DEEPSLEEP_V_0_8: the core voltage is 0.8V
-      \arg        RCU_DEEPSLEEP_V_0_7: the core voltage is 0.7V
+      \arg        RCU_DEEPSLEEP_V_0_9: the core voltage is 0.9V(customers are not recommended to use it)
+      \arg        RCU_DEEPSLEEP_V_0_8: the core voltage is 0.8V(customers are not recommended to use it)
+      \arg        RCU_DEEPSLEEP_V_0_7: the core voltage is 0.7V(customers are not recommended to use it)
     \param[out] none
     \retval     none
 */
@@ -1067,17 +1067,18 @@ uint32_t rcu_clock_freq_get(rcu_clock_freq_enum clock)
         pllmf4 = GET_BITS(RCU_CFG0, 27, 27);
         pllmf5 = GET_BITS(RCU_CFG1, 31, 31);
         /* high 16 bits */
-        if(1U == pllmf4){
-            pllmf += 17U;
-        }else{
-            if(pllmf == 15U){
-                pllmf += 1U; 
-            }else{                
-                pllmf += 2U;
-            }
+        /* high 16 bits */
+        if((0U == pllmf4)&&(0U == pllmf5)){
+            pllmf += 2U;
         }
-        if(1U == pllmf5){
-            pllmf += 31U;
+        if((1U == pllmf4)&&(0U == pllmf5)){
+            pllmf += 17U;
+        }
+        if((0U == pllmf4)&&(1U == pllmf5)){
+            pllmf += 33U;
+        }
+        if((1U == pllmf4)&&(1U == pllmf5)){
+            pllmf += 49U;
         }
             
         /* PLL clock source selection, HXTAL or IRC48M or IRC8M/2 */

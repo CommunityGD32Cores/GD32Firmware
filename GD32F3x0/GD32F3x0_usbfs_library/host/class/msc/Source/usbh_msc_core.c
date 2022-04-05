@@ -74,57 +74,57 @@ static usbh_status usbh_msc_itf_init (usbh_host *puhost)
 
         status = USBH_FAIL;
     } else {
-        puhost->active_class->class_data = (usbh_msc_handler *)malloc(sizeof(usbh_msc_handler));
+        static usbh_msc_handler msc_handler;
 
-        usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
-
-        memset(msc, 0U, sizeof(usbh_msc_handler));
+        memset((void*)&msc_handler, 0, sizeof(usbh_msc_handler));
+    
+        puhost->active_class->class_data = (void *)&msc_handler;
 
         usbh_interface_select(&puhost->dev_prop, interface);
 
         usb_desc_ep *ep_desc = &puhost->dev_prop.cfg_desc_set.itf_desc_set[interface][0].ep_desc[0];
 
         if (ep_desc->bEndpointAddress & 0x80) {
-            msc->ep_in = ep_desc->bEndpointAddress;
-            msc->ep_size_in = ep_desc->wMaxPacketSize;
+            msc_handler.ep_in = ep_desc->bEndpointAddress;
+            msc_handler.ep_size_in = ep_desc->wMaxPacketSize;
         } else {
-            msc->ep_out = ep_desc->bEndpointAddress;
-            msc->ep_size_out = ep_desc->wMaxPacketSize;
+            msc_handler.ep_out = ep_desc->bEndpointAddress;
+            msc_handler.ep_size_out = ep_desc->wMaxPacketSize;
         }
 
         ep_desc = &puhost->dev_prop.cfg_desc_set.itf_desc_set[interface][0].ep_desc[1];
 
         if (ep_desc->bEndpointAddress & 0x80) {
-            msc->ep_in = ep_desc->bEndpointAddress;
-            msc->ep_size_in = ep_desc->wMaxPacketSize;
+            msc_handler.ep_in = ep_desc->bEndpointAddress;
+            msc_handler.ep_size_in = ep_desc->wMaxPacketSize;
         } else {
-            msc->ep_out = ep_desc->bEndpointAddress;
-            msc->ep_size_out = ep_desc->wMaxPacketSize;
+            msc_handler.ep_out = ep_desc->bEndpointAddress;
+            msc_handler.ep_size_out = ep_desc->wMaxPacketSize;
         }
 
-        msc->state = MSC_INIT;
-        msc->error = MSC_OK;
-        msc->req_state = MSC_REQ_IDLE;
-        msc->pipe_out = usbh_pipe_allocate(puhost->data, msc->ep_out);
-        msc->pipe_in = usbh_pipe_allocate(puhost->data, msc->ep_in);
+        msc_handler.state = MSC_INIT;
+        msc_handler.error = MSC_OK;
+        msc_handler.req_state = MSC_REQ_IDLE;
+        msc_handler.pipe_out = usbh_pipe_allocate(puhost->data, msc_handler.ep_out);
+        msc_handler.pipe_in = usbh_pipe_allocate(puhost->data, msc_handler.ep_in);
 
         usbh_msc_bot_init(puhost);
 
         /* open the new channels */
         usbh_pipe_create (puhost->data,
                           &puhost->dev_prop,
-                          msc->pipe_out,
+                          msc_handler.pipe_out,
                           USB_EPTYPE_BULK,
-                          msc->ep_size_out);
+                          msc_handler.ep_size_out);
 
         usbh_pipe_create (puhost->data,
                           &puhost->dev_prop,
-                          msc->pipe_in,
+                          msc_handler.pipe_in,
                           USB_EPTYPE_BULK,
-                          msc->ep_size_in);
+                          msc_handler.ep_size_in);
 
-        usbh_pipe_toggle_set (puhost->data, msc->pipe_out, 0U);
-        usbh_pipe_toggle_set (puhost->data, msc->pipe_in, 0U);
+        usbh_pipe_toggle_set (puhost->data, msc_handler.pipe_out, 0U);
+        usbh_pipe_toggle_set (puhost->data, msc_handler.pipe_in, 0U);
     }
 
     return status;
@@ -298,7 +298,8 @@ static usbh_status usbh_msc_handle (usbh_host *puhost)
                 scsi_status = usbh_msc_request_sense (puhost, msc->cur_lun, &msc->unit[msc->cur_lun].sense);
                 if (USBH_OK == scsi_status) {
                     if ((msc->unit[msc->cur_lun].sense.SenseKey == UNIT_ATTENTION) || (msc->unit[msc->cur_lun].sense.SenseKey == NOT_READY)) {
-                        if ((puhost->control.timer - msc->timer) < 10000U) {
+                        if (((puhost->control.timer > msc->timer) && ((puhost->control.timer - msc->timer) < 10000U)) \
+                              || ((puhost->control.timer < msc->timer) && ((puhost->control.timer + 0x3FFFU - msc->timer) < 10000U))) {
                             msc->unit[msc->cur_lun].state = MSC_TEST_UNIT_READY;
                             break;
                         }
@@ -498,7 +499,9 @@ usbh_status usbh_msc_read (usbh_host *puhost,
     timeout = puhost->control.timer;
 
     while (USBH_BUSY == usbh_msc_rdwr_process(puhost, lun)) {
-        if (((puhost->control.timer - timeout) > (1000U * length)) || (0U == pudev->host.connect_status)) {
+        if (((puhost->control.timer > timeout) && ((puhost->control.timer - timeout) > (1000U * length))) \
+              || ((puhost->control.timer < timeout) && ((puhost->control.timer + 0x3FFFU - timeout) > (1000U * length))) \
+              || (0U == pudev->host.connect_status)) {
             msc->state = MSC_IDLE;
             return USBH_FAIL;
         }
@@ -544,7 +547,9 @@ usbh_status usbh_msc_write (usbh_host *puhost,
     timeout = puhost->control.timer;
 
     while (USBH_BUSY == usbh_msc_rdwr_process(puhost, lun)) {
-        if (((puhost->control.timer - timeout) > (1000U * length)) || (0U == pudev->host.connect_status)) {
+        if (((puhost->control.timer > timeout) && ((puhost->control.timer - timeout) > (1000U * length))) \
+              || ((puhost->control.timer < timeout) && ((puhost->control.timer + 0x3FFFU - timeout) > (1000U * length))) \
+              || (0U == pudev->host.connect_status)) {
             msc->state = MSC_IDLE;
             return USBH_FAIL;
         }

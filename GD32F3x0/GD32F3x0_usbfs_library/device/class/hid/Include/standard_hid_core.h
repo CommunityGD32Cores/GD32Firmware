@@ -39,7 +39,7 @@ OF SUCH DAMAGE.
 #include "usb_hid.h"
 
 #define USB_HID_CONFIG_DESC_LEN          0x22U
-#define USB_HID_REPORT_DESC_LEN          0x29U
+#define USB_HID_REPORT_DESC_LEN          0x2EU
 
 #define NO_CMD                           0xFFU
 
