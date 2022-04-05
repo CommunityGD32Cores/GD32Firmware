@@ -1,13 +1,39 @@
 /*!
-    \file  gd32f10x_rcu.h
-    \brief definitions for the RCU
+    \file    gd32f10x_rcu.h
+    \brief   definitions for the RCU
+    
+    \version 2014-12-26, V1.0.0, firmware for GD32F10x
+    \version 2017-06-20, V2.0.0, firmware for GD32F10x
+    \version 2018-07-31, V2.1.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, firmware for GD32F10x
-    2017-06-20, V2.0.0, firmware for GD32F10x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F10X_RCU_H
@@ -657,7 +683,7 @@ typedef enum
 #define RCU_PLL_MUL12                   CFG0_PLLMF(10)                      /*!< PLL source clock multiply by 12 */
 #define RCU_PLL_MUL13                   CFG0_PLLMF(11)                      /*!< PLL source clock multiply by 13 */
 #define RCU_PLL_MUL14                   CFG0_PLLMF(12)                      /*!< PLL source clock multiply by 14 */
-#if(defined(GD32F10X_MD) || defined(GD32F10X_HD) || defined(GD32F10X_XD))
+#if (defined(GD32F10X_MD) || defined(GD32F10X_HD) || defined(GD32F10X_XD))
 #define RCU_PLL_MUL15                   CFG0_PLLMF(13)                      /*!< PLL source clock multiply by 15 */
 #elif defined(GD32F10X_CL)
 #define RCU_PLL_MUL6_5                  CFG0_PLLMF(13)                      /*!< PLL source clock multiply by 6.5 */
@@ -687,7 +713,7 @@ typedef enum
 #define RCU_CKUSB_CKPLL_DIV2_5          CFG0_USBPSC(2)                      /*!< USBD/USBFS prescaler select CK_PLL/2.5 */
 #define RCU_CKUSB_CKPLL_DIV2            CFG0_USBPSC(3)                      /*!< USBD/USBFS prescaler select CK_PLL/2 */
 
-/* CKOUT0 Clock source selection */
+/* CKOUT0 clock source selection */
 #define CFG0_CKOUT0SEL(regval)          (BITS(24,27) & ((uint32_t)(regval) << 24))
 #define RCU_CKOUT0SRC_NONE              CFG0_CKOUT0SEL(0)                   /*!< no clock selected */
 #define RCU_CKOUT0SRC_CKSYS             CFG0_CKOUT0SEL(4)                   /*!< system clock selected */
@@ -794,6 +820,7 @@ typedef enum
 #define RCU_DEEPSLEEP_V_0_9             DSV_DSLPVS(3)                       /*!< core voltage is 0.9V in deep-sleep mode */
 
 /* function declarations */
+/* initialization, peripheral clock enable/disable functions */
 /* deinitialize the RCU */
 void rcu_deinit(void);
 /* enable the peripherals clock */
@@ -813,6 +840,7 @@ void rcu_bkp_reset_enable(void);
 /* disable the BKP domain reset */
 void rcu_bkp_reset_disable(void);
 
+/* clock configuration functions */
 /* configure the system clock source */
 void rcu_system_clock_source_config(uint32_t ck_sys);
 /* get the system clock source */
@@ -827,7 +855,7 @@ void rcu_apb2_clock_config(uint32_t ck_apb2);
 void rcu_ckout0_config(uint32_t ckout0_src);
 /* configure the PLL clock source selection and PLL multiply factor */
 void rcu_pll_config(uint32_t pll_src, uint32_t pll_mul);
-#if(defined(GD32F10X_MD) || defined(GD32F10X_HD) || defined(GD32F10X_XD))
+#if (defined(GD32F10X_MD) || defined(GD32F10X_HD) || defined(GD32F10X_XD))
 /* configure the PREDV0 division factor and clock source */
 void rcu_predv0_config(uint32_t predv0_div);
 #elif defined(GD32F10X_CL)
@@ -841,6 +869,7 @@ void rcu_pll1_config(uint32_t pll_mul);
 void rcu_pll2_config(uint32_t pll_mul);
 #endif /* GD32F10X_MD and GD32F10X_HD and GD32F10X_XD */
 
+/* peripheral clock configuration functions */
 /* configure the ADC division factor */
 void rcu_adc_clock_config(uint32_t adc_psc);
 /* configure the USBD/USBFS prescaler factor */
@@ -854,7 +883,7 @@ void rcu_i2s1_clock_config(uint32_t i2s_clock_source);
 void rcu_i2s2_clock_config(uint32_t i2s_clock_source);
 #endif /* GD32F10X_CL */
 
-
+/* interrupt & flag functions */
 /* get the clock stabilization and periphral reset flags */
 FlagStatus rcu_flag_get(rcu_flag_enum flag);
 /* clear the reset flag */
@@ -868,6 +897,7 @@ void rcu_interrupt_enable(rcu_int_enum stab_int);
 /* disable the stabilization interrupt */
 void rcu_interrupt_disable(rcu_int_enum stab_int);
 
+/* oscillator configuration functions */
 /* wait for oscillator stabilization flags is SET or oscillator startup is timeout */
 ErrStatus rcu_osci_stab_wait(rcu_osci_type_enum osci);
 /* turn on the oscillator */
@@ -885,7 +915,6 @@ void rcu_hxtal_clock_monitor_disable(void);
 
 /* set the IRC8M adjust value */
 void rcu_irc8m_adjust_value_set(uint32_t irc8m_adjval);
-
 /* set the deep sleep mode voltage */
 void rcu_deepsleep_voltage_set(uint32_t dsvol);
 

@@ -1,13 +1,39 @@
 /*!
     \file  gd32f10x_dbg.c
     \brief DBG driver
+
+    \version 2014-12-26, V1.0.0, firmware for GD32F10x
+    \version 2017-06-20, V2.0.0, firmware for GD32F10x
+    \version 2018-07-31, V2.1.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, firmware for GD32F10x
-    2017-06-20, V2.0.0, firmware for GD32F10x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "gd32f10x_dbg.h"
@@ -26,7 +52,7 @@ uint32_t dbg_id_get(void)
 /*!
     \brief      enable low power behavior when the mcu is in debug mode
     \param[in]  dbg_low_power:
-                this parameter can be any combination of the following values:
+                one or more parameters can be selected which are shown as below:
       \arg        DBG_LOW_POWER_SLEEP: keep debugger connection during sleep mode
       \arg        DBG_LOW_POWER_DEEPSLEEP: keep debugger connection during deepsleep mode
       \arg        DBG_LOW_POWER_STANDBY: keep debugger connection during standby mode
@@ -35,13 +61,13 @@ uint32_t dbg_id_get(void)
 */
 void dbg_low_power_enable(uint32_t dbg_low_power)
 {
-    DBG_CTL0 |= dbg_low_power;
+    DBG_CTL |= dbg_low_power;
 }
 
 /*!
     \brief      disable low power behavior when the mcu is in debug mode
     \param[in]  dbg_low_power:
-                this parameter can be any combination of the following values:
+                one or more parameters can be selected which are shown as below:
       \arg        DBG_LOW_POWER_SLEEP: donot keep debugger connection during sleep mode
       \arg        DBG_LOW_POWER_DEEPSLEEP: donot keep debugger connection during deepsleep mode
       \arg        DBG_LOW_POWER_STANDBY: donot keep debugger connection during standby mode
@@ -50,13 +76,13 @@ void dbg_low_power_enable(uint32_t dbg_low_power)
 */
 void dbg_low_power_disable(uint32_t dbg_low_power)
 {
-    DBG_CTL0 &= ~dbg_low_power;
+    DBG_CTL &= ~dbg_low_power;
 }
 
 /*!
     \brief      enable peripheral behavior when the mcu is in debug mode
     \param[in]  dbg_periph: refer to dbg_periph_enum
-                only one parameter can be selected which is shown as below:
+                one or more parameters can be selected which are shown as below:
       \arg        DBG_FWDGT_HOLD : debug FWDGT kept when core is halted
       \arg        DBG_WWDGT_HOLD : debug WWDGT kept when core is halted
       \arg        DBG_CANx_HOLD (x=0,1,CAN1 is only available for CL series): hold CANx counter when core is halted
@@ -67,13 +93,13 @@ void dbg_low_power_disable(uint32_t dbg_low_power)
 */
 void dbg_periph_enable(dbg_periph_enum dbg_periph)
 {
-    DBG_CTL0 |= (uint32_t)dbg_periph;
+    DBG_CTL |= (uint32_t)dbg_periph;
 }
 
 /*!
     \brief      disable peripheral behavior when the mcu is in debug mode
     \param[in]  dbg_periph: refer to dbg_periph_enum
-                only one parameter can be selected which is shown as below:
+                one or more parameters can be selected which are shown as below:
       \arg        DBG_FWDGT_HOLD : debug FWDGT kept when core is halted
       \arg        DBG_WWDGT_HOLD : debug WWDGT kept when core is halted
       \arg        DBG_CANx_HOLD (x=0,1,CAN1 is only available for CL series): hold CAN0 counter when core is halted
@@ -84,7 +110,7 @@ void dbg_periph_enable(dbg_periph_enum dbg_periph)
 */
 void dbg_periph_disable(dbg_periph_enum dbg_periph)
 {
-    DBG_CTL0 &= ~(uint32_t)dbg_periph;
+    DBG_CTL &= ~(uint32_t)dbg_periph;
 }
 
 /*!
@@ -95,7 +121,7 @@ void dbg_periph_disable(dbg_periph_enum dbg_periph)
 */
 void dbg_trace_pin_enable(void)
 {
-    DBG_CTL0 |= DBG_CTL0_TRACE_IOEN;
+    DBG_CTL |= DBG_CTL_TRACE_IOEN;
 }
 
 /*!
@@ -106,12 +132,13 @@ void dbg_trace_pin_enable(void)
 */
 void dbg_trace_pin_disable(void)
 {
-    DBG_CTL0 &= ~DBG_CTL0_TRACE_IOEN;
+    DBG_CTL &= ~DBG_CTL_TRACE_IOEN;
 }
 
 /*!
     \brief      trace pin mode selection 
     \param[in]  trace_mode:
+                only one parameter can be selected which is shown as below:
       \arg        TRACE_MODE_ASYNC: trace pin used for async mode 
       \arg        TRACE_MODE_SYNC_DATASIZE_1: trace pin used for sync mode and data size is 1
       \arg        TRACE_MODE_SYNC_DATASIZE_2: trace pin used for sync mode and data size is 2
@@ -121,6 +148,6 @@ void dbg_trace_pin_disable(void)
 */
 void dbg_trace_pin_mode_set(uint32_t trace_mode)
 {
-    DBG_CTL0 &= ~DBG_CTL0_TRACE_MODE;
-    DBG_CTL0 |= trace_mode;
+    DBG_CTL &= ~DBG_CTL_TRACE_MODE;
+    DBG_CTL |= trace_mode;
 }

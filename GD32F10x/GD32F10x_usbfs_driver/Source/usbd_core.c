@@ -1,13 +1,39 @@
 /*!
     \file  usbd_core.c
     \brief USB device mode core driver
+
+    \version 2014-12-26, V1.0.0, firmware for GD32F10x
+    \version 2017-06-20, V2.0.0, firmware for GD32F10x
+    \version 2018-07-31, V2.1.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, firmware for GD32F10x
-    2017-06-20, V2.0.0, firmware for GD32F10x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "usbd_core.h"
@@ -76,7 +102,7 @@ void usbd_ep_init (usb_core_handle_struct *pudev, const usb_descriptor_endpoint_
     uint8_t  ep_type = ep_desc->bmAttributes & USB_EPTYPE_MASK;
     uint16_t ep_mps  = ep_desc->wMaxPacketSize;
 
-    if (ep_desc->bEndpointAddress >> 7) {
+    if (ep_desc->bEndpointAddress >> 7U) {
         ep = &pudev->dev.in_ep[ep_num];
 
         devepinten |= 1U << ep_num;
@@ -86,7 +112,7 @@ void usbd_ep_init (usb_core_handle_struct *pudev, const usb_descriptor_endpoint_
     } else {
         ep = &pudev->dev.out_ep[ep_num];
 
-        devepinten |= (1U << ep_num) << 16;
+        devepinten |= (1U << ep_num) << 16U;
         devepctl = USB_DOEPxCTL((uint16_t)ep_num);
 
         ep_dir = USB_RX;
@@ -98,11 +124,11 @@ void usbd_ep_init (usb_core_handle_struct *pudev, const usb_descriptor_endpoint_
         devepctl |= ep_mps;
 
         devepctl &= ~DEPCTL_EPTYPE;
-        devepctl |= (uint32_t)ep_type << 18;
+        devepctl |= (uint32_t)ep_type << 18U;
 
         if (USB_TX == ep_dir) {
             devepctl &= ~DIEPCTL_TXFNUM;
-            devepctl |= (uint32_t)ep_num << 22;
+            devepctl |= (uint32_t)ep_num << 22U;
         }
 
         devepctl |= DEPCTL_SD0PID;
@@ -136,7 +162,7 @@ void usbd_ep_deinit (usb_core_handle_struct *pudev, uint8_t ep_addr)
     uint32_t devepinten = 0U;
     uint8_t ep_num = ep_addr & 0x7FU;
 
-    if (ep_addr >> 7) {
+    if (ep_addr >> 7U) {
         devepinten |= 1U << ep_num;
 
         USB_DIEPxCTL((uint16_t)ep_num) &= ~DEPCTL_EPACT;
@@ -419,12 +445,12 @@ void usbd_ep_clear_stall (usb_core_handle_struct *pudev, uint8_t ep_addr)
     uint8_t ep_num = ep_addr & 0x7FU;
     __IO uint32_t devepctl = 0U;
 
-    if(ep_addr >> 7){
+    if(ep_addr >> 7U){
         ep = &pudev->dev.in_ep[ep_num];
 
         devepctl = USB_DIEPxCTL((uint16_t)ep_num);
 
-        /* clear the IN endpoint stall bits */
+        /* clear the in endpoint stall bits */
         devepctl &= ~DEPCTL_STALL;
 
         if ((USB_EPTYPE_INTR == ep->endp_type) || (USB_EPTYPE_BULK == ep->endp_type)) {
@@ -437,7 +463,7 @@ void usbd_ep_clear_stall (usb_core_handle_struct *pudev, uint8_t ep_addr)
 
         devepctl = USB_DOEPxCTL((uint16_t)ep_num);
 
-        /* clear the OUT endpoint stall bits */
+        /* clear the out endpoint stall bits */
         devepctl &= ~DEPCTL_STALL;
 
         if ((USB_EPTYPE_INTR == ep->endp_type) || (USB_EPTYPE_BULK == ep->endp_type)) {
@@ -449,7 +475,7 @@ void usbd_ep_clear_stall (usb_core_handle_struct *pudev, uint8_t ep_addr)
 }
 
 /*!
-    \brief      flushes the FIFOs
+    \brief      flushes the fifos
     \param[in]  pudev: pointer to usb device instance
     \param[in]  ep_addr: endpoint address
     \param[out] none
@@ -457,7 +483,7 @@ void usbd_ep_clear_stall (usb_core_handle_struct *pudev, uint8_t ep_addr)
 */
 void  usbd_ep_fifo_flush (usb_core_handle_struct *pudev, uint8_t ep_addr)
 {
-    if (ep_addr >> 7) {
+    if (ep_addr >> 7U) {
         usb_txfifo_flush(pudev, ep_addr & 0x7FU);
     } else {
         usb_rxfifo_flush(pudev);

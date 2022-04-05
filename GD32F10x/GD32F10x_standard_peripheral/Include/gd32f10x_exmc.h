@@ -1,13 +1,39 @@
 /*!
     \file  gd32f10x_exmc.h
     \brief definitions for the EXMC
+    
+    \version 2014-12-26, V1.0.0, firmware for GD32F10x
+    \version 2017-06-20, V2.0.0, firmware for GD32F10x
+    \version 2018-07-31, V2.1.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, firmware for GD32F10x
-    2017-06-20, V2.0.0, firmware for GD32F10x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F10X_EXMC_H
@@ -210,14 +236,6 @@ typedef struct
 #define EXMC_NPATCFG(bank)                REG32(EXMC + 0x4CU + 0x20U * (bank))            /*!< EXMC NAND/PC card attribute space timing configuration register */
 #define EXMC_NECC(bank)                   REG32(EXMC + 0x54U + 0x20U * (bank))            /*!< EXMC NAND ECC register */
 
-///* CRAM page size */
-//#define SNCTL_CPS(regval)                 (BITS(16,18) & ((uint32_t)(regval) << 16))
-//#define EXMC_CRAM_AUTO_SPLIT              SNCTL_CPS(0)                  /*!< automatic burst split on page boundary crossing */
-//#define EXMC_CRAM_PAGE_SIZE_128_BYTES     SNCTL_CPS(1)                  /*!< page size is 128 bytes */
-//#define EXMC_CRAM_PAGE_SIZE_256_BYTES     SNCTL_CPS(2)                  /*!< page size is 256 bytes */
-//#define EXMC_CRAM_PAGE_SIZE_512_BYTES     SNCTL_CPS(3)                  /*!< page size is 512 bytes */
-//#define EXMC_CRAM_PAGE_SIZE_1024_BYTES    SNCTL_CPS(4)                  /*!< page size is 1024 bytes */
-
 /* NOR bank memory data bus width */
 #define SNCTL_NRW(regval)                 (BITS(4,5) & ((uint32_t)(regval) << 4))
 #define EXMC_NOR_DATABUS_WIDTH_8B         SNCTL_NRW(0)                  /*!< NOR data width 8 bits */
@@ -363,22 +381,21 @@ typedef struct
 /* function declarations */
 /* deinitialize EXMC NOR/SRAM region */
 void exmc_norsram_deinit(uint32_t norsram_region);
-/* initialize EXMC NOR/SRAM region */
-void exmc_norsram_init(exmc_norsram_parameter_struct* norsram_init_struct);
 /* exmc_norsram_parameter_struct parameter initialize */
-void exmc_norsram_parameter_init(exmc_norsram_parameter_struct* norsram_init_struct);
+void exmc_norsram_struct_para_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct);
+/* initialize EXMC NOR/SRAM region */
+void exmc_norsram_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct);
 /* EXMC NOR/SRAM bank enable */
 void exmc_norsram_enable(uint32_t norsram_region);
 /* EXMC NOR/SRAM bank disable */
 void exmc_norsram_disable(uint32_t norsram_region);
 
-
 /* deinitialize EXMC NAND bank */
 void exmc_nand_deinit(uint32_t nand_bank);
 /* initialize EXMC NAND bank */
-void exmc_nand_init(exmc_nand_parameter_struct* nand_init_struct);
-/* exmc_norsram_parameter_struct parameter initialize */
-void exmc_nand_parameter_init(exmc_nand_parameter_struct* nand_init_struct);
+void exmc_nand_init(exmc_nand_parameter_struct* exmc_nand_init_struct);
+/* exmc_nand_init_struct parameter initialize */
+void exmc_nand_struct_para_init(exmc_nand_parameter_struct* exmc_nand_init_struct);
 /* EXMC NAND bank enable */
 void exmc_nand_enable(uint32_t nand_bank);
 /* EXMC NAND bank disable */
@@ -393,12 +410,16 @@ void exmc_pccard_deinit(void);
 /* initialize EXMC PC card bank */
 void exmc_pccard_init(exmc_pccard_parameter_struct* exmc_pccard_init_struct);
 /* exmc_pccard_parameter_struct parameter initialize */
-void exmc_pccard_parameter_init(exmc_pccard_parameter_struct* exmc_pccard_init_struct);
+void exmc_pccard_struct_para_init(exmc_pccard_parameter_struct* exmc_pccard_init_struct);
 /* EXMC PC card bank enable */
 void exmc_pccard_enable(void);
 /* EXMC PC card bank disable */
 void exmc_pccard_disable(void);
 
+/* enable EXMC interrupt */
+void exmc_interrupt_enable(uint32_t bank, uint32_t interrupt_source);
+/* disable EXMC interrupt */
+void exmc_interrupt_disable(uint32_t bank, uint32_t interrupt_source);
 /* check EXMC flag is set or not */
 FlagStatus exmc_flag_get(uint32_t bank, uint32_t flag);
 /* clear EXMC flag */
@@ -407,9 +428,5 @@ void exmc_flag_clear(uint32_t bank, uint32_t flag);
 FlagStatus exmc_interrupt_flag_get(uint32_t bank, uint32_t interrupt_source);
 /* clear EXMC flag */
 void exmc_interrupt_flag_clear(uint32_t bank, uint32_t interrupt_source);
-/* enable EXMC interrupt */
-void exmc_interrupt_enable(uint32_t bank, uint32_t interrupt_source);
-/* disable EXMC interrupt */
-void exmc_interrupt_disable(uint32_t bank, uint32_t interrupt_source);
 
 #endif /* GD32F10X_EXMC_H */

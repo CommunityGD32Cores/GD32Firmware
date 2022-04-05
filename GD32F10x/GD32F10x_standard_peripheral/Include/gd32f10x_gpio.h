@@ -1,13 +1,39 @@
 /*!
     \file  gd32f10x_gpio.h
     \brief definitions for the GPIO
+    
+    \version 2014-12-26, V1.0.0, firmware for GD32F10x
+    \version 2017-06-20, V2.0.0, firmware for GD32F10x
+    \version 2018-07-31, V2.1.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, firmware for GD32F10x
-    2017-06-20, V2.0.0, firmware for GD32F10x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F10x_GPIO_H
@@ -216,7 +242,7 @@
 #define AFIO_PCF0_ENET_PHY_SEL           BIT(23)             /*!< ethernet MII or RMII PHY selection */
 #define AFIO_PCF0_SWJ_CFG                BITS(24,26)         /*!< serial wire JTAG configuration */
 #define AFIO_PCF0_SPI2_REMAP             BIT(28)             /*!< SPI2/I2S2 remapping */
-#define AFIO_PCF0_TIMER1ITR0_REMAP       BIT(29)             /*!< TIMER1 internal trigger 0 remapping */
+#define AFIO_PCF0_TIMER1ITI1_REMAP       BIT(29)             /*!< TIMER1 internal trigger 1 remapping */
 #define AFIO_PCF0_PTP_PPS_REMAP          BIT(30)             /*!< ethernet PTP PPS remapping */
 
 #else 
@@ -232,7 +258,7 @@
 #define AFIO_PCF0_TIMER3_REMAP           BIT(12)             /*!< TIMER3 remapping */
 #define AFIO_PCF0_CAN_REMAP              BITS(13,14)         /*!< CAN remapping */
 #define AFIO_PCF0_PD01_REMAP             BIT(15)             /*!< port D0/port D1 mapping on OSC_IN/OSC_OUT */
-#define AFIO_PCF0_TIMER4CH3_REMAP        BIT(16)             /*!< TIMER3 channel3 internal remapping */
+#define AFIO_PCF0_TIMER4CH3_REMAP        BIT(16)             /*!< TIMER4 channel3 internal remapping */
 #define AFIO_PCF0_ADC0_ETRGINS_REMAP     BIT(17)             /*!< ADC 0 external trigger inserted conversion remapping */
 #define AFIO_PCF0_ADC0_ETRGREG_REMAP     BIT(18)             /*!< ADC 0 external trigger regular conversion remapping */
 #define AFIO_PCF0_ADC1_ETRGINS_REMAP     BIT(19)             /*!< ADC 1 external trigger inserted conversion remapping */
@@ -270,7 +296,7 @@
 #define AFIO_PCF1_TIMER10_REMAP          BIT(7)             /*!< TIMER10 remapping */
 #define AFIO_PCF1_TIMER12_REMAP          BIT(8)             /*!< TIMER12 remapping */
 #define AFIO_PCF1_TIMER13_REMAP          BIT(9)             /*!< TIMER13 remapping */
-#define AFIO_PCF1_FSMC_NADV              BIT(10)            /*!< FSMC_NADV connect/disconnect */
+#define AFIO_PCF1_EXMC_NADV              BIT(10)            /*!< EXMC_NADV connect/disconnect */
 
 /* constants definitions */
 typedef FlagStatus bit_status;
@@ -290,9 +316,9 @@ typedef FlagStatus bit_status;
 #define GPIO_MODE_AF_PP                  ((uint8_t)0x18U)          /*!< AFIO output with push-pull */
 
 /* GPIO output max speed value */
-#define GPIO_OSPEED_10MHZ                ((uint8_t)0x01U)          /*!< output max speed 10M */
-#define GPIO_OSPEED_2MHZ                 ((uint8_t)0x02U)          /*!< output max speed 2M */
-#define GPIO_OSPEED_50MHZ                ((uint8_t)0x03U)          /*!< output max speed 50M */
+#define GPIO_OSPEED_10MHZ                ((uint8_t)0x01U)          /*!< output max speed 10MHz */
+#define GPIO_OSPEED_2MHZ                 ((uint8_t)0x02U)          /*!< output max speed 2MHz */
+#define GPIO_OSPEED_50MHZ                ((uint8_t)0x03U)          /*!< output max speed 50MHz */
 
 /* GPIO event output port definitions */
 #define GPIO_EVENT_PORT_GPIOA            ((uint8_t)0x00U)          /*!< event output port A */
@@ -381,14 +407,14 @@ typedef FlagStatus bit_status;
 #define GPIO_TIMER2_FULL_REMAP           ((uint32_t)0x001A0C00U)   /*!< TIMER2 full remapping */
 #define GPIO_TIMER3_REMAP                ((uint32_t)0x00001000U)   /*!< TIMER3 remapping */
 #define GPIO_PD01_REMAP                  ((uint32_t)0x00008000U)   /*!< PD01 remapping */
-#if (defined(GD32F10X_MD) || (GD32F10X_HD) || defined(GD32F10X_XD))
+#if (defined(GD32F10X_MD) || defined(GD32F10X_HD) || defined(GD32F10X_XD))
 #define GPIO_CAN_PARTIAL_REMAP           ((uint32_t)0x001D4000U)   /*!< CAN partial remapping(only for GD32F10X_MD devices, GD32F10X_HD devices and GD32F10X_XD devices) */
 #define GPIO_CAN_FULL_REMAP              ((uint32_t)0x001D6000U)   /*!< CAN full remapping(only for GD32F10X_MD devices, GD32F10X_HD devices and GD32F10X_XD devices) */
 #endif /* GD32F10X_MD||GD32F10X_HD||GD32F10X_XD */
 #if (defined(GD32F10X_CL) || defined(GD32F10X_HD))
 #define GPIO_TIMER4CH3_IREMAP            ((uint32_t)0x00200001U)   /*!< TIMER4 channel3 internal remapping(only for GD32F10X_CL devices and GD32F10X_HD devices) */
 #endif /* GD32F10X_CL||GD32F10X_HD */
-#if (defined(GD32F10X_MD) || (GD32F10X_HD) || defined(GD32F10X_XD))
+#if (defined(GD32F10X_MD) || defined(GD32F10X_HD) || defined(GD32F10X_XD))
 #define GPIO_ADC0_ETRGINS_REMAP          ((uint32_t)0x00200002U)   /*!< ADC0 external trigger inserted conversion remapping(only for GD32F10X_MD devices, GD32F10X_HD devices and GD32F10X_XD devices) */
 #define GPIO_ADC0_ETRGREG_REMAP          ((uint32_t)0x00200004U)   /*!< ADC0 external trigger regular conversion remapping(only for GD32F10X_MD devices, GD32F10X_HD devices and GD32F10X_XD devices) */
 #define GPIO_ADC1_ETRGINS_REMAP          ((uint32_t)0x00200008U)   /*!< ADC1 external trigger inserted conversion remapping(only for GD32F10X_MD devices, GD32F10X_HD devices and GD32F10X_XD devices) */
@@ -403,7 +429,7 @@ typedef FlagStatus bit_status;
 #define GPIO_ENET_REMAP                  ((uint32_t)0x00200020U)   /*!< ENET remapping(only for GD32F10X_CL devices) */
 #define GPIO_CAN1_REMAP                  ((uint32_t)0x00200040U)   /*!< CAN1 remapping(only for GD32F10X_CL devices) */
 #define GPIO_SPI2_REMAP                  ((uint32_t)0x00201100U)   /*!< SPI2 remapping(only for GD32F10X_CL devices) */
-#define GPIO_TIMER1ITR0_REMAP            ((uint32_t)0x00202000U)   /*!< TIMER1 internal trigger 0 remapping(only for GD32F10X_CL devices) */
+#define GPIO_TIMER1ITI1_REMAP            ((uint32_t)0x00202000U)   /*!< TIMER1 internal trigger 1 remapping(only for GD32F10X_CL devices) */
 #define GPIO_PTP_PPS_REMAP               ((uint32_t)0x00204000U)   /*!< ethernet PTP PPS remapping(only for GD32F10X_CL devices) */
 #endif /* GD32F10X_CL */
 #ifdef GD32F10X_XD
@@ -412,7 +438,7 @@ typedef FlagStatus bit_status;
 #define GPIO_TIMER10_REMAP               ((uint32_t)0x80000080U)   /*!< TIMER10 remapping */
 #define GPIO_TIMER12_REMAP               ((uint32_t)0x80000100U)   /*!< TIMER12 remapping */
 #define GPIO_TIMER13_REMAP               ((uint32_t)0x80000200U)   /*!< TIMER13 remapping */
-#define GPIO_FSMC_NADV_REMAP             ((uint32_t)0x80000400U)   /*!< FSMC_NADV connect/disconnect */
+#define GPIO_EXMC_NADV_REMAP             ((uint32_t)0x80000400U)   /*!< EXMC_NADV connect/disconnect */
 #endif /* GD32F10X_XD */
 
 #ifdef GD32F10X_CL
@@ -427,45 +453,45 @@ void gpio_deinit(uint32_t gpio_periph);
 /* reset alternate function I/O(AFIO) */
 void gpio_afio_deinit(void);
 /* GPIO parameter initialization */
-void gpio_init(uint32_t gpio_periph,uint32_t gpio_mode,uint32_t gpio_speed,uint32_t pin);
+void gpio_init(uint32_t gpio_periph,uint32_t mode,uint32_t speed,uint32_t pin);
 
 /* set GPIO pin bit */
-void gpio_bit_set(uint32_t gpio_periph,uint32_t pin);
+void gpio_bit_set(uint32_t gpio_periph, uint32_t pin);
 /* reset GPIO pin bit */
-void gpio_bit_reset(uint32_t gpio_periph,uint32_t pin);
+void gpio_bit_reset(uint32_t gpio_periph, uint32_t pin);
 /* write data to the specified GPIO pin */
-void gpio_bit_write(uint32_t gpio_periph,uint32_t pin,bit_status bit_value);
+void gpio_bit_write(uint32_t gpio_periph, uint32_t pin, bit_status bit_value);
 /* write data to the specified GPIO port */
-void gpio_port_write(uint32_t gpio_periph,uint16_t data);
+void gpio_port_write(uint32_t gpio_periph, uint16_t data);
 
 /* get GPIO pin input status */
-FlagStatus gpio_input_bit_get(uint32_t gpio_periph,uint32_t pin);
+FlagStatus gpio_input_bit_get(uint32_t gpio_periph, uint32_t pin);
 /* get GPIO port input status */
 uint16_t gpio_input_port_get(uint32_t gpio_periph);
 /* get GPIO pin output status */
-FlagStatus gpio_output_bit_get(uint32_t gpio_periph,uint32_t pin);
+FlagStatus gpio_output_bit_get(uint32_t gpio_periph, uint32_t pin);
 /* get GPIO port output status */
 uint16_t gpio_output_port_get(uint32_t gpio_periph);
 
-/* lock GPIO pin bit */
-void gpio_pin_lock(uint32_t gpio_periph,uint32_t pin);
+/* configure GPIO pin remap */
+void gpio_pin_remap_config(uint32_t remap, ControlStatus newvalue);
 
+/* select GPIO pin exti sources */
+void gpio_exti_source_select(uint8_t output_port, uint8_t output_pin);
 /* configure GPIO pin event output */
-void gpio_event_output_config(uint8_t gpio_outputport,uint8_t gpio_outputpin);
+void gpio_event_output_config(uint8_t output_port, uint8_t output_pin);
 /* enable GPIO pin event output */
 void gpio_event_output_enable(void);
 /* disable GPIO pin event output */
 void gpio_event_output_disable(void);
 
-/* select GPIO pin exti sources */
-void gpio_exti_source_select(uint8_t gpio_outputport,uint8_t gpio_outputpin);
+/* lock GPIO pin bit */
+void gpio_pin_lock(uint32_t gpio_periph, uint32_t pin);
 
 #ifdef GD32F10X_CL
 /* select ethernet MII or RMII PHY */
 void gpio_ethernet_phy_select(uint32_t gpio_enetsel);
 #endif /* GD32F10X_CL */
 
-/* configure GPIO pin remap */
-void gpio_pin_remap_config(uint32_t gpio_remap, ControlStatus newvalue);
 
 #endif /* GD32F10x_GPIO_H */

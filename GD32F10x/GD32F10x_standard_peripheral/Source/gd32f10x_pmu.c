@@ -1,13 +1,39 @@
 /*!
-    \file  gd32f10x_pmu.c
-    \brief PMU driver
+    \file    gd32f10x_pmu.c
+    \brief   PMU driver
+
+    \version 2014-12-26, V1.0.0, firmware for GD32F10x
+    \version 2017-06-20, V2.0.0, firmware for GD32F10x
+    \version 2018-07-31, V2.1.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, firmware for GD32F10x
-    2017-06-20, V2.0.0, firmware for GD32F10x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "gd32f10x_pmu.h"
@@ -28,6 +54,7 @@ void pmu_deinit(void)
 /*!
     \brief      select low voltage detector threshold
     \param[in]  lvdt_n:
+                only one parameter can be selected which is shown as below:
       \arg        PMU_LVDT_0: voltage threshold is 2.2V
       \arg        PMU_LVDT_1: voltage threshold is 2.3V
       \arg        PMU_LVDT_2: voltage threshold is 2.4V
@@ -66,6 +93,7 @@ void pmu_lvd_disable(void)
 /*!
     \brief      PMU work at sleep mode
     \param[in]  sleepmodecmd:
+                only one parameter can be selected which is shown as below:
       \arg        WFI_CMD: use WFI command
       \arg        WFE_CMD: use WFE command
     \param[out] none
@@ -86,10 +114,12 @@ void pmu_to_sleepmode(uint8_t sleepmodecmd)
 
 /*!
     \brief      PMU work at deepsleep mode
-    \param[in]  ldo
-      \arg        PMU_LDO_NORMAL: LDO normal work when pmu enter deepsleep mode
+    \param[in]  ldo:
+                only one parameter can be selected which is shown as below:
+      \arg        PMU_LDO_NORMAL: LDO work at normal power mode when pmu enter deepsleep mode
       \arg        PMU_LDO_LOWPOWER: LDO work at low power mode when pmu enter deepsleep mode
-    \param[in]  deepsleepmodecmd: 
+    \param[in]  deepsleepmodecmd:
+                only one parameter can be selected which is shown as below: 
       \arg        WFI_CMD: use WFI command
       \arg        WFE_CMD: use WFE command
     \param[out] none
@@ -121,6 +151,7 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
 /*!
     \brief      pmu work at standby mode
     \param[in]  standbymodecmd:
+                only one parameter can be selected which is shown as below:
       \arg        WFI_CMD: use WFI command
       \arg        WFE_CMD: use WFE command
     \param[out] none
@@ -146,70 +177,6 @@ void pmu_to_standbymode(uint8_t standbymodecmd)
 }
 
 /*!
-    \brief      clear flag bit
-    \param[in]  flag_reset:
-      \arg        PMU_FLAG_RESET_WAKEUP: reset wakeup flag
-      \arg        PMU_FLAG_RESET_STANDBY: reset standby flag
-    \param[out] none
-    \retval     none
-*/
-void pmu_flag_clear(uint32_t flag_reset)
-{
-    switch(flag_reset){
-    case PMU_FLAG_RESET_WAKEUP:
-        /* reset wakeup flag */
-        PMU_CTL |= PMU_CTL_WURST;
-        break;
-    case PMU_FLAG_RESET_STANDBY:
-        /* reset standby flag */
-        PMU_CTL |= PMU_CTL_STBRST;
-        break;
-    default :
-        break;
-    }
-}
-
-/*!
-    \brief      get flag state
-    \param[in]  flag:
-      \arg        PMU_FLAG_WAKEUP: wakeup flag
-      \arg        PMU_FLAG_STANDBY: standby flag
-      \arg        PMU_FLAG_LVD: lvd flag
-    \param[out] none
-    \retval     FlagStatus SET or RESET
-*/
-FlagStatus pmu_flag_get(uint32_t flag)
-{
-    if(PMU_CS & flag){
-        return  SET;
-    }else{
-        return  RESET;
-    }
-}
-
-/*!
-    \brief      enable backup domain write
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-void pmu_backup_write_enable(void)
-{
-    PMU_CTL |= PMU_CTL_BKPWEN;
-}
-
-/*!
-    \brief      disable backup domain write
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-void pmu_backup_write_disable(void)
-{
-    PMU_CTL &= ~PMU_CTL_BKPWEN;
-}
-
-/*!
     \brief      enable wakeup pin
     \param[in]  none
     \param[out] none
@@ -229,4 +196,70 @@ void pmu_wakeup_pin_enable(void)
 void pmu_wakeup_pin_disable(void)
 {
     PMU_CS &= ~PMU_CS_WUPEN;
+}
+
+/*!
+    \brief      enable write access to the registers in backup domain
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void pmu_backup_write_enable(void)
+{
+    PMU_CTL |= PMU_CTL_BKPWEN;
+}
+
+/*!
+    \brief      disable write access to the registers in backup domain
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void pmu_backup_write_disable(void)
+{
+    PMU_CTL &= ~PMU_CTL_BKPWEN;
+}
+
+/*!
+    \brief      get flag state
+    \param[in]  flag:
+                only one parameter can be selected which is shown as below:
+      \arg        PMU_FLAG_WAKEUP: wakeup flag
+      \arg        PMU_FLAG_STANDBY: standby flag
+      \arg        PMU_FLAG_LVD: lvd flag
+    \param[out] none
+    \retval     FlagStatus SET or RESET
+*/
+FlagStatus pmu_flag_get(uint32_t flag)
+{
+    if(PMU_CS & flag){
+        return  SET;
+    }else{
+        return  RESET;
+    }
+}
+
+/*!
+    \brief      clear flag bit
+    \param[in]  flag_reset:
+                only one parameter can be selected which is shown as below:
+      \arg        PMU_FLAG_RESET_WAKEUP: reset wakeup flag
+      \arg        PMU_FLAG_RESET_STANDBY: reset standby flag
+    \param[out] none
+    \retval     none
+*/
+void pmu_flag_clear(uint32_t flag_reset)
+{
+    switch(flag_reset){
+    case PMU_FLAG_RESET_WAKEUP:
+        /* reset wakeup flag */
+        PMU_CTL |= PMU_CTL_WURST;
+        break;
+    case PMU_FLAG_RESET_STANDBY:
+        /* reset standby flag */
+        PMU_CTL |= PMU_CTL_STBRST;
+        break;
+    default :
+        break;
+    }
 }

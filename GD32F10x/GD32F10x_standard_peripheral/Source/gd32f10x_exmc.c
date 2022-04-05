@@ -1,13 +1,39 @@
 /*!
-    \file  gd32f10x_exmc.c
-    \brief EXMC driver
+    \file    gd32f10x_exmc.c
+    \brief   EXMC driver
+
+    \version 2014-12-26, V1.0.0, firmware for GD32F10x
+    \version 2017-06-20, V2.0.0, firmware for GD32F10x
+    \version 2018-07-31, V2.1.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, firmware for GD32F10x
-    2017-06-20, V2.0.0, firmware for GD32F10x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "gd32f10x_exmc.h"
@@ -167,7 +193,7 @@ void exmc_norsram_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct)
     \param[out] exmc_norsram_init_struct: the initialized struct exmc_norsram_parameter_struct pointer
     \retval     none
 */
-void exmc_norsram_parameter_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct)
+void exmc_norsram_struct_para_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct)
 {
     /* configure the structure with default value */
     exmc_norsram_init_struct->norsram_region = EXMC_BANK0_NORSRAM_REGION0;
@@ -285,12 +311,12 @@ void exmc_nand_init(exmc_nand_parameter_struct* exmc_nand_init_struct)
 }
 
 /*!
-    \brief      initialize the struct exmc_norsram_parameter_struct
+    \brief      initialize the struct exmc_nand_init_struct
     \param[in]  none
-    \param[out] the initialized struct exmc_norsram_parameter_struct pointer
+    \param[out] the initialized struct exmc_nand_init_struct pointer
     \retval     none
 */
-void exmc_nand_parameter_init(exmc_nand_parameter_struct* exmc_nand_init_struct)
+void exmc_nand_struct_para_init(exmc_nand_parameter_struct* exmc_nand_init_struct)
 {
     /* configure the structure with default value */
     exmc_nand_init_struct->nand_bank = EXMC_BANK1_NAND;
@@ -426,7 +452,7 @@ void exmc_pccard_init(exmc_pccard_parameter_struct* exmc_pccard_init_struct)
     \param[out] the initialized struct exmc_pccard_parameter_struct pointer
     \retval     none
 */
-void exmc_pccard_parameter_init(exmc_pccard_parameter_struct* exmc_pccard_init_struct)
+void exmc_pccard_struct_para_init(exmc_pccard_parameter_struct* exmc_pccard_init_struct)
 {
     /* configure the structure with default value */
     exmc_pccard_init_struct->wait_feature = DISABLE;
@@ -469,12 +495,56 @@ void exmc_pccard_disable(void)
 }
 
 /*!
+    \brief      enable EXMC interrupt
+    \param[in]  bank: specifies the NAND bank, PC card bank
+                only one parameter can be selected which is shown as below:
+      \arg        EXMC_BANK1_NAND: the NAND bank1
+      \arg        EXMC_BANK2_NAND: the NAND bank2
+      \arg        EXMC_BANK3_PCCARD: the PC card bank
+    \param[in]  interrupt_source: specify get which interrupt flag
+                one or more parameters can be selected which is shown as below:
+      \arg        EXMC_NAND_PCCARD_INT_RISE: interrupt source of rising edge
+      \arg        EXMC_NAND_PCCARD_INT_LEVEL: interrupt source of high-level
+      \arg        EXMC_NAND_PCCARD_INT_FALL: interrupt source of falling edge
+    \param[out] none
+    \retval     none
+*/
+void exmc_interrupt_enable(uint32_t bank, uint32_t interrupt_source)
+{
+    /* NAND bank1, bank2 or PC card bank3 */
+    EXMC_NPINTEN(bank) |= interrupt_source;
+}
+
+/*!
+    \brief      disable EXMC interrupt
+    \param[in]  bank: specifies the NAND bank, PC card bank
+                only one parameter can be selected which is shown as below:
+      \arg        EXMC_BANK1_NAND: the NAND bank1
+      \arg        EXMC_BANK2_NAND: the NAND bank2
+      \arg        EXMC_BANK3_PCCARD: the PC card bank
+    \param[in]  interrupt_source: specify get which interrupt flag
+                one or more parameters can be selected which is shown as below:
+      \arg        EXMC_NAND_PCCARD_INT_RISE: interrupt source of rising edge
+      \arg        EXMC_NAND_PCCARD_INT_LEVEL: interrupt source of high-level
+      \arg        EXMC_NAND_PCCARD_INT_FALL: interrupt source of falling edge
+    \param[out] none
+    \retval     none
+*/
+void exmc_interrupt_disable(uint32_t bank, uint32_t interrupt_source)
+{
+    /* NAND bank1,bank2 or PC card bank3 */
+    EXMC_NPINTEN(bank) &= ~interrupt_source;
+}
+
+/*!
     \brief      check EXMC flag is set or not
-    \param[in]  bank: specifies the NAND bank , PC card bank
+    \param[in]  bank: specifies the NAND bank, PC card bank
+                only one parameter can be selected which is shown as below:
       \arg        EXMC_BANK1_NAND: the NAND bank1
       \arg        EXMC_BANK2_NAND: the NAND bank2
       \arg        EXMC_BANK3_PCCARD: the PC Card bank
     \param[in]  flag: specify get which flag
+                only one parameter can be selected which is shown as below:
       \arg        EXMC_NAND_PCCARD_FLAG_RISE: interrupt rising edge status
       \arg        EXMC_NAND_PCCARD_FLAG_LEVEL: interrupt high-level status
       \arg        EXMC_NAND_PCCARD_FLAG_FALL: interrupt falling edge status
@@ -500,11 +570,13 @@ FlagStatus exmc_flag_get(uint32_t bank, uint32_t flag)
 
 /*!
     \brief      clear EXMC flag
-    \param[in]  bank: specifie the NAND bank , PCCARD bank
+    \param[in]  bank: specifie the NAND bank, PCCARD bank
+                only one parameter can be selected which is shown as below:
       \arg        EXMC_BANK1_NAND: the NAND bank1
       \arg        EXMC_BANK2_NAND: the NAND bank2
       \arg        EXMC_BANK3_PCCARD: the PC card bank
     \param[in]  flag: specify get which flag
+                one or more parameters can be selected which is shown as below:
       \arg        EXMC_NAND_PCCARD_FLAG_RISE: interrupt rising edge status
       \arg        EXMC_NAND_PCCARD_FLAG_LEVEL: interrupt high-level status
       \arg        EXMC_NAND_PCCARD_FLAG_FALL: interrupt falling edge status
@@ -520,11 +592,13 @@ void exmc_flag_clear(uint32_t bank, uint32_t flag)
 
 /*!
     \brief      check EXMC interrupt flag is set or not
-    \param[in]  bank: specifies the NAND bank , PC card bank
+    \param[in]  bank: specifies the NAND bank, PC card bank
+                only one parameter can be selected which is shown as below:
       \arg        EXMC_BANK1_NAND: the NAND bank1
       \arg        EXMC_BANK2_NAND: the NAND bank2
       \arg        EXMC_BANK3_PCCARD: the PC card bank
     \param[in]  interrupt_source: specify get which interrupt flag
+                only one parameter can be selected which is shown as below:
       \arg        EXMC_NAND_PCCARD_INT_RISE: interrupt source of rising edge
       \arg        EXMC_NAND_PCCARD_INT_LEVEL: interrupt source of high-level
       \arg        EXMC_NAND_PCCARD_INT_FALL: interrupt source of falling edge
@@ -552,11 +626,13 @@ FlagStatus exmc_interrupt_flag_get(uint32_t bank, uint32_t interrupt_source)
 
 /*!
     \brief      clear EXMC interrupt flag
-    \param[in]  bank: specifies the NAND bank , PC card bank
+    \param[in]  bank: specifies the NAND bank, PC card bank
+                only one parameter can be selected which is shown as below:
       \arg        EXMC_BANK1_NAND: the NAND bank1
       \arg        EXMC_BANK2_NAND: the NAND bank2
       \arg        EXMC_BANK3_PCCARD: the PC card bank
     \param[in]  interrupt_source: specify get which interrupt flag
+                one or more parameters can be selected which is shown as below:
       \arg        EXMC_NAND_PCCARD_INT_RISE: interrupt source of rising edge
       \arg        EXMC_NAND_PCCARD_INT_LEVEL: interrupt source of high-level
       \arg        EXMC_NAND_PCCARD_INT_FALL: interrupt source of falling edge
@@ -565,44 +641,6 @@ FlagStatus exmc_interrupt_flag_get(uint32_t bank, uint32_t interrupt_source)
 */
 void exmc_interrupt_flag_clear(uint32_t bank, uint32_t interrupt_source)
 {
-    /* NAND bank1,bank2 or PC card bank3 */
+    /* NAND bank1, bank2 or PC card bank3 */
     EXMC_NPINTEN(bank) &= ~(interrupt_source >> INTEN_INTS_OFFSET);
-}
-
-/*!
-    \brief      enable EXMC interrupt
-    \param[in]  bank: specifies the NAND bank,PC card bank
-      \arg        EXMC_BANK1_NAND: the NAND bank1
-      \arg        EXMC_BANK2_NAND: the NAND bank2
-      \arg        EXMC_BANK3_PCCARD: the PC card bank
-    \param[in]  interrupt_source: specify get which interrupt flag
-      \arg        EXMC_NAND_PCCARD_INT_RISE: interrupt source of rising edge
-      \arg        EXMC_NAND_PCCARD_INT_LEVEL: interrupt source of high-level
-      \arg        EXMC_NAND_PCCARD_INT_FALL: interrupt source of falling edge
-    \param[out] none
-    \retval     none
-*/
-void exmc_interrupt_enable(uint32_t bank, uint32_t interrupt_source)
-{
-    /* NAND bank1,bank2 or PC card bank3 */
-    EXMC_NPINTEN(bank) |= interrupt_source;
-}
-
-/*!
-    \brief      disable EXMC interrupt
-    \param[in]  bank: specifies the NAND bank , PC card bank
-      \arg        EXMC_BANK1_NAND: the NAND bank1
-      \arg        EXMC_BANK2_NAND: the NAND bank2
-      \arg        EXMC_BANK3_PCCARD: the PC card bank
-    \param[in]  interrupt_source: specify get which interrupt flag
-      \arg        EXMC_NAND_PCCARD_INT_RISE: interrupt source of rising edge
-      \arg        EXMC_NAND_PCCARD_INT_LEVEL: interrupt source of high-level
-      \arg        EXMC_NAND_PCCARD_INT_FALL: interrupt source of falling edge
-    \param[out] none
-    \retval     none
-*/
-void exmc_interrupt_disable(uint32_t bank, uint32_t interrupt_source)
-{
-    /* NAND bank1,bank2 or PC card bank3 */
-    EXMC_NPINTEN(bank) &= ~interrupt_source;
 }

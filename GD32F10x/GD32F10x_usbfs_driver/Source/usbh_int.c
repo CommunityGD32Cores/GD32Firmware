@@ -1,13 +1,39 @@
 /*!
     \file  usbh_int.c
     \brief USB host mode interrupt handler file
+
+    \version 2014-12-26, V1.0.0, firmware for GD32F10x
+    \version 2017-06-20, V2.0.0, firmware for GD32F10x
+    \version 2018-07-31, V2.1.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, firmware for GD32F10x
-    2017-06-20, V2.0.0, firmware for GD32F10x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "usb_core.h"
@@ -49,17 +75,17 @@ uint32_t usbh_isr (usb_core_handle_struct *pudev)
             retval |= usbh_intf_sof (pudev);
         }
 
-        /* Rx FIFO non-empty interrupt handle */
+        /* rx fifo non-empty interrupt handle */
         if (int_flag & GINTF_RXFNEIF) {
             retval |= usbh_intf_rxfifo_noempty (pudev);
         }
 
-        /* Non-Periodic Tx FIFO empty interrupt hanlde */
+        /* non-periodic tx fifo empty interrupt hanlde */
         if (int_flag & GINTF_NPTXFEIF) {
             retval |= usbh_intf_nptxfifo_empty (pudev);
         }
 
-        /* periodic Tx FIFO empty interrupt handle */
+        /* periodic tx fifo empty interrupt handle */
         if (int_flag & GINTF_PTXFEIF) {
             retval |= usbh_intf_ptxfifo_empty (pudev);
         }
@@ -79,7 +105,7 @@ uint32_t usbh_isr (usb_core_handle_struct *pudev)
             retval |= usbh_intf_disconnect (pudev);
         }
 
-        /* isochronous IN transfer not complete interrupt handle */
+        /* isochronous in transfer not complete interrupt handle */
         if (int_flag & GINTF_ISOONCIF) {
             retval |= usbh_intf_iso_incomplete_xfer (pudev);
         }
@@ -287,7 +313,7 @@ static uint32_t usbh_intf_port (usb_core_handle_struct *pudev)
 }
 
 /*!
-    \brief      handle the OUT channel interrupt
+    \brief      handle the out channel interrupt
     \param[in]  pudev: pointer to usb device instance
     \param[in]  channel_num: host channel number which is in (0..7)
     \param[out] none
@@ -303,51 +329,59 @@ static uint32_t usbh_intf_hc_out (usb_core_handle_struct *pudev, uint8_t channel
     if (channel_intr & HCHINTF_ACK) {
         USB_HCHxINTF((uint16_t)channel_num) = HCHINTF_ACK;
     } else if (channel_intr & HCHINTF_REQOVR) {
+        /* handle queue overrun interrupt */
         USB_HCHxINTEN((uint16_t)channel_num) |= HCHINTEN_CHIE;
         usb_hostchannel_halt(pudev, channel_num);
         USB_HCHxINTF((uint16_t)channel_num) = HCHINTF_REQOVR;
     } else if (channel_intr & HCHINTF_TF) {
+        /* handle transfer finished interrupt */
         puhc->err_count = 0U;
         USB_HCHxINTEN((uint16_t)channel_num) |= HCHINTEN_CHIE;
         usb_hostchannel_halt(pudev, channel_num);
         USB_HCHxINTF((uint16_t)channel_num) = HCHINTF_TF;
         puhc->status = HC_XF;
     } else if (channel_intr & HCHINTF_STALL) {
+        /* handle stall */
         USB_HCHxINTEN((uint16_t)channel_num) |= HCHINTEN_CHIE;
         USB_HCHxINTF((uint16_t)channel_num) = HCHINTF_STALL;
         usb_hostchannel_halt(pudev, channel_num);
         puhc->status = HC_STALL;
     } else if (channel_intr & HCHINTF_NAK) {
+        /* handle NAK */
         puhc->err_count = 0U;
         USB_HCHxINTEN((uint16_t)channel_num) |= HCHINTEN_CHIE;
         usb_hostchannel_halt(pudev, channel_num);
         USB_HCHxINTF((uint16_t)channel_num) = HCHINTF_NAK;
         puhc->status = HC_NAK;
     } else if (channel_intr & HCHINTF_USBER) {
+        /* handle USB bus error */
         USB_HCHxINTEN((uint16_t)channel_num) |= HCHINTEN_CHIE;
         usb_hostchannel_halt(pudev, channel_num);
         puhc->status = HC_TRACERR;
         USB_HCHxINTF((uint16_t)channel_num) = HCHINTF_USBER;
     } else if (channel_intr & HCHINTF_NYET) {
+        /* handle NYET */
         puhc->err_count = 0U;
         USB_HCHxINTEN((uint16_t)channel_num) |= HCHINTEN_CHIE;
         usb_hostchannel_halt(pudev, channel_num);
         puhc->status = HC_NYET;
         USB_HCHxINTF((uint16_t)channel_num) = HCHINTF_NYET;
     } else if (channel_intr & HCHINTF_DTER) {
+        /* handle data toggle error */
         USB_HCHxINTEN((uint16_t)channel_num) |= HCHINTEN_CHIE;
         usb_hostchannel_halt(pudev, channel_num);
         USB_HCHxINTF((uint16_t)channel_num) = HCHINTF_NAK;
         puhc->status= HC_DTGERR;
         USB_HCHxINTF((uint16_t)channel_num) = HCHINTF_DTER;
     } else if (channel_intr & HCHINTF_CH) {
+        /* handle channel halted */
         USB_HCHxINTEN((uint16_t)channel_num) &= ~HCHINTEN_CHIE;
 
         switch (puhc->status) {
             case HC_XF:
                 puhc->urb_state = URB_DONE;
 
-                if (USB_EPTYPE_BULK == ((USB_HCHxCTL((uint16_t)channel_num) & HCHCTL_EPTYPE) >> 18)) {
+                if (USB_EPTYPE_BULK == ((USB_HCHxCTL((uint16_t)channel_num) & HCHCTL_EPTYPE) >> 18U)) {
                     puhc->data_tg_out ^= 1U; 
                 }
                 break;
@@ -376,7 +410,7 @@ static uint32_t usbh_intf_hc_out (usb_core_handle_struct *pudev, uint8_t channel
 }
 
 /*!
-    \brief      handle the IN channel interrupt
+    \brief      handle the in channel interrupt
     \param[in]  pudev: pointer to usb device instance
     \param[in]  channel_num: host channel number which is in (0..7)
     \param[out] none
@@ -417,12 +451,13 @@ static uint32_t usbh_intf_hc_in (usb_core_handle_struct *pudev, uint8_t channel_
     } else {
         /* no operation */
     }
-
+    /* handle queue overrun interrupt */
     if (channle_intf & HCHINTF_REQOVR) {
         USB_HCHxINTEN((uint16_t)channel_num) |= HCHINTEN_CHIE;
         usb_hostchannel_halt(pudev, channel_num);
         USB_HCHxINTF((uint16_t)channel_num) = HCHINTF_REQOVR;
     } else if (channle_intf & HCHINTF_TF) {
+        /* handle transfer finished interrupt */
         puhc->status = HC_XF;
         puhc->err_count = 0U;
         USB_HCHxINTF((uint16_t)channel_num) = HCHINTF_TF;
@@ -440,6 +475,7 @@ static uint32_t usbh_intf_hc_in (usb_core_handle_struct *pudev, uint8_t channel_
             /* no operation */
         }
     } else if (channle_intf & HCHINTF_CH) {
+        /* handle channel halted */
         USB_HCHxINTEN((uint16_t)channel_num) &= ~HCHINTEN_CHIE;
 
         switch (puhc->status) {
@@ -463,11 +499,13 @@ static uint32_t usbh_intf_hc_in (usb_core_handle_struct *pudev, uint8_t channel_
 
         USB_HCHxINTF((uint16_t)channel_num) = HCHINTF_CH;
     } else if (channle_intf & HCHINTF_USBER) {
+        /* handle USB bus error */
         USB_HCHxINTEN((uint16_t)channel_num) |= HCHINTEN_CHIE;
         puhc->status = HC_TRACERR;
         usb_hostchannel_halt(pudev, channel_num);
         USB_HCHxINTF((uint16_t)channel_num) = HCHINTF_USBER;
     } else if (channle_intf & HCHINTF_NAK) {
+        /* handle NAK */
         if (USB_EPTYPE_INTR == endp_type) {
             USB_HCHxINTEN((uint16_t)channel_num) |= HCHINTEN_CHIE;
             usb_hostchannel_halt(pudev, channel_num);
@@ -503,7 +541,7 @@ static uint32_t usbh_intf_rxfifo_noempty (usb_core_handle_struct *pudev)
     uint32_t usbh_ch_ctl_reg = 0U;
     usb_hostchannel_struct *puhc;
 
-    /* disable the Rx status queue level interrupt */
+    /* disable the rx status queue level interrupt */
     USB_GINTEN &= ~GINTF_RXFNEIF;
 
     rx_status = USB_GRSTATP;
@@ -532,13 +570,20 @@ static uint32_t usbh_intf_rxfifo_noempty (usb_core_handle_struct *pudev)
             }
             break;
         case GRSTATR_RPCKST_IN_XFER_COMP:
+            break;
         case GRSTATR_RPCKST_DATA_TOGGLE_ERR:
+            count = (rx_status & GRSTATRP_BCOUNT) >> 4;
+            while (count > 0) {
+                rx_status = USB_GRSTATP;
+                count--;
+            }
+            break;
         case GRSTATR_RPCKST_CH_HALTED:
         default:
             break;
     }
 
-    /* enable the Rx status queue level interrupt */
+    /* enable the rx status queue level interrupt */
     USB_GINTEN |= GINTF_RXFNEIF;
 
     return 1U;

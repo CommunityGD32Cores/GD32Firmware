@@ -1,13 +1,39 @@
 /*!
     \file  usbh_core.h
     \brief header file for usbh_core.c
+
+    \version 2014-12-26, V1.0.0, firmware for GD32F10x
+    \version 2017-06-20, V2.0.0, firmware for GD32F10x
+    \version 2018-07-31, V2.1.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, firmware for GD32F10x
-    2017-06-20, V2.0.0, firmware for GD32F10x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef USBH_CORE_H
@@ -17,6 +43,7 @@
 #include "usb_std.h"
 #include "usb_core.h"
 
+/* constants definitions */
 #define MSC_CLASS                       0x08    /*!< the MSC class define */
 #define HID_CLASS                       0x03    /*!< the HID class define */
 #define MSC_PROTOCOL                    0x50    /*!< the MSC protocal define */
@@ -47,153 +74,152 @@
 #define GO_TO_UP_STATE_EVENT            100U    /*!< go to up state event define */
 
 #define HOST_HANDLE_TABLE_SIZE          9U      /*!< the host handle table size define */
-
 /* the enum of host state */
 typedef enum 
 {
-    HOST_IDLE = 0,                     /* the host idle state definition */
-    HOST_DEV_ATTACHED,                 /* the host device attached state definition */
-    HOST_DEV_DETACHED,                 /* the host device detached state definition */
-    HOST_DETECT_DEV_SPEED,             /* the host detect device speed state definition */
-    HOST_ENUMERATION,                  /* the host enumeration state definition */
-    HOST_CLASS_REQUEST,                /* the host class request state definition */
-    HOST_CLASS,                        /* the host class state definition */
-    HOST_USER_INPUT,                   /* the host user input state definition */
-    HOST_SUSPENDED,                    /* the host suspended state definition */
-    HOST_ERROR                         /* the host error state definition */
+    HOST_IDLE = 0,                              /* the host idle state definition */
+    HOST_DEV_ATTACHED,                          /* the host device attached state definition */
+    HOST_DEV_DETACHED,                          /* the host device detached state definition */
+    HOST_DETECT_DEV_SPEED,                      /* the host detect device speed state definition */
+    HOST_ENUMERATION,                           /* the host enumeration state definition */
+    HOST_CLASS_REQUEST,                         /* the host class request state definition */
+    HOST_CLASS,                                 /* the host class state definition */
+    HOST_USER_INPUT,                            /* the host user input state definition */
+    HOST_SUSPENDED,                             /* the host suspended state definition */
+    HOST_ERROR                                  /* the host error state definition */
 }host_state_enum;
 
 /* the enum of host event */
 typedef enum 
 {
-    HOST_EVENT_ATTACHED = 0,           /* the host attached event */
-    HOST_EVENT_ENUM,                   /* the host enum event */
-    HOST_EVENT_USER_INPUT,             /* the host user input event */
-    HOST_EVENT_CLASS_REQ,              /* the host class request event */
-    HOST_EVENT_CLASS,                  /* the host class event */
-    HOST_EVENT_ERROR,                  /* the host error event */
-    HOST_EVENT_DEV_DETACHED,           /* the host device detached event */
-    HOST_EVENT_IDLE                    /* the host idle event */
+    HOST_EVENT_ATTACHED = 0,                    /* the host attached event */
+    HOST_EVENT_ENUM,                            /* the host enum event */
+    HOST_EVENT_USER_INPUT,                      /* the host user input event */
+    HOST_EVENT_CLASS_REQ,                       /* the host class request event */
+    HOST_EVENT_CLASS,                           /* the host class event */
+    HOST_EVENT_ERROR,                           /* the host error event */
+    HOST_EVENT_DEV_DETACHED,                    /* the host device detached event */
+    HOST_EVENT_IDLE                             /* the host idle event */
 }host_event_enum;
 
 /* the enum of enum state */
 typedef enum
 {
-    ENUM_IDLE = 0,                     /* the enum idle state definition */
-    ENUM_SET_ADDR,                     /* the enum set address state definition */
-    ENUM_GET_FULL_DEV_DESC,            /* the enum get full device descripter state definition */
-    ENUM_GET_CFG_DESC,                 /* the enum get configuration descripter state definition */
-    ENUM_GET_FULL_CFG_DESC,            /* the enum get full configuration descripter state definition */
-    ENUM_GET_MFC_STRING_DESC,          /* the enum get MFC string descripter state definition */
-    ENUM_GET_PRODUCT_STRING_DESC,      /* the enum get product string descripter state definition */
-    ENUM_GET_SERIALNUM_STRING_DESC,    /* the enum get serialnum string descripter state definition */
-    ENUM_SET_CONFIGURATION,            /* the enum set congiguration state definition */
-    ENUM_DEV_CONFIGURED                /* the enum device configuration state definition */
+    ENUM_IDLE = 0,                              /* the enum idle state definition */
+    ENUM_SET_ADDR,                              /* the enum set address state definition */
+    ENUM_GET_FULL_DEV_DESC,                     /* the enum get full device descripter state definition */
+    ENUM_GET_CFG_DESC,                          /* the enum get configuration descripter state definition */
+    ENUM_GET_FULL_CFG_DESC,                     /* the enum get full configuration descripter state definition */
+    ENUM_GET_MFC_STRING_DESC,                   /* the enum get MFC string descripter state definition */
+    ENUM_GET_PRODUCT_STRING_DESC,               /* the enum get product string descripter state definition */
+    ENUM_GET_SERIALNUM_STRING_DESC,             /* the enum get serialnum string descripter state definition */
+    ENUM_SET_CONFIGURATION,                     /* the enum set congiguration state definition */
+    ENUM_DEV_CONFIGURED                         /* the enum device configuration state definition */
 }enum_state_enum;
 
 /* the enum of ctrl state */
 typedef enum 
 {
-    CTRL_IDLE = 0,                     /* the ctrl idle state definition */
-    CTRL_SETUP,                        /* the ctrl setup state definition */
-    CTRL_DATA,                         /* the ctrl data state definition */
-    CTRL_STATUS,                       /* the ctrl status state definition */
-    CTRL_ERROR,                        /* the ctrl error state definition */
-    CTRL_STALLED,                      /* the ctrl stalled state definition */
-    CTRL_COMPLETE                      /* the ctrl complete state definition */
+    CTRL_IDLE = 0,                              /* the ctrl idle state definition */
+    CTRL_SETUP,                                 /* the ctrl setup state definition */
+    CTRL_DATA,                                  /* the ctrl data state definition */
+    CTRL_STATUS,                                /* the ctrl status state definition */
+    CTRL_ERROR,                                 /* the ctrl error state definition */
+    CTRL_STALLED,                               /* the ctrl stalled state definition */
+    CTRL_COMPLETE                               /* the ctrl complete state definition */
 }ctrl_state_enum;
 
 /* the enum of host status */
 typedef enum 
 {
-    USBH_OK = 0,                       /* the usbh ok status definition */
-    USBH_BUSY,                         /* the usbh busy status definition */
-    USBH_FAIL,                         /* the usbh fail status definition */
-    USBH_NOT_SUPPORTED,                /* the usbh not supported status definition */
-    USBH_UNRECOVERED_ERROR,            /* the usbh unrecovered error status definition */
-    USBH_SPEED_UNKNOWN_ERROR,          /* the usbh speed unknown error status definition */
-    USBH_APPLY_DEINIT                  /* the usbh apply deinit status definition */
+    USBH_OK = 0,                                /* the usbh ok status definition */
+    USBH_BUSY,                                  /* the usbh busy status definition */
+    USBH_FAIL,                                  /* the usbh fail status definition */
+    USBH_NOT_SUPPORTED,                         /* the usbh not supported status definition */
+    USBH_UNRECOVERED_ERROR,                     /* the usbh unrecovered error status definition */
+    USBH_SPEED_UNKNOWN_ERROR,                   /* the usbh speed unknown error status definition */
+    USBH_APPLY_DEINIT                           /* the usbh apply deinit status definition */
 }usbh_status_enum;
 
 /* the state of user action */
 typedef enum 
 {
-    USBH_USER_NO_RESP = 0,             /* the user no response */
-    USBH_USER_RESP_OK = 1,             /* the user response ok */
+    USBH_USER_NO_RESP = 0,                      /* the user no response */
+    USBH_USER_RESP_OK = 1,                      /* the user response ok */
 }usbh_user_status_enum;
 
 /* control transfer information */
 typedef struct
 {
-    uint8_t               hc_in_num;   /* the host in channel number */
-    uint8_t               hc_out_num;  /* the host out channel number */
-    uint8_t               ep0_size;    /* the endpoint 0 max packet size */
-    uint8_t               error_count; /* the error count */
-    uint16_t              length;      /* the length */
-    uint16_t              timer;       /* the timer */
-    uint8_t              *buff;        /* the buffer */
-    usb_setup_union       setup;       /* the setup packet */
+    uint8_t               hc_in_num;            /* the host in channel number */
+    uint8_t               hc_out_num;           /* the host out channel number */
+    uint8_t               ep0_size;             /* the endpoint 0 max packet size */
+    uint8_t               error_count;          /* the error count */
+    uint16_t              length;               /* the length */
+    uint16_t              timer;                /* the timer */
+    uint8_t              *buff;                 /* the buffer */
+    usb_setup_union       setup;                /* the setup packet */
 }usbh_ctrl_struct;
 
 /* device property */
 typedef struct
 {
-    uint8_t                              address;                                           /* the device address */
-    uint8_t                              speed;                                             /* the device speed */
-    usb_descriptor_device_struct         dev_desc;                                          /* the device descripter */
-    usb_descriptor_configuration_struct  cfg_desc;                                          /* the configuration descripter */
-    usb_descriptor_interface_struct      itf_desc[USBH_MAX_INTERFACES_NUM];                 /* the interface descripter */
-    usb_descriptor_endpoint_struct       ep_desc[USBH_MAX_INTERFACES_NUM][USBH_MAX_EP_NUM]; /* the endpoint descripter */
+    uint8_t                              address;                                            /* the device address */
+    uint8_t                              speed;                                              /* the device speed */
+    usb_descriptor_device_struct         dev_desc;                                           /* the device descripter */
+    usb_descriptor_configuration_struct  cfg_desc;                                           /* the configuration descripter */
+    usb_descriptor_interface_struct      itf_desc[USBH_MAX_INTERFACES_NUM];                  /* the interface descripter */
+    usb_descriptor_endpoint_struct       ep_desc[USBH_MAX_INTERFACES_NUM][USBH_MAX_EP_NUM];  /* the endpoint descripter */
 }usbh_device_struct;
 
 /* user callbacks */
 typedef struct
 {
-    void (*init)                        (void);                 /* the user callback init function */
-    void (*deinit)                      (void);                 /* the user callback deinit function */
-    void (*device_connected)            (void);                 /* the user callback device connected function */
-    void (*device_reset)                (void);                 /* the user callback device reset function */
-    void (*device_disconnected)         (void);                 /* the user callback device disconnected function */
-    void (*over_current_detected)       (void);                 /* the user callback over current detected function */
-    void (*device_speed_detected)       (uint8_t device_speed);  /* the user callback device speed detected function */
-    void (*device_desc_available)       (void *devDesc);        /* the user callback device descrpiter available function */
-    void (*device_address_set)          (void);                 /* the user callback set device address function */
+    void (*init)                        (void);                                              /* the user callback init function */
+    void (*deinit)                      (void);                                              /* the user callback deinit function */
+    void (*device_connected)            (void);                                              /* the user callback device connected function */
+    void (*device_reset)                (void);                                              /* the user callback device reset function */
+    void (*device_disconnected)         (void);                                              /* the user callback device disconnected function */
+    void (*over_current_detected)       (void);                                              /* the user callback over current detected function */
+    void (*device_speed_detected)       (uint8_t device_speed);                              /* the user callback device speed detected function */
+    void (*device_desc_available)       (void *devDesc);                                     /* the user callback device descrpiter available function */
+    void (*device_address_set)          (void);                                              /* the user callback set device address function */
 
     void (*configuration_desc_available)(usb_descriptor_configuration_struct *cfg_desc,
                                          usb_descriptor_interface_struct *itf_desc,
                                          usb_descriptor_endpoint_struct *ep_desc);  
-                                                                /* the configuration descripter available function */
+                                                                                             /* the configuration descripter available function */
 
-    void (*manufacturer_string)         (void *mfc_string);      /* the user callback manufacturer string function */
-    void (*product_string)              (void *prod_string);     /* the user callback product string function */
-    void (*serial_num_string)           (void *serial_string);   /* the user callback serial number string function */
-    void (*enumeration_finish)          (void);                 /* the user callback enumeration finish function */
-    usbh_user_status_enum (*user_input) (void);                 /* the user callback user input function */
+    void (*manufacturer_string)         (void *mfc_string);                                  /* the user callback manufacturer string function */
+    void (*product_string)              (void *prod_string);                                 /* the user callback product string function */
+    void (*serial_num_string)           (void *serial_string);                               /* the user callback serial number string function */
+    void (*enumeration_finish)          (void);                                              /* the user callback enumeration finish function */
+    usbh_user_status_enum (*user_input) (void);                                              /* the user callback user input function */
     int  (*user_application)            (usb_core_handle_struct *pudev, uint8_t id);          
-                                                                /* the user callback user appliction function */
-    void (*device_not_supported)        (void);                 /* the user callback device not supported function */
-    void (*unrecovered_error)           (void);                 /* the user callback unrecovered error function */
+                                                                                             /* the user callback user appliction function */
+    void (*device_not_supported)        (void);                                              /* the user callback device not supported function */
+    void (*unrecovered_error)           (void);                                              /* the user callback unrecovered error function */
 }usbh_user_callback_struct;
 
 /* the backup state struct */
 typedef struct
 {
-    host_state_enum                      host_backup_state;     /* the host backup state */
-    enum_state_enum                      enum_backup_state;     /* the enum backup state */
-    ctrl_state_enum                      ctrl_backup_state;     /* the ctrl backup state */
-    uint8_t                              class_req_backup_state;/* the class request backup state */
-    uint8_t                              class_backup_state;    /* the class backup state */
+    host_state_enum                      host_backup_state;                                  /* the host backup state */
+    enum_state_enum                      enum_backup_state;                                  /* the enum backup state */
+    ctrl_state_enum                      ctrl_backup_state;                                  /* the ctrl backup state */
+    uint8_t                              class_req_backup_state;                             /* the class request backup state */
+    uint8_t                              class_backup_state;                                 /* the class backup state */
 } backup_state_struct;
 
 /* host information */
 typedef struct
 {
-    backup_state_struct                  usbh_backup_state;                            /* the usbh backup state variable */
-    usbh_ctrl_struct                     control;                                      /* the control struct variable */
-    usbh_device_struct                   device;                                       /* the device struct variable */
-    usbh_user_callback_struct           *usr_cb;                                       /* the user callback function */
-    usbh_status_enum (*class_init)      (usb_core_handle_struct *pudev, void *phost);  /* the class init function */
-    void (*class_deinit)                (usb_core_handle_struct *pudev, void *phost);  /* the class deinit function */
+    backup_state_struct                  usbh_backup_state;                                  /* the usbh backup state variable */
+    usbh_ctrl_struct                     control;                                            /* the control struct variable */
+    usbh_device_struct                   device;                                             /* the device struct variable */
+    usbh_user_callback_struct           *usr_cb;                                             /* the user callback function */
+    usbh_status_enum (*class_init)      (usb_core_handle_struct *pudev, void *phost);        /* the class init function */
+    void (*class_deinit)                (usb_core_handle_struct *pudev, void *phost);        /* the class deinit function */
 }usbh_host_struct;
 
 /* the action function definition */
@@ -202,26 +228,26 @@ typedef usbh_status_enum (*ACT_FUN)     (usb_core_handle_struct *pudev, usbh_hos
 /* the state table struct */
 typedef struct 
 {
-    uint8_t                              cur_state;             /* the current state */
-    uint8_t                              cur_event;             /* the current event */
-    uint8_t                              next_state;            /* the next state */
-    ACT_FUN                              event_action_fun;      /* the event action function entry */
+    uint8_t                              cur_state;                                          /* the current state */
+    uint8_t                              cur_event;                                          /* the current event */
+    uint8_t                              next_state;                                         /* the next state */
+    ACT_FUN                              event_action_fun;                                   /* the event action function entry */
 } state_table_struct;
 
 /* the state stack struct */
 typedef struct
 {
-    uint8_t                              state;                 /* the state in state stack */
-    state_table_struct*                  table;                 /* the table in state stack */
-    uint8_t                              table_size;            /* the table size in state stack */
+    uint8_t                              state;                                              /* the state in state stack */
+    state_table_struct*                  table;                                              /* the table in state stack */
+    uint8_t                              table_size;                                         /* the table size in state stack */
 } usbh_state_stack_struct;
 
 /* the state regist table struct */
 typedef struct
 {
-    uint8_t                              id;                    /* the id of the state table */
-    state_table_struct*                  table;                 /* the table entry to regist */
-    uint8_t                              table_size;            /* the table size to regist */
+    uint8_t                              id;                                                 /* the id of the state table */
+    state_table_struct*                  table;                                              /* the table entry to regist */
+    uint8_t                              table_size;                                         /* the table size to regist */
 } usbh_state_regist_table_struct;
 
 /* the state handle struct */

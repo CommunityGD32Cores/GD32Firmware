@@ -1,13 +1,39 @@
 /*!
     \file  usbh_std.c
     \brief USB 2.0 standard function definition
+
+    \version 2014-12-26, V1.0.0, firmware for GD32F10x
+    \version 2017-06-20, V2.0.0, firmware for GD32F10x
+    \version 2018-07-31, V2.1.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, firmware for GD32F10x
-    2017-06-20, V2.0.0, firmware for GD32F10x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "usbh_core.h"
@@ -15,8 +41,8 @@
 #include "usbh_std.h"
 #include "usbh_ctrl.h"
 
-uint8_t local_buffer[64];
-uint8_t usbh_cfg_desc[512];
+uint8_t local_buffer[64U];
+uint8_t usbh_cfg_desc[512U];
 uint8_t enum_polling_handle_flag = 0U;
 
 static void enum_idle_handle                       (usb_core_handle_struct *pudev, usbh_host_struct *puhost, usbh_state_handle_struct *pustate);
@@ -605,23 +631,23 @@ void usbh_enum_cfg_set(usb_core_handle_struct *pudev,
 */
 void usbh_device_desc_parse (usb_descriptor_device_struct *dev_desc, uint8_t *buf, uint16_t len)
 {
-    dev_desc->Header.bLength  = *(uint8_t *)(buf + 0);
-    dev_desc->Header.bDescriptorType = *(uint8_t *)(buf + 1);
-    dev_desc->bcdUSB          = SWAPBYTE(buf + 2);
-    dev_desc->bDeviceClass    = *(uint8_t *)(buf + 4);
-    dev_desc->bDeviceSubClass = *(uint8_t *)(buf + 5);
-    dev_desc->bDeviceProtocol = *(uint8_t *)(buf + 6);
-    dev_desc->bMaxPacketSize0 = *(uint8_t *)(buf + 7);
+    dev_desc->Header.bLength  = *(uint8_t *)(buf + 0U);
+    dev_desc->Header.bDescriptorType = *(uint8_t *)(buf + 1U);
+    dev_desc->bcdUSB          = SWAPBYTE(buf + 2U);
+    dev_desc->bDeviceClass    = *(uint8_t *)(buf + 4U);
+    dev_desc->bDeviceSubClass = *(uint8_t *)(buf + 5U);
+    dev_desc->bDeviceProtocol = *(uint8_t *)(buf + 6U);
+    dev_desc->bMaxPacketSize0 = *(uint8_t *)(buf + 7U);
 
     if (len > 8U){
         /* for 1st time after device connection, host may issue only 8 bytes for device descriptor length  */
-        dev_desc->idVendor      = SWAPBYTE(buf + 8);
-        dev_desc->idProduct     = SWAPBYTE(buf + 10);
-        dev_desc->bcdDevice     = SWAPBYTE(buf + 12);
-        dev_desc->iManufacturer = *(uint8_t *)(buf + 14);
-        dev_desc->iProduct      = *(uint8_t *)(buf + 15);
-        dev_desc->iSerialNumber = *(uint8_t *)(buf + 16);
-        dev_desc->bNumberConfigurations = *(uint8_t *)(buf + 17);
+        dev_desc->idVendor      = SWAPBYTE(buf + 8U);
+        dev_desc->idProduct     = SWAPBYTE(buf + 10U);
+        dev_desc->bcdDevice     = SWAPBYTE(buf + 12U);
+        dev_desc->iManufacturer = *(uint8_t *)(buf + 14U);
+        dev_desc->iProduct      = *(uint8_t *)(buf + 15U);
+        dev_desc->iSerialNumber = *(uint8_t *)(buf + 16U);
+        dev_desc->bNumberConfigurations = *(uint8_t *)(buf + 17U);
     }
 }
 
@@ -653,20 +679,20 @@ void  usbh_cfg_desc_parse (usb_descriptor_configuration_struct *cfg_desc,
     static uint16_t prev_ep_size = 0U;
 
     /* parse configuration descriptor */
-    cfg_desc->Header.bLength         = *(uint8_t *)(buf + 0);
-    cfg_desc->Header.bDescriptorType = *(uint8_t *)(buf + 1);
-    cfg_desc->wTotalLength           = SWAPBYTE(buf + 2);
-    cfg_desc->bNumInterfaces         = *(uint8_t *)(buf + 4);
-    cfg_desc->bConfigurationValue    = *(uint8_t *)(buf + 5);
-    cfg_desc->iConfiguration         = *(uint8_t *)(buf + 6);
-    cfg_desc->bmAttributes           = *(uint8_t *)(buf + 7);
-    cfg_desc->bMaxPower              = *(uint8_t *)(buf + 8);
+    cfg_desc->Header.bLength         = *(uint8_t *)(buf + 0U);
+    cfg_desc->Header.bDescriptorType = *(uint8_t *)(buf + 1U);
+    cfg_desc->wTotalLength           = SWAPBYTE(buf + 2U);
+    cfg_desc->bNumInterfaces         = *(uint8_t *)(buf + 4U);
+    cfg_desc->bConfigurationValue    = *(uint8_t *)(buf + 5U);
+    cfg_desc->iConfiguration         = *(uint8_t *)(buf + 6U);
+    cfg_desc->bmAttributes           = *(uint8_t *)(buf + 7U);
+    cfg_desc->bMaxPower              = *(uint8_t *)(buf + 8U);
 
     if (len > USB_CFGDESC_SIZE) {
         ptr = USB_CFG_DESC_LEN;
 
         if (cfg_desc->bNumInterfaces <= USBH_MAX_INTERFACES_NUM) {
-            pitf = (usb_descriptor_interface_struct *)0;
+            pitf = (usb_descriptor_interface_struct *)0U;
 
             for (; ptr < cfg_desc->wTotalLength; ) {
                 pdesc = usbh_next_desc_get((uint8_t *)pdesc, &ptr);
@@ -722,15 +748,15 @@ void  usbh_cfg_desc_parse (usb_descriptor_configuration_struct *cfg_desc,
 */
 void  usbh_interface_desc_parse (usb_descriptor_interface_struct *itf_desc, uint8_t *buf)
 {
-    itf_desc->Header.bLength         = *(uint8_t *)(buf + 0);
-    itf_desc->Header.bDescriptorType = *(uint8_t *)(buf + 1);
-    itf_desc->bInterfaceNumber       = *(uint8_t *)(buf + 2);
-    itf_desc->bAlternateSetting      = *(uint8_t *)(buf + 3);
-    itf_desc->bNumEndpoints          = *(uint8_t *)(buf + 4);
-    itf_desc->bInterfaceClass        = *(uint8_t *)(buf + 5);
-    itf_desc->bInterfaceSubClass     = *(uint8_t *)(buf + 6);
-    itf_desc->bInterfaceProtocol     = *(uint8_t *)(buf + 7);
-    itf_desc->iInterface             = *(uint8_t *)(buf + 8);
+    itf_desc->Header.bLength         = *(uint8_t *)(buf + 0U);
+    itf_desc->Header.bDescriptorType = *(uint8_t *)(buf + 1U);
+    itf_desc->bInterfaceNumber       = *(uint8_t *)(buf + 2U);
+    itf_desc->bAlternateSetting      = *(uint8_t *)(buf + 3U);
+    itf_desc->bNumEndpoints          = *(uint8_t *)(buf + 4U);
+    itf_desc->bInterfaceClass        = *(uint8_t *)(buf + 5U);
+    itf_desc->bInterfaceSubClass     = *(uint8_t *)(buf + 6U);
+    itf_desc->bInterfaceProtocol     = *(uint8_t *)(buf + 7U);
+    itf_desc->iInterface             = *(uint8_t *)(buf + 8U);
 }
 
 /*!
@@ -742,12 +768,12 @@ void  usbh_interface_desc_parse (usb_descriptor_interface_struct *itf_desc, uint
 */
 void  usbh_endpoint_desc_parse (usb_descriptor_endpoint_struct *ep_desc, uint8_t *buf)
 {
-    ep_desc->Header.bLength          = *(uint8_t *)(buf + 0);
-    ep_desc->Header.bDescriptorType  = *(uint8_t *)(buf + 1);
-    ep_desc->bEndpointAddress = *(uint8_t *)(buf + 2);
-    ep_desc->bmAttributes     = *(uint8_t *)(buf + 3);
-    ep_desc->wMaxPacketSize   = SWAPBYTE(buf + 4);
-    ep_desc->bInterval        = *(uint8_t *)(buf + 6);
+    ep_desc->Header.bLength          = *(uint8_t *)(buf + 0U);
+    ep_desc->Header.bDescriptorType  = *(uint8_t *)(buf + 1U);
+    ep_desc->bEndpointAddress = *(uint8_t *)(buf + 2U);
+    ep_desc->bmAttributes     = *(uint8_t *)(buf + 3U);
+    ep_desc->wMaxPacketSize   = SWAPBYTE(buf + 4U);
+    ep_desc->bInterval        = *(uint8_t *)(buf + 6U);
 }
 
 /*!

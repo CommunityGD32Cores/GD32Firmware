@@ -1,13 +1,39 @@
 /*!
     \file  usbd_core.c
     \brief USB device driver
+
+    \version 2014-12-26, V1.0.0, firmware for GD32F10x
+    \version 2017-06-20, V2.0.0, firmware for GD32F10x
+    \version 2018-07-31, V2.1.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, firmware for GD32F10x
-    2017-06-20, V2.0.0, firmware for GD32F10x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "usbd_core.h"
@@ -93,52 +119,20 @@ void  usbd_core_deinit (void)
 /*!
     \brief      endpoint initialization
     \param[in]  pudev: pointer to USB core instance
+    \param[in]  buf_kind: kind of buffer
     \param[in]  pep_desc: pointer to endpoint descriptor
     \param[out] none
     \retval     none
 */
-void  usbd_ep_init (usbd_core_handle_struct *pudev, void *ep_desc)
+void  usbd_ep_init (usbd_core_handle_struct *pudev, usbd_epkind_enum buf_kind, void *ep_desc)
 {
-    usb_ep_struct *ep;
-    uint8_t ep_num = ((usb_descriptor_endpoint_struct *)ep_desc)->bEndpointAddress & 0x0FU;
-    uint32_t reg_value = ((usb_descriptor_endpoint_struct *)ep_desc)->wMaxPacketSize;
+    usb_descriptor_endpoint_struct *desc_ep = (usb_descriptor_endpoint_struct *)ep_desc;
 
-    if (((usb_descriptor_endpoint_struct *)ep_desc)->bEndpointAddress >> 7U) {
-        ep = &pudev->in_ep[ep_num];
-
-        ep->maxpacket = reg_value;
-
-        /* set the endpoint transmit buffer address */
-        (pbuf_reg + ep_num)->tx_addr = (uint16_t)g_free_buf_addr;
-
-        reg_value = (reg_value + 1U) & ~1U;
-
-        /* configure the endpoint status as NAK status */
-        USBD_ENDP_TX_STATUS_SET(ep_num, EPTX_NAK);
-    } else {
-        ep = &pudev->out_ep[ep_num];
-
-        ep->maxpacket = reg_value;
-
-        /* set the endpoint receive buffer address */
-        (pbuf_reg + ep_num)->rx_addr = (uint16_t)g_free_buf_addr;
-
-        if (reg_value > 62U) {
-            reg_value = (reg_value + 31U) & ~31U;
-            (pbuf_reg + ep_num)->rx_count = ((reg_value << 5U) - 1U) | 0x8000U;
-        } else {
-            reg_value = (reg_value + 1U) & ~1U;
-            (pbuf_reg + ep_num)->rx_count = reg_value << 9U;
-        }
-
-        /* configure the endpoint status as NAK status */
-        USBD_ENDP_RX_STATUS_SET(ep_num, EPRX_NAK);
-    }
-
-    g_free_buf_addr += reg_value;
+    uint8_t ep_num = desc_ep->bEndpointAddress & 0x0FU;
+    uint32_t reg_value = 0;
 
     /* set the endpoint type */
-    switch (((usb_descriptor_endpoint_struct *)ep_desc)->bmAttributes & USB_EPTYPE_MASK) {
+    switch (desc_ep->bmAttributes & USB_EPTYPE_MASK) {
     case ENDP_CONTROL:
         reg_value = EP_CONTROL;
         break;
@@ -157,7 +151,78 @@ void  usbd_ep_init (usbd_core_handle_struct *pudev, void *ep_desc)
 
     USBD_REG_SET(USBD_EPxCS(ep_num), reg_value | ep_num);
 
-    ep->stall = 0;
+    reg_value = desc_ep->wMaxPacketSize;
+
+    if (desc_ep->bEndpointAddress >> 7U) {
+        usb_ep_struct *ep = &pudev->in_ep[ep_num];
+
+        ep->maxpacket = reg_value;
+
+        /* set the endpoint transmit buffer address */
+        (pbuf_reg + ep_num)->tx_addr = (uint16_t)g_free_buf_addr;
+
+        reg_value = (reg_value + 1U) & ~1U;
+
+        g_free_buf_addr += reg_value;
+
+        if (ENDP_DBL_BUF == buf_kind) {
+            USBD_ENDP_DOUBLE_BUF_SET(ep_num);
+
+            (pbuf_reg + ep_num)->rx_addr = (uint16_t)g_free_buf_addr;
+
+            g_free_buf_addr += reg_value;
+
+            USBD_ENDP_TX_STATUS_SET(ep_num, EPTX_VALID);
+            USBD_ENDP_RX_STATUS_SET(ep_num, EPRX_DISABLED);
+        } else {
+            /* configure the endpoint status as NAK status */
+            USBD_ENDP_TX_STATUS_SET(ep_num, EPTX_NAK);
+        }
+    } else {
+        usb_ep_struct *ep = &pudev->out_ep[ep_num];
+
+        ep->maxpacket = reg_value;
+
+        if (ENDP_DBL_BUF == buf_kind) {
+            USBD_ENDP_DOUBLE_BUF_SET(ep_num);
+
+            USBD_DTG_TX_TOGGLE(ep_num);
+
+            /* set the endpoint transmit buffer address */
+            (pbuf_reg + ep_num)->tx_addr = (uint16_t)g_free_buf_addr;
+
+            if (reg_value > 62U) {
+                reg_value = (reg_value + 31U) & ~31U;
+                (pbuf_reg + ep_num)->tx_count = (uint16_t)(((reg_value << 5U) - 1U) | 0x8000U);
+            } else {
+                reg_value = (reg_value + 1U) & ~1U;
+                (pbuf_reg + ep_num)->tx_count = (uint16_t)(reg_value << 9U);
+            }
+
+            g_free_buf_addr += reg_value;
+        }
+
+        reg_value = desc_ep->wMaxPacketSize;
+
+        /* set the endpoint receive buffer address */
+        (pbuf_reg + ep_num)->rx_addr = (uint16_t)g_free_buf_addr;
+
+        if (reg_value > 62U) {
+            reg_value = (reg_value + 31U) & ~31U;
+            (pbuf_reg + ep_num)->rx_count = (uint16_t)(((reg_value << 5U) - 1U) | 0x8000U);
+        } else {
+            reg_value = (reg_value + 1U) & ~1U;
+            (pbuf_reg + ep_num)->rx_count = (uint16_t)(reg_value << 9U);
+        }
+
+        if (ENDP_DBL_BUF == buf_kind) {
+            USBD_ENDP_RX_STATUS_SET(ep_num, EPRX_DISABLED);
+            USBD_ENDP_TX_STATUS_SET(ep_num, EPTX_NAK);
+        } else {
+            /* configure the endpoint status as NAK status */
+            USBD_ENDP_RX_STATUS_SET(ep_num, EPRX_NAK);
+        }
+    }
 }
 
 /*!
@@ -252,7 +317,7 @@ void  usbd_ep_tx (usbd_core_handle_struct *pudev, uint8_t ep_addr, uint8_t *pbuf
 }
 
 /*!
-    \brief      set an endpoint to STALL status
+    \brief      set an endpoint to stall status
     \param[in]  pudev: pointer to usb core instance
     \param[in]  ep_addr: endpoint address
                   in this parameter:

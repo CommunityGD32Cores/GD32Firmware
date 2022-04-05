@@ -2,13 +2,39 @@
     \file  usbd_std.c
     \brief USB device stand routines
     \note  about USB standard, please refer to the USB2.0 protocol
+
+    \version 2014-12-26, V1.0.0, firmware for GD32F10x
+    \version 2017-06-20, V2.0.0, firmware for GD32F10x
+    \version 2018-07-31, V2.1.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, firmware for GD32F10x
-    2017-06-20, V2.0.0, firmware for GD32F10x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "usbd_std.h"
@@ -165,7 +191,7 @@ uint8_t  usbd_in_transaction (usbd_core_handle_struct *pudev, uint8_t ep_num)
                 /* continue to transmit remain data */
                 usbd_ep_tx (pudev, EP0_IN, ep->trs_buf, (uint16_t)ep->trs_len);
 
-                usbd_ep_rx (pudev, 0, NULL, 0);
+                usbd_ep_rx (pudev, 0U, NULL, 0U);
             } else {
 #ifndef USB_DFU
                 /* transmit length is maxpacket multiple, so send zero length packet */
@@ -174,7 +200,7 @@ uint8_t  usbd_in_transaction (usbd_core_handle_struct *pudev, uint8_t ep_num)
 
                     pudev->ctl_count = 0U;
 
-                    usbd_ep_rx (pudev, 0, NULL, 0);
+                    usbd_ep_rx (pudev, 0U, NULL, 0U);
                 } else
 #endif /* USB_DFU */
                 {
@@ -285,7 +311,13 @@ static void  usbd_reserved (usbd_core_handle_struct *pudev, usb_device_req_struc
 }
 
 #ifdef LPM_ENABLED
-
+/*!
+    \brief      get BOS descriptor
+    \param[in]  pudev: pointer to USB device instance
+    \param[in]  pLen: data length pointer
+    \param[out] none
+    \retval     descriptor buffer pointer
+*/
 static uint8_t* usbd_bos_descriptor_get (usbd_core_handle_struct *pudev, uint16_t *pLen)
 {
     *pLen = pudev->bos_desc[2] | ((uint16_t)pudev->bos_desc[3] << 8);
@@ -612,15 +644,16 @@ static void  usbd_getdescriptor (usbd_core_handle_struct *pudev, usb_device_req_
 {
     if (USB_REQTYPE_DEVICE == (req->bmRequestType & USB_REQ_RECIPIENT_MASK)) {
         uint8_t *pbuf = NULL;
-        uint8_t  desc_index = (uint8_t)(req->wValue >> 8);
+        uint8_t  desc_type = (uint8_t)(req->wValue >> 8);
+        uint8_t  desc_index = (uint8_t)(req->wValue) & 0xFFU;
         uint16_t len = 0U;
 
-        if (desc_index <= 0x03U) {
+        if ((desc_type <= 0x03U) && (desc_index <= 0x05U)) {
             /* call corresponding descriptor get function */
-            pbuf = standard_descriptor_get[desc_index - 1U](pudev, (uint8_t)(req->wValue) & 0xFFU, &len);
+            pbuf = standard_descriptor_get[desc_type - 1U](pudev, desc_index, &len);
         } 
 #ifdef LPM_ENABLED
-        else if (USB_DESCTYPE_BOS == desc_index) {
+        else if (USB_DESCTYPE_BOS == desc_type) {
             pbuf = usbd_bos_descriptor_get(pudev, &len);
         }
 #endif /* LPM_ENABLED */
@@ -666,7 +699,7 @@ static void  usbd_getconfiguration (usbd_core_handle_struct *pudev, usb_device_r
 {
     uint32_t usbd_default_config = 0U;
 
-    if (req->wLength != 1) {
+    if (req->wLength != 1U) {
         usbd_enum_error(pudev, req);
     } else {
         switch (pudev->status) {
@@ -674,7 +707,7 @@ static void  usbd_getconfiguration (usbd_core_handle_struct *pudev, usb_device_r
             usbd_ep_tx (pudev, EP0_IN, (uint8_t *)&usbd_default_config, 1U);
             break;
         case USBD_CONFIGURED:
-            usbd_ep_tx (pudev, EP0_IN, &pudev->config_num, 1);
+            usbd_ep_tx (pudev, EP0_IN, &pudev->config_num, 1U);
             break;
         default:
             usbd_enum_error(pudev, req);

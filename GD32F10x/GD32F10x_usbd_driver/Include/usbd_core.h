@@ -1,13 +1,39 @@
 /*!
     \file  usbd_core.h
     \brief USB device driver core
+
+    \version 2014-12-26, V1.0.0, firmware for GD32F10x
+    \version 2017-06-20, V2.0.0, firmware for GD32F10x
+    \version 2018-07-31, V2.1.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, firmware for GD32F10x
-    2017-06-20, V2.0.0, firmware for GD32F10x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef USBD_CORE_H
@@ -102,42 +128,41 @@ typedef struct
 typedef struct
 {
     /* basic parameters */
-    uint8_t        stall;            /*!< endpoint stall status */
-    uint32_t       maxpacket;        /*!< the maxpacket of the endpoint */
+    uint8_t        stall;               /*!< endpoint stall status */
+    uint32_t       maxpacket;           /*!< the maxpacket of the endpoint */
 
     /* transaction level parameters */
-    uint8_t       *trs_buf;          /*!< transaction buffer address */
-    uint32_t       trs_len;          /*!< transaction buffer length */
-    uint32_t       trs_count;        /*!< transaction data counts */
+    uint8_t       *trs_buf;             /*!< transaction buffer address */
+    uint32_t       trs_len;             /*!< transaction buffer length */
+    uint32_t       trs_count;           /*!< transaction data counts */
 }usb_ep_struct;
 
 /* USB standard device request structure */
 typedef struct
 {
-    uint8_t    bmRequestType; /*!< the property of the request */
-    uint8_t    bRequest;      /*!< the code of the request */
-    uint16_t   wValue;        /*!< the value of the request which used to choose the different request in the same code request */
-    uint16_t   wIndex;        /*!< USB standard device request index */
-    uint16_t   wLength;       /*!< the return datas length that the host wants to get */
+    uint8_t    bmRequestType;           /*!< the property of the request */
+    uint8_t    bRequest;                /*!< the code of the request */
+    uint16_t   wValue;                  /*!< the value of the request which used to choose the different request in the same code request */
+    uint16_t   wIndex;                  /*!< USB standard device request index */
+    uint16_t   wLength;                 /*!< the return datas length that the host wants to get */
 }usb_device_req_struct;
 
 /* USB core driver struct */
 typedef struct
 {
     /* basic parameters */
-    uint8_t  config_num;      /*!< the number of the USB device configuration */
-    uint8_t  status;          /*!< USB device status */
-    uint8_t  prev_status;     /*!< the previous USB device status */
-    uint8_t  remote_wakeup;   /*!< the flag that point out the device whether support the 
-                                   remte wakeup function */
+    uint8_t  config_num;                /*!< the number of the USB device configuration */
+    __IO uint8_t  status;               /*!< USB device status */
+    uint8_t  prev_status;               /*!< the previous USB device status */
+    uint8_t  remote_wakeup;             /*!< the flag that point out the device whether support the remote wakeup function */
 
     /* the parameters which needs in control transfer */
-    uint8_t  setup_packet[8];      /*!< the buffer used to store the setup packet */
-    uint32_t ctl_count;            /*!< the datas length of control transfer request */
+    uint8_t  setup_packet[8];           /*!< the buffer used to store the setup packet */
+    uint32_t ctl_count;                 /*!< the datas length of control transfer request */
 
     /* device endpoints */
-    usb_ep_struct in_ep[EP_COUNT];      /*!< the IN direction endpoints */
-    usb_ep_struct out_ep[EP_COUNT];     /*!< the OUT direction endpoints */
+    usb_ep_struct in_ep[EP_COUNT];      /*!< the in direction endpoints */
+    usb_ep_struct out_ep[EP_COUNT];     /*!< the out direction endpoints */
 
 #ifdef LPM_ENABLED
     uint8_t *bos_desc;                  /*!< BOS descriptor */
@@ -167,14 +192,14 @@ void  usbd_core_deinit (void);
 void  user_buffer_free (uint8_t ep_num, uint8_t dir);
 
 /* endpoint initialization */
-void  usbd_ep_init (usbd_core_handle_struct *pudev, void *pep_desc);
+void  usbd_ep_init (usbd_core_handle_struct *pudev, usbd_epkind_enum buf_kind, void *pep_desc);
 /* configure the endpoint when it is disabled */
 void  usbd_ep_deinit (usbd_core_handle_struct *pudev, uint8_t ep_addr);
 /* endpoint prepare to transmit data */
 void  usbd_ep_tx (usbd_core_handle_struct *pudev, uint8_t ep_addr, uint8_t *pbuf, uint16_t buf_len);
 /* endpoint prepare to receive data */
 void  usbd_ep_rx (usbd_core_handle_struct *pudev, uint8_t ep_addr, uint8_t *pbuf, uint16_t buf_len);
-/* set an endpoint to STALL status */
+/* set an endpoint to stall status */
 void  usbd_ep_stall (usbd_core_handle_struct *pudev, uint8_t ep_addr);
 /* clear endpoint stalled status */
 void  usbd_ep_clear_stall (usbd_core_handle_struct *pudev, uint8_t ep_addr);

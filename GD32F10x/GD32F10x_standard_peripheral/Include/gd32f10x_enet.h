@@ -1,13 +1,39 @@
 /*!
-    \file  gd32f10x_enet.h
-    \brief definitions for the ENET
+    \file    gd32f10x_enet.h
+    \brief   definitions for the ENET
+
+    \version 2014-12-26, V1.0.0, firmware for GD32F10x
+    \version 2017-06-20, V2.0.0, firmware for GD32F10x
+    \version 2018-07-31, V2.1.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, firmware for GD32F10x
-    2017-06-20, V2.0.0, firmware for GD32F10x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F10x_ENET_H
@@ -1318,8 +1344,6 @@ void enet_rx_enable(void);
 void enet_rx_disable(void);
 /* put registers value into the application buffer */
 void enet_registers_get(enet_registers_type_enum type, uint32_t *preg, uint32_t num);
-/* get the enet debug status from the debug register */
-uint32_t enet_debug_status_get(uint32_t mac_debug);
 /* enable the MAC address filter */
 void enet_address_filter_enable(enet_macaddress_enum mac_addr);
 /* disable the MAC address filter */
@@ -1380,10 +1404,10 @@ FlagStatus enet_desc_flag_get(enet_descriptors_struct *desc, uint32_t desc_flag)
 void enet_desc_flag_set(enet_descriptors_struct *desc, uint32_t desc_flag);
 /* clear the bit flag of ENET dma tx descriptor */
 void enet_desc_flag_clear(enet_descriptors_struct *desc, uint32_t desc_flag); 
-/* when receiving the completed, set RS bit in ENET_DMA_STAT register will immediately set */
-void enet_rx_desc_immediate_receive_complete_interrupt(enet_descriptors_struct *desc);
-/* when receiving the completed, set RS bit in ENET_DMA_STAT register will is set after a configurable delay time */
-void enet_rx_desc_delay_receive_complete_interrupt(enet_descriptors_struct *desc, uint32_t delay_time);
+/* when receiving the completed, set RS bit in ENET_DMA_STAT register will set */
+void enet_desc_receive_complete_bit_enable(enet_descriptors_struct *desc);
+/* when receiving the completed, set RS bit in ENET_DMA_STAT register will not set */
+void enet_desc_receive_complete_bit_disable(enet_descriptors_struct *desc);
 /* drop current receive frame */
 void enet_rxframe_drop(void);
 /* enable DMA feature */
@@ -1445,8 +1469,6 @@ void enet_ptp_timestamp_update_config(uint32_t sign, uint32_t second, uint32_t s
 void enet_ptp_expected_time_config(uint32_t second, uint32_t nanosecond);
 /* get the PTP current system time */
 void enet_ptp_system_time_get(enet_ptp_systime_struct *systime_struct);
-/* configure the PPS output frequency */
-void enet_ptp_pps_output_frequency_config(uint32_t freq);
 /* configure and start PTP timestamp counter */
 void enet_ptp_start(int32_t updatemethod, uint32_t init_sec, uint32_t init_subsec, uint32_t carry_cfg, uint32_t accuracy_cfg);
 /* adjust frequency in fine method by configure addend register */

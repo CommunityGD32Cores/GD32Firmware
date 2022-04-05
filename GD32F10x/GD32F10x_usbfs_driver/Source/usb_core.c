@@ -1,13 +1,39 @@
 /*!
     \file  usb_core.c
     \brief USB core driver which can operate in host-mode and device-mode
+
+    \version 2014-12-26, V1.0.0, firmware for GD32F10x
+    \version 2017-06-20, V2.0.0, firmware for GD32F10x
+    \version 2018-07-31, V2.1.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, firmware for GD32F10x
-    2017-06-20, V2.0.0, firmware for GD32F10x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "usb_core.h"
@@ -72,7 +98,7 @@ static usb_status_enum usb_core_reset (usb_core_handle_struct *pudev)
 }
 
 /*!
-    \brief      write a packet into the Tx FIFO associated with the endpoint
+    \brief      write a packet into the tx fifo associated with the endpoint
     \param[in]  src: pointer to source buffer
     \param[in]  chep_num: channel or endpoint identifier which is in (0..3)
     \param[in]  len: packet length
@@ -96,7 +122,7 @@ usb_status_enum usb_fifo_write (uint8_t *src, uint8_t chep_num, uint16_t len)
 }
 
 /*!
-    \brief      read a packet from the Rx FIFO associated with the endpoint
+    \brief      read a packet from the rx fifo associated with the endpoint
     \param[in]  dest: pointer to destination buffer
     \param[in]  len: packet length
     \param[out] none
@@ -175,7 +201,7 @@ usb_status_enum usb_core_init (usb_core_handle_struct *pudev)
     /* active the transceiver and enable vbus sensing */
     USB_GCCFG |= GCCFG_PWRON | GCCFG_VBUSACEN | GCCFG_VBUSBCEN;
 
-    /* set Tx FIFO empty level to half empty mode */
+    /* set tx fifo empty level to half empty mode */
     USB_GAHBCS &= ~GAHBCS_TXFTH | TXFIFO_EMPTY_HALF;
 
 #ifndef VBUS_SENSING_ENABLED
@@ -202,9 +228,9 @@ usb_status_enum usb_core_init (usb_core_handle_struct *pudev)
 }
 
 /*!
-    \brief      flush a Tx FIFO or all Tx FIFOs
+    \brief      flush a tx fifo or all tx fifos
     \param[in]  pudev: pointer to usb device
-    \param[in]  fifo_num: FIFO number which is in (0..3)
+    \param[in]  fifo_num: fifo number which is in (0..3)
     \param[out] none
     \retval     operation status
 */
@@ -214,7 +240,7 @@ usb_status_enum usb_txfifo_flush (usb_core_handle_struct *pudev, uint8_t fifo_nu
 
     USB_GRSTCTL = ((uint32_t)fifo_num << 6U) | GRSTCTL_TXFF;
 
-    /* wait for Tx FIFO flush bit is set */
+    /* wait for tx fifo flush bit is set */
     do {
         if (++count > 200000U) {
             break;
@@ -230,7 +256,7 @@ usb_status_enum usb_txfifo_flush (usb_core_handle_struct *pudev, uint8_t fifo_nu
 }
 
 /*!
-    \brief      flush the entire Rx FIFO
+    \brief      flush the entire rx fifo
     \param[in]  pudev: pointer to usb device
     \param[out] none
     \retval     operation status
@@ -241,7 +267,7 @@ usb_status_enum usb_rxfifo_flush (usb_core_handle_struct *pudev)
 
     USB_GRSTCTL = GRSTCTL_RXFF;
 
-    /* wait for Rx FIFO flush bit is set */
+    /* wait for rx fifo flush bit is set */
     do {
         if (++count > 200000U) {
             break;
@@ -315,19 +341,19 @@ usb_status_enum usb_hostcore_init (usb_core_handle_struct *pudev)
     /* reset USB port */
     usb_port_reset(pudev);
 
-    /* configure data FIFO sizes */
+    /* configure data fifo sizes */
     if (USB_FS_CORE_ID == pudev->cfg.core_id) {
-        /* set Rx FIFO size */
+        /* set rx fifo size */
         USB_GRFLEN = USBFS_RX_FIFO_SIZE;
 
-        /* set non-periodic Tx FIFO size and address */
+        /* set non-periodic tx fifo size and address */
         nptxfifolen &= ~HNPTFLEN_HNPTXRSAR;
         nptxfifolen |= USBFS_RX_FIFO_SIZE;
         nptxfifolen &= ~HNPTFLEN_HNPTXFD;
         nptxfifolen |= USBFS_HTX_NPFIFO_SIZE << 16;
         USB_HNPTFLEN = nptxfifolen;
 
-        /* set periodic Tx FIFO size and address */
+        /* set periodic tx fifo size and address */
         ptxfifolen &= ~HPTFLEN_HPTXFSAR;
         ptxfifolen |= USBFS_RX_FIFO_SIZE + USBFS_HTX_PFIFO_SIZE;
         ptxfifolen &= ~HPTFLEN_HPTXFD;
@@ -337,19 +363,19 @@ usb_status_enum usb_hostcore_init (usb_core_handle_struct *pudev)
 
 #ifdef USE_OTG_MODE
 
-    /* clear Host Set HNP Enable bit in the USB OTG Control Register */
+    /* clear host set HNP enable bit in the USB OTG control register */
     otgctl |= GOTGCS_HHNPEN;
     USB_GOTGCS &= ~otgctl;
     USB_GOTGCS |= 0;
 
 #endif /* USE_OTG_MODE */
 
-    /* make sure the FIFOs are flushed */
+    /* make sure the fifos are flushed */
 
-    /* flush all Tx FIFOs in device or host mode */
+    /* flush all tx fifos in device or host mode */
     usb_txfifo_flush(pudev, 0x10U);
 
-    /* flush the entire Rx FIFO */
+    /* flush the entire rx fifo */
     usb_rxfifo_flush(pudev);
 
     /* clear all pending host channel interrupts */
@@ -585,15 +611,15 @@ usb_status_enum usb_hostchannel_startxfer(usb_core_handle_struct *pudev, uint8_t
     chxlen &= ~HCHLEN_TLEN;
     chxlen |= puhc->xfer_len;
     chxlen &= ~HCHLEN_PCNT;
-    chxlen |= (uint32_t)packet_num << 19;
+    chxlen |= (uint32_t)packet_num << 19U;
     chxlen &= ~HCHLEN_DPID;
-    chxlen |= (uint32_t)(puhc->DPID) << 29;
+    chxlen |= (uint32_t)(puhc->DPID) << 29U;
     USB_HCHxLEN((uint16_t)hc_num) = (uint32_t)chxlen;
 
     /* set host channel enable */
     chctl = USB_HCHxCTL((uint16_t)hc_num);
 
-    if (1 == USB_EVEN_FRAME()) {
+    if (1U == USB_EVEN_FRAME()) {
         chctl |= HCHCTL_ODDFRM;
     } else {
         chctl &= ~HCHCTL_ODDFRM;
@@ -722,7 +748,7 @@ usb_status_enum usb_devcore_init (usb_core_handle_struct *pudev)
     __IO uint32_t devinep0intf = USB_DIEP0TFLEN;
     __IO uint32_t devinepintf = 0U;
 
-    /* restart the Phy Clock (Maybe don't need to...) */
+    /* restart the phy clock (maybe don't need to...) */
     USB_PWRCLKCTL = 0U;
 
     /* config periodic frmae interval to default */
@@ -734,11 +760,11 @@ usb_status_enum usb_devcore_init (usb_core_handle_struct *pudev)
         USB_DCFG &= ~DCFG_DS;
         USB_DCFG |= USB_SPEED_INP_FULL;
 
-        /* set Rx FIFO size */
+        /* set rx fifo size */
         USB_GRFLEN &= ~GRFLEN_RXFD;
         USB_GRFLEN |= (uint32_t)RX_FIFO_FS_SIZE;
 
-        /* set endpoint 0 Tx FIFO length and RAM address */
+        /* set endpoint 0 tx fifo length and RAM address */
         devinep0intf &= ~DIEP0TFLEN_IEP0TXFD;
         devinep0intf |= (uint32_t)TX0_FIFO_FS_SIZE << 16;
         devinep0intf &= ~DIEP0TFLEN_IEP0TXRSAR;
@@ -748,7 +774,7 @@ usb_status_enum usb_devcore_init (usb_core_handle_struct *pudev)
 
         ram_address = (uint32_t)RX_FIFO_FS_SIZE;
 
-        /* set endpoint 1 to 3's Tx FIFO length and RAM address */
+        /* set endpoint 1 to 3's tx fifo length and RAM address */
         for (i = 1U; i < USBFS_MAX_DEV_EPCOUNT; i++) {
             ram_address += USBFS_TX_FIFO_SIZE[i - 1U];
 
@@ -761,12 +787,12 @@ usb_status_enum usb_devcore_init (usb_core_handle_struct *pudev)
         }
     }
 
-    /* make sure all FIFOs are flushed */
+    /* make sure all fifos are flushed */
 
-    /* flush all Tx FIFOs */
+    /* flush all tx fifos */
     usb_txfifo_flush(pudev, 0x10U);
 
-    /* flush entire Rx FIFO */
+    /* flush entire rx fifo */
     usb_rxfifo_flush(pudev);
 
     /* clear all pending device interrupts */
@@ -775,7 +801,7 @@ usb_status_enum usb_devcore_init (usb_core_handle_struct *pudev)
     USB_DAEPINT = 0xFFFFFFFFU;
     USB_DAEPINTEN = 0U;
 
-    /* configure all IN/OUT endpoints */
+    /* configure all in/out endpoints */
     for (i = 0U; i < pudev->cfg.dev_endp_num; i++) {
         if (USB_DIEPxCTL(i) & DEPCTL_EPEN) {
             USB_DIEPxCTL(i) |= DEPCTL_EPD | DEPCTL_SNAK;
@@ -789,11 +815,11 @@ usb_status_enum usb_devcore_init (usb_core_handle_struct *pudev)
             USB_DOEPxCTL(i) = 0U;
         }
 
-        /* set IN/OUT endpoint transfer length to 0 */
+        /* set in/out endpoint transfer length to 0 */
         USB_DIEPxLEN(i) = 0U;
         USB_DOEPxLEN(i) = 0U;
 
-        /* clear all pending IN/OUT endpoints interrupts */
+        /* clear all pending in/out endpoints interrupts */
         USB_DIEPxINTF(i) = 0xFFU;
         USB_DOEPxINTF(i) = 0xFFU;
     }
@@ -840,7 +866,7 @@ static usb_status_enum usb_devint_enable(usb_core_handle_struct *pudev)
 }
 
 /*!
-    \brief      configures endpoint 0 to receive SETUP packets
+    \brief      configures endpoint 0 to receive setup packets
     \param[in]  pudev: pointer to usb device
     \param[out] none
     \retval     none
@@ -849,15 +875,15 @@ void usb_ep0_startout(usb_core_handle_struct *pudev)
 {
     __IO uint32_t ep0len = 0U;
 
-    /* set OUT endpoint 0 receive length to 24 bytes */
+    /* set out endpoint 0 receive length to 24 bytes */
     ep0len &= ~DOEP0LEN_TLEN;
     ep0len |= 8U * 3U;
 
-    /* set OUT endpoint 0 receive length to 1 packet */
+    /* set out endpoint 0 receive length to 1 packet */
     ep0len &= ~DOEP0LEN_PCNT;
     ep0len |= 1U << 19;
 
-    /* set SETUP packet count to 3 */
+    /* set setup packet count to 3 */
     ep0len &= ~DOEP0LEN_STPCNT;
     ep0len |= 3U << 29;
 

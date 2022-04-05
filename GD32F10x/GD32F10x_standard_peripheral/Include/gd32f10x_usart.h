@@ -1,13 +1,39 @@
 /*!
-    \file  gd32f10x_usart.h
-    \brief definitions for the USART
+    \file    gd32f10x_usart.h
+    \brief   definitions for the USART 
+
+    \version 2014-12-26, V1.0.0, firmware for GD32F10x
+    \version 2017-06-20, V2.0.1, firmware for GD32F10x
+    \version 2018-07-31, V2.1.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, firmware for GD32F10x
-    2017-06-20, V2.0.0, firmware for GD32F10x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F10X_USART_H
@@ -16,20 +42,20 @@
 #include "gd32f10x.h"
 
 /* USARTx(x=0,1,2)/UARTx(x=3,4) definitions */
-#define USART1                        USART_BASE                     /*!< USART1 base address */
-#define USART2                        (USART_BASE+0x00000400U)       /*!< USART2 base address */
-#define UART3                         (USART_BASE+0x00000800U)       /*!< UART3 base address */
-#define UART4                         (USART_BASE+0x00000C00U)       /*!< UART4 base address */
-#define USART0                        (USART_BASE+0x0000F400U)       /*!< USART0 base address */
+#define USART1                        USART_BASE                       /*!< USART1 base address */
+#define USART2                        (USART_BASE+(0x00000400U))       /*!< USART2 base address */
+#define UART3                         (USART_BASE+(0x00000800U))       /*!< UART3 base address */
+#define UART4                         (USART_BASE+(0x00000C00U))       /*!< UART4 base address */
+#define USART0                        (USART_BASE+(0x0000F400U))       /*!< USART0 base address */
 
 /* registers definitions */
-#define USART_STAT(usartx)            REG32((usartx) + 0x00U)        /*!< USART status register */
-#define USART_DATA(usartx)            REG32((usartx) + 0x04U)        /*!< USART data register */
-#define USART_BAUD(usartx)            REG32((usartx) + 0x08U)        /*!< USART baud rate register */
-#define USART_CTL0(usartx)            REG32((usartx) + 0x0CU)        /*!< USART control register 0 */
-#define USART_CTL1(usartx)            REG32((usartx) + 0x10U)        /*!< USART control register 1 */
-#define USART_CTL2(usartx)            REG32((usartx) + 0x14U)        /*!< USART control register 2 */
-#define USART_GP(usartx)              REG32((usartx) + 0x18U)        /*!< USART guard time and prescaler register */
+#define USART_STAT(usartx)            REG32((usartx) + (0x00000000U))  /*!< USART status register */
+#define USART_DATA(usartx)            REG32((usartx) + (0x00000004U))  /*!< USART data register */
+#define USART_BAUD(usartx)            REG32((usartx) + (0x00000008U))  /*!< USART baud rate register */
+#define USART_CTL0(usartx)            REG32((usartx) + (0x0000000CU))  /*!< USART control register 0 */
+#define USART_CTL1(usartx)            REG32((usartx) + (0x00000010U))  /*!< USART control register 1 */
+#define USART_CTL2(usartx)            REG32((usartx) + (0x00000014U))  /*!< USART control register 2 */
+#define USART_GP(usartx)              REG32((usartx) + (0x00000018U))  /*!< USART guard time and prescaler register */
 
 /* bits definitions */
 /* USARTx_STAT */
@@ -98,18 +124,18 @@
 /* constants definitions */
 /* define the USART bit position and its register index offset */
 #define USART_REGIDX_BIT(regidx, bitpos)     (((uint32_t)(regidx) << 6) | (uint32_t)(bitpos))
-#define USART_REG_VAL(usartx, offset)        (REG32((usartx) + (((uint32_t)(offset) & 0xFFFFU) >> 6)))
-#define USART_BIT_POS(val)                   ((uint32_t)(val) & 0x1FU)
+#define USART_REG_VAL(usartx, offset)        (REG32((usartx) + (((uint32_t)(offset) & (0x0000FFFFU)) >> 6)))
+#define USART_BIT_POS(val)                   ((uint32_t)(val) & (0x0000001FU))
 #define USART_REGIDX_BIT2(regidx, bitpos, regidx2, bitpos2)   (((uint32_t)(regidx2) << 22) | (uint32_t)((bitpos2) << 16)\
                                                               | (((uint32_t)(regidx) << 6) | (uint32_t)(bitpos)))
 #define USART_REG_VAL2(usartx, offset)       (REG32((usartx) + ((uint32_t)(offset) >> 22)))
-#define USART_BIT_POS2(val)                  (((uint32_t)(val) & 0x1F0000U) >> 16)
+#define USART_BIT_POS2(val)                  (((uint32_t)(val) & (0x001F0000U)) >> 16)
 
 /* register offset */
-#define USART_STAT_REG_OFFSET               0x00U        /*!< STAT register offset */
-#define USART_CTL0_REG_OFFSET                     0x0CU        /*!< CTL0 register offset */
-#define USART_CTL1_REG_OFFSET                     0x10U        /*!< CTL1 register offset */
-#define USART_CTL2_REG_OFFSET                     0x14U        /*!< CTL2 register offset */
+#define USART_STAT_REG_OFFSET                     (0x00000000U)        /*!< STAT register offset */
+#define USART_CTL0_REG_OFFSET                     (0x0000000CU)        /*!< CTL0 register offset */
+#define USART_CTL1_REG_OFFSET                     (0x00000010U)        /*!< CTL1 register offset */
+#define USART_CTL2_REG_OFFSET                     (0x00000014U)        /*!< CTL2 register offset */
 
 /* USART flags */
 typedef enum
@@ -283,7 +309,7 @@ void usart_lin_mode_enable(uint32_t usart_periph);
 /* LIN mode disable */
 void usart_lin_mode_disable(uint32_t usart_periph);
 /* LIN break detection length */
-void usart_lin_break_dection_length_config(uint32_t usart_periph, uint32_t lblen);
+void usart_lin_break_detection_length_config(uint32_t usart_periph, uint32_t lblen);
 /* send break frame */
 void usart_send_break(uint32_t usart_periph);
 

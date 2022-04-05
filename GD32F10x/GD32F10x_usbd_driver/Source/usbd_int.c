@@ -1,13 +1,39 @@
 /*!
     \file  usbd_int.c
     \brief USB device power interrupt routines
+
+    \version 2014-12-26, V1.0.0, firmware for GD32F10x
+    \version 2017-06-20, V2.0.0, firmware for GD32F10x
+    \version 2018-07-31, V2.1.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, firmware for GD32F10x
-    2017-06-20, V2.0.0, firmware for GD32F10x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "usbd_int.h"
@@ -111,6 +137,93 @@ void  usbd_isr (void)
         usbd_intf_suspend(&usb_device_dev);
     }
 #endif /* LPM_ENABLED */
+}
+
+/*!
+    \brief      handle USB high priority successful transfer event 
+    \param[in]  pudev: pointer to USB device instance
+    \param[out] none
+    \retval     USB device operation status
+*/
+uint8_t  usbd_intf_hpst (usbd_core_handle_struct *pudev)
+{
+    uint8_t ep_num = 0U;
+
+    __IO uint16_t int_status = 0U;
+    __IO uint16_t ep_value = 0U;
+
+    usb_ep_struct *ep = NULL;
+
+    /* wait till interrupts are not pending */
+    while (0U != ((int_status = USBD_INTF) & (uint16_t)INTF_STIF)) {
+        /* get endpoint number and the value of control and state register */
+        ep_num = (uint8_t)(int_status & INTF_EPNUM);
+        ep_value = USBD_EPxCS(ep_num);
+
+        if (0U == (int_status & INTF_DIR)) {
+            /* handle the in direction transaction */
+
+            ep = &(pudev->in_ep[ep_num]);
+
+            if (0U != (ep_value & EPxCS_TX_ST)) {
+                /* clear successful transmit interrupt flag */
+                USBD_ENDP_TX_STAT_CLEAR(ep_num);
+                
+                if (ep_value & EPxCS_TX_DTG) {
+                    /* just handle single buffer situation */
+                    ep->trs_count = (pbuf_reg + ep_num)->tx_count & EPTCNT_CNT;
+                }
+
+                /* maybe mutiple packets */
+                ep->trs_buf += ep->trs_count;
+
+                usbd_in_transaction(pudev, ep_num);
+            }
+        } else {
+            /* handle the out direction transaction */
+
+            uint16_t count = 0U;
+
+            ep = &(pudev->out_ep[ep_num]);
+
+            if (0U != (ep_value & EPxCS_RX_ST)) {
+                /* clear successful receive interrupt flag */
+                USBD_ENDP_RX_STAT_CLEAR(ep_num);
+
+                if (ep_value & EPxCS_TX_DTG) {
+                    count = (pbuf_reg + ep_num)->tx_count & (uint16_t)EPRCNT_CNT;
+
+                    if (0U != count) {
+                        usbd_ep_data_read(ep->trs_buf, (pbuf_reg + ep_num)->tx_addr, count);
+                    }
+                } else {
+                    count = (pbuf_reg + ep_num)->rx_count & (uint16_t)EPRCNT_CNT;
+
+                    if (0U != count) {
+                        usbd_ep_data_read(ep->trs_buf, (pbuf_reg + ep_num)->rx_addr, count);
+                    }
+                }
+
+                user_buffer_free(ep_num, DBUF_EP_OUT);
+
+                /* maybe mutiple packets */
+                ep->trs_count += count;
+                ep->trs_buf += count;
+                ep->trs_len -= count;
+
+                if ((0U == ep->trs_len) || (count < ep->maxpacket)) {
+                    USBD_ENDP_TX_STATUS_SET(ep_num, EPRX_NAK);
+
+                    /* enter data OUT status */
+                    usbd_out_transaction(pudev, ep_num);
+
+                    ep->trs_count = 0U;
+                }
+            }
+        }
+    }
+
+    return USBD_OK;
 }
 
 /*!
@@ -277,11 +390,14 @@ static uint8_t  usbd_intf_reset (usbd_core_handle_struct *pudev)
     {
         _EP_ADDR_SET(i, i);
     }
+    
+   /* set device address as default address 0 */
+    USBD_REG_SET(USBD_DADDR, DADDR_USBEN);
+
+    /* clear endpoint 0 register */
+    USBD_REG_SET(USBD_EPxCS(EP0), USBD_EPxCS(EP0));
 
     USBD_REG_SET(USBD_EPxCS(EP0), EP_CONTROL | EPRX_VALID | EPTX_NAK);
-
-    /* set device address as default address 0 */
-    USBD_REG_SET(USBD_DADDR, DADDR_USBEN);
 
     pudev->status = USBD_DEFAULT;
 

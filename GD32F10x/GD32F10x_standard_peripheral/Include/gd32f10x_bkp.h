@@ -1,13 +1,39 @@
 /*!
     \file  gd32f10x_bkp.h
     \brief definitions for the BKP
+
+    \version 2014-12-26, V1.0.0, firmware for GD32F10x
+    \version 2017-06-20, V2.0.0, firmware for GD32F10x
+    \version 2018-07-31, V2.1.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, firmware for GD32F10x
-    2017-06-20, V2.0.0, firmware for GD32F10x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F10X_BKP_H
@@ -87,30 +113,6 @@
 #define BKP_TPCS_TIF                    BIT(9)                   /*!< tamper interrupt flag */
 
 /* constants definitions */
-/* BKP register */
-#define BKP_DATA0_9(number)             REG16((BKP) + 0x04U + (number) * 0x04U)
-#define BKP_DATA10_41(number)           REG16((BKP) + 0x40U + ((number)-10U) * 0x04U)
-
-/* get data of BKP data register */
-#define BKP_DATA_GET(regval)            GET_BITS((uint32_t)(regval), 0, 15)
-
-/* RTC clock calibration value */
-#define OCTL_RCCV(regval)               (BITS(0,6) & ((uint32_t)(regval) << 0))
-
-/* RTC output selection */
-#define RTC_OUTPUT_ALARM_PULSE          ((uint16_t)0x0000U)      /*!< RTC alarm pulse is selected as the RTC output */
-#define RTC_OUTPUT_SECOND_PULSE         ((uint16_t)0x0200U)      /*!< RTC second pulse is selected as the RTC output */
-
-/* tamper pin active level */
-#define TAMPER_PIN_ACTIVE_HIGH          ((uint16_t)0x0000U)      /*!< the tamper pin is active high */
-#define TAMPER_PIN_ACTIVE_LOW           ((uint16_t)0x0002U)      /*!< the tamper pin is active low */
-
-/* tamper flag */
-#define BKP_FLAG_TAMPER                 BKP_TPCS_TEF             /*!< tamper event flag */
-
-/* tamper interrupt flag */
-#define BKP_INT_FLAG_TAMPER             BKP_TPCS_TIF             /*!< tamper interrupt flag */
-
 /* BKP data register number */
 typedef enum 
 {
@@ -158,13 +160,36 @@ typedef enum
     BKP_DATA_41,                                                 /*!< BKP data register 41 */
 }bkp_data_register_enum;
 
+/* BKP register */
+#define BKP_DATA0_9(number)             REG16((BKP) + 0x04U + (number) * 0x04U)
+#define BKP_DATA10_41(number)           REG16((BKP) + 0x40U + ((number)-10U) * 0x04U)
+
+/* get data of BKP data register */
+#define BKP_DATA_GET(regval)            GET_BITS((uint32_t)(regval), 0, 15)
+
+/* RTC clock calibration value */
+#define OCTL_RCCV(regval)               (BITS(0,6) & ((uint32_t)(regval) << 0))
+
+/* RTC output selection */
+#define RTC_OUTPUT_ALARM_PULSE          ((uint16_t)0x0000U)      /*!< RTC alarm pulse is selected as the RTC output */
+#define RTC_OUTPUT_SECOND_PULSE         ((uint16_t)0x0200U)      /*!< RTC second pulse is selected as the RTC output */
+
+/* tamper pin active level */
+#define TAMPER_PIN_ACTIVE_HIGH          ((uint16_t)0x0000U)      /*!< the tamper pin is active high */
+#define TAMPER_PIN_ACTIVE_LOW           ((uint16_t)0x0002U)      /*!< the tamper pin is active low */
+
+/* tamper flag */
+#define BKP_FLAG_TAMPER                 BKP_TPCS_TEF             /*!< tamper event flag */
+
+/* tamper interrupt flag */
+#define BKP_INT_FLAG_TAMPER             BKP_TPCS_TIF             /*!< tamper interrupt flag */
 /* function declarations */
 /* reset BKP registers */
 void bkp_deinit(void);
 /* write BKP data register */
-void bkp_write_data(bkp_data_register_enum register_number, uint16_t data);
+void bkp_data_write(bkp_data_register_enum register_number, uint16_t data);
 /* read BKP data register */
-uint16_t bkp_read_data(bkp_data_register_enum register_number);
+uint16_t bkp_data_read(bkp_data_register_enum register_number);
 
 /* RTC related functions */
 /* enable RTC clock calibration output */
@@ -175,7 +200,7 @@ void bkp_rtc_calibration_output_disable(void);
 void bkp_rtc_signal_output_enable(void);
 /* disable RTC alarm or second signal output */
 void bkp_rtc_signal_output_disable(void);
-/* RTC output selection */
+/* select RTC output */
 void bkp_rtc_output_select(uint16_t outputsel);
 /* set RTC clock calibration value */
 void bkp_rtc_calibration_value_set(uint8_t value);
@@ -187,19 +212,19 @@ void bkp_tamper_detection_enable(void);
 void bkp_tamper_detection_disable(void);
 /* set tamper pin active level */
 void bkp_tamper_active_level_set(uint16_t level);
-/* enable tamper pin interrupt */
-void bkp_tamper_interrupt_enable(void);
-/* disable tamper pin interrupt */
-void bkp_tamper_interrupt_disable(void);
 
-/* flag functions */
-/* get BKP flag state */
-FlagStatus bkp_flag_get(uint16_t flag);
-/* clear BKP flag state */
-void bkp_flag_clear(uint16_t flag);
-/* get BKP interrupt flag state */
-FlagStatus bkp_interrupt_flag_get(uint16_t flag);
-/* clear BKP interrupt flag state */
-void bkp_interrupt_flag_clear(uint16_t flag);
+/* interrupt & flag functions */
+/* enable tamper interrupt */
+void bkp_interrupt_enable(void);
+/* disable tamper interrupt */
+void bkp_interrupt_disable(void);
+/* get tamper flag state */
+FlagStatus bkp_flag_get(void);
+/* clear tamper flag state */
+void bkp_flag_clear(void);
+/* get tamper interrupt flag state */
+FlagStatus bkp_interrupt_flag_get(void);
+/* clear tamper interrupt flag state */
+void bkp_interrupt_flag_clear(void);
 
 #endif /* GD32F10X_BKP_H */
