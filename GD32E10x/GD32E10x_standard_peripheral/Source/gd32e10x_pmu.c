@@ -123,6 +123,8 @@ void pmu_to_sleepmode(uint8_t sleepmodecmd)
     if(WFI_CMD == sleepmodecmd){
         __WFI();
     }else{
+        __SEV();
+        __WFE();
         __WFE();
     }
 }

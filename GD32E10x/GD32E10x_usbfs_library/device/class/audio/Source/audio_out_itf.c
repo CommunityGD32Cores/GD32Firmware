@@ -36,13 +36,17 @@ OF SUCH DAMAGE.
 #include "audio_core.h"
 #include "audio_out_itf.h"
 
-static uint8_t init         (uint32_t audiofreq, uint32_t volume, uint32_t options);
-static uint8_t deinit       (uint32_t options);
-static uint8_t audio_cmd    (uint8_t* pbuf, uint32_t size, uint8_t cmd);
-static uint8_t volume_ctl   (uint8_t vol);
-static uint8_t mute_ctl     (uint8_t cmd);
-static uint8_t periodic_tc  (uint8_t cmd);
-static uint8_t get_state    (void);
+/* local function prototypes ('static') */
+static uint8_t init (uint32_t audio_freq, uint32_t volume);
+static uint8_t deinit (void);
+static uint8_t audio_cmd (uint8_t* pbuf, uint32_t size, uint8_t cmd);
+static uint8_t volume_ctl (uint8_t vol);
+static uint8_t mute_ctl (uint8_t cmd);
+static uint8_t periodic_tc (uint8_t cmd);
+static uint8_t get_state (void);
+
+/* local variable defines */
+static uint8_t audio_state = AUDIO_STATE_INACTIVE;
 
 audio_fops_struct audio_out_fops = 
 {
@@ -55,30 +59,29 @@ audio_fops_struct audio_out_fops =
     get_state
 };
 
-static uint8_t audio_state = AUDIO_STATE_INACTIVE;
-
 /*!
-    \brief      initialize and configures all required resources for audio play function
+    \brief      initialize and configures all required resources
     \param[in]  audio_freq: statrt_up audio frequency
     \param[in]  volume: start_up volume to be set
-    \param[in]  options: specific options passed to low layer function
     \param[out] none
-    \retval     AUDIO_OK if all operations succeed, AUDIO_FAIL else
+    \retval     AUDIO_OK if all operations succeed, otherwise, AUDIO_FAIL.
 */
-static uint8_t init (uint32_t audio_freq, uint32_t volume, uint32_t options)
+static uint8_t init (uint32_t audio_freq, uint32_t volume)
 {
     static uint32_t initialized = 0U;
 
     /* check if the low layer has already been initialized */
     if (0U == initialized) {
-        /* call low layer function */
-        if (0U != eval_audio_init(OUTPUT_DEVICE_AUTO, (uint8_t)volume, audio_freq)) {
-            audio_state = AUDIO_STATE_ERROR;
+        /* initialize GPIO */
+        codec_gpio_init();
 
-            return AUDIO_FAIL;
-        }
+        /* initialize i2s */
+        codec_audio_interface_init(audio_freq);
 
-        /* set the initialization flag to prevent reinitializing the interface again */
+        /* initialize DMA */
+        codec_i2s_dma_init();
+
+        /* prevent reinitializing the interface again */
         initialized = 1U;
     }
 
@@ -90,11 +93,11 @@ static uint8_t init (uint32_t audio_freq, uint32_t volume, uint32_t options)
 
 /*!
     \brief      free all resources used by low layer and stops audio-play function
-    \param[in]  options: specific options passed to low layer function
+    \param[in]  none
     \param[out] none
-    \retval     AUDIO_OK if all operations succeed, AUDIO_FAIL else
+    \retval     AUDIO_OK if all operations succeed, otherwise, AUDIO_FAIL.
 */
-static uint8_t deinit (uint32_t options)
+static uint8_t deinit (void)
 {
     /* update the audio state machine */
     audio_state = AUDIO_STATE_INACTIVE;
@@ -112,7 +115,7 @@ static uint8_t deinit (uint32_t options)
       \arg        AUDIO_CMD_RESUME
       \arg        AUDIO_CMD_STOP
     \param[out] none
-    \retval     AUDIO_OK if all operations succeed, AUDIO_FAIL else
+    \retval     AUDIO_OK if all operations succeed, otherwise, AUDIO_FAIL.
 */
 static uint8_t audio_cmd (uint8_t* pbuf, uint32_t size, uint8_t cmd)
 {
@@ -130,20 +133,15 @@ static uint8_t audio_cmd (uint8_t* pbuf, uint32_t size, uint8_t cmd)
         if ((AUDIO_STATE_ACTIVE == audio_state) || \
             (AUDIO_STATE_STOPPED == audio_state) || \
             (AUDIO_STATE_PLAYING == audio_state)) {
-            audio_mal_play((uint32_t)pbuf, size);
+            audio_play((uint32_t)pbuf, size);
             audio_state = AUDIO_STATE_PLAYING;
 
             return AUDIO_OK;
         } else if (AUDIO_STATE_PAUSED == audio_state) {
-            if (eval_audio_pause_resume(AUDIO_RESUME, (uint32_t)pbuf, (size / 2U))) {
-                audio_state = AUDIO_STATE_ERROR;
+            audio_pause_resume(AUDIO_RESUME, (uint32_t)pbuf, (size/2));
+            audio_state = AUDIO_STATE_PLAYING;
 
-                return AUDIO_FAIL;
-            } else {
-                audio_state = AUDIO_STATE_PLAYING;
-
-                return AUDIO_OK;
-            }
+            return AUDIO_OK;
         } else {
             return AUDIO_FAIL;
         }
@@ -153,11 +151,8 @@ static uint8_t audio_cmd (uint8_t* pbuf, uint32_t size, uint8_t cmd)
         if (AUDIO_STATE_PLAYING != audio_state) {
             /* unsupported command */
             return AUDIO_FAIL;
-        } else if (eval_audio_stop(CODEC_PDWN_SW)) {
-            audio_state = AUDIO_STATE_ERROR;
-
-            return AUDIO_FAIL;
         } else {
+            audio_stop();
             audio_state = AUDIO_STATE_STOPPED;
 
             return AUDIO_OK;
@@ -168,11 +163,8 @@ static uint8_t audio_cmd (uint8_t* pbuf, uint32_t size, uint8_t cmd)
         if (AUDIO_STATE_PLAYING != audio_state) {
             /* unsupported command */
             return AUDIO_FAIL;
-        } else if (eval_audio_pause_resume(AUDIO_PAUSE, (uint32_t)pbuf, (size / 2U))) {
-            audio_state = AUDIO_STATE_ERROR;
-
-            return AUDIO_FAIL;
         } else {
+            audio_pause_resume(AUDIO_PAUSE, (uint32_t)pbuf, (size/2));
             audio_state = AUDIO_STATE_PAUSED;
 
             return AUDIO_OK;
@@ -188,7 +180,7 @@ static uint8_t audio_cmd (uint8_t* pbuf, uint32_t size, uint8_t cmd)
     \brief      set the volume level
     \param[in]  vol: volume level to be set in % (from 0% to 100%)
     \param[out] none
-    \retval     AUDIO_OK if all operations succeed, AUDIO_FAIL else
+    \retval     AUDIO_OK if all operations succeed, otherwise, AUDIO_FAIL.
 */
 static uint8_t volume_ctl (uint8_t vol)
 {
@@ -199,7 +191,7 @@ static uint8_t volume_ctl (uint8_t vol)
     \brief      mute or unmute the audio current output
     \param[in]  cmd: can be 0 to unmute, or 1 to mute
     \param[out] none
-    \retval     AUDIO_OK if all operations succeed, AUDIO_FAIL else
+    \retval     AUDIO_OK if all operations succeed, otherwise, AUDIO_FAIL.
 */
 static uint8_t mute_ctl (uint8_t cmd)
 {
@@ -210,7 +202,7 @@ static uint8_t mute_ctl (uint8_t cmd)
     \brief      periodic transfer control
     \param[in]  cmd: command
     \param[out] none
-    \retval     AUDIO_OK if all operations succeed, AUDIO_FAIL else
+    \retval     AUDIO_OK if all operations succeed, otherwise, AUDIO_FAIL.
 */
 static uint8_t periodic_tc (uint8_t cmd)
 {
@@ -221,7 +213,7 @@ static uint8_t periodic_tc (uint8_t cmd)
     \brief      return the current state of the audio machine
     \param[in]  none
     \param[out] none
-    \retval     AUDIO_OK if all operations succeed, AUDIO_FAIL else
+    \retval     AUDIO_OK if all operations succeed, otherwise, AUDIO_FAIL.
 */
 static uint8_t get_state (void)
 {

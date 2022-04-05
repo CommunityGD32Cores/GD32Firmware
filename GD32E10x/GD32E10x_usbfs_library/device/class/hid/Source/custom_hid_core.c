@@ -5,6 +5,7 @@
     \version 2020-08-05, V2.0.0, firmware for GD32E10x
     \version 2020-12-10, V2.0.1, firmware for GD32E10x
     \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2021-06-22, V2.1.1, firmware for GD32E10x
 */
 
 /*
@@ -484,7 +485,7 @@ static uint8_t custom_hid_data_out (usb_dev *udev, uint8_t ep_num)
         break;
     }
 
-    usbd_ep_recev (udev, CUSTOMHID_IN_EP, hid->data, 2U);
+    usbd_ep_recev (udev, CUSTOMHID_OUT_EP, hid->data, 2U);
 
     return USBD_OK;
 }

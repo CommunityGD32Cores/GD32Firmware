@@ -71,11 +71,13 @@ void rcu_deinit(void)
     RCU_CTL |= RCU_CTL_IRC8MEN;
     rcu_osci_stab_wait(RCU_IRC8M);
 
+    RCU_CFG0 &= ~RCU_CFG0_SCS;
+
+    /* reset HXTALEN, CKMEN, PLLEN bits */
+    RCU_CTL &= ~(RCU_CTL_HXTALEN | RCU_CTL_CKMEN | RCU_CTL_PLLEN);
     /* reset CFG0 register */
     RCU_CFG0 &= ~(RCU_CFG0_SCS | RCU_CFG0_AHBPSC | RCU_CFG0_APB1PSC | RCU_CFG0_APB2PSC |
                   RCU_CFG0_ADCPSC | RCU_CFG0_CKOUT0SEL | RCU_CFG0_ADCPSC_2);
-    /* reset HXTALEN, CKMEN, PLLEN bits */
-    RCU_CTL &= ~(RCU_CTL_HXTALEN | RCU_CTL_CKMEN | RCU_CTL_PLLEN);
     /* reset HXTALBPS bit */
     RCU_CTL &= ~RCU_CTL_HXTALBPS;
     /* reset PLLSEL, PREDV0_LSB, PLLMF, USBFSPSC bits */

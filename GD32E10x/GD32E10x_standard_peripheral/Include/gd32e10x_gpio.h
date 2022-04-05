@@ -256,7 +256,7 @@ OF SUCH DAMAGE.
 #define AFIO_PCF0_ADC1_ETRGREG_REMAP     BIT(20)             /*!< ADC 1 external trigger regular conversion remapping */
 #define AFIO_PCF0_SWJ_CFG                BITS(24,26)         /*!< serial wire JTAG configuration */
 #define AFIO_PCF0_SPI2_REMAP             BIT(28)             /*!< SPI2/I2S2 remapping */
-#define AFIO_PCF0_TIMER1ITR0_REMAP       BIT(29)             /*!< TIMER1 internal trigger 0 remapping */
+#define AFIO_PCF0_TIMER1ITI1_REMAP       BIT(29)             /*!< TIMER1 internal trigger 1 remapping */
 
 /* AFIO_EXTISS0 */
 #define AFIO_EXTI0_SS                    BITS(0,3)           /*!< EXTI 0 sources selection */
@@ -416,7 +416,7 @@ typedef FlagStatus bit_status;
 #define GPIO_SWJ_SWDPENABLE_REMAP        ((uint32_t)0x00300000U | (PCF0_SWJ_CFG(2) >> 16))                 /*!< JTAG-DP disabled and SW-DP enabled */
 #define GPIO_SWJ_DISABLE_REMAP           ((uint32_t)0x00300000U | (PCF0_SWJ_CFG(4) >> 16))                 /*!< JTAG-DP disabled and SW-DP disabled */
 #define GPIO_SPI2_REMAP                  ((uint32_t)0x00200000U | (AFIO_PCF0_SPI2_REMAP >> 16))            /*!< SPI2 remapping */
-#define GPIO_TIMER1ITR0_REMAP            ((uint32_t)0x00200000U | (AFIO_PCF0_TIMER1ITR0_REMAP >> 16))      /*!< TIMER1 internal trigger 0 remapping */
+#define GPIO_TIMER1ITI1_REMAP            ((uint32_t)0x00200000U | (AFIO_PCF0_TIMER1ITI1_REMAP >> 16))      /*!< TIMER1 internal trigger 1 remapping */
 #define GPIO_TIMER8_REMAP                ((uint32_t)0x80000000U | AFIO_PCF1_TIMER8_REMAP)                  /*!< TIMER8 remapping */
 #define GPIO_EXMC_NADV_REMAP             ((uint32_t)0x80000000U | AFIO_PCF1_EXMC_NADV)                     /*!< EXMC_NADV connect/disconnect */
 #define GPIO_CTC_REMAP0                  ((uint32_t)0x801B0000U | PCF1_CTC_REMAP(1))                       /*!< CTC remapping(PD15)*/

@@ -4,6 +4,7 @@
 
     \version 2020-08-05, V2.0.0, firmware for GD32E10x
     \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2021-07-26, V2.1.1, firmware for GD32E10x
 */
 
 /*
@@ -207,10 +208,12 @@ static uint32_t usbh_int_port (usb_core_driver *udev)
                 udev->regs.hr->HFT = 48000U;
 
                 if (HCTL_48MHZ != clock_type) {
-                    usb_phyclock_config (udev, HCTL_48MHZ);
-                }
+                    if (USB_EMBEDDED_PHY == udev->bp.phy_itf) {
+                        usb_phyclock_config (udev, HCTL_48MHZ);
+                    }
 
-                port_reset = 1U;
+                    port_reset = 1U;
+                }
             } else {
                 /* for high speed device and others */
                 port_reset = 1U;

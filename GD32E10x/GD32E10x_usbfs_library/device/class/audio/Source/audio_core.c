@@ -36,17 +36,18 @@ OF SUCH DAMAGE.
 
 #include "audio_out_itf.h"
 #include "audio_core.h"
-
 #include <string.h>
+#include <math.h>
 
 #define USBD_VID                     0x28E9U
-#define USBD_PID                     0x9574U
+#define USBD_PID                     0x9585U
 
-#ifdef USE_USB_AUDIO_MICPHONE
-extern volatile uint32_t count_data;
-extern const char wavetestdata[];
-#define LENGTH_DATA    (1747 * 32)
-#endif
+#define VOL_MIN                      0U    /* volume Minimum Value */
+#define VOL_MAX                      100U  /* volume Maximum Value */
+#define VOL_RES                      1U    /* volume Resolution */
+#define VOL_0dB                      70U   /* 0dB is in the middle of VOL_MIN and VOL_MAX */
+
+usbd_audio_handler audio_handler;
 
 /* local function prototypes ('static') */
 static uint8_t audio_init (usb_dev *udev, uint8_t config_index);
@@ -56,7 +57,13 @@ static uint8_t audio_set_intf (usb_dev *udev, usb_req *req);
 static uint8_t audio_ctlx_out (usb_dev *udev);
 static uint8_t audio_data_in (usb_dev *udev, uint8_t ep_num);
 static uint8_t audio_data_out (usb_dev *udev, uint8_t ep_num);
-static uint8_t usbd_audio_sof (usb_dev *udev);
+static uint8_t audio_sof (usb_dev *udev);
+static uint8_t audio_iso_in_incomplete (usb_dev *udev);
+static uint8_t audio_iso_out_incomplete (usb_dev *udev);
+#ifdef USB_SPK_FEEDBACK
+static uint32_t usbd_audio_spk_get_feedback(usb_dev *udev);
+static void get_feedback_fs_rate(uint32_t rate, uint8_t *buf);
+#endif /* USB_SPK_FEEDBACK */
 
 usb_class_core usbd_audio_cb = {
     .init      = audio_init,
@@ -66,13 +73,10 @@ usb_class_core usbd_audio_cb = {
     .ctlx_out  = audio_ctlx_out,
     .data_in   = audio_data_in,
     .data_out  = audio_data_out,
-    .SOF       = usbd_audio_sof
+    .SOF       = audio_sof,
+    .incomplete_isoc_in = audio_iso_in_incomplete,
+    .incomplete_isoc_out = audio_iso_out_incomplete
 };
-
-#define VOL_MIN        0U    /* volume Minimum Value */
-#define VOL_MAX        100U  /* volume Maximum Value */
-#define VOL_RES        1U    /* volume Resolution */
-#define VOL_0dB        70U   /* 0dB is in the middle of VOL_MIN and VOL_MAX */
 
 /* note:it should use the c99 standard when compiling the below codes */
 /* USB standard device descriptor */
@@ -144,10 +148,11 @@ const usb_desc_config_set audio_config_set =
          .bInCollection       = CONFIG_DESC_AS_ITF_COUNT,
 #ifdef USE_USB_AUDIO_MICPHONE
          .baInterfaceNr0       = 0x01U,
-#endif
+#endif /* USE_USB_AUDIO_MICPHONE */
+
 #ifdef USE_USB_AUDIO_SPEAKER
          .baInterfaceNr1       = 0x02U
-#endif
+#endif /* USE_USB_AUDIO_SPEAKER */
     },
 
 #ifdef USE_USB_AUDIO_MICPHONE
@@ -179,8 +184,8 @@ const usb_desc_config_set audio_config_set =
          .bUnitID             = AUDIO_IN_STREAMING_CTRL,
          .bSourceID           = 0x01U,
          .bControlSize        = 0x01U,
-         .bmaControls0        = AUDIO_CONTROL_MUTE,
-         .bmaControls1        = AUDIO_CONTROL_VOLUME,
+         .bmaControls0        = AUDIO_CONTROL_MUTE | AUDIO_CONTROL_VOLUME,
+         .bmaControls1        = 0x00U,
          .iFeature            = 0x00U
     },
 
@@ -198,7 +203,7 @@ const usb_desc_config_set audio_config_set =
          .bSourceID           = 0x02U,
          .iTerminal           = 0x00U
     },
-#endif
+#endif /* USE_USB_AUDIO_MICPHONE */
 
 #ifdef USE_USB_AUDIO_SPEAKER
     .speak_in_terminal = 
@@ -229,8 +234,8 @@ const usb_desc_config_set audio_config_set =
          .bUnitID             = AUDIO_OUT_STREAMING_CTRL,
          .bSourceID           = 0x04U,
          .bControlSize        = 0x01U,
-         .bmaControls0        = AUDIO_CONTROL_MUTE,
-         .bmaControls1        = AUDIO_CONTROL_VOLUME,
+         .bmaControls0        = AUDIO_CONTROL_MUTE | AUDIO_CONTROL_VOLUME,
+         .bmaControls1        = 0x00U,
          .iFeature            = 0x00U
     },
 
@@ -248,7 +253,7 @@ const usb_desc_config_set audio_config_set =
          .bSourceID           = 0x05U,
          .iTerminal           = 0x00U
     },
-#endif
+#endif /* USE_USB_AUDIO_SPEAKER */
 
 #ifdef USE_USB_AUDIO_MICPHONE
     .mic_std_as_itf_zeroband = 
@@ -341,7 +346,7 @@ const usb_desc_config_set audio_config_set =
          .bLockDelayUnits     = 0x00U,
          .wLockDelay          = 0x0000U,
     },
-#endif
+#endif /* USE_USB_AUDIO_MICPHONE */
 
 #ifdef USE_USB_AUDIO_SPEAKER
     .speak_std_as_itf_zeroband = 
@@ -369,7 +374,11 @@ const usb_desc_config_set audio_config_set =
          },
          .bInterfaceNumber    = 0x02U,
          .bAlternateSetting   = 0x01U,
+#ifdef USB_SPK_FEEDBACK
+         .bNumEndpoints       = 0x02U,
+#else
          .bNumEndpoints       = 0x01U,
+#endif /* USB_SPK_FEEDBACK */
          .bInterfaceClass     = USB_CLASS_AUDIO,
          .bInterfaceSubClass  = AUDIO_SUBCLASS_AUDIOSTREAMING,
          .bInterfaceProtocol  = AUDIO_PROTOCOL_UNDEFINED,
@@ -415,11 +424,19 @@ const usb_desc_config_set audio_config_set =
              .bDescriptorType = USB_DESCTYPE_EP 
          },
          .bEndpointAddress    = AUDIO_OUT_EP,
-         .bmAttributes        = USB_ENDPOINT_TYPE_ISOCHRONOUS,
+#ifdef USB_SPK_FEEDBACK
+         .bmAttributes        = USB_EP_ATTR_ISO | USB_EP_ATTR_ASYNC,
+#else
+         .bmAttributes        = USB_EP_ATTR_ISO,
+#endif /* USB_SPK_FEEDBACK */
          .wMaxPacketSize      = SPEAKER_OUT_PACKET,
          .bInterval           = 0x01U,
          .bRefresh            = 0x00U,
+#ifdef USB_SPK_FEEDBACK
+         .bSynchAddress       = AUDIO_FEEDBACK_IN_EP
+#else
          .bSynchAddress       = 0x00U
+#endif /* USB_SPK_FEEDBACK */
     },
 
     .speak_as_endpoint = 
@@ -433,8 +450,26 @@ const usb_desc_config_set audio_config_set =
          .bmAttributes        = 0x00U,
          .bLockDelayUnits     = 0x00U,
          .wLockDelay          = 0x0000U,
+    },
+
+#ifdef USB_SPK_FEEDBACK
+    .speak_feedback_endpoint = 
+    {
+        .header = 
+         {
+             .bLength         = sizeof(usb_desc_FeedBack_ep), 
+             .bDescriptorType = USB_DESCTYPE_EP 
+         },
+         .bEndpointAddress    = AUDIO_FEEDBACK_IN_EP,
+         .bmAttributes        = USB_EP_ATTR_ISO | USB_EP_ATTR_ASYNC | USB_EP_ATTR_FEEDBACK,
+         .wMaxPacketSize      = FEEDBACK_IN_PACKET,
+         .bInterval           = 0x01U,
+         .Refresh             = 0x05U, /* refresh every 32(2^5) ms */
+         .bSynchAddress       = 0x00U,
     }
-#endif
+#endif /* USB_SPK_FEEDBACK */
+
+#endif /* USE_USB_AUDIO_SPEAKER */
 };
 
 /* USB language ID descriptor */
@@ -490,6 +525,7 @@ void *const usbd_audio_strings[] =
     [STR_IDX_SERIAL]  = (uint8_t *)&serial_string
 };
 
+/* USB descriptor configure */
 usb_desc audio_desc = {
     .dev_desc    = (uint8_t *)&audio_dev_desc,
     .config_desc = (uint8_t *)&audio_config_set,
@@ -505,8 +541,6 @@ usb_desc audio_desc = {
 */
 static uint8_t audio_init (usb_dev *udev, uint8_t config_index)
 {
-    static usbd_audio_handler audio_handler;
-
     memset((void *)&audio_handler, 0, sizeof(usbd_audio_handler));
 
 #ifdef USE_USB_AUDIO_MICPHONE
@@ -524,7 +558,7 @@ static uint8_t audio_init (usb_dev *udev, uint8_t config_index)
     /* initialize TX endpoint */
     usbd_ep_setup (udev, &ep);
 }
-#endif
+#endif /* USE_USB_AUDIO_MICPHONE */
 
 #ifdef USE_USB_AUDIO_SPEAKER
 {
@@ -533,28 +567,41 @@ static uint8_t audio_init (usb_dev *udev, uint8_t config_index)
 
     usb_desc_std_ep std_ep = audio_config_set.speak_std_endpoint;
 
-    usb_desc_ep ep = {
+    usb_desc_ep ep1 = {
         .header           = std_ep.header,
         .bEndpointAddress = std_ep.bEndpointAddress,
         .bmAttributes     = std_ep.bmAttributes,
-        .wMaxPacketSize   = std_ep.wMaxPacketSize,
+        .wMaxPacketSize   = SPEAKER_OUT_MAX_PACKET,
         .bInterval        = std_ep.bInterval 
     };
 
     /* initialize RX endpoint */
-    usbd_ep_setup (udev, &ep);
+    usbd_ep_setup (udev, &ep1);
+
+    /* prepare out endpoint to receive next audio packet */
+    usbd_ep_recev (udev, AUDIO_OUT_EP, audio_handler.usb_rx_buffer, SPEAKER_OUT_MAX_PACKET);
 
     /* initialize the audio output hardware layer */
-    if (USBD_OK != audio_out_fops.audio_init(USBD_AUDIO_FREQ_16K, DEFAULT_VOLUME, 0U)) {
+    if (USBD_OK != audio_out_fops.audio_init(USBD_SPEAKER_FREQ, DEFAULT_VOLUME)) {
         return USBD_FAIL;
     }
 
-    /* prepare OUT endpoint to receive audio data */
-    usbd_ep_recev (udev, AUDIO_OUT_EP, (uint8_t*)audio_handler.isoc_out_buff, SPEAKER_OUT_PACKET);
-}
-#endif
+#ifdef USB_SPK_FEEDBACK
+    usb_desc_FeedBack_ep feedback_ep = audio_config_set.speak_feedback_endpoint;
 
-    udev->dev.class_data[USBD_AUDIO_INTERFACE] = (void *)&audio_handler;
+    usb_desc_ep ep2 = {
+        .header           = feedback_ep.header,
+        .bEndpointAddress = feedback_ep.bEndpointAddress,
+        .bmAttributes     = feedback_ep.bmAttributes,
+        .wMaxPacketSize   = feedback_ep.wMaxPacketSize,
+        .bInterval        = feedback_ep.bInterval 
+    };
+
+    /* initialize Tx endpoint */
+    usbd_ep_setup (udev, &ep2);
+#endif /* USB_SPK_FEEDBACK */
+}
+#endif /* USE_USB_AUDIO_SPEAKER */
 
     return USBD_OK;
 }
@@ -571,17 +618,23 @@ static uint8_t audio_deinit (usb_dev *udev, uint8_t config_index)
 #ifdef USE_USB_AUDIO_MICPHONE
     /* deinitialize AUDIO endpoints */
     usbd_ep_clear(udev, AUDIO_IN_EP);
-#endif
+#endif /* USE_USB_AUDIO_MICPHONE */
 
 #ifdef USE_USB_AUDIO_SPEAKER
     /* deinitialize AUDIO endpoints */
     usbd_ep_clear(udev, AUDIO_OUT_EP);
 
     /* deinitialize the audio output hardware layer */
-    if (USBD_OK != audio_out_fops.audio_deinit(0U)) {
+    if (USBD_OK != audio_out_fops.audio_deinit()) {
         return USBD_FAIL;
     }
-#endif
+
+#ifdef USB_SPK_FEEDBACK
+    /* deinitialize AUDIO endpoints */
+    usbd_ep_clear(udev, AUDIO_FEEDBACK_IN_EP);
+#endif /* USB_SPK_FEEDBACK */
+
+#endif /* USE_USB_AUDIO_SPEAKER */
 
     return USBD_OK;
 }
@@ -597,14 +650,12 @@ static uint8_t audio_req_handler (usb_dev *udev, usb_req *req)
 {
     uint8_t status = REQ_NOTSUPP;
 
-    usbd_audio_handler *audio = (usbd_audio_handler *)udev->dev.class_data[USBD_AUDIO_INTERFACE];
-
     usb_transc *transc_in = &udev->dev.transc_in[0];
     usb_transc *transc_out = &udev->dev.transc_out[0];
 
     switch (req->bRequest) {
     case AUDIO_REQ_GET_CUR:
-        transc_in->xfer_buf = audio->audioctl;
+        transc_in->xfer_buf = audio_handler.audioctl;
         transc_in->remain_len = req->wLength;
 
         status = REQ_SUPP;
@@ -612,35 +663,35 @@ static uint8_t audio_req_handler (usb_dev *udev, usb_req *req)
 
     case AUDIO_REQ_SET_CUR:
         if (req->wLength) {
-            transc_out->xfer_buf = audio->audioctl;
+            transc_out->xfer_buf = audio_handler.audioctl;
             transc_out->remain_len = req->wLength;
 
             udev->dev.class_core->command = AUDIO_REQ_SET_CUR;
 
-            audio->audioctl_len = req->wLength;
-            audio->audioctl_unit = BYTE_HIGH(req->wIndex);
+            audio_handler.audioctl_len = req->wLength;
+            audio_handler.audioctl_unit = BYTE_HIGH(req->wIndex);
 
             status = REQ_SUPP;
         }
         break;
-        
+
     case AUDIO_REQ_GET_MIN:
-        *((uint16_t *)audio->audioctl) = VOL_MIN;
-        transc_in->xfer_buf = audio->audioctl;
+        *((uint16_t *)audio_handler.audioctl) = VOL_MIN;
+        transc_in->xfer_buf = audio_handler.audioctl;
         transc_in->remain_len = req->wLength;
         status = REQ_SUPP;
         break;
 
     case AUDIO_REQ_GET_MAX:
-        *((uint16_t *)audio->audioctl) = VOL_MAX;
-        transc_in->xfer_buf = audio->audioctl;
+        *((uint16_t *)audio_handler.audioctl) = VOL_MAX;
+        transc_in->xfer_buf = audio_handler.audioctl;
         transc_in->remain_len = req->wLength;
         status = REQ_SUPP;
         break;
 
     case AUDIO_REQ_GET_RES:
-        *((uint16_t *)audio->audioctl) = VOL_RES;
-        transc_in->xfer_buf = audio->audioctl;
+        *((uint16_t *)audio_handler.audioctl) = VOL_RES;
+        transc_in->xfer_buf = audio_handler.audioctl;
         transc_in->remain_len = req->wLength;
         status = REQ_SUPP;
         break;
@@ -662,8 +713,47 @@ static uint8_t audio_req_handler (usb_dev *udev, usb_req *req)
 static uint8_t audio_set_intf(usb_dev *udev, usb_req *req)
 {
     udev->dev.class_core->alter_set = req->wValue;
-    
-    return USBD_OK;
+
+#ifdef USE_USB_AUDIO_SPEAKER
+
+    uint8_t new_alt;
+
+    if(0xFF != req->wValue){
+        new_alt = req->wValue;
+
+        if(new_alt != 0){
+            /* deinit audio handler */
+            memset((void *)&audio_handler, 0, sizeof(usbd_audio_handler));
+
+            audio_handler.play_flag = 0;
+            audio_handler.isoc_out_rdptr = audio_handler.isoc_out_buff;
+            audio_handler.isoc_out_wrptr = audio_handler.isoc_out_buff;
+
+#ifdef USB_SPK_FEEDBACK
+            /* feedback calculate sample freq */
+            audio_handler.actual_freq = I2S_ACTUAL_SAM_FREQ(USBD_SPEAKER_FREQ);
+            get_feedback_fs_rate(audio_handler.actual_freq, audio_handler.feedback_freq);
+
+            /* send feedback data of estimated frequence*/
+            usbd_ep_send(udev, AUDIO_FEEDBACK_IN_EP, audio_handler.feedback_freq, FEEDBACK_IN_PACKET);
+#endif /* USB_SPK_FEEDBACK */
+        }else{
+            /* stop audio output */
+            audio_out_fops.audio_cmd(audio_handler.isoc_out_rdptr, SPEAKER_OUT_PACKET/2, AUDIO_CMD_STOP);
+
+            audio_handler.play_flag = 0;
+            audio_handler.isoc_out_rdptr = audio_handler.isoc_out_buff;
+            audio_handler.isoc_out_wrptr = audio_handler.isoc_out_buff;
+
+            usbd_fifo_flush (udev, AUDIO_IN_EP);
+            usbd_fifo_flush (udev, AUDIO_FEEDBACK_IN_EP);
+            usbd_fifo_flush (udev, AUDIO_OUT_EP);
+        }
+    }
+
+#endif /* USE_USB_AUDIO_SPEAKER */
+
+    return 0;
 }
 
 /*!
@@ -675,7 +765,6 @@ static uint8_t audio_set_intf(usb_dev *udev, usb_req *req)
 static uint8_t audio_ctlx_out (usb_dev *udev)
 {
 #ifdef USE_USB_AUDIO_SPEAKER
-    usbd_audio_handler *audio = (usbd_audio_handler *)udev->dev.class_data[USBD_AUDIO_INTERFACE];
 
     /* handles audio control requests data */
     /* check if an audio_control request has been issued */
@@ -683,19 +772,20 @@ static uint8_t audio_ctlx_out (usb_dev *udev)
         /* in this driver, to simplify code, only SET_CUR request is managed */
 
         /* check for which addressed unit the audio_control request has been issued */
-        if (AUDIO_OUT_STREAMING_CTRL == audio->audioctl_unit) {
+        if (AUDIO_OUT_STREAMING_CTRL == audio_handler.audioctl_unit) {
             /* in this driver, to simplify code, only one unit is manage */
 
             /* call the audio interface mute function */
-            audio_out_fops.audio_mute_ctl(audio->audioctl[0]);
+            audio_out_fops.audio_mute_ctl(audio_handler.audioctl[0]);
 
             /* reset the audioctl_cmd variable to prevent re-entering this function */
             udev->dev.class_core->command = 0U;
 
-            audio->audioctl_len = 0U;
+            audio_handler.audioctl_len = 0U;
         }
     }
-#endif
+
+#endif /* USE_USB_AUDIO_SPEAKER */
 
     return USBD_OK;
 }
@@ -710,6 +800,7 @@ static uint8_t audio_ctlx_out (usb_dev *udev)
 static uint8_t audio_data_in (usb_dev *udev, uint8_t ep_num)
 {
 #ifdef USE_USB_AUDIO_MICPHONE
+    if(ep_num == EP_ID(AUDIO_IN_EP)){
         if(count_data < LENGTH_DATA){
             /* Prepare next buffer to be sent: dummy data */
             usbd_ep_send(udev, AUDIO_IN_EP,(uint8_t*)&wavetestdata[count_data],MIC_IN_PACKET);
@@ -718,7 +809,18 @@ static uint8_t audio_data_in (usb_dev *udev, uint8_t ep_num)
             usbd_ep_send(udev, AUDIO_IN_EP,(uint8_t*)wavetestdata,MIC_IN_PACKET);
             count_data = MIC_IN_PACKET;
         }
-#endif
+    }
+#endif /* USE_USB_AUDIO_MICPHONE */
+
+#ifdef USB_SPK_FEEDBACK
+    if(ep_num == EP_ID(AUDIO_FEEDBACK_IN_EP)){
+        /* calculate feedback actual freq */
+        audio_handler.actual_freq = usbd_audio_spk_get_feedback(udev);
+        get_feedback_fs_rate(audio_handler.actual_freq, audio_handler.feedback_freq);
+
+        usbd_ep_send(udev, AUDIO_FEEDBACK_IN_EP, audio_handler.feedback_freq, FEEDBACK_IN_PACKET);
+    }
+#endif /* USB_SPK_FEEDBACK */
 
     return USBD_OK;
 }
@@ -733,29 +835,75 @@ static uint8_t audio_data_in (usb_dev *udev, uint8_t ep_num)
 static uint8_t audio_data_out (usb_dev *udev, uint8_t ep_num)
 {
 #ifdef USE_USB_AUDIO_SPEAKER
-    usbd_audio_handler *audio = (usbd_audio_handler *)udev->dev.class_data[USBD_AUDIO_INTERFACE];
 
-    /* increment the Buffer pointer or roll it back when all buffers are full */
-    if (audio->isoc_out_wrptr >= (audio->isoc_out_buff + (SPEAKER_OUT_PACKET * OUT_PACKET_NUM))) {
-        /* all buffers are full: roll back */
-        audio->isoc_out_wrptr = audio->isoc_out_buff;
-    } else {
-        /* increment the buffer pointer */
-        audio->isoc_out_wrptr += SPEAKER_OUT_PACKET;
+    uint16_t usb_rx_length, tail_len;
+
+    /* get receive length */
+    usb_rx_length = ((usb_core_driver *)udev)->dev.transc_out[ep_num].xfer_count;
+
+    if(audio_handler.isoc_out_wrptr >= audio_handler.isoc_out_rdptr){
+        audio_handler.buf_free_size = TOTAL_OUT_BUF_SIZE + audio_handler.isoc_out_rdptr - audio_handler.isoc_out_wrptr;
+    }else{
+        audio_handler.buf_free_size = audio_handler.isoc_out_rdptr - audio_handler.isoc_out_wrptr;
     }
 
-    /* Toggle the frame index */  
-    udev->dev.transc_out[ep_num].frame_num = 
-    (udev->dev.transc_out[ep_num].frame_num)? 0U:1U;
+    /* free buffer enough to save rx data */
+    if(audio_handler.buf_free_size > usb_rx_length){
+        if(audio_handler.isoc_out_wrptr >= audio_handler.isoc_out_rdptr){
+            tail_len = audio_handler.isoc_out_buff + TOTAL_OUT_BUF_SIZE - audio_handler.isoc_out_wrptr;
+
+            if(tail_len >= usb_rx_length){
+                memcpy(audio_handler.isoc_out_wrptr, audio_handler.usb_rx_buffer, usb_rx_length);
+
+                /* increment the buffer pointer */
+                audio_handler.isoc_out_wrptr += usb_rx_length;
+
+                /* increment the Buffer pointer or roll it back when all buffers are full */
+                if(audio_handler.isoc_out_wrptr >= (audio_handler.isoc_out_buff + TOTAL_OUT_BUF_SIZE)){
+                    /* all buffers are full: roll back */
+                    audio_handler.isoc_out_wrptr = audio_handler.isoc_out_buff;
+                }
+            }else{
+                memcpy(audio_handler.isoc_out_wrptr, audio_handler.usb_rx_buffer, tail_len);
+                /* adjust write pointer */
+                audio_handler.isoc_out_wrptr = audio_handler.isoc_out_buff;
+
+                memcpy(audio_handler.isoc_out_wrptr, &audio_handler.usb_rx_buffer[tail_len], usb_rx_length - tail_len);
+                /* adjust write pointer */
+                audio_handler.isoc_out_wrptr += usb_rx_length - tail_len;
+            }
+        }else{
+            memcpy(audio_handler.isoc_out_wrptr, audio_handler.usb_rx_buffer, usb_rx_length);
+
+            /* increment the buffer pointer */
+            audio_handler.isoc_out_wrptr += usb_rx_length;
+        }
+    }
+
+    /* toggle the frame index */  
+    udev->dev.transc_out[ep_num].frame_num = (udev->dev.transc_out[ep_num].frame_num)? 0U:1U;
 
     /* prepare out endpoint to receive next audio packet */
-    usbd_ep_recev (udev, AUDIO_OUT_EP, (uint8_t*)(audio->isoc_out_wrptr), SPEAKER_OUT_PACKET);
+    usbd_ep_recev (udev, AUDIO_OUT_EP, audio_handler.usb_rx_buffer, SPEAKER_OUT_MAX_PACKET);
 
-    /* trigger the start of streaming only when half buffer is full */
-    if ((0U == audio->play_flag) && (audio->isoc_out_wrptr >= (audio->isoc_out_buff + ((SPEAKER_OUT_PACKET * OUT_PACKET_NUM) / 2U)))) {
-        /* enable start of streaming */
-        audio->play_flag = 1U;
+    if(audio_handler.isoc_out_wrptr >= audio_handler.isoc_out_rdptr){
+        audio_handler.buf_free_size = TOTAL_OUT_BUF_SIZE + audio_handler.isoc_out_rdptr - audio_handler.isoc_out_wrptr;
+    }else{
+        audio_handler.buf_free_size = audio_handler.isoc_out_rdptr - audio_handler.isoc_out_wrptr;
     }
+
+    if ((0U == audio_handler.play_flag) && (audio_handler.buf_free_size < TOTAL_OUT_BUF_SIZE/2)) {
+        /* enable start of streaming */
+        audio_handler.play_flag = 1U;
+
+        /* initialize the audio output hardware layer */
+        if (USBD_OK != audio_out_fops.audio_cmd(audio_handler.isoc_out_rdptr, SPEAKER_OUT_MAX_PACKET/2, AUDIO_CMD_PLAY)) {
+            return USBD_FAIL;
+        }
+
+        audio_handler.dam_tx_len = SPEAKER_OUT_MAX_PACKET;
+    }
+
 #endif
 
     return USBD_OK;
@@ -767,45 +915,91 @@ static uint8_t audio_data_out (usb_dev *udev, uint8_t ep_num)
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t usbd_audio_sof (usb_dev *udev)
+static uint8_t audio_sof (usb_dev *udev)
 {
-#ifdef USE_USB_AUDIO_SPEAKER
-    usbd_audio_handler *audio = (usbd_audio_handler *)udev->dev.class_data[USBD_AUDIO_INTERFACE];
+    return USBD_OK;
+}
 
-    /* check if there are available data in stream buffer.
-       in this function, a single variable (play_flag) is used to avoid software delays.
-       the play operation must be executed as soon as possible after the SOF detection. */
-    if (audio->play_flag) {
-        /* start playing received packet */
-        audio_out_fops.audio_cmd((uint8_t*)(audio->isoc_out_rdptr),  /* samples buffer pointer */
-                                 SPEAKER_OUT_PACKET,          /* number of samples in Bytes */
-                                 AUDIO_CMD_PLAY);             /* command to be processed */
+/*!
+    \brief      handles the audio ISO IN Incomplete event
+    \param[in]  udev: pointer to USB device instance
+    \param[out] none
+    \retval     USB device operation status
+*/
+static uint8_t audio_iso_in_incomplete (usb_dev *udev)
+{
+#ifdef USB_SPK_FEEDBACK
+    __IO uint32_t epctl = udev->regs.er_in[EP_ID(AUDIO_FEEDBACK_IN_EP)]->DIEPCTL;
 
-        /* increment the Buffer pointer or roll it back when all buffers all full */
-        if (audio->isoc_out_rdptr >= (audio->isoc_out_buff + (SPEAKER_OUT_PACKET * OUT_PACKET_NUM))) {
-            /* roll back to the start of buffer */
-            audio->isoc_out_rdptr = audio->isoc_out_buff;
-        } else {
-            /* increment to the next sub-buffer */
-            audio->isoc_out_rdptr += SPEAKER_OUT_PACKET;
-        }
+    /* judge FEEDBACK ep is enable */
+    if((epctl & DEPCTL_EPEN)){
+        (void)usb_txfifo_flush (&udev->regs, EP_ID(AUDIO_FEEDBACK_IN_EP));
 
-        /* if all available buffers have been consumed, stop playing */
-        if (audio->isoc_out_rdptr == audio->isoc_out_wrptr) {
-            /* Pause the audio stream */
-            audio_out_fops.audio_cmd((uint8_t*)(audio->isoc_out_buff),   /* samples buffer pointer */
-                                     SPEAKER_OUT_PACKET,          /* number of samples in Bytes */
-                                     AUDIO_CMD_PAUSE);            /* command to be processed */
+        audio_handler.actual_freq = usbd_audio_spk_get_feedback(udev);
+        get_feedback_fs_rate(audio_handler.actual_freq, audio_handler.feedback_freq);
 
-            /* stop entering play loop */
-            audio->play_flag = 0U;
-
-            /* reset buffer pointers */
-            audio->isoc_out_rdptr = audio->isoc_out_buff;
-            audio->isoc_out_wrptr = audio->isoc_out_buff;
-        }
+        /* send feedback data of estimated frequence*/
+        usbd_ep_send(udev, AUDIO_FEEDBACK_IN_EP, audio_handler.feedback_freq, FEEDBACK_IN_PACKET);
     }
-#endif
+#endif /* USB_SPK_FEEDBACK */
 
     return USBD_OK;
 }
+
+/*!
+    \brief      handles the audio ISO OUT Incomplete event
+    \param[in]  udev: pointer to USB device instance
+    \param[out] none
+    \retval     USB device operation status
+*/
+static uint8_t audio_iso_out_incomplete (usb_dev *udev)
+{
+    return USBD_OK;
+}
+
+#ifdef USB_SPK_FEEDBACK
+
+/*!
+    \brief      calculate feedback sample frequency
+    \param[in]  udev: pointer to USB device instance
+    \param[out] none
+    \retval     feedback frequency value
+*/
+static uint32_t usbd_audio_spk_get_feedback(usb_dev *udev)
+{
+    uint32_t fb_freq;
+
+    if(audio_handler.isoc_out_wrptr >= audio_handler.isoc_out_rdptr){
+        audio_handler.buf_free_size = TOTAL_OUT_BUF_SIZE + audio_handler.isoc_out_rdptr - audio_handler.isoc_out_wrptr;
+    }else{
+        audio_handler.buf_free_size = audio_handler.isoc_out_rdptr - audio_handler.isoc_out_wrptr;
+    }
+
+    if(audio_handler.buf_free_size <= (TOTAL_OUT_BUF_SIZE/4)){
+        fb_freq = I2S_ACTUAL_SAM_FREQ(USBD_SPEAKER_FREQ) - FEEDBACK_FREQ_OFFSET;
+    }else if(audio_handler.buf_free_size >= (TOTAL_OUT_BUF_SIZE*3/4)){
+        fb_freq = I2S_ACTUAL_SAM_FREQ(USBD_SPEAKER_FREQ) + FEEDBACK_FREQ_OFFSET;
+    }else{
+        fb_freq = I2S_ACTUAL_SAM_FREQ(USBD_SPEAKER_FREQ);
+    }
+
+    return fb_freq;
+}
+
+/*!
+    \brief      get feedback value from rate in usb full speed
+    \param[in]  rate: sample frequence
+    \param[in]  buf: pointer to result buffer
+    \param[out] none
+    \retval     USB device operation status
+*/
+static void get_feedback_fs_rate(uint32_t rate, uint8_t *buf)
+{
+    rate = ((rate / 1000) << 14) | ((rate % 1000) << 4);
+
+    buf[0] = rate;
+    buf[1] = rate >> 8;
+    buf[2] = rate >> 16;
+}
+
+#endif /* USB_SPK_FEEDBACK */

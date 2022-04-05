@@ -4,6 +4,7 @@
 
     \version 2020-08-05, V2.0.0, firmware for GD32E10x
     \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2021-09-27, V2.1.1, firmware for GD32E10x
 */
 
 /*
@@ -253,7 +254,7 @@ static uint8_t* _usb_config_desc_get (usb_core_driver *udev, uint8_t index, uint
 {
     (void)index;
 
-    *len = udev->dev.desc->config_desc[2];
+    *len = udev->dev.desc->config_desc[2] | (udev->dev.desc->config_desc[3]<< 8);
 
     return udev->dev.desc->config_desc;
 }

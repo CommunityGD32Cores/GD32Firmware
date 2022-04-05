@@ -234,6 +234,12 @@ typedef struct _usbh_host
     uint8_t                              class_num;                         /*!< USB class number */
 
     void                                *data;                              /*!< used for... */
+
+#if USB_LOW_POWER
+    uint8_t                             suspend_flag;                       /*!< host suspend flag */
+    uint8_t                             dev_supp_remote_wkup;               /*!< record device remote wakeup function */
+    uint8_t                             wakeup_mode;                        /*!< record wakeup mode */
+#endif /* USB_LOW_POWER*/
 } usbh_host;
 
 /*!

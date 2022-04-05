@@ -183,7 +183,7 @@ void bkp_rtc_clock_output_select(uint16_t clocksel)
     \brief      select RTC clock calibration direction
     \param[in]  direction: RTC clock calibration direction
                 only one parameter can be selected which is shown as below:
-      \arg        RTC_CLOCK_SLOWED_DOWN: RTC clock slow down
+      \arg        RTC_CLOCK_SLOW_DOWN: RTC clock slow down
       \arg        RTC_CLOCK_SPEED_UP: RTC clock speed up
     \param[out] none
     \retval     none

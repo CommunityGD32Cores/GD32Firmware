@@ -179,7 +179,7 @@ typedef enum
 #define RTC_CLOCK_DIV_1               ((uint16_t)BKP_OCTL_CCOSEL)     /*!< RTC clock div 1 */
 
 /* RTC clock calibration direction */
-#define RTC_CLOCK_SLOWED_DOWN         ((uint16_t)0x0000U)             /*!< RTC clock slow down */
+#define RTC_CLOCK_SLOW_DOWN           ((uint16_t)0x0000U)             /*!< RTC clock slow down */
 #define RTC_CLOCK_SPEED_UP            ((uint16_t)BKP_OCTL_CALDIR)     /*!< RTC clock speed up */
 
 /* tamper pin active level */

@@ -42,10 +42,10 @@ OF SUCH DAMAGE.
 
 /* number of sub-packets in the audio transfer buffer. you can modify this value but always make sure
    that it is an even number and higher than 3 */
-#define OUT_PACKET_NUM                               4U
+#define OUT_PACKET_NUM                               120U
 
 /* total size of the audio transfer buffer */
-#define OUT_BUF_MARGIN                               4U
+#define OUT_BUF_MARGIN                               0U
 #define TOTAL_OUT_BUF_SIZE                           ((uint32_t)((SPEAKER_OUT_PACKET + OUT_BUF_MARGIN) * OUT_PACKET_NUM))
 
 #define AUDIO_CONFIG_DESC_SET_LEN                    (sizeof(usb_desc_config_set))
@@ -238,6 +238,17 @@ typedef struct
     uint16_t wLockDelay;              /*!< indicates the time it takes this endpoint to reliably lock its internal clock recovery circuitry */
 } usb_desc_AS_ep;
 
+typedef struct
+{
+    usb_desc_header header;           /*!< descriptor header, including type and size */
+    uint8_t  bEndpointAddress;        /*!< EP_GENERAL descriptor subtype */
+    uint8_t  bmAttributes;            /*!< transfer type and synchronization type */
+    uint16_t wMaxPacketSize;          /*!< maximum packet size this endpoint is capable of sending or receiving */
+    uint8_t  bInterval;               /*!< polling interval in milliseconds for the endpoint if it is an INTERRUPT or ISOCHRONOUS type */
+    uint8_t  Refresh;                 /*!< bRefresh 1~9, power of 2 */
+    uint8_t  bSynchAddress;           /* bSynchAddress */
+} usb_desc_FeedBack_ep;
+
 #pragma pack()
 
 /* USB configuration descriptor structure */
@@ -275,27 +286,45 @@ typedef struct
     usb_desc_format_type        speak_format_typeI;
     usb_desc_std_ep             speak_std_endpoint;
     usb_desc_AS_ep              speak_as_endpoint;
+#ifdef USB_SPK_FEEDBACK
+    usb_desc_FeedBack_ep        speak_feedback_endpoint;
+#endif
 #endif
 } usb_desc_config_set;
 
 typedef struct
 {
+#ifdef USE_USB_AUDIO_SPEAKER
     /* main buffer for audio data out transfers and its relative pointers */
-    uint8_t  isoc_out_buff[TOTAL_OUT_BUF_SIZE * 2U];
+    uint8_t  isoc_out_buff[TOTAL_OUT_BUF_SIZE];
     uint8_t* isoc_out_wrptr;
     uint8_t* isoc_out_rdptr;
+    uint16_t buf_free_size;
+    uint16_t dam_tx_len;
+
+    __IO uint32_t actual_freq;
+    __IO uint8_t play_flag;
+    uint8_t feedback_freq[3];
+    uint32_t cur_sam_freq;
+
+    /* usb receive buffer */
+    uint8_t usb_rx_buffer[SPEAKER_OUT_MAX_PACKET];
+#endif /* USE_USB_AUDIO_SPEAKER */
 
     /* main buffer for audio control requests transfers and its relative variables */
     uint8_t  audioctl[64];
     uint8_t  audioctl_unit;
     uint32_t audioctl_len;
-
-#ifdef USE_USB_AUDIO_SPEAKER
-    uint32_t play_flag;
-#endif /* USE_USB_AUDIO_SPEAKER */
 } usbd_audio_handler;
+
+#ifdef USE_USB_AUDIO_MICPHONE
+    extern volatile uint32_t count_data;
+    extern const char wavetestdata[];
+    #define LENGTH_DATA    (1747 * 32)
+#endif
 
 extern usb_desc audio_desc;
 extern usb_class_core usbd_audio_cb;
+extern usbd_audio_handler audio_handler;
 
 #endif /* __AUDIO_CORE_H */
