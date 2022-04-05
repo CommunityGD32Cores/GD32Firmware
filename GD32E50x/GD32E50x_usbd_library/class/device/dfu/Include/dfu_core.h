@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -134,7 +135,7 @@ typedef enum {
 
 #pragma pack(1)
 
-/* USB DFU function descriptor struct */
+/* USB DFU function descriptor structure */
 typedef struct
 {
     usb_desc_header header;               /*!< descriptor header, including type and size */
@@ -146,7 +147,7 @@ typedef struct
 
 #pragma pack()
 
-/* USB configuration descriptor struct */
+/* USB configuration descriptor structure */
 typedef struct
 {
     usb_desc_config           config;
@@ -154,7 +155,7 @@ typedef struct
     usb_desc_dfu_func         dfu_func;
 } usb_dfu_desc_config_set;
 
-/* USB DFU handler struct */
+/* USB DFU handler structure */
 typedef struct
 {
     uint8_t bStatus;

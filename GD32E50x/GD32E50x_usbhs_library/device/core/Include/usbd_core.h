@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -80,7 +81,7 @@ __STATIC_INLINE uint16_t usbd_rxcount_get (usb_core_driver *udev, uint8_t ep_num
 }
 
 /* function declarations */
-/* initailizes the USB device-mode stack and load the class driver */
+/* initializes the USB device-mode stack and load the class driver */
 void usbd_init (usb_core_driver *udev, usb_desc *desc, usb_class_core *class_core);
 /* endpoint initialization */
 uint32_t usbd_ep_setup (usb_core_driver *udev, const usb_desc_ep *ep_desc);

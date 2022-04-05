@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -40,25 +41,25 @@ OF SUCH DAMAGE.
 
 /*!
     \brief      send 'Inquiry' command to the device
-    \param[in]  puhost: pointer to USB host handler
+    \param[in]  uhost: pointer to USB host handler
     \param[in]  lun: logic unit number
     \param[in]  inquiry: pointer to the inquiry structure
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_msc_scsi_inquiry (usbh_host *puhost, uint8_t lun, scsi_std_inquiry_data *inquiry)
+usbh_status usbh_msc_scsi_inquiry (usbh_host *uhost, uint8_t lun, scsi_std_inquiry_data *inquiry)
 {
     usbh_status error = USBH_FAIL;
-    usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
+    usbh_msc_handler *msc = (usbh_msc_handler *)uhost->active_class->class_data;
 
     switch (msc->bot.cmd_state) {
     case BOT_CMD_SEND:
-        /* prepare the cbw and relevent field*/
+        /* prepare the CBW and relevant field*/
         msc->bot.cbw.field.dCBWDataTransferLength = STANDARD_INQUIRY_DATA_LEN;
         msc->bot.cbw.field.bmCBWFlags = USB_TRX_IN;
         msc->bot.cbw.field.bCBWCBLength = CBW_LENGTH;
 
-        memset(msc->bot.cbw.field.CBWCB, 0, CBW_LENGTH);
+        memset(msc->bot.cbw.field.CBWCB, 0U, CBW_LENGTH);
 
         msc->bot.cbw.field.CBWCB[0] = SCSI_INQUIRY;
         msc->bot.cbw.field.CBWCB[1] = (lun << 5U);
@@ -71,16 +72,16 @@ usbh_status usbh_msc_scsi_inquiry (usbh_host *puhost, uint8_t lun, scsi_std_inqu
         break;
 
     case BOT_CMD_WAIT:
-        error = usbh_msc_bot_process(puhost, lun);
+        error = usbh_msc_bot_process(uhost, lun);
 
-        if (error == USBH_OK) {
-            memset(inquiry, 0, sizeof(scsi_std_inquiry_data));
+        if (USBH_OK == error) {
+            memset(inquiry, 0U, sizeof(scsi_std_inquiry_data));
 
             /* assign inquiry data */
             inquiry->device_type = msc->bot.pbuf[0] & 0x1FU;
             inquiry->peripheral_qualifier = msc->bot.pbuf[0] >> 5U;
 
-            if (((uint32_t)msc->bot.pbuf[1] & 0x80U) == 0x80U) {
+            if (0x80U == ((uint32_t)msc->bot.pbuf[1] & 0x80U)) {
                 inquiry->removable_media = 1U;
             } else {
                 inquiry->removable_media = 0U;
@@ -101,25 +102,25 @@ usbh_status usbh_msc_scsi_inquiry (usbh_host *puhost, uint8_t lun, scsi_std_inqu
 
 /*!
     \brief      send 'Test unit ready' command to the device
-    \param[in]  puhost: pointer to USB host handler
+    \param[in]  uhost: pointer to USB host handler
     \param[in]  lun: logic unit number
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_msc_test_unitready (usbh_host *puhost, uint8_t lun)
+usbh_status usbh_msc_test_unitready (usbh_host *uhost, uint8_t lun)
 {
     usbh_status status = USBH_FAIL;
-    usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
+    usbh_msc_handler *msc = (usbh_msc_handler *)uhost->active_class->class_data;
 
 
     switch (msc->bot.cmd_state) {
     case BOT_CMD_SEND:  
-        /* prepare the CBW and relevent field */
+        /* prepare the CBW and relevant field */
         msc->bot.cbw.field.dCBWDataTransferLength = CBW_LENGTH_TEST_UNIT_READY;
         msc->bot.cbw.field.bmCBWFlags = USB_TRX_OUT;
         msc->bot.cbw.field.bCBWCBLength = CBW_LENGTH;
 
-        memset(msc->bot.cbw.field.CBWCB, 0, CBW_CB_LENGTH);
+        memset(msc->bot.cbw.field.CBWCB, 0U, CBW_CB_LENGTH);
 
         msc->bot.cbw.field.CBWCB[0] = SCSI_TEST_UNIT_READY; 
         msc->bot.state = BOT_SEND_CBW;
@@ -129,7 +130,7 @@ usbh_status usbh_msc_test_unitready (usbh_host *puhost, uint8_t lun)
         break;
 
     case BOT_CMD_WAIT: 
-        status = usbh_msc_bot_process(puhost, lun);
+        status = usbh_msc_bot_process(uhost, lun);
         break;
 
     default:
@@ -141,25 +142,25 @@ usbh_status usbh_msc_test_unitready (usbh_host *puhost, uint8_t lun)
 
 /*!
     \brief      send the read capacity command to the device
-    \param[in]  puhost: pointer to USB host handler
+    \param[in]  uhost: pointer to USB host handler
     \param[in]  lun: logic unit number
-    \param[in]  capacity: pointer to scsi capacity
+    \param[in]  capacity: pointer to SCSI capacity
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_msc_read_capacity10 (usbh_host *puhost, uint8_t lun, scsi_capacity *capacity)
+usbh_status usbh_msc_read_capacity10 (usbh_host *uhost, uint8_t lun, scsi_capacity *capacity)
 {
     usbh_status status = USBH_FAIL;
-    usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
+    usbh_msc_handler *msc = (usbh_msc_handler *)uhost->active_class->class_data;
 
     switch (msc->bot.cmd_state) {
     case BOT_CMD_SEND:
-        /* prepare the CBW and relevent field */
+        /* prepare the CBW and relevant field */
         msc->bot.cbw.field.dCBWDataTransferLength = READ_CAPACITY10_DATA_LEN;
         msc->bot.cbw.field.bmCBWFlags = USB_TRX_IN;
         msc->bot.cbw.field.bCBWCBLength = CBW_LENGTH;
 
-        memset(msc->bot.cbw.field.CBWCB, 0, CBW_CB_LENGTH);
+        memset(msc->bot.cbw.field.CBWCB, 0U, CBW_CB_LENGTH);
 
         msc->bot.cbw.field.CBWCB[0] = SCSI_READ_CAPACITY10;
         msc->bot.state = BOT_SEND_CBW;
@@ -170,7 +171,7 @@ usbh_status usbh_msc_read_capacity10 (usbh_host *puhost, uint8_t lun, scsi_capac
         break;
 
     case BOT_CMD_WAIT:
-        status = usbh_msc_bot_process(puhost, lun);
+        status = usbh_msc_bot_process(uhost, lun);
 
         if (USBH_OK == status) {
             capacity->block_nbr = msc->bot.pbuf[3] | \
@@ -191,25 +192,25 @@ usbh_status usbh_msc_read_capacity10 (usbh_host *puhost, uint8_t lun, scsi_capac
 
 /*!
     \brief      send the mode sense6 command to the device
-    \param[in]  puhost: pointer to USB host handler
+    \param[in]  uhost: pointer to USB host handler
     \param[in]  lun: logic unit number
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_msc_mode_sense6 (usbh_host *puhost, uint8_t lun)
+usbh_status usbh_msc_mode_sense6 (usbh_host *uhost, uint8_t lun)
 {
     usbh_status status = USBH_FAIL;
-    usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
+    usbh_msc_handler *msc = (usbh_msc_handler *)uhost->active_class->class_data;
 
 
     switch (msc->bot.cmd_state) {
     case BOT_CMD_SEND:
-        /* prepare the CBW and relevent field */
+        /* prepare the CBW and relevant field */
         msc->bot.cbw.field.dCBWDataTransferLength = XFER_LEN_MODE_SENSE6;
         msc->bot.cbw.field.bmCBWFlags = USB_TRX_IN;
         msc->bot.cbw.field.bCBWCBLength = CBW_LENGTH;
 
-        memset(msc->bot.cbw.field.CBWCB, 0, CBW_CB_LENGTH);
+        memset(msc->bot.cbw.field.CBWCB, 0U, CBW_CB_LENGTH);
 
         msc->bot.cbw.field.CBWCB[0] = SCSI_MODE_SENSE6; 
         msc->bot.cbw.field.CBWCB[2] = MODE_SENSE_PAGE_CONTROL_FIELD | MODE_SENSE_PAGE_CODE;
@@ -222,7 +223,7 @@ usbh_status usbh_msc_mode_sense6 (usbh_host *puhost, uint8_t lun)
         break;
 
     case BOT_CMD_WAIT:
-        status = usbh_msc_bot_process(puhost, lun);
+        status = usbh_msc_bot_process(uhost, lun);
 
         if (USBH_OK == status) {
             if (msc->bot.data[2] & MASK_MODE_SENSE_WRITE_PROTECT) {
@@ -243,25 +244,25 @@ usbh_status usbh_msc_mode_sense6 (usbh_host *puhost, uint8_t lun)
 
 /*!
     \brief      send the Request Sense command to the device
-    \param[in]  puhost: pointer to USB host handler
+    \param[in]  uhost: pointer to USB host handler
     \param[in]  lun: logic unit number
     \param[in]  sense_data: pointer to sense data
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_msc_request_sense (usbh_host *puhost, uint8_t lun, msc_scsi_sense *sense_data)
+usbh_status usbh_msc_request_sense (usbh_host *uhost, uint8_t lun, msc_scsi_sense *sense_data)
 {
     usbh_status status = USBH_FAIL;
-    usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
+    usbh_msc_handler *msc = (usbh_msc_handler *)uhost->active_class->class_data;
 
     switch (msc->bot.cmd_state) {
     case BOT_CMD_SEND:
-        /* prepare the cbw and relevent field */
+        /* prepare the CBW and relevant field */
         msc->bot.cbw.field.dCBWDataTransferLength = ALLOCATION_LENGTH_REQUEST_SENSE;
         msc->bot.cbw.field.bmCBWFlags = USB_TRX_IN;
         msc->bot.cbw.field.bCBWCBLength = CBW_LENGTH;
 
-        memset(msc->bot.cbw.field.CBWCB, 0, CBW_CB_LENGTH);
+        memset(msc->bot.cbw.field.CBWCB, 0U, CBW_CB_LENGTH);
 
         msc->bot.cbw.field.CBWCB[0] = SCSI_REQUEST_SENSE; 
         msc->bot.cbw.field.CBWCB[1] = (lun << 5U);
@@ -275,7 +276,7 @@ usbh_status usbh_msc_request_sense (usbh_host *puhost, uint8_t lun, msc_scsi_sen
         break;
 
     case BOT_CMD_WAIT:
-        status = usbh_msc_bot_process(puhost, lun);
+        status = usbh_msc_bot_process(uhost, lun);
 
         if (status == USBH_OK) {
             /* get sense data */
@@ -294,7 +295,7 @@ usbh_status usbh_msc_request_sense (usbh_host *puhost, uint8_t lun, msc_scsi_sen
 
 /*!
     \brief      send the write10 command to the device
-    \param[in]  puhost: pointer to USB host handler
+    \param[in]  uhost: pointer to USB host handler
     \param[in]  lun: logic unit number
     \param[in]  data_buf: data buffer contains the data to write
     \param[in]  addr: address to which the data will be written
@@ -302,10 +303,10 @@ usbh_status usbh_msc_request_sense (usbh_host *puhost, uint8_t lun, msc_scsi_sen
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_msc_write10 (usbh_host *puhost, uint8_t lun, uint8_t *data_buf, uint32_t addr, uint32_t sector_num)
+usbh_status usbh_msc_write10 (usbh_host *uhost, uint8_t lun, uint8_t *data_buf, uint32_t addr, uint32_t sector_num)
 {
     usbh_status status = USBH_FAIL;
-    usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
+    usbh_msc_handler *msc = (usbh_msc_handler *)uhost->active_class->class_data;
 
     switch (msc->bot.cmd_state) {
     case BOT_CMD_SEND:
@@ -313,7 +314,7 @@ usbh_status usbh_msc_write10 (usbh_host *puhost, uint8_t lun, uint8_t *data_buf,
         msc->bot.cbw.field.bmCBWFlags = USB_TRX_OUT;
         msc->bot.cbw.field.bCBWCBLength = CBW_LENGTH;
 
-        memset(msc->bot.cbw.field.CBWCB, 0, CBW_CB_LENGTH);
+        memset(msc->bot.cbw.field.CBWCB, 0U, CBW_CB_LENGTH);
 
         msc->bot.cbw.field.CBWCB[0] = SCSI_WRITE10; 
 
@@ -323,7 +324,7 @@ usbh_status usbh_msc_write10 (usbh_host *puhost, uint8_t lun, uint8_t *data_buf,
         msc->bot.cbw.field.CBWCB[4] = (((uint8_t*)&addr)[1]);
         msc->bot.cbw.field.CBWCB[5] = (((uint8_t*)&addr)[0]);
 
-        /* tranfer length */
+        /* transfer length */
         msc->bot.cbw.field.CBWCB[7] = (((uint8_t *)&sector_num)[1]);
         msc->bot.cbw.field.CBWCB[8] = (((uint8_t *)&sector_num)[0]);
 
@@ -335,7 +336,7 @@ usbh_status usbh_msc_write10 (usbh_host *puhost, uint8_t lun, uint8_t *data_buf,
         break;
 
     case BOT_CMD_WAIT:
-        status = usbh_msc_bot_process(puhost, lun);
+        status = usbh_msc_bot_process(uhost, lun);
         break;
 
     default:
@@ -347,7 +348,7 @@ usbh_status usbh_msc_write10 (usbh_host *puhost, uint8_t lun, uint8_t *data_buf,
 
 /*!
     \brief      send the read10 command to the device
-    \param[in]  puhost: pointer to USB host handler
+    \param[in]  uhost: pointer to USB host handler
     \param[in]  lun: logic unit number
     \param[in]  data_buf: data buffer contains the data to write
     \param[in]  addr: address to which the data will be read
@@ -355,19 +356,19 @@ usbh_status usbh_msc_write10 (usbh_host *puhost, uint8_t lun, uint8_t *data_buf,
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_msc_read10 (usbh_host *puhost, uint8_t lun, uint8_t *data_buf, uint32_t addr, uint32_t sector_num)
+usbh_status usbh_msc_read10 (usbh_host *uhost, uint8_t lun, uint8_t *data_buf, uint32_t addr, uint32_t sector_num)
 {
     usbh_status status = USBH_FAIL;
-    usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
+    usbh_msc_handler *msc = (usbh_msc_handler *)uhost->active_class->class_data;
 
     switch (msc->bot.cmd_state) {
     case BOT_CMD_SEND:
-        /* prepare the CBW and relevent field */
+        /* prepare the CBW and relevant field */
         msc->bot.cbw.field.dCBWDataTransferLength = sector_num * msc->unit[lun].capacity.block_size;
         msc->bot.cbw.field.bmCBWFlags = USB_TRX_IN;
         msc->bot.cbw.field.bCBWCBLength = CBW_LENGTH;
 
-        memset(msc->bot.cbw.field.CBWCB, 0, CBW_CB_LENGTH);
+        memset(msc->bot.cbw.field.CBWCB, 0U, CBW_CB_LENGTH);
 
         msc->bot.cbw.field.CBWCB[0] = SCSI_READ10; 
 
@@ -377,7 +378,7 @@ usbh_status usbh_msc_read10 (usbh_host *puhost, uint8_t lun, uint8_t *data_buf, 
         msc->bot.cbw.field.CBWCB[4] = (((uint8_t*)&addr)[1]);
         msc->bot.cbw.field.CBWCB[5] = (((uint8_t*)&addr)[0]);
 
-        /* tranfer length */
+        /* transfer length */
         msc->bot.cbw.field.CBWCB[7] = (((uint8_t *)&sector_num)[1]);
         msc->bot.cbw.field.CBWCB[8] = (((uint8_t *)&sector_num)[0]);
 
@@ -389,7 +390,7 @@ usbh_status usbh_msc_read10 (usbh_host *puhost, uint8_t lun, uint8_t *data_buf, 
         break;
 
     case BOT_CMD_WAIT:
-        status = usbh_msc_bot_process(puhost, lun);
+        status = usbh_msc_bot_process(uhost, lun);
         break;
 
     default:

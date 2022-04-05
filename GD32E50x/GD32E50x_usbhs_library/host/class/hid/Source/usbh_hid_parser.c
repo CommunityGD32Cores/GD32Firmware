@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -53,7 +54,7 @@ uint32_t hid_item_read (hid_report_item *ri, uint8_t ndx)
 
     /* if this is an array, wee may need to offset ri->data.*/
     if (ri->count > 0U) {
-        /* if app tries to read outside of the array. */
+        /* if APP tries to read outside of the array. */
         if (ri->count <= ndx) {
             return(0U);
         }
@@ -84,12 +85,12 @@ uint32_t hid_item_read (hid_report_item *ri, uint8_t ndx)
         /* yes, so sign extend value to 32 bits. */
         uint32_t vs = (uint32_t)((0xffffffffU & ~((1U << (ri->size)) - 1U)) | val);
 
-        if (ri->resolution == 1U) {
+        if (1U == ri->resolution) {
             return((uint32_t)vs);
         }
         return((uint32_t)(vs * ri->resolution));
     } else {
-        if (ri->resolution == 1U) {
+        if (1U == ri->resolution) {
             return(val);
         }
 
@@ -103,7 +104,7 @@ uint32_t hid_item_read (hid_report_item *ri, uint8_t ndx)
     \param[in]  value: the value to be write
     \param[in]  ndx: report index
     \param[out] none
-    \retval     operation status (1: fail 0: Ok)
+    \retval     operation status (1: fail 0: OK)
 */
 uint32_t hid_item_write(hid_report_item *ri, uint32_t value, uint8_t ndx)
 {
@@ -118,7 +119,7 @@ uint32_t hid_item_write(hid_report_item *ri, uint32_t value, uint8_t ndx)
 
     /* if this is an array, wee may need to offset ri->data.*/
     if (ri->count > 0U) {
-        /* if app tries to read outside of the array. */
+        /* if APP tries to read outside of the array. */
         if (ri->count >= ndx) {
             return(0U);
         }
@@ -133,7 +134,7 @@ uint32_t hid_item_write(hid_report_item *ri, uint32_t value, uint8_t ndx)
     }
 
     /* convert physical value to logical value. */
-    if (ri->resolution != 1U) {
+    if (1U != ri->resolution) {
         value = value / ri->resolution;
     }
 

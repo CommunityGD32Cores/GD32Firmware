@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -57,7 +58,7 @@ extern usb_desc cdc_desc;
 extern usb_class_core cdc_class;
 
 /* function declarations */
-/* check cdc acm is ready for data transfer */
+/* check CDC ACM is ready for data transfer */
 uint8_t cdc_acm_check_ready(usb_dev *udev);
 /* send CDC ACM data */
 void cdc_acm_data_send(usb_dev *udev);

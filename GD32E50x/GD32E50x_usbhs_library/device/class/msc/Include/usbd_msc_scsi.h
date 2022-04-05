@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -44,8 +45,8 @@ OF SUCH DAMAGE.
 
 /* function declarations */
 /* process SCSI commands */
-int8_t scsi_process_cmd (usb_core_driver *pudev, uint8_t lun, uint8_t *cmd);
+int8_t scsi_process_cmd (usb_core_driver *udev, uint8_t lun, uint8_t *cmd);
 /* load the last error code in the error list */
-void scsi_sense_code (usb_core_driver *pudev, uint8_t lun, uint8_t skey, uint8_t asc);
+void scsi_sense_code (usb_core_driver *udev, uint8_t lun, uint8_t skey, uint8_t asc);
 
 #endif /* __USBD_MSC_SCSI_H */

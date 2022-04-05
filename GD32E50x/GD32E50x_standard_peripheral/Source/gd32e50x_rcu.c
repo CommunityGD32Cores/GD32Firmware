@@ -4,10 +4,12 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50X
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2020-09-20, V1.1.1, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     All rights reserved.
 
@@ -70,29 +72,33 @@ void rcu_deinit(void)
     RCU_CTL |= RCU_CTL_IRC8MEN;
     rcu_osci_stab_wait(RCU_IRC8M);
 
-    /* reset CFG0 register */
-#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32EPRT))
-    RCU_CFG0 &= ~(RCU_CFG0_SCS | RCU_CFG0_AHBPSC | RCU_CFG0_APB1PSC | RCU_CFG0_APB2PSC |
-                  RCU_CFG0_ADCPSC | RCU_CFG0_PLLSEL | RCU_CFG0_PREDV0 | RCU_CFG0_PLLMF |
-                  RCU_CFG0_USBDPSC | RCU_CFG0_CKOUT0SEL | RCU_CFG0_PLLMF_4 | RCU_CFG0_ADCPSC_2 | RCU_CFG0_PLLMF_5 | RCU_CFG0_USBDPSC_2);
-#elif defined(GD32E50X_CL)
-    RCU_CFG0 &= ~(RCU_CFG0_SCS | RCU_CFG0_AHBPSC | RCU_CFG0_APB1PSC | RCU_CFG0_APB2PSC |
-                  RCU_CFG0_ADCPSC | RCU_CFG0_PLLSEL | RCU_CFG0_PREDV0_LSB | RCU_CFG0_PLLMF |
-                  RCU_CFG0_USBHSPSC | RCU_CFG0_CKOUT0SEL | RCU_CFG0_ADCPSC_2 | RCU_CFG0_PLLMF_4 | RCU_CFG0_PLLMF_5 | RCU_CFG0_USBHSPSC_2);
-#endif /* GD32E50X_HD and GD32E50X_XD and GD32EPRT */
     /* reset CTL register */
     RCU_CTL &= ~(RCU_CTL_HXTALEN | RCU_CTL_CKMEN | RCU_CTL_PLLEN);
     RCU_CTL &= ~RCU_CTL_HXTALBPS;
-#ifdef GD32E50X_CL
+#if defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508)
     RCU_CTL &= ~(RCU_CTL_PLL1EN | RCU_CTL_PLL2EN);
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL and GD32EPRT and GD32E508 */
+    /* reset CFG0 register */
+#if defined(GD32E50X_HD) || defined(GD32E50X_XD)
+    RCU_CFG0 &= ~(RCU_CFG0_SCS | RCU_CFG0_AHBPSC | RCU_CFG0_APB1PSC | RCU_CFG0_APB2PSC |
+                  RCU_CFG0_ADCPSC | RCU_CFG0_PLLSEL | RCU_CFG0_PREDV0 | RCU_CFG0_PLLMF |
+                  RCU_CFG0_USBDPSC | RCU_CFG0_CKOUT0SEL | RCU_CFG0_PLLMF_4 | RCU_CFG0_ADCPSC_2 | RCU_CFG0_PLLMF_5 | RCU_CFG0_USBDPSC_2);
+#elif defined(GD32E50X_CL) || defined(GD32E508)
+    RCU_CFG0 &= ~(RCU_CFG0_SCS | RCU_CFG0_AHBPSC | RCU_CFG0_APB1PSC | RCU_CFG0_APB2PSC |
+                  RCU_CFG0_ADCPSC | RCU_CFG0_PLLSEL | RCU_CFG0_PREDV0_LSB | RCU_CFG0_PLLMF |
+                  RCU_CFG0_USBHSPSC | RCU_CFG0_CKOUT0SEL | RCU_CFG0_ADCPSC_2 | RCU_CFG0_PLLMF_4 | RCU_CFG0_PLLMF_5 | RCU_CFG0_USBHSPSC_2);
+#elif defined(GD32EPRT)
+    RCU_CFG0 &= ~(RCU_CFG0_SCS | RCU_CFG0_AHBPSC | RCU_CFG0_APB1PSC | RCU_CFG0_APB2PSC |
+                  RCU_CFG0_ADCPSC | RCU_CFG0_PLLSEL | RCU_CFG0_PREDV0_LSB | RCU_CFG0_PLLMF |
+                  RCU_CFG0_USBDPSC | RCU_CFG0_CKOUT0SEL | RCU_CFG0_ADCPSC_2 | RCU_CFG0_PLLMF_4 | RCU_CFG0_PLLMF_5 | RCU_CFG0_USBDPSC_2);
+#endif /* GD32E50X_HD and GD32E50X_XD */
 
     /* reset INT and CFG1 register */
-#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32EPRT))
+#if defined(GD32E50X_HD) || defined(GD32E50X_XD)
     RCU_INT = 0x009f0000U;
     RCU_CFG1 &= ~(RCU_CFG1_ADCPSC_3 | RCU_CFG1_PLLPRESEL);
     RCU_CFG2 &= ~(RCU_CFG2_USART5SEL | RCU_CFG2_I2C2SEL);
-#elif defined(GD32E50X_CL)
+#elif defined(GD32E50X_CL) || defined(GD32E508)
     RCU_INT = 0x00ff0000U;
     RCU_ADDINT = 0x00C00000U;
     RCU_ADDCTL &= ~(RCU_ADDCTL_CK48MSEL | RCU_ADDCTL_USBHSSEL | RCU_ADDCTL_USBHSDV | RCU_ADDCTL_USBSWEN | RCU_ADDCTL_PLLUSBEN | RCU_ADDCTL_IRC48MEN); 
@@ -102,7 +108,17 @@ void rcu_deinit(void)
                   RCU_CFG1_PREDV0SEL | RCU_CFG1_I2S1SEL | RCU_CFG1_I2S2SEL | RCU_CFG1_SHRTIMERSEL | RCU_CFG1_PLL2MF_5 | RCU_CFG1_ADCPSC_3 |
                   RCU_CFG1_PLLPRESEL | RCU_CFG1_PLL2MF_4);
     RCU_CFG2 &= ~(RCU_CFG2_USART5SEL | RCU_CFG2_I2C2SEL);
-#endif /* GD32E50X_HD and GD32E50X_XD and GD32EPRT */
+#elif defined(GD32EPRT)
+    RCU_INT = 0x00ff0000U;
+    RCU_ADDINT &= ~ (RCU_ADDINT_IRC48MSTBIC);
+    RCU_ADDCTL &= ~(RCU_ADDCTL_CK48MSEL | RCU_ADDCTL_IRC48MEN); 
+
+    RCU_CFG1 &= ~(RCU_CFG1_PREDV0 | RCU_CFG1_PREDV1 | RCU_CFG1_PLL1MF | RCU_CFG1_PLL2MF |
+                  RCU_CFG1_PREDV0SEL | RCU_CFG1_I2S1SEL | RCU_CFG1_I2S2SEL | RCU_CFG1_PLL2MF_5 | RCU_CFG1_ADCPSC_3 |
+                  RCU_CFG1_PLLPRESEL | RCU_CFG1_PLL2MF_4);
+    RCU_CFG2 &= ~(RCU_CFG2_USART5SEL | RCU_CFG2_I2C2SEL);
+
+#endif /* GD32E50X_HD and GD32E50X_XD */
 }
 
 /*!
@@ -121,12 +137,13 @@ void rcu_deinit(void)
       \arg        RCU_TMU: TMU clock
       \arg        RCU_SQPI: SQPI clock
       \arg        RCU_EXMC: EXMC clock
-      \arg        RCU_TIMERx (x=0,1,2,3,4,5,6,7,8,9,10,11,12,13,TIMER8..13 are not available for HD series): TIMER clock
+      \arg        RCU_TIMERx (x=0,1,2,3,4,5,6,7,8,9,10,11,12,13,TIMER8..13 are not available for EPRT series): TIMER clock
       \arg        RCU_WWDGT: WWDGT clock
       \arg        RCU_SPIx (x=0,1,2): SPI clock
       \arg        RCU_USARTx (x=0,1,2,5): USART clock
       \arg        RCU_UARTx (x=3,4): UART clock
       \arg        RCU_I2Cx (x=0,1,2): I2C clock
+      \arg        RCU_CANx (x=0,1,2,CAN2 is only available for CL series,CANx is not avaliable for GD32EPRT): CAN clock
       \arg        RCU_PMU: PMU clock
       \arg        RCU_DAC: DAC clock
       \arg        RCU_RTC: RTC clock
@@ -160,12 +177,13 @@ void rcu_periph_clock_enable(rcu_periph_enum periph)
       \arg        RCU_TMU: TMU clock
       \arg        RCU_SQPI: SQPI clock
       \arg        RCU_EXMC: EXMC clock
-      \arg        RCU_TIMERx (x=0,1,2,3,4,5,6,7,8,9,10,11,12,13,TIMER8..13 are not available for HD series): TIMER clock
+      \arg        RCU_TIMERx (x=0,1,2,3,4,5,6,7,8,9,10,11,12,13,TIMER8..13 are not available for EPRT series): TIMER clock
       \arg        RCU_WWDGT: WWDGT clock
       \arg        RCU_SPIx (x=0,1,2): SPI clock
       \arg        RCU_USARTx (x=0,1,2,5): USART clock
       \arg        RCU_UARTx (x=3,4): UART clock
       \arg        RCU_I2Cx (x=0,1,2): I2C clock
+      \arg        RCU_CANx (x=0,1,2,CAN2 is only available for CL series,CANx is not avaliable for GD32EPRT): CAN clock
       \arg        RCU_PMU: PMU clock
       \arg        RCU_DAC: DAC clock
       \arg        RCU_RTC: RTC clock
@@ -222,7 +240,7 @@ void rcu_periph_clock_sleep_disable(rcu_periph_sleep_enum periph)
       \arg        RCU_USBHSRST: reset USBHS(CL series available)
       \arg        RCU_TMURST: reset TMU
       \arg        RCU_SQPIRST: reset SQPI
-      \arg        RCU_TIMERxRST (x=0,1,2,3,4,5,6,7,8,9,10,11,12,13,TIMER8..13 are not available for HD series): reset TIMER
+      \arg        RCU_TIMERxRST (x=0,1,2,3,4,5,6,7,8,9,10,11,12,13,TIMER8..13 are not available for EPRT series): reset TIMER
       \arg        RCU_WWDGTRST: reset WWDGT
       \arg        RCU_SPIxRST (x=0,1,2): reset SPI
       \arg        RCU_USARTxRST (x=0,1,2,5): reset USART
@@ -254,7 +272,7 @@ void rcu_periph_reset_enable(rcu_periph_reset_enum periph_reset)
       \arg        RCU_USBHSRST: reset USBHS(CL series available)
       \arg        RCU_TMURST: reset TMU
       \arg        RCU_SQPIRST: reset SQPI
-      \arg        RCU_TIMERxRST (x=0,1,2,3,4,5,6,7,8,9,10,11,12,13,TIMER8..13 are not available for HD series): reset TIMER
+      \arg        RCU_TIMERxRST (x=0,1,2,3,4,5,6,7,8,9,10,11,12,13,TIMER8..13 are not available for EPRT series): reset TIMER
       \arg        RCU_WWDGTRST: reset WWDGT
       \arg        RCU_SPIxRST (x=0,1,2): reset SPI
       \arg        RCU_USARTxRST (x=0,1,2,5): reset USART
@@ -405,13 +423,13 @@ void rcu_apb2_clock_config(uint32_t ck_apb2)
       \arg        RCU_CKOUT0SRC_IRC8M: high speed 8M internal oscillator clock selected
       \arg        RCU_CKOUT0SRC_HXTAL: HXTAL selected
       \arg        RCU_CKOUT0SRC_CKPLL_DIV2: CK_PLL/2 selected
-      \arg        RCU_CKOUT0SRC_CKPLL1: CK_PLL1 selected
-      \arg        RCU_CKOUT0SRC_CKPLL2_DIV2: CK_PLL2/2 selected
-      \arg        RCU_CKOUT0SRC_EXT1: EXT1 selected
-      \arg        RCU_CKOUT0SRC_CKPLL2: CK_PLL2 clock selected
-      \arg        RCU_CKOUT0SRC_CKIRC48M: CK_IRC48M clock selected
-      \arg        RCU_CKOUT0SRC_CKIRC48M_DIV8: CK_IRC48M/8 clock selected
-      \arg        RCU_CKOUT0SRC_CKPLLUSB_DIV32: CK_PLLUSB/32 clock selected
+      \arg        RCU_CKOUT0SRC_CKPLL1: CK_PLL1 selected (only available for CL and EPRT series)
+      \arg        RCU_CKOUT0SRC_CKPLL2_DIV2: CK_PLL2/2 selected (only available for CL and EPRT series)
+      \arg        RCU_CKOUT0SRC_EXT1: EXT1 selected (only available for CL and EPRT series)
+      \arg        RCU_CKOUT0SRC_CKPLL2: CK_PLL2 clock selected (only available for CL and EPRT series)
+      \arg        RCU_CKOUT0SRC_CKIRC48M: CK_IRC48M clock selected (only available for CL and EPRT series)
+      \arg        RCU_CKOUT0SRC_CKIRC48M_DIV8: CK_IRC48M/8 clock selected (only available for CL and EPRT series)
+      \arg        RCU_CKOUT0SRC_CKPLLUSB_DIV32: CK_PLLUSB/32 clock selected (only available for CL series)
     \param[out] none
     \retval     none
 */
@@ -473,7 +491,7 @@ void rcu_pllpresel_config(uint32_t pll_presel)
     RCU_CFG1 = reg;
 }
 
-#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32EPRT))
+#if defined(GD32E50X_HD) || defined(GD32E50X_XD)
 /*!
     \brief      configure the PREDV0 division factor
     \param[in]  predv0_div: PREDV0 division factor
@@ -495,7 +513,7 @@ void rcu_predv0_config(uint32_t predv0_div)
 
     RCU_CFG0 = reg;
 }
-#elif defined(GD32E50X_CL)
+#elif defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508)
 /*!
     \brief      configure the PREDV0 division factor and clock source
     \param[in]  predv0_source: PREDV0 input clock source selection
@@ -569,7 +587,9 @@ void rcu_pll2_config(uint32_t pll_mul)
     RCU_CFG1 &= ~RCU_CFG1_PLL2MF;
     RCU_CFG1 |= pll_mul; 
 }
+#endif /* GD32E50X_HD and GD32E50X_XD */
 
+#if defined(GD32E50X_CL) || defined(GD32E508)
 /*!
     \brief      configure the PLLUSB clock source preselection
     \param[in]  pllusb_presel: PLLUSB clock source preselection
@@ -631,7 +651,7 @@ void rcu_pllusb_config(uint32_t pllusb_mul)
     RCU_ADDCFG |= pllusb_mul;
 }
 
-#endif /* GD32E50X_HD and GD32E50X_XD and GD32EPRT */
+#endif /* GD32E50X_CL and GD32E508 */
 
 /*!
     \brief      configure the ADC prescaler factor
@@ -716,7 +736,7 @@ void rcu_usb_clock_config(uint32_t usb_psc)
     /* configure the USBD/USBHS prescaler factor */
 #if (defined(GD32E50X_HD) || defined(GD32E50X_XD)||defined(GD32EPRT))
     reg &= ~RCU_CFG0_USBDPSC;
-#elif defined(GD32E50X_CL)
+#elif defined(GD32E50X_CL) || defined(GD32E508)
     reg &= ~RCU_CFG0_USBHSPSC;
 #endif /* GD32E50X_HD and GD32E50X_XD and GD32EPRT */
 
@@ -744,7 +764,7 @@ void rcu_rtc_clock_config(uint32_t rtc_clock_source)
     RCU_BDCTL = (reg | rtc_clock_source);
 }
 
-#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32E50X_CL))
+#ifndef GD32EPRT
 /*!
     \brief      configure the SHRTIMER clock source selection
     \param[in]  shrtimer_clock_source: SHRTIMER clock source selection
@@ -763,7 +783,7 @@ void rcu_shrtimer_clock_config(uint32_t shrtimer_clock_source)
     reg &= ~RCU_CFG1_SHRTIMERSEL;
     RCU_CFG1 = (reg | shrtimer_clock_source);
 }
-#endif /* GD32E50X_HD and GD32E50X_XD and GD32E50X_CL */
+#endif /* GD32EPRT */
 
 /*!
     \brief      configure the USART5 clock source selection
@@ -805,7 +825,28 @@ void rcu_i2c2_clock_config(uint32_t i2c2_clock_source)
     RCU_CFG2 = (reg | i2c2_clock_source);
 }
 
-#ifdef GD32E50X_CL
+/*!
+    \brief      configure the CK48M clock source selection
+    \param[in]  ck48m_clock_source: CK48M clock source selection
+                only one parameter can be selected which is shown as below:
+      \arg        RCU_CK48MSRC_CKPLL: CK_PLL selected as CK48M source clock
+      \arg        RCU_CK48MSRC_IRC48M: CK_IRC48M selected as CK48M source clock
+      \arg        RCU_CK48MSRC_CKPLLUSB: (not available for EPRT series): CKPLLUSB selected as CK48M source clock 
+      \arg        RCU_CK48MSRC_CKPLL2: CKPLL2 selected as CK48M source clock
+    \param[out] none
+    \retval     none
+*/
+void rcu_ck48m_clock_config(uint32_t ck48m_clock_source)
+{
+    uint32_t reg;
+    
+    reg = RCU_ADDCTL;
+    /* reset the CK48MSEL bit and set according to ck48m_clock_source */
+    reg &= ~RCU_ADDCTL_CK48MSEL;
+    RCU_ADDCTL = (reg | ck48m_clock_source);
+}
+
+#if defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508)
 /*!
     \brief      configure the I2S1 clock source selection
     \param[in]  i2s_clock_source: I2S1 clock source selection
@@ -843,29 +884,9 @@ void rcu_i2s2_clock_config(uint32_t i2s_clock_source)
     reg &= ~RCU_CFG1_I2S2SEL;
     RCU_CFG1 = (reg | i2s_clock_source);
 }
+#endif /* GD32E50X_CL and GD32E50X_EPRT and GD32E508 */
 
-
-/*!
-    \brief      configure the CK48M clock source selection
-    \param[in]  ck48m_clock_source: CK48M clock source selection
-                only one parameter can be selected which is shown as below:
-      \arg        RCU_CK48MSRC_CKPLL: CK_PLL selected as CK48M source clock
-      \arg        RCU_CK48MSRC_IRC48M: CK_IRC48M selected as CK48M source clock
-      \arg        RCU_CK48MSRC_CKPLLUSB: CKPLLUSB selected as CK48M source clock
-      \arg        RCU_CK48MSRC_CKPLL2: CKPLL2 selected as CK48M source clock
-    \param[out] none
-    \retval     none
-*/
-void rcu_ck48m_clock_config(uint32_t ck48m_clock_source)
-{
-    uint32_t reg;
-    
-    reg = RCU_ADDCTL;
-    /* reset the CK48MSEL bit and set according to ck48m_clock_source */
-    reg &= ~RCU_ADDCTL_CK48MSEL;
-    RCU_ADDCTL = (reg | ck48m_clock_source);
-}
-
+#if defined(GD32E50X_CL) || defined(GD32E508)
 /*!
     \brief      configure the USBHSSEL source clock selection
     \param[in]  usbhssel_clock_source: USBHSSEL clock source selection
@@ -915,7 +936,7 @@ void rcu_usbdv_config(uint32_t usbhs_dv)
 
     RCU_ADDCTL = reg;
 }
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL and GD32E508 */
 
 /*!
     \brief      get the clock stabilization and periphral reset flags
@@ -1175,7 +1196,7 @@ ErrStatus rcu_osci_stab_wait(rcu_osci_type_enum osci)
         }
         break;
 
-#ifdef GD32E50X_CL
+#if defined(GD32E50X_CL)  || defined(GD32EPRT) || defined(GD32E508)
     /* wait PLL1 stable */
     case RCU_PLL1_CK:
         while((RESET == osci_stat) && (OSC_STARTUP_TIMEOUT != stb_cnt)){
@@ -1200,6 +1221,8 @@ ErrStatus rcu_osci_stab_wait(rcu_osci_type_enum osci)
             reval = SUCCESS;
         }
         break;
+#endif /* GD32E50X_CL and GD32E50X_EPRT and GD32E508 */
+#if defined(GD32E50X_CL) || defined(GD32E508)
     case RCU_PLLUSB_CK:
         while((RESET == osci_stat) && (OSC_STARTUP_TIMEOUT != stb_cnt)){
             osci_stat = rcu_flag_get(RCU_FLAG_PLLUSBSTB);
@@ -1211,7 +1234,7 @@ ErrStatus rcu_osci_stab_wait(rcu_osci_type_enum osci)
             reval = SUCCESS;
         }
         break;
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL and GD32E508 */
 
     default:
         break;
@@ -1231,8 +1254,8 @@ ErrStatus rcu_osci_stab_wait(rcu_osci_type_enum osci)
       \arg        RCU_IRC48M: internal 48M RC oscillators(IRC48M)
       \arg        RCU_IRC40K: internal 40K RC oscillator(IRC40K)
       \arg        RCU_PLL_CK: phase locked loop(PLL)
-      \arg        RCU_PLL1_CK: phase locked loop 1(CL series only)
-      \arg        RCU_PLL2_CK: phase locked loop 2(CL series only)
+      \arg        RCU_PLL1_CK: phase locked loop 1(CL and EPRT series only)
+      \arg        RCU_PLL2_CK: phase locked loop 2(CL and EPRT series only)
       \arg        RCU_PLLUSB_CK: phase locked loop USB(CL series only)
     \param[out] none
     \retval     none
@@ -1252,8 +1275,8 @@ void rcu_osci_on(rcu_osci_type_enum osci)
       \arg        RCU_IRC48M: internal 48M RC oscillators(IRC48M)
       \arg        RCU_IRC40K: internal 40K RC oscillator(IRC40K)
       \arg        RCU_PLL_CK: phase locked loop(PLL)
-      \arg        RCU_PLL1_CK: phase locked loop 1(CL series only)
-      \arg        RCU_PLL2_CK: phase locked loop 2(CL series only)
+      \arg        RCU_PLL1_CK: phase locked loop 1(CL and EPRT series only)
+      \arg        RCU_PLL2_CK: phase locked loop 2(CL and EPRT series only)
       \arg        RCU_PLLUSB_CK: phase locked loop USB(CL series only)
     \param[out] none
     \retval     none
@@ -1293,10 +1316,10 @@ void rcu_osci_bypass_mode_enable(rcu_osci_type_enum osci)
     case RCU_IRC48M:
     case RCU_IRC40K:
     case RCU_PLL_CK:
-#ifdef GD32E50X_CL
+#if defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508)
     case RCU_PLL1_CK:
     case RCU_PLL2_CK:
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL and GD32EPRT and GD32E508 */
         break;
     default:
         break;
@@ -1333,10 +1356,10 @@ void rcu_osci_bypass_mode_disable(rcu_osci_type_enum osci)
     case RCU_IRC48M:
     case RCU_IRC40K:
     case RCU_PLL_CK:
-#ifdef GD32E50X_CL
+#if defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508)
     case RCU_PLL1_CK:
     case RCU_PLL2_CK:
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL and GD32EPRT and GD32E508 */
         break;
     default:
         break;
@@ -1418,9 +1441,9 @@ uint32_t rcu_clock_freq_get(rcu_clock_freq_enum clock)
     uint32_t cksys_freq, ahb_freq, apb1_freq, apb2_freq;
     uint32_t usart_freq = 0U;
     uint32_t pllsel, pllpresel, predv0sel, pllmf,ck_src, idx, clk_exp;
-#ifdef GD32E50X_CL
+#if defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508)
     uint32_t predv0, predv1, pll1mf;
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL and GD32EPRT and GD32E508*/
 
     /* exponent of AHB, APB1 and APB2 clock divider */
     uint8_t ahb_exp[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
@@ -1454,26 +1477,26 @@ uint32_t rcu_clock_freq_get(rcu_clock_freq_enum clock)
                 ck_src = IRC48M_VALUE;
             }
 
-#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32EPRT))
+#if defined(GD32E50X_HD) || defined(GD32E50X_XD)
             predv0sel = (RCU_CFG0 & RCU_CFG0_PREDV0);
             /* PREDV0 input source clock divided by 2 */
             if(RCU_CFG0_PREDV0 == predv0sel){
                 ck_src = HXTAL_VALUE/2U;
             }
-#elif defined(GD32E50X_CL)
+#elif defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508)
             predv0sel = (RCU_CFG1 & RCU_CFG1_PREDV0SEL);
             /* source clock use PLL1 */
             if(RCU_PREDV0SRC_CKPLL1 == predv0sel){
                 predv1 = ((RCU_CFG1 & RCU_CFG1_PREDV1) >> RCU_CFG1_PREDV1_OFFSET) + 1U;
                 pll1mf = (uint32_t)((RCU_CFG1 & RCU_CFG1_PLL1MF) >> RCU_CFG1_PLL1MF_OFFSET) + 2U;
-                if(17U == pll1mf){
+                if(15U == pll1mf){
                     pll1mf = 20U;
                 }
                 ck_src = (ck_src/predv1)*pll1mf;
             }
             predv0 = (RCU_CFG1 & RCU_CFG1_PREDV0) + 1U;
             ck_src /= predv0;
-#endif /* GD32E50X_HD and GD32E50X_XD and GD32EPRT */
+#endif /* GD32E50X_HD and GD32E50X_XD */
         }else{
             /* PLL clock source is IRC8M/2 */
             ck_src = IRC8M_VALUE/2U;
@@ -1489,17 +1512,15 @@ uint32_t rcu_clock_freq_get(rcu_clock_freq_enum clock)
         }
         if(pllmf < 15U){
             pllmf += 2U;
-        }else if((pllmf >= 15U) && (pllmf <= 62U)){
+        }else if((pllmf >= 15U) && (pllmf <= 64U)){
             pllmf += 1U;
-        }else{
-            pllmf = 63U;
         }
         cksys_freq = ck_src*pllmf;
-    #ifdef GD32E50X_CL
+#if defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508)
         if(15U == pllmf){
             cksys_freq = ck_src*6U + ck_src/2U;
         }
-    #endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL and GD32EPRT and GD32E508 */
 
         break;
     /* IRC8M is selected as CK_SYS */
@@ -1538,7 +1559,7 @@ uint32_t rcu_clock_freq_get(rcu_clock_freq_enum clock)
         ck_freq = apb2_freq;
         break;
     case CK_USART:
-        /* calculate USART0 clock frequency */
+        /* calculate USART5 clock frequency */
         if(RCU_USART5SRC_CKAPB2 == (RCU_CFG2 & RCU_CFG2_USART5SEL)){
             usart_freq = apb2_freq;
         }else if(RCU_USART5SRC_CKSYS == (RCU_CFG2 & RCU_CFG2_USART5SEL)){

@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -138,14 +139,14 @@ typedef struct
 
 /* function declarations */
 /* initialize the mass storage parameters */
-void usbh_msc_bot_init (usbh_host *puhost);
+void usbh_msc_bot_init (usbh_host *uhost);
 /* manage the different states of BOT transfer and updates the status to upper layer */
-usbh_status usbh_msc_bot_process (usbh_host *puhost, uint8_t lun);
+usbh_status usbh_msc_bot_process (usbh_host *uhost, uint8_t lun);
 /* manages the different error handling for stall */
-usbh_status usbh_msc_bot_abort (usbh_host *puhost, uint8_t direction);
-/* reset msc bot request struct */
-usbh_status usbh_msc_bot_reset (usbh_host *puhost);
+usbh_status usbh_msc_bot_abort (usbh_host *uhost, uint8_t direction);
+/* reset MSC bot request structure */
+usbh_status usbh_msc_bot_reset (usbh_host *uhost);
 /* decode the CSW received by the device and updates the same to upper layer */
-bot_csw_status usbh_msc_csw_decode (usbh_host *puhost);
+bot_csw_status usbh_msc_csw_decode (usbh_host *uhost);
 
 #endif /* __USBH_MSC_BBB_H */

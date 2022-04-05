@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -46,10 +47,10 @@ typedef struct
     uint8_t     shift;
     uint8_t     count;
     uint8_t     sign;
-    uint32_t    logical_min;      /*!< min value device can return */
-    uint32_t    logical_max;      /*!< max value device can return */
-    uint32_t    physical_min;     /*!< min vale read can report */
-    uint32_t    physical_max;     /*!< max value read can report */
+    uint32_t    logical_min;      /* min value device can return */
+    uint32_t    logical_max;      /* max value device can return */
+    uint32_t    physical_min;     /* min vale read can report */
+    uint32_t    physical_max;     /* max value read can report */
     uint32_t    resolution;
 } hid_report_item;
 

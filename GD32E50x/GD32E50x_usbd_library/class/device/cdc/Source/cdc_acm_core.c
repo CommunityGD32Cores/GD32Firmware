@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -256,11 +257,11 @@ usb_desc cdc_desc = {
     .strings     = usbd_cdc_strings
 };
 
+/* local function prototypes ('static') */
 static uint8_t cdc_acm_init         (usb_dev *udev, uint8_t config_index);
 static uint8_t cdc_acm_deinit       (usb_dev *udev, uint8_t config_index);
 static uint8_t cdc_acm_req_handler  (usb_dev *udev, usb_req *req);
 static uint8_t cdc_acm_ctlx_out     (usb_dev *udev);
-
 static void cdc_acm_data_in         (usb_dev *udev, uint8_t ep_num);
 static void cdc_acm_data_out        (usb_dev *udev, uint8_t ep_num);
 
@@ -310,7 +311,7 @@ void cdc_acm_data_send (usb_dev *udev)
 }
 
 /*!
-    \brief      check cdc acm is ready for data transfer
+    \brief      check CDC ACM is ready for data transfer
     \param[in]  udev: pointer to USB device instance
     \param[out] none
     \retval     0 if CDC is ready, 5 otherwise
@@ -349,7 +350,7 @@ static uint8_t cdc_acm_init (usb_dev *udev, uint8_t config_index)
     udev->ep_transc[EP_ID(CDC_IN_EP)][TRANSC_IN] = cdc_class.data_in;
     udev->ep_transc[CDC_OUT_EP][TRANSC_OUT] = cdc_class.data_out;
 
-    /* initialize cdc handler structure */
+    /* initialize CDC handler structure */
     cdc_handler.packet_receive = 0U;
     cdc_handler.packet_sent = 1U;
     cdc_handler.pre_packet_send = 1U; 
@@ -405,7 +406,6 @@ static uint8_t cdc_acm_ctlx_out (usb_dev *udev)
 
     return USBD_OK;
 }
-
 
 /*!
     \brief      handle CDC ACM data in transaction

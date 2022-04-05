@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -46,7 +47,7 @@ OF SUCH DAMAGE.
 
 typedef enum _usb_reqsta {
     REQ_SUPP     = 0x0U,                   /* request support */
-    REQ_NOTSUPP  = 0x1U                    /* request not support */
+    REQ_NOTSUPP  = 0x1U,                   /* request not support */
 } usb_reqsta;
 
 /* string descriptor index */
@@ -59,10 +60,10 @@ enum _str_index
     STR_IDX_CONFIG                = 0x4U,  /* configuration string index */
     STR_IDX_ITF                   = 0x5U,  /* interface string index */
 #ifndef WINUSB_EXEMPT_DRIVER
-    STR_IDX_MAX                   = 0x6U   /* string maximum index */
+    STR_IDX_MAX                   = 0x6U,  /* string maximum index */
 #else
-    STR_IDX_MAX                   = 0xEFU   /* string maximum index */
-#endif
+    STR_IDX_MAX                   = 0xEFU, /* string maximum index */
+#endif /* WINUSB_EXEMPT_DRIVER */
 };
 
 typedef enum _usb_pwrsta {
@@ -74,19 +75,20 @@ typedef enum _usb_feature
 {
     USB_FEATURE_EP_HALT           = 0x0U,  /* USB has endpoint halt feature */
     USB_FEATURE_REMOTE_WAKEUP     = 0x1U,  /* USB has endpoint remote wakeup feature */
-    USB_FEATURE_TEST_MODE         = 0x2U   /* USB has endpoint test mode feature */
+    USB_FEATURE_TEST_MODE         = 0x2U,  /* USB has endpoint test mode feature */
 } usb_feature;
 
 #define ENG_LANGID                0x0409U  /* english language ID */
 #define CHN_LANGID                0x0804U  /* chinese language ID */
 
 /* USB device exported macros */
-#define CTL_EP(ep)           (((ep) == 0x00U) || ((ep) == 0x80U))
+#define CTL_EP(ep)                (((ep) == 0x00U) || ((ep) == 0x80U))
 
 #define DEVICE_ID1                (0x1FFFF7E8U)  /* device ID1 */
 #define DEVICE_ID2                (0x1FFFF7ECU)  /* device ID2 */
 #define DEVICE_ID3                (0x1FFFF7F0U)  /* device ID3 */
-#define DEVICE_ID                 (0x40022100U)
+
+#define DEVICE_ID                 (0x40022104U)
 
 /* function declarations */
 /* handle USB standard device request */

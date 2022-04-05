@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -41,28 +42,28 @@ OF SUCH DAMAGE.
 
 /* function declarations */
 /* configure USB control status parameters */
-void usbh_ctlstate_config (usbh_host *puhost, uint8_t *buf, uint16_t len);
+void usbh_ctlstate_config (usbh_host *uhost, uint8_t *buf, uint16_t len);
 /* get device descriptor from the USB device */
-usbh_status usbh_devdesc_get (usbh_host *puhost, uint8_t len);
+usbh_status usbh_devdesc_get (usbh_host *uhost, uint8_t len);
 /* get configuration descriptor from the USB device */
-usbh_status usbh_cfgdesc_get (usbh_host *puhost, uint16_t len);
+usbh_status usbh_cfgdesc_get (usbh_host *uhost, uint16_t len);
 /* get string descriptor from the USB device */
-usbh_status usbh_strdesc_get (usbh_host *puhost,uint8_t str_index, uint8_t *buf, uint16_t len);
+usbh_status usbh_strdesc_get (usbh_host *uhost,uint8_t str_index, uint8_t *buf, uint16_t len);
 /* set the address to the connected device */
-usbh_status usbh_setaddress (usbh_host *puhost, uint8_t dev_addr);
+usbh_status usbh_setaddress (usbh_host *uhost, uint8_t dev_addr);
 /* set the configuration value to the connected device */
-usbh_status usbh_setcfg (usbh_host *puhost, uint16_t config);
+usbh_status usbh_setcfg (usbh_host *uhost, uint16_t config);
 /* set the interface value to the connected device */
-usbh_status usbh_setinterface (usbh_host *puhost, uint8_t itf_num, uint8_t alter_setting);
+usbh_status usbh_setinterface (usbh_host *uhost, uint8_t itf_num, uint8_t alter_setting);
 /* set or enable a specific device feature */
-usbh_status usbh_setdevfeature (usbh_host *puhost, uint8_t feature_selector, uint16_t windex);
+usbh_status usbh_setdevfeature (usbh_host *uhost, uint8_t feature_selector, uint16_t windex);
 /* clear or disable a specific device feature */
-usbh_status usbh_clrdevfeature (usbh_host *puhost, uint8_t feature_selector, uint16_t windex);
+usbh_status usbh_clrdevfeature (usbh_host *uhost, uint8_t feature_selector, uint16_t windex);
 /* clear or disable a specific feature */
-usbh_status usbh_clrfeature (usbh_host *puhost, uint8_t ep_addr, uint8_t pp_num); 
+usbh_status usbh_clrfeature (usbh_host *uhost, uint8_t ep_addr, uint8_t pp_num); 
 /* get the next descriptor header */
 usb_desc_header *usbh_nextdesc_get (uint8_t *pbuf, uint16_t *ptr);
-/* select a interface */
+/* select an interface */
 usbh_status usbh_interface_select (usb_dev_prop *udev, uint8_t interface);
 /* find the interface index for a specific class */
 uint8_t usbh_interface_find (usb_dev_prop *udev, uint8_t main_class, uint8_t sub_class, uint8_t protocol);

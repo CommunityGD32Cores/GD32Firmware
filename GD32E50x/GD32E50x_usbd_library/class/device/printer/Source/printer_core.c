@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -174,7 +175,7 @@ static usb_desc_str product_string =
     .unicode_string = {'G', 'D', '3', '2', '-', 'U', 'S', 'B', '_', 'P', 'r', 'i', 'n', 't', 'e', 'r'}
 };
 
-/* USBD serial string */
+/* USB serial string */
 static usb_desc_str serial_string = 
 {
     .header = 
@@ -184,7 +185,7 @@ static usb_desc_str serial_string =
      }
 };
 
-/* USB string descriptor */
+/* USB string descriptor set */
 static uint8_t* usbd_msc_strings[] = 
 {
     [STR_IDX_LANGID]  = (uint8_t *)&usbd_language_id_desc,
@@ -199,12 +200,12 @@ usb_desc printer_desc = {
     .strings     = usbd_msc_strings
 };
 
+/* local function prototypes ('static') */
 static uint8_t printer_init         (usb_dev *udev, uint8_t config_index);
 static uint8_t printer_deinit       (usb_dev *udev, uint8_t config_index);
 static uint8_t printer_req_handler  (usb_dev *udev, usb_req *req);
 static void printer_data_in         (usb_dev *udev, uint8_t ep_num);
 static void printer_data_out        (usb_dev *udev, uint8_t ep_num);
-
 
 usb_class printer_class = {
     .init          = printer_init,
@@ -222,7 +223,7 @@ usb_class printer_class = {
 */
 static uint8_t printer_init (usb_dev *udev, uint8_t config_index)
 {
-    /* initialize the data Tx/Rx endpoint */
+    /* initialize the data TX/RX endpoint */
     usbd_ep_init(udev, EP_BUF_SNG, BULK_TX_ADDR, &(printer_config_desc.printer_epin));
     usbd_ep_init(udev, EP_BUF_SNG, BULK_RX_ADDR, &(printer_config_desc.printer_epout));
 
@@ -244,7 +245,7 @@ static uint8_t printer_init (usb_dev *udev, uint8_t config_index)
 */
 static uint8_t printer_deinit (usb_dev *udev, uint8_t config_index)
 {
-    /* deinitialize the data Tx/Rx endpoint */
+    /* deinitialize the data TX/RX endpoint */
     usbd_ep_deinit(udev, PRINTER_IN_EP);
     usbd_ep_deinit(udev, PRINTER_OUT_EP);
 

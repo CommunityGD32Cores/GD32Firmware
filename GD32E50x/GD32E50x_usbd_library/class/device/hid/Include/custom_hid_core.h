@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -39,7 +40,7 @@ OF SUCH DAMAGE.
 #include "usbd_enum.h"
 #include "usb_hid.h"
 
-#define DESC_LEN_REPORT             95U
+#define DESC_LEN_REPORT             96U
 #define DESC_LEN_CONFIG             41U
 
 #define MAX_PERIPH_NUM              4U
@@ -59,8 +60,10 @@ typedef struct {
 extern usb_desc custom_hid_desc;
 extern usb_class custom_hid_class;
 
+/* function declarations */
+/* register HID interface operation functions */
 uint8_t custom_hid_itfop_register (usb_dev *udev, hid_fop_handler *hid_fop);
-
+/* send custom HID report */
 uint8_t custom_hid_report_send (usb_dev *udev, uint8_t *report, uint16_t len);
 
 #endif /* __CUSTOM_HID_CORE_H */

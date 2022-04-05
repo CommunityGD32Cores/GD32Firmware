@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -67,7 +68,7 @@ enum usbd_state {
     USBD_FAIL                     /*!< USB device fail state */
 };
 
-/* USB device transcation type */
+/* USB device transaction type */
 enum usbd_transc {
     TRANSC_SETUP = 0U,            /*!< SETUP transaction */
     TRANSC_OUT,                   /*!< OUT transaction */
@@ -81,7 +82,7 @@ enum usbd_ep_kind {
     EP_BUF_DBL                    /*!< double buffer endpoint type value */
 };
 
-/* USB device transaction struct */
+/* USB device transaction structure */
 typedef struct {
     uint8_t   max_len;            /*!< packet max length */
     uint8_t   ep_stall;           /*!< endpoint STALL */
@@ -91,7 +92,7 @@ typedef struct {
     uint16_t  xfer_count;         /*!< transfer count */
 } usb_transc;
 
-/* USB device basic struct */
+/* USB device basic structure */
 typedef struct {
     uint8_t  max_ep_count;        /*!< endpoint max count */
     uint8_t  twin_buf;            /*!< double buffer */
@@ -101,8 +102,8 @@ typedef struct {
 /* USB descriptor */
 typedef struct {
     uint8_t *dev_desc;            /*!< device descriptor */
-    uint8_t *config_desc;         /*!< config descriptor */
-    uint8_t *bos_desc;            /*!< bos descriptor */
+    uint8_t *config_desc;         /*!< configure descriptor */
+    uint8_t *bos_desc;            /*!< BOS descriptor */
     uint8_t **strings;            /*!< strings descriptor */
 } usb_desc;
 
@@ -119,7 +120,7 @@ typedef struct {
 
 /* USB LPM management */
 typedef struct {
-    uint32_t besl;                /*!< besl */
+    uint32_t besl;                /*!< BESL */
     uint32_t L1_resume;           /*!< L1 resume */
     uint32_t L1_remote_wakeup;    /*!< L1 remote wakeup */
 } usb_lpm;
@@ -134,7 +135,7 @@ typedef struct _usb_dev usb_dev;
 typedef struct _usb_handler usb_handler;
 typedef void (*usb_ep_transc) (usb_dev *usbd_dev, uint8_t ep_num);
 
-/* USB class struct */
+/* USB class structure */
 typedef struct {
     uint8_t req_cmd;
     uint8_t req_altset;
@@ -151,7 +152,7 @@ typedef struct {
     void (*data_out) (usb_dev *udev, uint8_t ep_num);
 } usb_class;
 
-/* USB core driver struct */
+/* USB core driver structure */
 struct _usb_dev {
     /* basic parameters */
     uint8_t         config;
@@ -186,7 +187,7 @@ typedef struct
     uint8_t (*SOF) (usb_dev *udev); /*!< SOF ISR callback */
 } usbd_int_cb_struct;
 
-/* USB handler struct */
+/* USB handler structure */
 struct _usb_handler {
     void (*init)             (void);
     void (*deinit)           (void);
@@ -253,7 +254,7 @@ __STATIC_INLINE void usbd_core_deinit (usb_dev *udev)
     \brief      initialize endpoint
     \param[in]  udev: pointer to USB core instance
     \param[in]  buf_kind: endpoint buffer kind
-    \param[in]  buf_addr: buffer addresss
+    \param[in]  buf_addr: buffer address
     \param[in]  ep_desc: pointer to endpoint descriptor
     \param[out] none
     \retval     none

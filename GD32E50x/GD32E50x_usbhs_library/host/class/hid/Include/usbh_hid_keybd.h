@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -289,12 +290,12 @@ typedef struct
 
 /* function declarations */
 /* initialize the keyboard function */
-usbh_status usbh_hid_keybd_init (usb_core_driver *pudev, usbh_host *puhost);
+usbh_status usbh_hid_keybd_init (usb_core_driver *udev, usbh_host *uhost);
 /* get keyboard information */
-hid_keybd_info *usbh_hid_keybd_info_get (usb_core_driver *pudev, usbh_host *puhost);
-/* get the ascii code of hid */
+hid_keybd_info *usbh_hid_keybd_info_get (usb_core_driver *udev, usbh_host *uhost);
+/* get the ASCII code of hid */
 uint8_t usbh_hid_ascii_code_get (hid_keybd_info *info);
 /* keyboard machine */
-void usbh_hid_keybrd_machine (usb_core_driver *pudev, usbh_host *puhost);
+void usbh_hid_keybrd_machine (usb_core_driver *udev, usbh_host *uhost);
 
 #endif /* __USBH_HID_KEYBD_H */

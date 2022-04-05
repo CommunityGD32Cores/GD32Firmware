@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     All rights reserved.
 
@@ -39,6 +40,8 @@ OF SUCH DAMAGE.
 #define GD32E50X_TMU_H
 
 #include "gd32e50x.h"
+
+#if defined(GD32E50X_CL) || defined(GD32E508)
 
 /* TMU definitions */
 #define TMU                             TMU_BASE
@@ -122,5 +125,7 @@ void tmu_interrupt_disable(void);
 FlagStatus tmu_flag_get(uint32_t flag);
 /* check teh TMU interrupt flag */
 FlagStatus tmu_interrupt_flag_get(uint32_t int_flag);
+
+#endif /* GD32E50x_CL and GD32E508 */
 
 #endif /* GD32E50X_TMU_H */

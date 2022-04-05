@@ -4,10 +4,12 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2020-12-07, V1.1.1, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -42,11 +44,11 @@ OF SUCH DAMAGE.
 #define USBD_PID                    0x028FU
 
 /* local function prototypes ('static') */
-static uint8_t msc_core_init   (usb_dev *pudev, uint8_t config_index);
-static uint8_t msc_core_deinit (usb_dev *pudev, uint8_t config_index);
-static uint8_t msc_core_req    (usb_dev *pudev, usb_req *req);
-static uint8_t msc_core_in     (usb_dev *pudev, uint8_t ep_num);
-static uint8_t msc_core_out    (usb_dev *pudev, uint8_t ep_num);
+static uint8_t msc_core_init   (usb_dev *udev, uint8_t config_index);
+static uint8_t msc_core_deinit (usb_dev *udev, uint8_t config_index);
+static uint8_t msc_core_req    (usb_dev *udev, usb_req *req);
+static uint8_t msc_core_in     (usb_dev *udev, uint8_t ep_num);
+static uint8_t msc_core_out    (usb_dev *udev, uint8_t ep_num);
 
 usb_class_core msc_class = 
 {
@@ -138,6 +140,77 @@ __ALIGN_BEGIN const usb_desc_config_set msc_config_desc __ALIGN_END =
     }
 };
 
+/* USB device other speed configuration descriptor */
+__ALIGN_BEGIN const usb_desc_config_set other_speed_msc_config_desc __ALIGN_END = 
+{
+    .config = 
+    {
+        .header = {
+            .bLength         = sizeof(usb_desc_config), 
+            .bDescriptorType = USB_DESCTYPE_OTHER_SPD_CONFIG
+        },
+        .wTotalLength        = USB_MSC_CONFIG_DESC_SIZE,
+        .bNumInterfaces      = 0x01U,
+        .bConfigurationValue = 0x01U,
+        .iConfiguration      = 0x00U,
+        .bmAttributes        = 0xC0U,
+        .bMaxPower           = 0x32U
+    },
+
+    .msc_itf = 
+    {
+        .header = {
+            .bLength         = sizeof(usb_desc_itf), 
+            .bDescriptorType = USB_DESCTYPE_ITF
+        },
+        .bInterfaceNumber    = 0x00U,
+        .bAlternateSetting   = 0x00U,
+        .bNumEndpoints       = 0x02U,
+        .bInterfaceClass     = USB_CLASS_MSC,
+        .bInterfaceSubClass  = USB_MSC_SUBCLASS_SCSI,
+        .bInterfaceProtocol  = USB_MSC_PROTOCOL_BBB,
+        .iInterface          = 0x00U
+    },
+
+    .msc_epin = 
+    {
+        .header = {
+            .bLength         = sizeof(usb_desc_ep), 
+            .bDescriptorType = USB_DESCTYPE_EP
+        },
+        .bEndpointAddress    = MSC_IN_EP,
+        .bmAttributes        = USB_EP_ATTR_BULK,
+        .wMaxPacketSize      = 64U,
+        .bInterval           = 0x00U
+    },
+
+    .msc_epout = 
+    {
+        .header = {
+            .bLength         = sizeof(usb_desc_ep), 
+            .bDescriptorType = USB_DESCTYPE_EP
+        },
+        .bEndpointAddress    = MSC_OUT_EP,
+        .bmAttributes        = USB_EP_ATTR_BULK,
+        .wMaxPacketSize      = 64U,
+        .bInterval           = 0x00U
+    }
+};
+
+__ALIGN_BEGIN const uint8_t usbd_qualifier_desc[10] __ALIGN_END = 
+{
+    0x0A, 
+    0x06,
+    0x00, 
+    0x02,
+    0x00, 
+    0x00,
+    0x00, 
+    0x40,
+    0x01, 
+    0x00
+};
+
 /* USB language ID descriptor */
 __ALIGN_BEGIN const usb_desc_LANGID usbd_language_id_desc __ALIGN_END = 
 {
@@ -193,67 +266,71 @@ void *const usbd_msc_strings[] =
 usb_desc msc_desc = {
     .dev_desc    = (uint8_t *)&msc_dev_desc,
     .config_desc = (uint8_t *)&msc_config_desc,
-    .strings     = usbd_msc_strings
+    .strings     = usbd_msc_strings,
+#ifdef USE_USB_HS
+    .other_speed_config_desc = (uint8_t *)&other_speed_msc_config_desc,
+    .qualifier_desc = (uint8_t *)&usbd_qualifier_desc,
+#endif
 };
 
 static uint8_t usbd_msc_maxlun = 0U;
 
 /*!
     \brief      initialize the MSC device
-    \param[in]  pudev: pointer to USB device instance
+    \param[in]  udev: pointer to USB device instance
     \param[in]  config_index: configuration index
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t msc_core_init (usb_dev *pudev, uint8_t config_index)
+static uint8_t msc_core_init (usb_dev *udev, uint8_t config_index)
 {
     static usbd_msc_handler msc_handler;
 
-    memset((void *)&msc_handler, 0, sizeof(usbd_msc_handler));
+    memset((void *)&msc_handler, 0U, sizeof(usbd_msc_handler));
 
-    pudev->dev.class_data[USBD_MSC_INTERFACE] = (void *)&msc_handler;
+    udev->dev.class_data[USBD_MSC_INTERFACE] = (void *)&msc_handler;
 
-    /* configure MSC Tx endpoint */
-    usbd_ep_setup (pudev, &(msc_config_desc.msc_epin));
+    /* configure MSC TX endpoint */
+    usbd_ep_setup (udev, &(msc_config_desc.msc_epin));
 
-    /* configure MSC Rx endpoint */
-    usbd_ep_setup (pudev, &(msc_config_desc.msc_epout));
+    /* configure MSC RX endpoint */
+    usbd_ep_setup (udev, &(msc_config_desc.msc_epout));
 
-    /* init the BBB layer */
-    msc_bbb_init(pudev);
+    /* initialize the BBB layer */
+    msc_bbb_init(udev);
 
     return USBD_OK;
 }
 
 /*!
     \brief      de-initialize the MSC device
-    \param[in]  pudev: pointer to USB device instance
+    \param[in]  udev: pointer to USB device instance
     \param[in]  config_index: configuration index
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t msc_core_deinit (usb_dev *pudev, uint8_t config_index)
+static uint8_t msc_core_deinit (usb_dev *udev, uint8_t config_index)
 {
     /* clear MSC endpoints */
-    usbd_ep_clear (pudev, MSC_IN_EP);
-    usbd_ep_clear (pudev, MSC_OUT_EP);
+    usbd_ep_clear (udev, MSC_IN_EP);
+    usbd_ep_clear (udev, MSC_OUT_EP);
 
-    /* un-init the BBB layer */
-    msc_bbb_deinit(pudev);
+    /* deinitialize the BBB layer */
+    msc_bbb_deinit(udev);
 
     return USBD_OK;
 }
 
 /*!
     \brief      handle the MSC class-specific and standard requests
-    \param[in]  pudev: pointer to USB device instance
+    \param[in]  udev: pointer to USB device instance
     \param[in]  req: device class-specific request
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t msc_core_req (usb_dev *pudev, usb_req *req)
+static uint8_t msc_core_req (usb_dev *udev, usb_req *req)
 {
-    usb_transc *transc = &pudev->dev.transc_in[0];
+    usb_transc *transc = &udev->dev.transc_in[0];
 
     switch (req->bRequest) {
     case BBB_GET_MAX_LUN :
@@ -273,14 +350,14 @@ static uint8_t msc_core_req (usb_dev *pudev, usb_req *req)
         if((0U == req->wValue) && 
             (0U == req->wLength) &&
              (0x80U != (req->bmRequestType & 0x80U))) {
-            msc_bbb_reset(pudev);
+            msc_bbb_reset(udev);
         } else {
             return USBD_FAIL; 
         }
         break;
 
     case USB_CLEAR_FEATURE:
-        msc_bbb_clrfeature (pudev, (uint8_t)req->wIndex);
+        msc_bbb_clrfeature (udev, (uint8_t)req->wIndex);
         break;
 
     default:
@@ -292,32 +369,28 @@ static uint8_t msc_core_req (usb_dev *pudev, usb_req *req)
 
 /*!
     \brief      handle data in stage
-    \param[in]  pudev: pointer to USB device instance
+    \param[in]  udev: pointer to USB device instance
     \param[in]  ep_num: the endpoint number
     \param[out] none
     \retval     none
 */
-static uint8_t msc_core_in (usb_dev *pudev, uint8_t ep_num)
+static uint8_t msc_core_in (usb_dev *udev, uint8_t ep_num)
 {
-    if ((MSC_IN_EP & 0x7FU) == ep_num) {
-        msc_bbb_data_in(pudev, ep_num);
-    }
+    msc_bbb_data_in(udev, ep_num);
 
     return USBD_OK;
 }
 
 /*!
     \brief      handle data out stage
-    \param[in]  pudev: pointer to USB device instance
+    \param[in]  udev: pointer to USB device instance
     \param[in]  ep_num: the endpoint number
     \param[out] none
     \retval     none
 */
-static uint8_t msc_core_out (usb_dev *pudev, uint8_t ep_num)
+static uint8_t msc_core_out (usb_dev *udev, uint8_t ep_num)
 {
-    if (MSC_OUT_EP == ep_num) {
-        msc_bbb_data_out (pudev, ep_num);
-    }
+    msc_bbb_data_out (udev, ep_num);
 
     return USBD_OK;
 }

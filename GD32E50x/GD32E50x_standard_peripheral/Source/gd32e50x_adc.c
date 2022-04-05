@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -52,7 +53,7 @@ void adc_deinit(uint32_t adc_periph)
         rcu_periph_reset_enable(RCU_ADC1RST);
         rcu_periph_reset_disable(RCU_ADC1RST);
         break;
-#if (defined(GD32E50X_HD) || defined(GD32E50X_XD))
+#if (defined(GD32E50X_HD) || defined(GD32E50X_XD)||defined(GD32EPRT))
     case ADC2:
         rcu_periph_reset_enable(RCU_ADC2RST);
         rcu_periph_reset_disable(RCU_ADC2RST);

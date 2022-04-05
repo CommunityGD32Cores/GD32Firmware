@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -151,7 +152,7 @@ typedef struct _usb_desc_itf_set
     usb_desc_ep  ep_desc[USBH_MAX_EP_NUM];
 } usb_desc_itf_set;
 
-/* USB config descriptor set */
+/* USB configure descriptor set */
 typedef struct _usb_desc_cfg_set
 {
     usb_desc_config   cfg_desc;
@@ -161,9 +162,10 @@ typedef struct _usb_desc_cfg_set
 /* USB device property */
 typedef struct
 {
-    uint8_t                   data[USBH_DATA_BUF_MAX_LEN];
+    uint8_t                   data[USBH_DATA_BUF_MAX_LEN]; /* if DMA is used, the data array must be located in the first position */
     uint8_t                   cur_itf;
     uint8_t                   addr;
+
     uint32_t                  speed;
 
     usb_desc_dev              dev_desc;
@@ -185,7 +187,7 @@ typedef struct
     void        (*class_deinit)    (struct _usbh_host *phost);
     usbh_status (*class_requests)  (struct _usbh_host *phost);
     usbh_status (*class_machine)   (struct _usbh_host *phost);
-    usbh_status (*class_sof)       (struct _usbh_host *puhost);
+    usbh_status (*class_sof)       (struct _usbh_host *uhost);
 
     void         *class_data;
 } usbh_class;
@@ -224,50 +226,51 @@ typedef struct _usbh_host
     usb_host_state                      backup_state;                       /*!< backup of previous state machine value */
     usbh_enum_state                     enum_state;                         /*!< enumeration state machine */
     usbh_control                        control;                            /*!< USB host control state machine */
-    usb_dev_prop                        dev_prop;                           /*!< USB device properity */
+    usb_dev_prop                        dev_prop;                           /*!< USB device property */
 
     usbh_class                          *uclass[USBH_MAX_SUPPORTED_CLASS];  /*!< USB host supported class */
     usbh_class                          *active_class;                      /*!< USB active class */
     usbh_user_cb                        *usr_cb;                            /*!< USB user callback */
 
-    uint8_t                             class_num;                          /*!< USB class number */
+    uint8_t                              class_num;                         /*!< USB class number */
+
     void                                *data;                              /*!< used for... */
 } usbh_host;
 
 /*!
     \brief      get USB URB state
-    \param[in]  pudev: pointer to USB core instance
+    \param[in]  udev: pointer to USB core instance
     \param[in]  pp_num: pipe number
     \param[out] none
     \retval     none
 */
-static inline usb_urb_state usbh_urbstate_get (usb_core_driver *pudev, uint8_t pp_num)
+static inline usb_urb_state usbh_urbstate_get (usb_core_driver *udev, uint8_t pp_num)
 {
-    return pudev->host.pipe[pp_num].urb_state;
+    return udev->host.pipe[pp_num].urb_state;
 }
 
 /*!
     \brief      get USB transfer data count
-    \param[in]  pudev: pointer to USB core instance
+    \param[in]  udev: pointer to USB core instance
     \param[in]  pp_num: pipe number
     \param[out] none
     \retval     none
 */
-static inline uint32_t usbh_xfercount_get (usb_core_driver *pudev, uint8_t pp_num)
+static inline uint32_t usbh_xfercount_get (usb_core_driver *udev, uint8_t pp_num)
 {
-    return pudev->host.backup_xfercount[pp_num];
+    return udev->host.backup_xfercount[pp_num];
 }
 
 /* function declarations */
 /* USB host stack initializations */
-void usbh_init (usbh_host *puhost, usbh_user_cb *user_cb);
+void usbh_init (usbh_host *uhost, usbh_user_cb *user_cb);
 /* USB host register device class */
-usbh_status usbh_class_register (usbh_host *puhost, usbh_class *puclass);
+usbh_status usbh_class_register (usbh_host *uhost, usbh_class *puclass);
 /* de-initialize USB host */
-usbh_status usbh_deinit (usbh_host *puhost);
+usbh_status usbh_deinit (usbh_host *uhost);
 /* USB host core main state machine process */
-void usbh_core_task (usbh_host *puhost);
+void usbh_core_task (usbh_host *uhost);
 /* handle the error on USB host side */
-void usbh_error_handler (usbh_host *puhost, usbh_status err_type);
+void usbh_error_handler (usbh_host *uhost, usbh_status err_type);
 
 #endif /* __USBH_CORE_H */

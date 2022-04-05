@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -117,77 +118,77 @@ typedef struct _usb_core_driver
 
 /*!
     \brief      get USB even frame
-    \param[in]  pudev: pointer to USB device
+    \param[in]  udev: pointer to USB device
     \param[out] none
     \retval     none
 */
-__STATIC_INLINE uint8_t usb_frame_even (usb_core_driver *pudev)
+__STATIC_INLINE uint8_t usb_frame_even (usb_core_driver *udev)
 {
-    return (uint8_t)!(pudev->regs.hr->HFINFR & 0x01U);
+    return (uint8_t)!(udev->regs.hr->HFINFR & 0x01U);
 }
 
 /*!
     \brief      configure USB clock of PHY
-    \param[in]  pudev: pointer to USB device
+    \param[in]  udev: pointer to USB device
     \param[in]  clock: PHY clock
     \param[out] none
     \retval     none
 */
-__STATIC_INLINE void usb_phyclock_config (usb_core_driver *pudev, uint8_t clock)
+__STATIC_INLINE void usb_phyclock_config (usb_core_driver *udev, uint8_t clock)
 {
-//    pudev->regs.hr->HCTL &= ~HCTL_CLKSEL;
-//    pudev->regs.hr->HCTL |= clock;
+//    udev->regs.hr->HCTL &= ~HCTL_CLKSEL;
+//    udev->regs.hr->HCTL |= clock;
 }
 
 /*!
     \brief      read USB port
-    \param[in]  pudev: pointer to USB device
+    \param[in]  udev: pointer to USB device
     \param[out] none
     \retval     port status
 */
-__STATIC_INLINE uint32_t usb_port_read (usb_core_driver *pudev)
+__STATIC_INLINE uint32_t usb_port_read (usb_core_driver *udev)
 {
-    return *pudev->regs.HPCS & ~(HPCS_PE | HPCS_PCD | HPCS_PEDC);
+    return *udev->regs.HPCS & ~(HPCS_PE | HPCS_PCD | HPCS_PEDC);
 }
 
 /*!
     \brief      get USB current speed
-    \param[in]  pudev: pointer to USB device
+    \param[in]  udev: pointer to USB device
     \param[out] none
-    \retval     usb current speed
+    \retval     USB current speed
 */
-__STATIC_INLINE uint32_t usb_curspeed_get (usb_core_driver *pudev)
+__STATIC_INLINE uint32_t usb_curspeed_get (usb_core_driver *udev)
 {
-    return *pudev->regs.HPCS & HPCS_PS;
+    return *udev->regs.HPCS & HPCS_PS;
 }
 
 /*!
     \brief      get USB current frame
-    \param[in]  pudev: pointer to USB device
+    \param[in]  udev: pointer to USB device
     \param[out] none
-    \retval     usb current frame
+    \retval     USB current frame
 */
-__STATIC_INLINE uint32_t usb_curframe_get (usb_core_driver *pudev)
+__STATIC_INLINE uint32_t usb_curframe_get (usb_core_driver *udev)
 {
-    return (pudev->regs.hr->HFINFR & 0xFFFFU);
+    return (udev->regs.hr->HFINFR & 0xFFFFU);
 }
 
 /* function declarations */
 /* initializes USB core for host mode */
-usb_status usb_host_init (usb_core_driver *pudev);
+usb_status usb_host_init (usb_core_driver *udev);
 /* control the VBUS to power */
-void usb_portvbus_switch (usb_core_driver *pudev, uint8_t state);
+void usb_portvbus_switch (usb_core_driver *udev, uint8_t state);
 /* reset host port */
-uint32_t usb_port_reset (usb_core_driver *pudev);
+uint32_t usb_port_reset (usb_core_driver *udev);
 /* initialize host pipe */
-usb_status usb_pipe_init (usb_core_driver *pudev, uint8_t pipe_num);
+usb_status usb_pipe_init (usb_core_driver *udev, uint8_t pipe_num);
 /* prepare host pipe for transferring packets */
-usb_status usb_pipe_xfer (usb_core_driver *pudev, uint8_t pipe_num);
+usb_status usb_pipe_xfer (usb_core_driver *udev, uint8_t pipe_num);
 /* halt host pipe */
-usb_status usb_pipe_halt (usb_core_driver *pudev, uint8_t pipe_num);
+usb_status usb_pipe_halt (usb_core_driver *udev, uint8_t pipe_num);
 /* configure host pipe to do ping operation */
-usb_status usb_pipe_ping (usb_core_driver *pudev, uint8_t pipe_num);
+usb_status usb_pipe_ping (usb_core_driver *udev, uint8_t pipe_num);
 /* stop the USB host and clean up FIFO */
-void usb_host_stop (usb_core_driver *pudev);
+void usb_host_stop (usb_core_driver *udev);
 
 #endif /* __DRV_USB_HOST_H */

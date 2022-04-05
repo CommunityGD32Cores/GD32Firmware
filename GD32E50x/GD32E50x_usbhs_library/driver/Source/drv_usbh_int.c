@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -47,115 +48,115 @@ OF SUCH DAMAGE.
 #endif /* __CC_ARM */
 
 /* local function prototypes ('static') */
-static uint32_t usbh_int_port           (usb_core_driver *pudev);
-static uint32_t usbh_int_pipe           (usb_core_driver *pudev);
-static uint32_t usbh_int_pipe_in        (usb_core_driver *pudev, uint32_t pp_num);
-static uint32_t usbh_int_pipe_out       (usb_core_driver *pudev, uint32_t pp_num);
-static uint32_t usbh_int_rxfifonoempty  (usb_core_driver *pudev);
-static uint32_t usbh_int_txfifoempty    (usb_core_driver *pudev, usb_pipe_mode pp_mode);
+static uint32_t usbh_int_port           (usb_core_driver *udev);
+static uint32_t usbh_int_pipe           (usb_core_driver *udev);
+static uint32_t usbh_int_pipe_in        (usb_core_driver *udev, uint32_t pp_num);
+static uint32_t usbh_int_pipe_out       (usb_core_driver *udev, uint32_t pp_num);
+static uint32_t usbh_int_rxfifonoempty  (usb_core_driver *udev);
+static uint32_t usbh_int_txfifoempty    (usb_core_driver *udev, usb_pipe_mode pp_mode);
 
 /*!
     \brief      handle global host interrupt
-    \param[in]  pudev: pointer to USB core instance
+    \param[in]  udev: pointer to USB core instance
     \param[out] none
     \retval     operation status
 */
-uint32_t usbh_isr (usb_core_driver *pudev)
+uint32_t usbh_isr (usb_core_driver *udev)
 {
-    uint32_t Retval = 0U;
+    uint32_t retval = 0U;
 
     __IO uint32_t intr = 0U;
 
     /* check if host mode */
-    if (HOST_MODE == (pudev->regs.gr->GINTF & GINTF_COPM)) {
-        intr = usb_coreintr_get(&pudev->regs);
+    if (HOST_MODE == (udev->regs.gr->GINTF & GINTF_COPM)) {
+        intr = usb_coreintr_get(&udev->regs);
 
         if (!intr) {
             return 0U;
         }
 
         if (intr & GINTF_SOF) {
-            usbh_int_fop->SOF(pudev->host.data);
+            usbh_int_fop->SOF(udev->host.data);
 
             /* clear interrupt */
-            pudev->regs.gr->GINTF = GINTF_SOF;
+            udev->regs.gr->GINTF = GINTF_SOF;
         }
 
         if (intr & GINTF_RXFNEIF) {
-            Retval |= usbh_int_rxfifonoempty (pudev);
+            retval |= usbh_int_rxfifonoempty (udev);
         }
 
         if (intr & GINTF_NPTXFEIF) {
-            Retval |= usbh_int_txfifoempty (pudev, PIPE_NON_PERIOD);
+            retval |= usbh_int_txfifoempty (udev, PIPE_NON_PERIOD);
         }
 
         if (intr & GINTF_PTXFEIF) {
-            Retval |= usbh_int_txfifoempty (pudev, PIPE_PERIOD);
+            retval |= usbh_int_txfifoempty (udev, PIPE_PERIOD);
         }
 
         if (intr & GINTF_HCIF) {
-            Retval |= usbh_int_pipe (pudev);
+            retval |= usbh_int_pipe (udev);
         }
 
         if (intr & GINTF_HPIF) {
-            Retval |= usbh_int_port (pudev);
+            retval |= usbh_int_port (udev);
         }
 
         if (intr & GINTF_DISCIF) {
-            usbh_int_fop->disconnect(pudev->host.data);
+            usbh_int_fop->disconnect(udev->host.data);
 
             /* clear interrupt */
-            pudev->regs.gr->GINTF = GINTF_DISCIF;
+            udev->regs.gr->GINTF = GINTF_DISCIF;
         }
 
         if (intr & GINTF_ISOONCIF) {
-            pudev->regs.pr[0]->HCHCTL |= HCHCTL_CEN | HCHCTL_CDIS;
+            udev->regs.pr[0]->HCHCTL |= HCHCTL_CEN | HCHCTL_CDIS;
 
             /* clear interrupt */
-            pudev->regs.gr->GINTF = GINTF_ISOONCIF;
+            udev->regs.gr->GINTF = GINTF_ISOONCIF;
         }
     }
 
-    return Retval;
+    return retval;
 }
 
 /*!
     \brief      handle USB pipe halt
-    \param[in]  pudev: pointer to USB core instance
+    \param[in]  udev: pointer to USB core instance
     \param[in]  pp_num: pp_num: host channel number which is in (0..7)
     \param[in]  pp_int: pipe interrupt
     \param[in]  pp_status: pipe status
     \param[out] none
     \retval     none
 */
-static inline void usb_pp_halt (usb_core_driver *pudev, 
+static inline void usb_pp_halt (usb_core_driver *udev, 
                                 uint8_t pp_num, 
                                 uint32_t pp_int,
                                 usb_pipe_staus pp_status)
 {
-    pudev->regs.pr[pp_num]->HCHINTEN |= HCHINTEN_CHIE;
+    udev->regs.pr[pp_num]->HCHINTEN |= HCHINTEN_CHIE;
 
-    usb_pipe_halt(pudev, pp_num);
+    usb_pipe_halt(udev, pp_num);
 
-    pudev->regs.pr[pp_num]->HCHINTF = pp_int;
+    udev->regs.pr[pp_num]->HCHINTF = pp_int;
 
-    pudev->host.pipe[pp_num].pp_status = pp_status;
+    udev->host.pipe[pp_num].pp_status = pp_status;
 }
 
 /*!
     \brief      handle the host port interrupt
-    \param[in]  pudev: pointer to USB device instance
+    \param[in]  udev: pointer to USB device instance
     \param[out] none
     \retval     operation status
 */
 #if defined (__ICCARM__)      /*!< IAR compiler */
     #pragma optimize = none
 #endif /* __ICCARM */
-static uint32_t usbh_int_port (usb_core_driver *pudev)
+static uint32_t usbh_int_port (usb_core_driver *udev)
 {
     uint32_t retval = 0U;
 
-    __IO uint32_t port_state = *pudev->regs.HPCS;
+    __IO uint32_t port_state = *udev->regs.HPCS;
     
     __IO uint32_t port_reset = 0U;
 
@@ -163,67 +164,67 @@ static uint32_t usbh_int_port (usb_core_driver *pudev)
     port_state &= ~(HPCS_PE | HPCS_PCD | HPCS_PEDC);
 
     /* port connect detected */
-    if (*pudev->regs.HPCS & HPCS_PCD) {
+    if (*udev->regs.HPCS & HPCS_PCD) {
         port_state |= HPCS_PCD;
 
-        usbh_int_fop->connect(pudev->host.data);
+        usbh_int_fop->connect(udev->host.data);
 
         retval |= 1U;
     }
 
     /* port enable changed */
-    if (*pudev->regs.HPCS & HPCS_PEDC) {
+    if (*udev->regs.HPCS & HPCS_PEDC) {
         port_state |= HPCS_PEDC;
 
-        if (*pudev->regs.HPCS & HPCS_PE) {
-            uint32_t port_speed = usb_curspeed_get(pudev);
+        if (*udev->regs.HPCS & HPCS_PE) {
+            uint32_t port_speed = usb_curspeed_get(udev);
 
-            pudev->host.connect_status = 1U;
+            udev->host.connect_status = 1U;
 
             if (PORT_SPEED_LOW == port_speed) {
-                pudev->regs.hr->HFT = 6000U;
+                udev->regs.hr->HFT = 6000U;
             } else if (PORT_SPEED_FULL == port_speed) {
-                pudev->regs.hr->HFT = 48000U;
+                udev->regs.hr->HFT = 48000U;
             } else {
             }
 
             port_reset = 1U;
 
-            usbh_int_fop->port_enabled(pudev->host.data);
+            usbh_int_fop->port_enabled(udev->host.data);
 
-            pudev->regs.gr->GINTEN |= GINTEN_DISCIE | GINTEN_SOFIE;
+            udev->regs.gr->GINTEN |= GINTEN_DISCIE | GINTEN_SOFIE;
         } else {
-            usbh_int_fop->port_disabled(pudev->host.data);
+            usbh_int_fop->port_disabled(udev->host.data);
         }
     }
     
     if (1U == port_reset) {
-        usb_port_reset(pudev);
+        usb_port_reset(udev);
     }
 
     /* clear port interrupts */
-    *pudev->regs.HPCS = port_state;
+    *udev->regs.HPCS = port_state;
 
     return retval;
 }
 
 /*!
     \brief      handle all host channels interrupt
-    \param[in]  pudev: pointer to USB device instance
+    \param[in]  udev: pointer to USB device instance
     \param[out] none
     \retval     operation status
 */
-static uint32_t usbh_int_pipe (usb_core_driver *pudev)
+static uint32_t usbh_int_pipe (usb_core_driver *udev)
 {
     uint32_t pp_num = 0U;
     uint32_t retval = 0U;
 
-    for (pp_num = 0U; pp_num < pudev->bp.num_pipe; pp_num++) {
-        if ((pudev->regs.hr->HACHINT & HACHINT_HACHINT) & (1U << pp_num)) {
-            if (pudev->regs.pr[pp_num]->HCHCTL & HCHCTL_EPDIR) {
-                retval |= usbh_int_pipe_in (pudev, pp_num);
+    for (pp_num = 0U; pp_num < udev->bp.num_pipe; pp_num++) {
+        if ((udev->regs.hr->HACHINT & HACHINT_HACHINT) & (1U << pp_num)) {
+            if (udev->regs.pr[pp_num]->HCHCTL & HCHCTL_EPDIR) {
+                retval |= usbh_int_pipe_in (udev, pp_num);
             } else {
-                retval |= usbh_int_pipe_out (pudev, pp_num);
+                retval |= usbh_int_pipe_out (udev, pp_num);
             }
         }
     }
@@ -233,7 +234,7 @@ static uint32_t usbh_int_pipe (usb_core_driver *pudev)
 
 /*!
     \brief      handle the IN channel interrupt
-    \param[in]  pudev: pointer to USB device instance
+    \param[in]  udev: pointer to USB device instance
     \param[in]  pp_num: host channel number which is in (0..7)
     \param[out] none
     \retval     operation status
@@ -241,11 +242,11 @@ static uint32_t usbh_int_pipe (usb_core_driver *pudev)
 #if defined (__ICCARM__)      /*!< IAR compiler */
     #pragma optimize = none
 #endif /* __ICCARM */
-static uint32_t usbh_int_pipe_in (usb_core_driver *pudev, uint32_t pp_num)
+static uint32_t usbh_int_pipe_in (usb_core_driver *udev, uint32_t pp_num)
 {
-    usb_pr *pp_reg = pudev->regs.pr[pp_num];
+    usb_pr *pp_reg = udev->regs.pr[pp_num];
 
-    usb_pipe *pp = &pudev->host.pipe[pp_num];
+    usb_pipe *pp = &udev->host.pipe[pp_num];
 
     __IO uint32_t intr_pp = pp_reg->HCHINTF & pp_reg->HCHINTEN;
 
@@ -254,25 +255,25 @@ static uint32_t usbh_int_pipe_in (usb_core_driver *pudev, uint32_t pp_num)
     if (intr_pp & HCHINTF_ACK) {
         pp_reg->HCHINTF = HCHINTF_ACK;
     } else if (intr_pp & HCHINTF_STALL) {
-        usb_pp_halt (pudev, (uint8_t)pp_num, HCHINTF_STALL, PIPE_STALL);
+        usb_pp_halt (udev, (uint8_t)pp_num, HCHINTF_STALL, PIPE_STALL);
         pp_reg->HCHINTF = HCHINTF_NAK;
 
-        /* note: When there is a 'STALL', reset also nak,
-           else, the pudev->host.pp_status = HC_STALL
+        /* note: When there is a 'STALL', reset also NAK,
+           else, the udev->host.pp_status = HC_STALL
            will be overwritten by 'NAK' in code below */
         intr_pp &= ~HCHINTF_NAK;
     } else if (intr_pp & HCHINTF_DTER) {
-        usb_pp_halt (pudev, (uint8_t)pp_num, HCHINTF_DTER, PIPE_DTGERR);
+        usb_pp_halt (udev, (uint8_t)pp_num, HCHINTF_DTER, PIPE_DTGERR);
         pp_reg->HCHINTF = HCHINTF_NAK;
     } else {
         /* no operation */
     }
 
     if (intr_pp & HCHINTF_REQOVR) {
-        usb_pp_halt (pudev, (uint8_t)pp_num, HCHINTF_REQOVR, PIPE_REQOVR);
+        usb_pp_halt (udev, (uint8_t)pp_num, HCHINTF_REQOVR, PIPE_REQOVR);
     } else if (intr_pp & HCHINTF_TF) {
-        if ((uint8_t)USB_USE_DMA == pudev->bp.transfer_mode) {
-            pudev->host.backup_xfercount[pp_num] = pp->xfer_len - (pp_reg->HCHLEN & HCHLEN_TLEN);
+        if ((uint8_t)USB_USE_DMA == udev->bp.transfer_mode) {
+            udev->host.backup_xfercount[pp_num] = pp->xfer_len - (pp_reg->HCHLEN & HCHLEN_TLEN);
         }
 
         pp->pp_status = PIPE_XF;
@@ -283,7 +284,7 @@ static uint32_t usbh_int_pipe_in (usb_core_driver *pudev, uint32_t pp_num)
         switch (ep_type) {
         case USB_EPTYPE_CTRL:
         case USB_EPTYPE_BULK:
-            usb_pp_halt (pudev, (uint8_t)pp_num, HCHINTF_NAK, PIPE_XF);
+            usb_pp_halt (udev, (uint8_t)pp_num, HCHINTF_NAK, PIPE_XF);
 
             pp->data_toggle_in ^= 1U;
             break;
@@ -333,7 +334,7 @@ static uint32_t usbh_int_pipe_in (usb_core_driver *pudev, uint32_t pp_num)
         pp_reg->HCHINTF = HCHINTF_CH;
     } else if (intr_pp & HCHINTF_USBER) {
         pp->err_count++;
-        usb_pp_halt (pudev, (uint8_t)pp_num, HCHINTF_USBER, PIPE_TRACERR);
+        usb_pp_halt (udev, (uint8_t)pp_num, HCHINTF_USBER, PIPE_TRACERR);
     } else if (intr_pp & HCHINTF_NAK) {
         switch (ep_type) {
         case USB_EPTYPE_CTRL:
@@ -345,7 +346,7 @@ static uint32_t usbh_int_pipe_in (usb_core_driver *pudev, uint32_t pp_num)
         case USB_EPTYPE_INTR:
             pp_reg->HCHINTEN |= HCHINTEN_CHIE;
 
-            (void)usb_pipe_halt(pudev, (uint8_t)pp_num);
+            (void)usb_pipe_halt(udev, (uint8_t)pp_num);
             break;
 
         default:
@@ -364,7 +365,7 @@ static uint32_t usbh_int_pipe_in (usb_core_driver *pudev, uint32_t pp_num)
 
 /*!
     \brief      handle the OUT channel interrupt
-    \param[in]  pudev: pointer to USB device instance
+    \param[in]  udev: pointer to USB device instance
     \param[in]  pp_num: host channel number which is in (0..7)
     \param[out] none
     \retval     operation status
@@ -372,42 +373,42 @@ static uint32_t usbh_int_pipe_in (usb_core_driver *pudev, uint32_t pp_num)
 #if defined (__ICCARM__)      /*!< IAR compiler */
     #pragma optimize = none
 #endif /* __ICCARM */
-static uint32_t usbh_int_pipe_out (usb_core_driver *pudev, uint32_t pp_num)
+static uint32_t usbh_int_pipe_out (usb_core_driver *udev, uint32_t pp_num)
 {
-    usb_pr *pp_reg = pudev->regs.pr[pp_num];
+    usb_pr *pp_reg = udev->regs.pr[pp_num];
 
-    usb_pipe *pp = &pudev->host.pipe[pp_num];
+    usb_pipe *pp = &udev->host.pipe[pp_num];
 
     uint32_t intr_pp = pp_reg->HCHINTF & pp_reg->HCHINTEN;
 
     if (intr_pp & HCHINTF_ACK) {
         if (URB_PING == pp->urb_state) {
             pp->err_count = 0U;
-            usb_pp_halt (pudev, (uint8_t)pp_num, HCHINTF_TF, PIPE_XF);
+            usb_pp_halt (udev, (uint8_t)pp_num, HCHINTF_TF, PIPE_XF);
         }
 
         pp_reg->HCHINTF = HCHINTF_ACK;
     } else if (intr_pp & HCHINTF_STALL) {
-        usb_pp_halt (pudev, (uint8_t)pp_num, HCHINTF_STALL, PIPE_STALL);
+        usb_pp_halt (udev, (uint8_t)pp_num, HCHINTF_STALL, PIPE_STALL);
     } else if (intr_pp & HCHINTF_DTER) {
-        usb_pp_halt (pudev, (uint8_t)pp_num, HCHINTF_DTER, PIPE_DTGERR);
+        usb_pp_halt (udev, (uint8_t)pp_num, HCHINTF_DTER, PIPE_DTGERR);
         pp_reg->HCHINTF = HCHINTF_NAK;
     } else if (intr_pp & HCHINTF_REQOVR) {
-        usb_pp_halt (pudev, (uint8_t)pp_num, HCHINTF_REQOVR, PIPE_REQOVR);
+        usb_pp_halt (udev, (uint8_t)pp_num, HCHINTF_REQOVR, PIPE_REQOVR);
     } else if (intr_pp & HCHINTF_TF) {
         pp->err_count = 0U;
-        usb_pp_halt (pudev, (uint8_t)pp_num, HCHINTF_TF, PIPE_XF);
+        usb_pp_halt (udev, (uint8_t)pp_num, HCHINTF_TF, PIPE_XF);
     } else if (intr_pp & HCHINTF_NAK) {
         pp->err_count = 0U;
-        usb_pp_halt (pudev, (uint8_t)pp_num, HCHINTF_NAK, PIPE_NAK);
+        usb_pp_halt (udev, (uint8_t)pp_num, HCHINTF_NAK, PIPE_NAK);
     } else if (intr_pp & HCHINTF_USBER) {
         pp->err_count++;
-        usb_pp_halt (pudev, (uint8_t)pp_num, HCHINTF_USBER, PIPE_TRACERR);
+        usb_pp_halt (udev, (uint8_t)pp_num, HCHINTF_USBER, PIPE_TRACERR);
     } else if (intr_pp & HCHINTF_NYET) {
         pp->err_count = 0U;
-        usb_pp_halt (pudev, (uint8_t)pp_num, HCHINTF_NYET, PIPE_NYET);
+        usb_pp_halt (udev, (uint8_t)pp_num, HCHINTF_NYET, PIPE_NYET);
     } else if (intr_pp & HCHINTF_CH) {
-        pudev->regs.pr[pp_num]->HCHINTEN &= ~HCHINTEN_CHIE;
+        udev->regs.pr[pp_num]->HCHINTEN &= ~HCHINTEN_CHIE;
 
         switch (pp->pp_status) {
         case PIPE_XF:
@@ -423,8 +424,8 @@ static uint32_t usbh_int_pipe_out (usb_core_driver *pudev, uint32_t pp_num)
             break;
 
         case PIPE_NYET:
-            if (1U == pudev->host.pipe[pp_num].ping) {
-                (void)usb_pipe_ping (pudev, (uint8_t)pp_num);
+            if (1U == udev->host.pipe[pp_num].ping) {
+                (void)usb_pipe_ping (udev, (uint8_t)pp_num);
             }
 
             pp->urb_state = URB_NOTREADY;
@@ -459,25 +460,25 @@ static uint32_t usbh_int_pipe_out (usb_core_driver *pudev, uint32_t pp_num)
 }
 
 /*!
-    \brief      handle the rx fifo non-empty interrupt
-    \param[in]  pudev: pointer to USB device instance
+    \brief      handle the RX FIFO non-empty interrupt
+    \param[in]  udev: pointer to USB device instance
     \param[out] none
     \retval     operation status
 */
 #if defined (__ICCARM__)      /*!< IAR compiler */
     #pragma optimize = none
 #endif /* __ICCARM */
-static uint32_t usbh_int_rxfifonoempty (usb_core_driver *pudev)
+static uint32_t usbh_int_rxfifonoempty (usb_core_driver *udev)
 {
     uint32_t count = 0U;
 
     __IO uint8_t pp_num = 0U;
     __IO uint32_t rx_stat = 0U;
 
-    /* disable the rx status queue level interrupt */
-    pudev->regs.gr->GINTEN &= ~GINTEN_RXFNEIE;
+    /* disable the RX status queue level interrupt */
+    udev->regs.gr->GINTEN &= ~GINTEN_RXFNEIE;
 
-    rx_stat = pudev->regs.gr->GRSTATP;
+    rx_stat = udev->regs.gr->GRSTATP;
     pp_num = (uint8_t)(rx_stat & GRSTATRP_CNUM);
 
     switch ((rx_stat & GRSTATRP_RPCKST) >> 17U) {
@@ -485,23 +486,23 @@ static uint32_t usbh_int_rxfifonoempty (usb_core_driver *pudev)
             count = (rx_stat & GRSTATRP_BCOUNT) >> 4U;
 
             /* read the data into the host buffer. */
-            if ((NULL != pudev->host.pipe[pp_num].xfer_buf) && (count > 0U)) {
-                (void)usb_rxfifo_read (&pudev->regs, pudev->host.pipe[pp_num].xfer_buf, (uint16_t)count);
+            if ((NULL != udev->host.pipe[pp_num].xfer_buf) && (count > 0U)) {
+                (void)usb_rxfifo_read (&udev->regs, udev->host.pipe[pp_num].xfer_buf, (uint16_t)count);
 
                 /* manage multiple transfer packet */
-                pudev->host.pipe[pp_num].xfer_buf += count;
-                pudev->host.pipe[pp_num].xfer_count += count;
+                udev->host.pipe[pp_num].xfer_buf += count;
+                udev->host.pipe[pp_num].xfer_count += count;
 
-                pudev->host.backup_xfercount[pp_num] = pudev->host.pipe[pp_num].xfer_count;
+                udev->host.backup_xfercount[pp_num] = udev->host.pipe[pp_num].xfer_count;
 
-                if (pudev->regs.pr[pp_num]->HCHLEN & HCHLEN_PCNT) {
+                if (udev->regs.pr[pp_num]->HCHLEN & HCHLEN_PCNT) {
                     /* re-activate the channel when more packets are expected */
-                    __IO uint32_t pp_ctl = pudev->regs.pr[pp_num]->HCHCTL;
+                    __IO uint32_t pp_ctl = udev->regs.pr[pp_num]->HCHCTL;
 
                     pp_ctl |= HCHCTL_CEN;
                     pp_ctl &= ~HCHCTL_CDIS;
 
-                    pudev->regs.pr[pp_num]->HCHCTL = pp_ctl;
+                    udev->regs.pr[pp_num]->HCHCTL = pp_ctl;
                 }
             }
             break;
@@ -513,7 +514,7 @@ static uint32_t usbh_int_rxfifonoempty (usb_core_driver *pudev)
             count = (rx_stat & GRSTATRP_BCOUNT) >> 4U;
 
             while (count > 0U) {
-                rx_stat = pudev->regs.gr->GRSTATP;
+                rx_stat = udev->regs.gr->GRSTATP;
                 count--;
             }
             break;
@@ -525,15 +526,15 @@ static uint32_t usbh_int_rxfifonoempty (usb_core_driver *pudev)
             break;
     }
 
-    /* enable the rx status queue level interrupt */
-    pudev->regs.gr->GINTEN |= GINTEN_RXFNEIE;
+    /* enable the RX status queue level interrupt */
+    udev->regs.gr->GINTEN |= GINTEN_RXFNEIE;
 
     return 1U;
 }
 
 /*!
     \brief      handle the TX FIFO empty interrupt
-    \param[in]  pudev: pointer to USB device instance
+    \param[in]  udev: pointer to USB device instance
     \param[in]  pp_mode: pipe mode
     \param[out] none
     \retval     operation status
@@ -541,16 +542,16 @@ static uint32_t usbh_int_rxfifonoempty (usb_core_driver *pudev)
 #if defined (__ICCARM__)      /*!< IAR compiler */
     #pragma optimize = none
 #endif /* __ICCARM */
-static uint32_t usbh_int_txfifoempty (usb_core_driver *pudev, usb_pipe_mode pp_mode)
+static uint32_t usbh_int_txfifoempty (usb_core_driver *udev, usb_pipe_mode pp_mode)
 {
     uint8_t pp_num = 0U;
     uint16_t word_count = 0U, len = 0U;
     __IO uint32_t *txfiforeg = 0U, txfifostate = 0U;
 
     if (PIPE_NON_PERIOD == pp_mode) {
-        txfiforeg = &pudev->regs.gr->HNPTFQSTAT;
+        txfiforeg = &udev->regs.gr->HNPTFQSTAT;
     } else if (PIPE_PERIOD == pp_mode) {
-        txfiforeg = &pudev->regs.hr->HPTFQSTAT;
+        txfiforeg = &udev->regs.hr->HPTFQSTAT;
     } else {
         return 0U;
     }
@@ -559,28 +560,28 @@ static uint32_t usbh_int_txfifoempty (usb_core_driver *pudev, usb_pipe_mode pp_m
 
     pp_num = (uint8_t)((txfifostate & TFQSTAT_CNUM) >> 27U);
 
-    word_count = (uint16_t)(pudev->host.pipe[pp_num].xfer_len + 3U) / 4U;
+    word_count = (uint16_t)(udev->host.pipe[pp_num].xfer_len + 3U) / 4U;
 
-    while (((txfifostate & TFQSTAT_TXFS) >= word_count) && (0U != pudev->host.pipe[pp_num].xfer_len)) {
+    while (((txfifostate & TFQSTAT_TXFS) >= word_count) && (0U != udev->host.pipe[pp_num].xfer_len)) {
         len = (uint16_t)(txfifostate & TFQSTAT_TXFS) * 4U;
 
-        if (len > pudev->host.pipe[pp_num].xfer_len) {
+        if (len > udev->host.pipe[pp_num].xfer_len) {
             /* last packet */
-            len = (uint16_t)pudev->host.pipe[pp_num].xfer_len;
+            len = (uint16_t)udev->host.pipe[pp_num].xfer_len;
 
             if (PIPE_NON_PERIOD == pp_mode) {
-                pudev->regs.gr->GINTEN &= ~GINTEN_NPTXFEIE;
+                udev->regs.gr->GINTEN &= ~GINTEN_NPTXFEIE;
             } else {
-                pudev->regs.gr->GINTEN &= ~GINTEN_PTXFEIE;
+                udev->regs.gr->GINTEN &= ~GINTEN_PTXFEIE;
             }
         }
 
-        word_count = (uint16_t)((pudev->host.pipe[pp_num].xfer_len + 3U) / 4U);
-        usb_txfifo_write (&pudev->regs, pudev->host.pipe[pp_num].xfer_buf, pp_num, len);
+        word_count = (uint16_t)((udev->host.pipe[pp_num].xfer_len + 3U) / 4U);
+        usb_txfifo_write (&udev->regs, udev->host.pipe[pp_num].xfer_buf, pp_num, len);
 
-        pudev->host.pipe[pp_num].xfer_buf += len;
-        pudev->host.pipe[pp_num].xfer_len -= len;
-        pudev->host.pipe[pp_num].xfer_count += len;
+        udev->host.pipe[pp_num].xfer_buf += len;
+        udev->host.pipe[pp_num].xfer_len -= len;
+        udev->host.pipe[pp_num].xfer_count += len;
 
         txfifostate = *txfiforeg;
     }

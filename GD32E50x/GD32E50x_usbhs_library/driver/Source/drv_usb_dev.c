@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -45,6 +46,7 @@ static const uint8_t EP0_MAXLEN[4] = {
     [DSTAT_EM_LS_PHY_6MHZ] = EP0MPL_8
 };
 
+/* USB endpoint Tx FIFO size */
 uint16_t USBHS_TX_FIFO_SIZE[USBHS_MAX_EP_COUNT] = 
 {
     (uint16_t)TX0_FIFO_SIZE,
@@ -72,7 +74,7 @@ usb_status usb_devcore_init (usb_core_driver *udev)
     /* restart the PHY clock (maybe don't need to...) */
     *udev->regs.PWRCLKCTL = 0U;
 
-    /* config periodic frame interval to default value */
+    /* configure periodic frame interval to default value */
     udev->regs.dr->DCFG &= ~DCFG_EOPFT;
     udev->regs.dr->DCFG |= FRAME_INTERVAL_80;
 
@@ -86,20 +88,20 @@ usb_status usb_devcore_init (usb_core_driver *udev)
         /* no operation */
     }
 
-    /* Set Rx FIFO size */
+    /* Set RX FIFO size */
     usb_set_rxfifo(&udev->regs, (uint16_t)RX_FIFO_SIZE);
 
-    /* Set endpoint 0 to 3's Tx FIFO length and RAM address */
+    /* Set endpoint 0 to 3's TX FIFO length and RAM address */
     for (i = 0U; i < USBHS_MAX_EP_COUNT; i++) {
         usb_set_txfifo(&udev->regs, i, USBHS_TX_FIFO_SIZE[i]);
     }
 
     /* make sure all FIFOs are flushed */
 
-    /* flush all Tx FIFOs */
+    /* flush all TX FIFOs */
     (void)usb_txfifo_flush (&udev->regs, 0x10U);
 
-    /* flush entire Rx FIFO */
+    /* flush entire RX FIFO */
     (void)usb_rxfifo_flush (&udev->regs);
 
     /* clear all pending device interrupts */
@@ -212,7 +214,7 @@ usb_status usb_transc0_active (usb_core_driver *udev, usb_transc *transc)
         reg_addr = &udev->regs.er_out[0]->DOEPCTL;
     }
 
-    /* endpoint 0 is actived after USB clock is enabled */
+    /* endpoint 0 is activated after USB clock is enabled */
 
     *reg_addr &= ~(DEPCTL_MPL | DEPCTL_EPTYPE | DIEPCTL_TXFNUM);
 
@@ -281,7 +283,7 @@ usb_status usb_transc_active (usb_core_driver *udev, usb_transc *transc)
 }
 
 /*!
-    \brief      deactive the USB transaction
+    \brief      deactivate the USB transaction
     \param[in]  udev: pointer to USB device
     \param[in]  transc: the USB transaction
     \param[out] none
@@ -344,7 +346,7 @@ usb_status usb_transc_inxfer (usb_core_driver *udev, usb_transc *transc)
         if (0U == ep_num) {
             transc->xfer_len = USB_MIN(transc->xfer_len, transc->max_len);
 
-            eplen |= 1U << 19;
+            eplen |= 1U << 19U;
         } else {
             eplen |= (((transc->xfer_len - 1U) + transc->max_len) / transc->max_len) << 19U;
         }
@@ -380,7 +382,7 @@ usb_status usb_transc_inxfer (usb_core_driver *udev, usb_transc *transc)
         udev->regs.er_in[ep_num]->DIEPCTL = epctl;
 
         if (transc->ep_type != (uint8_t)USB_EPTYPE_ISOC) {
-            /* enable the Tx FIFO empty interrupt for this endpoint */
+            /* enable the TX FIFO empty interrupt for this endpoint */
             if (transc->xfer_len > 0U) {
                 udev->regs.dr->DIEPFEINTEN |= 1U << ep_num;
             }
@@ -553,7 +555,7 @@ void usb_ctlep_startout (usb_core_driver *udev)
 }
 
 /*!
-    \brief      active remote wakeup signalling
+    \brief      active remote wakeup signaling
     \param[in]  udev: pointer to USB device
     \param[out] none
     \retval     none
@@ -613,7 +615,7 @@ void usb_dev_suspend (usb_core_driver *udev)
 }
 
 /*!
-    \brief      stop the device and clean up fifos
+    \brief      stop the device and clean up FIFOs
     \param[in]  udev: pointer to USB device
     \param[out] none
     \retval     none

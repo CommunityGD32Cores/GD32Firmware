@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -59,7 +60,7 @@ typedef enum
     CDC_CTRL_STATE
 } cdc_state;
 
-/* cdc transfer state */
+/* CDC transfer state */
 typedef struct _cdc_xfer
 {
     volatile cdc_state cdc_cur_state;
@@ -132,22 +133,22 @@ extern usbh_class usbh_cdc;
 
 /* function declarations */
 /* send data to the device */
-void cdc_data_send (usbh_host *puhost, uint8_t *data, uint16_t length);
+void cdc_data_send (usbh_host *uhost, uint8_t *data, uint16_t length);
 /* send dummy data to the device */
-void cdc_dummydata_send (usbh_host *puhost);
+void cdc_dummydata_send (usbh_host *uhost);
 /* enable CDC receive */
-void cdc_start_reception (usbh_host *puhost);
+void cdc_start_reception (usbh_host *uhost);
 /* stop CDC receive */
-void cdc_stop_reception (usbh_host *puhost);
+void cdc_stop_reception (usbh_host *uhost);
 /* get currently configured line coding */
-usbh_status cdc_get_line_coding (usbh_host *puhost);
+usbh_status cdc_get_line_coding (usbh_host *uhost);
 /* specify typical asynchronous line-character formatting properties */
-usbh_status cdc_set_line_coding (usbh_host *puhost);
+usbh_status cdc_set_line_coding (usbh_host *uhost);
 /* this request generates RS-232/V.24 style control signals */
-usbh_status cdc_set_control_line_state (usbh_host *puhost);
+usbh_status cdc_set_control_line_state (usbh_host *uhost);
 /* this function prepares the state before issuing the class specific commands */
-void cdc_change_state_to_issue_setconfig (usbh_host *puhost);
+void cdc_change_state_to_issue_setconfig (usbh_host *uhost);
 /* this function prepares the state before issuing the class specific commands */
-void cdc_issue_getconfig (usbh_host *puhost);
+void cdc_issue_getconfig (usbh_host *uhost);
 
 #endif /* __USBH_CDC_CORE_H */

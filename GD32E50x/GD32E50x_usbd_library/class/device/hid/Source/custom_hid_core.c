@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -35,7 +36,6 @@ OF SUCH DAMAGE.
 
 #include "usbd_transc.h"
 #include "custom_hid_core.h"
-
 #include <string.h>
 
 #define USBD_VID                     0x28E9U
@@ -64,6 +64,7 @@ usb_desc_dev custom_hid_dev_desc =
     .bNumberConfigurations = USBD_CFG_MAX_NUM,
 };
 
+/* USB device configure descriptor */
 usb_hid_desc_config_set custom_hid_config_desc = 
 {
     .config = 
@@ -171,7 +172,7 @@ static usb_desc_str product_string =
     .unicode_string = {'G', 'D', '3', '2', '-', 'C', 'u', 's', 't', 'o', 'm', 'H', 'I', 'D'}
 };
 
-/* USBD serial string */
+/* USB serial string */
 static usb_desc_str serial_string = 
 {
     .header = 
@@ -182,7 +183,7 @@ static usb_desc_str serial_string =
 };
 
 /* USB string descriptor set */
-uint8_t* usbd_hid_strings[] = 
+static uint8_t* usbd_hid_strings[] = 
 {
     [STR_IDX_LANGID]  = (uint8_t *)&usbd_language_id_desc,
     [STR_IDX_MFC]     = (uint8_t *)&manufacturer_string,
@@ -196,10 +197,10 @@ usb_desc custom_hid_desc = {
     .strings     = usbd_hid_strings
 };
 
+/* local function prototypes ('static') */
 static uint8_t custom_hid_init         (usb_dev *udev, uint8_t config_index);
 static uint8_t custom_hid_deinit       (usb_dev *udev, uint8_t config_index);
 static uint8_t custom_hid_req_handler  (usb_dev *udev, usb_req *req);
-
 static void custom_hid_data_in         (usb_dev *udev, uint8_t ep_num);
 static void custom_hid_data_out        (usb_dev *udev, uint8_t ep_num);
 
@@ -215,9 +216,9 @@ usb_class custom_hid_class = {
 
 const uint8_t customhid_report_descriptor[DESC_LEN_REPORT] =
 {
-    0x05, 0x01,     /* USAGE_PAGE (Generic Desktop) */
-    0x09, 0x00,     /* USAGE (Custom Device)        */
-    0xa1, 0x01,     /* COLLECTION (Application)     */
+    0x06, 0x00, 0xFF,  /* USAGE_PAGE (Vendor Defined: 0xFF00) */
+    0x09, 0x00,        /* USAGE (Custom Device)               */
+    0xa1, 0x01,        /* COLLECTION (Application)            */
 
     /* led 1 */
     0x85, 0x11,     /* REPORT_ID (0x11)          */
@@ -237,7 +238,7 @@ const uint8_t customhid_report_descriptor[DESC_LEN_REPORT] =
     0x95, 0x01,     /* REPORT_COUNT (1)          */
     0x91, 0x82,     /* OUTPUT (Data,Var,Abs,Vol) */
 
-    /* led 3 */        
+    /* led 3 */
     0x85, 0x13,     /* REPORT_ID (0x13)          */
     0x09, 0x03,     /* USAGE (LED 3)             */
     0x15, 0x00,     /* LOGICAL_MINIMUM (0)       */
@@ -255,16 +256,16 @@ const uint8_t customhid_report_descriptor[DESC_LEN_REPORT] =
     0x95, 0x01,     /* REPORT_COUNT (1)          */
     0x91, 0x82,     /* OUTPUT (Data,Var,Abs,Vol) */
 
-    /* wakeup key */  
+    /* wakeup key */
     0x85, 0x15,     /* REPORT_ID (0x15)          */
     0x09, 0x05,     /* USAGE (Push Button)       */
     0x15, 0x00,     /* LOGICAL_MINIMUM (0)       */
     0x25, 0x01,     /* LOGICAL_MAXIMUM (1)       */
     0x75, 0x01,     /* REPORT_SIZE (1)           */
-    0x81, 0x82,     /* INPUT (Data,Var,Abs,Vol)  */
+    0x81, 0x02,     /* INPUT (Data,Var,Abs,Vol)  */
 
     0x75, 0x07,     /* REPORT_SIZE (7)           */
-    0x81, 0x83,     /* INPUT (Cnst,Var,Abs,Vol)  */
+    0x81, 0x03,     /* INPUT (Cnst,Var,Abs,Vol)  */
 
     /* tamper key */
     0x85, 0x16,     /* REPORT_ID (0x16)          */
@@ -272,10 +273,10 @@ const uint8_t customhid_report_descriptor[DESC_LEN_REPORT] =
     0x15, 0x00,     /* LOGICAL_MINIMUM (0)       */
     0x25, 0x01,     /* LOGICAL_MAXIMUM (1)       */
     0x75, 0x01,     /* REPORT_SIZE (1)           */
-    0x81, 0x82,     /* INPUT (Data,Var,Abs,Vol)  */
+    0x81, 0x02,     /* INPUT (Data,Var,Abs,Vol)  */
 
     0x75, 0x07,     /* REPORT_SIZE (7)           */
-    0x81, 0x83,     /* INPUT (Cnst,Var,Abs,Vol)  */
+    0x81, 0x03,     /* INPUT (Cnst,Var,Abs,Vol)  */
 
     0xc0            /* END_COLLECTION            */
 };
@@ -283,7 +284,7 @@ const uint8_t customhid_report_descriptor[DESC_LEN_REPORT] =
 /*!
     \brief      register HID interface operation functions
     \param[in]  udev: pointer to USB device instance
-    \param[in]  hid_fop: HID operation functuons structure
+    \param[in]  hid_fop: HID operation functions structure
     \param[out] none
     \retval     USB device operation status
 */
@@ -315,7 +316,7 @@ uint8_t custom_hid_report_send (usb_dev *udev, uint8_t *report, uint16_t len)
 
 /*!
     \brief      initialize the HID device
-    \param[in]  pudev: pointer to USB device instance
+    \param[in]  udev: pointer to USB device instance
     \param[in]  config_index: configuration index
     \param[out] none
     \retval     USB device operation status
@@ -464,6 +465,7 @@ static void custom_hid_data_out (usb_dev *udev, uint8_t ep_num)
         switch (hid->data[0]){
         case 0x11:
             if (RESET != hid->data[1]) {
+                /* turn on led1  */
                 gd_eval_led_on(LED1);
             } else {
                 gd_eval_led_off(LED1);
@@ -491,7 +493,7 @@ static void custom_hid_data_out (usb_dev *udev, uint8_t ep_num)
             }
             break;
         default:
-            /* turn off all leds */
+            /* turn off all LEDs */
             gd_eval_led_off(LED1);
             gd_eval_led_off(LED2);
             gd_eval_led_off(LED3);

@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -546,7 +547,7 @@ typedef enum
 #define FILTER_LENGTH_14                 ((uint32_t)0x0000000EU)               /*!< digital filter is enabled and filter spikes with a length of up to 14 tI2CCLK */
 #define FILTER_LENGTH_15                 ((uint32_t)0x0000000FU)               /*!< digital filter is enabled and filter spikes with a length of up to 15 tI2CCLK */
 
-/* defines which bits of ADDRESS2[7:1] are compared with an incoming address byte, and which bits are masked (don¡¯t care) */
+/* defines which bits of ADDRESS2[7:1] are compared with an incoming address byte, and which bits are masked (donï¿½ï¿½t care) */
 #define ADDRESS2_NO_MASK                 ((uint32_t)0x00000000U)               /*!< no mask, all the bits must be compared */
 #define ADDRESS2_MASK_BIT1               ((uint32_t)0x00000001U)               /*!< ADDRESS2[1] is masked, only ADDRESS2[7:2] are compared */
 #define ADDRESS2_MASK_BIT1_2             ((uint32_t)0x00000002U)               /*!< ADDRESS2[2:1] is masked, only ADDRESS2[7:3] are compared */

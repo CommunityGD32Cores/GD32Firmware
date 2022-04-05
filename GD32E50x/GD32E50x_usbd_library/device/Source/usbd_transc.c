@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -36,6 +37,7 @@ OF SUCH DAMAGE.
 #include "usbd_enum.h"
 #include "usbd_transc.h"
 
+/* local function prototypes ('static') */
 static inline void usb_stall_transc (usb_dev *udev);
 static inline void usb_ctl_status_in (usb_dev *udev);
 static inline void usb_ctl_data_in (usb_dev *udev);
@@ -45,6 +47,7 @@ static inline void usb_0len_packet_send (usb_dev *udev);
 /*!
     \brief      USB setup stage processing
     \param[in]  udev: pointer to USB device instance
+    \param[in]  ep_num: endpoint identifier(0..7)
     \param[out] none
     \retval     none
 */
@@ -135,7 +138,7 @@ void _usb_in0_transc (usb_dev *udev, uint8_t ep_num)
         usb_0len_packet_send(udev);
 
         udev->control.ctl_zlp = 0U;
-    } 
+    }
 
     if (((uint8_t)USBD_CONFIGURED == udev->cur_status) && (udev->class_core->ctlx_in != NULL)) {
         (void)udev->class_core->ctlx_in(udev);

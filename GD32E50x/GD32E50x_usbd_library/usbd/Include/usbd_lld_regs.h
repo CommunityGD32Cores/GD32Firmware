@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -136,7 +137,7 @@ OF SUCH DAMAGE.
 /* endpoint kind control mask */
 #define EPKCTL_MASK                    (~EPxCS_KCTL & EPCS_MASK)
 
-/* EPxCS_TX_STA[1:0] status for Tx transfer */
+/* EPxCS_TX_STA[1:0] status for TX transfer */
 #define ENDP_TXSTAT(regval)            (EPxCS_TX_STA & ((regval) << 4U))
 
 #define EPTX_DISABLED                  ENDP_TXSTAT(0U)  /* transmission state is disabled */
@@ -145,7 +146,7 @@ OF SUCH DAMAGE.
 #define EPTX_VALID                     ENDP_TXSTAT(3U)  /* transmission state is enabled */
 #define EPTX_DTGMASK                   (EPxCS_TX_STA | EPCS_MASK)
 
-/* EPxCS_RX_STA[1:0] status for Rx transfer */
+/* EPxCS_RX_STA[1:0] status for RX transfer */
 #define ENDP_RXSTAT(regval)            (EPxCS_RX_STA & ((regval) << 12U))
 
 #define EPRX_DISABLED                  ENDP_RXSTAT(0U)  /* reception state is disabled */
@@ -179,7 +180,7 @@ OF SUCH DAMAGE.
 
 /* USBD operation macros */
 
-/* Tx or Rx transfer status setting (bits EPTX_STA[1:0]) */
+/* TX or RX transfer status setting (bits EPTX_STA[1:0]) */
 
 #define USBD_EP_TX_STAT_SET(ep, stat) do {\
     USBD_EPxCS(ep) = (USBD_EPxCS(ep) & (uint16_t)EPTX_DTGMASK) ^ (stat); \

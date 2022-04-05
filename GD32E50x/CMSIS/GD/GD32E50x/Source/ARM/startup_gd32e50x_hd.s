@@ -4,10 +4,11 @@
 ;
 ;    \version 2020-03-10, V1.0.0, firmware for GD32E50x
 ;    \version 2020-08-26, V1.1.0, firmware for GD32E50x
+;    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 ;*/
 ;
 ;/*
-;    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+;    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 ;
 ;    Redistribution and use in source and binary forms, with or without modification, 
 ;are permitted provided that the following conditions are met:
@@ -101,10 +102,10 @@ __Vectors       DCD     __initial_sp                      ; Top of Stack
                 DCD     DMA0_Channel5_IRQHandler          ; 32:DMA0 Channel5
                 DCD     DMA0_Channel6_IRQHandler          ; 33:DMA0 Channel6
                 DCD     ADC0_1_IRQHandler                 ; 34:ADC0 and ADC1
-                DCD     USBD_HP_IRQHandler                ; 35:USBD HP
-                DCD     USBD_LP_IRQHandler                ; 36:USBD LP
-                DCD     0                                 ; Reserved
-                DCD     0                                 ; Reserved
+                DCD     USBD_HP_CAN0_TX_IRQHandler        ; 35:USBD HP or CAN0 TX
+                DCD     USBD_LP_CAN0_RX0_IRQHandler       ; 36:USBD LP or CAN0 RX0
+                DCD     CAN0_RX1_IRQHandler               ; 37:CAN0 RX1
+                DCD     CAN0_EWMC_IRQHandler              ; 38:CAN0 EWMC
                 DCD     EXTI5_9_IRQHandler                ; 39:EXTI5 to EXTI9
                 DCD     TIMER0_BRK_IRQHandler             ; 40:TIMER0 Break
                 DCD     TIMER0_UP_IRQHandler              ; 41:TIMER0 Update
@@ -145,10 +146,10 @@ __Vectors       DCD     __initial_sp                      ; Top of Stack
                 DCD     0                                 ; Reserved
                 DCD     0                                 ; Reserved
                 DCD     0                                 ; Reserved
-                DCD     0                                 ; Reserved
-                DCD     0                                 ; Reserved
-                DCD     0                                 ; Reserved
-                DCD     0                                 ; Reserved
+                DCD     CAN1_TX_IRQHandler                ; 79:CAN1 TX
+                DCD     CAN1_RX0_IRQHandler               ; 80:CAN1 RX0
+                DCD     CAN1_RX1_IRQHandler               ; 81:CAN1 RX1
+                DCD     CAN1_EWMC_IRQHandler              ; 82:CAN1 EWMC
                 DCD     0                                 ; Reserved
                 DCD     0                                 ; Reserved
                 DCD     SHRTIMER_IRQ2_IRQHandler          ; 85:SHRTIMER IRQ2
@@ -254,8 +255,10 @@ Default_Handler PROC
                 EXPORT  DMA0_Channel5_IRQHandler          [WEAK]
                 EXPORT  DMA0_Channel6_IRQHandler          [WEAK]
                 EXPORT  ADC0_1_IRQHandler                 [WEAK]
-                EXPORT  USBD_HP_IRQHandler                [WEAK]
-                EXPORT  USBD_LP_IRQHandler                [WEAK]
+                EXPORT  USBD_HP_CAN0_TX_IRQHandler        [WEAK]
+                EXPORT  USBD_LP_CAN0_RX0_IRQHandler       [WEAK]
+                EXPORT  CAN0_RX1_IRQHandler               [WEAK]
+                EXPORT  CAN0_EWMC_IRQHandler              [WEAK]
                 EXPORT  EXTI5_9_IRQHandler                [WEAK]
                 EXPORT  TIMER0_BRK_IRQHandler             [WEAK]
                 EXPORT  TIMER0_UP_IRQHandler              [WEAK]
@@ -293,6 +296,10 @@ Default_Handler PROC
                 EXPORT  DMA1_Channel1_IRQHandler          [WEAK]
                 EXPORT  DMA1_Channel2_IRQHandler          [WEAK]
                 EXPORT  DMA1_Channel3_4_IRQHandler        [WEAK]
+                EXPORT  CAN1_TX_IRQHandler                [WEAK]
+                EXPORT  CAN1_RX0_IRQHandler               [WEAK]
+                EXPORT  CAN1_RX1_IRQHandler               [WEAK]
+                EXPORT  CAN1_EWMC_IRQHandler              [WEAK]
                 EXPORT  SHRTIMER_IRQ2_IRQHandler          [WEAK]
                 EXPORT  SHRTIMER_IRQ3_IRQHandler          [WEAK]
                 EXPORT  SHRTIMER_IRQ4_IRQHandler          [WEAK]
@@ -326,8 +333,10 @@ DMA0_Channel4_IRQHandler
 DMA0_Channel5_IRQHandler
 DMA0_Channel6_IRQHandler
 ADC0_1_IRQHandler
-USBD_HP_IRQHandler
-USBD_LP_IRQHandler
+USBD_HP_CAN0_TX_IRQHandler
+USBD_LP_CAN0_RX0_IRQHandler
+CAN0_RX1_IRQHandler
+CAN0_EWMC_IRQHandler
 EXTI5_9_IRQHandler
 TIMER0_BRK_IRQHandler
 TIMER0_UP_IRQHandler
@@ -365,6 +374,10 @@ DMA1_Channel0_IRQHandler
 DMA1_Channel1_IRQHandler
 DMA1_Channel2_IRQHandler
 DMA1_Channel3_4_IRQHandler
+CAN1_TX_IRQHandler
+CAN1_RX0_IRQHandler
+CAN1_RX1_IRQHandler
+CAN1_EWMC_IRQHandler
 SHRTIMER_IRQ2_IRQHandler
 SHRTIMER_IRQ3_IRQHandler
 SHRTIMER_IRQ4_IRQHandler

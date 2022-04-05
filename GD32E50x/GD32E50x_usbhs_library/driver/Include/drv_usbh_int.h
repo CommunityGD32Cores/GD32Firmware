@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -41,17 +42,17 @@ OF SUCH DAMAGE.
 
 typedef struct _usbh_int_cb
 {
-    uint8_t (*connect)          (usbh_host *puhost);
-    uint8_t (*disconnect)       (usbh_host *puhost);
-    uint8_t (*port_enabled)     (usbh_host *puhost);
-    uint8_t (*port_disabled)    (usbh_host *puhost);
-    uint8_t (*SOF)              (usbh_host *puhost);
+    uint8_t (*connect)          (usbh_host *uhost);
+    uint8_t (*disconnect)       (usbh_host *uhost);
+    uint8_t (*port_enabled)     (usbh_host *uhost);
+    uint8_t (*port_disabled)    (usbh_host *uhost);
+    uint8_t (*SOF)              (usbh_host *uhost);
 } usbh_int_cb;
 
 extern usbh_int_cb *usbh_int_fop;
 
 /* function declarations */
 /* handle global host interrupt */
-uint32_t usbh_isr (usb_core_driver *pudev);
+uint32_t usbh_isr (usb_core_driver *udev);
 
 #endif /* __DRV_USBH_INT_H */

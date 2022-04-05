@@ -4,10 +4,12 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2020-12-07, V1.1.1, firmware for GD32E50x
+    \version 2020-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -145,7 +147,7 @@ uint8_t usbd_setup_transc (usb_core_driver *udev)
     }
 
     if (REQ_SUPP == reqstat) {
-        if (req.wLength == 0U) {
+        if (0U == req.wLength) {
             (void)usbd_ctl_status_send (udev);
         } else {
             if (req.bmRequestType & 0x80U) {
@@ -176,7 +178,7 @@ uint8_t usbd_setup_transc (usb_core_driver *udev)
 */
 uint8_t usbd_out_transc (usb_core_driver *udev, uint8_t ep_num)
 {
-    if (ep_num == 0U) {
+    if (0U == ep_num) {
         usb_transc *transc = &udev->dev.transc_out[0];
 
         switch (udev->dev.control.ctl_state) {
@@ -193,8 +195,8 @@ uint8_t usbd_out_transc (usb_core_driver *udev, uint8_t ep_num)
 
         case USB_CTL_LAST_DATA_OUT:
             if (udev->dev.cur_status == (uint8_t)USBD_CONFIGURED) {
-                if (udev->dev.class_core->data_out != NULL) {
-                    (void)udev->dev.class_core->data_out (udev, 0U);
+                if (udev->dev.class_core->ctlx_out != NULL) {
+                    (void)udev->dev.class_core->ctlx_out (udev);
                 }
             }
 
@@ -247,8 +249,8 @@ uint8_t usbd_in_transc (usb_core_driver *udev, uint8_t ep_num)
                 udev->dev.control.ctl_zlp = 0U;
             } else {
                 if (udev->dev.cur_status == (uint8_t)USBD_CONFIGURED) {
-                    if (udev->dev.class_core->data_in != NULL) {
-                        (void)udev->dev.class_core->data_in (udev, 0U);
+                    if (udev->dev.class_core->ctlx_in != NULL) {
+                        (void)udev->dev.class_core->ctlx_in (udev);
                     }
                 }
 

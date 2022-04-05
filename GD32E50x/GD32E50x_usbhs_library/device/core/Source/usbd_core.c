@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -46,7 +47,7 @@ const uint32_t ep_type[] = {
 };
 
 /*!
-    \brief      initailizes the USB device-mode stack and load the class driver
+    \brief      initializes the USB device-mode stack and load the class driver
     \param[in]  udev: pointer to USB core instance
     \param[in]  desc: pointer to USB descriptor
     \param[in]  class_core: class driver
@@ -63,16 +64,16 @@ void usbd_init (usb_core_driver *udev, usb_desc *desc, usb_class_core *class_cor
     /* create serial string */
     serial_string_get(udev->dev.desc->strings[STR_IDX_SERIAL]);
 
-    /* configure USB capabilites */
+    /* configure USB capabilities */
     (void)usb_basic_init (&udev->bp, &udev->regs);
 
-    /* initailizes the USB core*/
+    /* initializes the USB core*/
     (void)usb_core_init (udev->bp, &udev->regs);
 
     /* set device disconnect */
     usbd_disconnect (udev);
 
-    /* initailizes device mode */
+    /* initializes device mode */
     (void)usb_devcore_init (udev);
 
     /* set device connect */
@@ -136,7 +137,7 @@ uint32_t usbd_ep_clear (usb_core_driver *udev, uint8_t ep_addr)
         transc = &udev->dev.transc_out[ep_addr];
     }
 
-    /* deactive USB endpoint function */
+    /* deactivate USB endpoint function */
     (void)usb_transc_deactivate (udev, transc);
 
     return 0U;

@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -46,7 +47,7 @@ void usbd_remote_wakeup_active(usb_dev *udev)
     resume_mcu(udev);
 
 #ifdef LPM_ENABLED
-    if(1 == udev->lpm.L1_remote_wakeup){
+    if(1U == udev->lpm.L1_remote_wakeup){
         udev->drv_handler->resume(udev);
 
         udev->lpm.L1_resume = 1U;

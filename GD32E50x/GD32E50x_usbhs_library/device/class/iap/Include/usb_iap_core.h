@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -86,7 +87,7 @@ extern usb_desc iap_desc;
 extern usb_class_core iap_class;
 
 /* function declarations */
-/* send iap report */
+/* send IAP report */
 uint8_t iap_report_send (usb_dev *udev, uint8_t *report, uint32_t len);
 
 #endif /* __USB_IAP_CORE_H */

@@ -3,10 +3,12 @@
     \brief   definitions for the ADC
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
+    \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -40,7 +42,7 @@ OF SUCH DAMAGE.
 /* ADC definitions */
 #define ADC0                            ADC_BASE
 #define ADC1                            (ADC_BASE + 0x00000400U)
-#if (defined(GD32E50X_HD) || defined(GD32E50X_XD))
+#if (defined(GD32E50X_HD) || defined(GD32E50X_XD)||defined(GD32EPRT))
 #define ADC2                            (ADC_BASE + 0x00001800U)
 #endif
 

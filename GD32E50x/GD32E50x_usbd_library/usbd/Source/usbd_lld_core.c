@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -39,11 +40,11 @@ OF SUCH DAMAGE.
 #define USB_EPTYPE_MASK           0x03U
 
 #if defined (__CC_ARM)         /* ARM Compiler */
-static usbd_ep_ram btable_ep[EP_COUNT]__attribute__((at(USBD_RAM + BTABLE_OFFSET)));
+static usbd_ep_ram btable_ep[EP_COUNT]__attribute__((at(USBD_RAM + 2 * (BTABLE_OFFSET & 0xFFF8))));
 #elif defined (__ICCARM__)     /* IAR Compiler */
-    __no_init usbd_ep_ram btable_ep[EP_COUNT] @(USBD_RAM + BTABLE_OFFSET);
+    __no_init usbd_ep_ram btable_ep[EP_COUNT] @(USBD_RAM + 2 * (BTABLE_OFFSET & 0xFFF8));
 #elif defined (__GNUC__)       /* GNU GCC Compiler  */
-    usbd_ep_ram *btable_ep = (usbd_ep_ram *)(USBD_RAM + BTABLE_OFFSET);
+    usbd_ep_ram *btable_ep = (usbd_ep_ram *)(USBD_RAM + 2 * (BTABLE_OFFSET & 0xFFF8));
 #endif
 
 usb_core_drv usbd_core;
@@ -55,6 +56,7 @@ static const uint32_t ep_type[] = {
     [USB_EP_ATTR_ISO]  = EP_ISO
 };
 
+/* local function prototypes ('static') */
 static void usbd_dp_pullup (FlagStatus status);
 static void usbd_core_reset (void);
 static void usbd_core_stop (void);
@@ -469,7 +471,7 @@ static void usbd_ep_data_write (uint8_t *user_fifo, uint8_t ep_num, uint16_t byt
 
     btable_ep[ep_num].tx_count = bytes;
 
-    USBD_EP_TX_STAT_SET(ep_num, EPTX_VALID);    
+    USBD_EP_TX_STAT_SET(ep_num, EPTX_VALID);
 }
 
 /*!

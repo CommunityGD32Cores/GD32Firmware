@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -189,8 +190,8 @@ __IO    uint8_t              data_ready;
 
     hid_state            state; 
     hid_ctlstate         ctl_state;
-    usbh_status          (*init)(usb_core_driver *pudev, usbh_host *puhost);
-    void                 (*machine)(usb_core_driver *pudev, usbh_host *puhost);
+    usbh_status          (*init)(usb_core_driver *udev, usbh_host *uhost);
+    void                 (*machine)(usb_core_driver *udev, usbh_host *uhost);
 } usbh_hid_handler;
 
 extern usbh_class usbh_hid;
@@ -198,22 +199,22 @@ extern usbh_class usbh_hid;
 
 /* function declarations */
 /* get HID report */
-usbh_status usbh_get_report (usbh_host *puhost,
+usbh_status usbh_get_report (usbh_host *uhost,
                              uint8_t  report_type,
                              uint8_t  report_ID,
                              uint8_t  report_len,
                              uint8_t *report_buf);
 /* set HID report */
-usbh_status usbh_set_report (usb_core_driver *pudev,
-                             usbh_host *puhost,
+usbh_status usbh_set_report (usb_core_driver *udev,
+                             usbh_host *uhost,
                              uint8_t  report_type,
                              uint8_t  report_ID,
                              uint8_t  report_len,
                              uint8_t *report_buf);
 /* get device function */
-hid_type usbh_hid_device_type_get(usb_core_driver *pudev, usbh_host *puhost);
+hid_type usbh_hid_device_type_get(usb_core_driver *udev, usbh_host *uhost);
 /* get HID device poll time */
-uint8_t usbh_hid_poll_interval_get (usb_core_driver *pudev, usbh_host *puhost);
+uint8_t usbh_hid_poll_interval_get (usb_core_driver *udev, usbh_host *uhost);
 /* read data from FIFO */
 uint16_t usbh_hid_fifo_read (data_fifo *fifo, void *buf, uint16_t nbytes);
 /* write data to FIFO */

@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -41,12 +42,12 @@ OF SUCH DAMAGE.
 
 /* function declarations */
 /* send the setup packet to the USB device */
-usbh_status usbh_ctlsetup_send (usb_core_driver *pudev, uint8_t *buf, uint8_t pp_num);
+usbh_status usbh_ctlsetup_send (usb_core_driver *udev, uint8_t *buf, uint8_t pp_num);
 /* send a data packet to the USB device */
-usbh_status usbh_data_send (usb_core_driver *pudev, uint8_t *buf, uint8_t pp_num, uint16_t len);
+usbh_status usbh_data_send (usb_core_driver *udev, uint8_t *buf, uint8_t pp_num, uint16_t len);
 /* receive a data packet from the USB device */
-usbh_status usbh_data_recev (usb_core_driver *pudev, uint8_t *buf, uint8_t pp_num, uint16_t len);
+usbh_status usbh_data_recev (usb_core_driver *udev, uint8_t *buf, uint8_t pp_num, uint16_t len);
 /* USB control transfer handler */
-usbh_status usbh_ctl_handler (usbh_host *puhost);
+usbh_status usbh_ctl_handler (usbh_host *uhost);
 
 #endif /* __USBH_TRANSC_H */

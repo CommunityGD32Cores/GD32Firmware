@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -83,7 +84,7 @@ typedef struct
     uint8_t                 state_changed;
 } msc_lun;
 
-/* structure for msc process */
+/* structure for MSC process */
 typedef struct _msc_process
 {
     uint8_t         pipe_in;
@@ -107,16 +108,16 @@ typedef struct _msc_process
 extern usbh_class usbh_msc;
 
 /* function declarations */
-/* get msc logic unit information */
-usbh_status usbh_msc_lun_info_get (usbh_host *puhost, uint8_t lun, msc_lun *info);
-/* msc read interface */
-usbh_status usbh_msc_read (usbh_host *puhost,
+/* get MSC logic unit information */
+usbh_status usbh_msc_lun_info_get (usbh_host *uhost, uint8_t lun, msc_lun *info);
+/* MSC read interface */
+usbh_status usbh_msc_read (usbh_host *uhost,
                            uint8_t lun,
                            uint32_t address,
                            uint8_t *pbuf,
                            uint32_t length);
-/* msc write interface */
-usbh_status usbh_msc_write (usbh_host *puhost,
+/* MSC write interface */
+usbh_status usbh_msc_write (usbh_host *uhost,
                             uint8_t lun,
                             uint32_t address,
                             uint8_t *pbuf,

@@ -1,13 +1,15 @@
 /*!
-    \file    msc_mem.h 
-    \brief   the header file of msc_mem.c
+    \file    usbd_msc_data.c
+    \brief   USB MSC vital inquiry pages and sense data
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-02-20, V1.1.1, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -33,29 +35,42 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#ifndef __MSC_MEM_H
-#define __MSC_MEM_H
+#include "usbd_msc_data.h"
 
-#include "usbd_conf.h"
-
-#define USBD_STD_INQUIRY_LENGTH              36U
-#define USBD_STD_READ_TOC_CMD_LENGTH         20U
-
-typedef struct
+/* USB mass storage page 0 inquiry data */
+const uint8_t msc_page00_inquiry_data[] = 
 {
-    int8_t (*mem_init)         (uint8_t lun);
-    int8_t (*mem_ready)        (uint8_t lun);
-    int8_t (*mem_protected)    (uint8_t lun);
-    int8_t (*mem_read)         (uint8_t lun, uint8_t *buf, uint32_t block_addr, uint16_t block_len);
-    int8_t (*mem_write)        (uint8_t lun, uint8_t *buf, uint32_t block_addr, uint16_t block_len);
-    int8_t (*mem_maxlun)       (void);
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    (INQUIRY_PAGE00_LENGTH - 4U),
+    0x80U,
+    0x83U,
+};
 
-    uint8_t *mem_toc_data;
-    uint8_t *mem_inquiry_data[MEM_LUN_NUM];
-    uint32_t mem_block_size[MEM_LUN_NUM];
-    uint32_t mem_block_len[MEM_LUN_NUM];
-} usbd_mem_cb;
+/* USB mass storage sense 6 data */
+const uint8_t msc_mode_sense6_data[] = 
+{
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U
+};
 
-extern usbd_mem_cb *usbd_mem_fops;
-
-#endif /* __MSC_MEM_H */
+/* USB mass storage sense 10 data */
+const uint8_t msc_mode_sense10_data[] = 
+{
+    0x00U,
+    0x06U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U
+};

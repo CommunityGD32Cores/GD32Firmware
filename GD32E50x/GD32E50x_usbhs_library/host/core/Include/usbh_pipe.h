@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -46,55 +47,55 @@ OF SUCH DAMAGE.
 
 /*!
     \brief      set toggle for a pipe
-    \param[in]  pudev: pointer to USB core instance
+    \param[in]  udev: pointer to USB core instance
     \param[in]  pp_num: pipe number
     \param[in]  toggle: toggle (0/1)
     \param[out] none
     \retval     operation status
 */
-__STATIC_INLINE void usbh_pipe_toggle_set (usb_core_driver *pudev, uint8_t pp_num, uint8_t toggle)
+__STATIC_INLINE void usbh_pipe_toggle_set (usb_core_driver *udev, uint8_t pp_num, uint8_t toggle)
 {
-    if (pudev->host.pipe[pp_num].ep.dir) {
-        pudev->host.pipe[pp_num].data_toggle_in = toggle;
+    if (udev->host.pipe[pp_num].ep.dir) {
+        udev->host.pipe[pp_num].data_toggle_in = toggle;
     } else {
-        pudev->host.pipe[pp_num].data_toggle_out = toggle;
+        udev->host.pipe[pp_num].data_toggle_out = toggle;
     }
 }
 
 /*!
     \brief      get toggle flag of pipe
-    \param[in]  pudev: pointer to USB core instance
+    \param[in]  udev: pointer to USB core instance
     \param[in]  pp_num: pipe number
     \param[out] none
     \retval     operation status
 */
-__STATIC_INLINE uint8_t usbh_pipe_toggle_get (usb_core_driver *pudev, uint8_t pp_num)
+__STATIC_INLINE uint8_t usbh_pipe_toggle_get (usb_core_driver *udev, uint8_t pp_num)
 {
-    if (pudev->host.pipe[pp_num].ep.dir) {
-        return pudev->host.pipe[pp_num].data_toggle_in;
+    if (udev->host.pipe[pp_num].ep.dir) {
+        return udev->host.pipe[pp_num].data_toggle_in;
     } else {
-        return pudev->host.pipe[pp_num].data_toggle_out;
+        return udev->host.pipe[pp_num].data_toggle_out;
     }
 }
 
 /* function declarations */
 /* create a pipe */
-uint8_t usbh_pipe_create (usb_core_driver *pudev,
-                          usb_dev_prop *udev,
+uint8_t usbh_pipe_create (usb_core_driver *udev,
+                          usb_dev_prop *dev,
                           uint8_t  pp_num,
                           uint8_t  ep_type,
                           uint16_t ep_mpl);
 /* modify a pipe */
-uint8_t usbh_pipe_update (usb_core_driver *pudev,
+uint8_t usbh_pipe_update (usb_core_driver *udev,
                           uint8_t  pp_num,
                           uint8_t  dev_addr,
                           uint32_t dev_speed,
                           uint16_t ep_mpl);
 /* allocate a new pipe */
-uint8_t usbh_pipe_allocate (usb_core_driver *pudev, uint8_t ep_addr);
+uint8_t usbh_pipe_allocate (usb_core_driver *udev, uint8_t ep_addr);
 /* free a pipe */
-uint8_t usbh_pipe_free (usb_core_driver *pudev, uint8_t pp_num);
+uint8_t usbh_pipe_free (usb_core_driver *udev, uint8_t pp_num);
 /* delete all USB host pipe */
-uint8_t usbh_pipe_delete (usb_core_driver *pudev);
+uint8_t usbh_pipe_delete (usb_core_driver *udev);
 
 #endif /* __USBH_PIPE_H */

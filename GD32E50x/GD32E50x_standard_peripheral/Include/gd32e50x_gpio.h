@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -245,8 +246,29 @@ OF SUCH DAMAGE.
 #define AFIO_EC_EOE                BIT(7)                    /*!< event output enable */
 
 /* AFIO_PCF0 */
-#ifdef GD32E50X_CL
+#if defined GD32E50X_CL
 /* memory map and bit definitions for GD32E50X_CL devices */
+#define AFIO_PCF0_SPI0_REMAP             BIT(0)              /*!< SPI0 remapping */
+#define AFIO_PCF0_I2C0_REMAP             BIT(1)              /*!< I2C0 remapping */
+#define AFIO_PCF0_USART0_REMAP           BIT(2)              /*!< USART0 remapping */
+#define AFIO_PCF0_USART1_REMAP           BIT(3)              /*!< USART1 remapping */
+#define AFIO_PCF0_USART2_REMAP           BITS(4,5)           /*!< USART2 remapping */
+#define AFIO_PCF0_TIMER0_REMAP           BITS(6,7)           /*!< TIMER0 remapping */
+#define AFIO_PCF0_TIMER1_REMAP           BITS(8,9)           /*!< TIMER1 remapping */
+#define AFIO_PCF0_TIMER2_REMAP           BITS(10,11)         /*!< TIMER2 remapping */
+#define AFIO_PCF0_TIMER3_REMAP           BIT(12)             /*!< TIMER3 remapping */
+#define AFIO_PCF0_CAN0_REMAP             BITS(13,14)         /*!< CAN0 remapping */
+#define AFIO_PCF0_PD01_REMAP             BIT(15)             /*!< port D0/port D1 mapping on OSC_IN/OSC_OUT */
+#define AFIO_PCF0_TIMER4CH3_IREMAP       BIT(16)             /*!< TIMER4 channel3 internal remapping */
+#define AFIO_PCF0_ENET_REMAP             BIT(21)             /*!< ethernet MAC I/O remapping */
+#define AFIO_PCF0_CAN1_REMAP             BIT(22)             /*!< CAN1 remapping */
+#define AFIO_PCF0_ENET_PHY_SEL           BIT(23)             /*!< ethernet MII or RMII PHY selection */
+#define AFIO_PCF0_SWJ_CFG                BITS(24,26)         /*!< serial wire JTAG configuration */
+#define AFIO_PCF0_SPI2_REMAP             BIT(28)             /*!< SPI2/I2S2 remapping */
+#define AFIO_PCF0_TIMER1ITR0_REMAP       BIT(29)             /*!< TIMER1 internal trigger 0 remapping */
+#define AFIO_PCF0_PTP_PPS_REMAP          BIT(30)             /*!< ethernet PTP PPS remapping */
+#elif defined GD32EPRT
+/* memory map and bit definitions for GD32EPRT devices */
 #define AFIO_PCF0_SPI0_REMAP             BIT(0)              /*!< SPI0 remapping */
 #define AFIO_PCF0_I2C0_REMAP             BIT(1)              /*!< I2C0 remapping */
 #define AFIO_PCF0_USART0_REMAP           BIT(2)              /*!< USART0 remapping */
@@ -264,7 +286,6 @@ OF SUCH DAMAGE.
 #define AFIO_PCF0_SPI2_REMAP             BIT(28)             /*!< SPI2/I2S2 remapping */
 #define AFIO_PCF0_TIMER1ITR0_REMAP       BIT(29)             /*!< TIMER1 internal trigger 0 remapping */
 #define AFIO_PCF0_PTP_PPS_REMAP          BIT(30)             /*!< ethernet PTP PPS remapping */
-
 #else 
 /* memory map and bit definitions for GD32E50X_HD devices and GD32E50X_XD devices */
 #define AFIO_PCF0_SPI0_REMAP             BIT(0)              /*!< SPI0 remapping */
@@ -276,12 +297,14 @@ OF SUCH DAMAGE.
 #define AFIO_PCF0_TIMER1_REMAP           BITS(8,9)           /*!< TIMER1 remapping */
 #define AFIO_PCF0_TIMER2_REMAP           BITS(10,11)         /*!< TIMER2 remapping */
 #define AFIO_PCF0_TIMER3_REMAP           BIT(12)             /*!< TIMER3 remapping */
+#define AFIO_PCF0_CAN0_REMAP             BITS(13,14)         /*!< CAN0 remapping */
 #define AFIO_PCF0_PD01_REMAP             BIT(15)             /*!< port D0/port D1 mapping on OSC_IN/OSC_OUT */
 #define AFIO_PCF0_TIMER4CH3_IREMAP       BIT(16)             /*!< TIMER4 channel3 internal remapping */
 #define AFIO_PCF0_ADC0_ETRGINS_REMAP     BIT(17)             /*!< ADC 0 external trigger inserted conversion remapping */
 #define AFIO_PCF0_ADC0_ETRGREG_REMAP     BIT(18)             /*!< ADC 0 external trigger regular conversion remapping */
 #define AFIO_PCF0_ADC1_ETRGINS_REMAP     BIT(19)             /*!< ADC 1 external trigger inserted conversion remapping */
 #define AFIO_PCF0_ADC1_ETRGREG_REMAP     BIT(20)             /*!< ADC 1 external trigger regular conversion remapping */
+#define AFIO_PCF0_CAN1_REMAP             BIT(22)             /*!< CAN1 remapping */
 #define AFIO_PCF0_SWJ_CFG                BITS(24,26)         /*!< serial wire JTAG configuration */
 #define AFIO_PCF0_SPI2_REMAP             BIT(28)             /*!< SPI2/I2S2 remapping */
 #endif /* GD32E50X_CL */
@@ -487,6 +510,7 @@ typedef FlagStatus bit_status;
 #define PCF0_TIMER0_REMAP(regval)       (BITS(6,7) & ((uint32_t)(regval) << 6))                           /*!< TIMER0 remapping */
 #define PCF0_TIMER1_REMAP(regval)       (BITS(8,9) & ((uint32_t)(regval) << 8))                           /*!< TIMER1 remapping */
 #define PCF0_TIMER2_REMAP(regval)       (BITS(10,11) & ((uint32_t)(regval) << 10))                        /*!< TIMER2 remapping */
+#define PCF0_CAN0_REMAP(regval)         (BITS(13,14) & ((uint32_t)(regval) << 13))                        /*!< CAN0 remapping */
 #define PCF0_SWJ_CFG(regval)            (BITS(24,26) & ((uint32_t)(regval) << 24))                        /*!< serial wire JTAG configuration */
 #define PCF1_CTC_REMAP(regval)          (BITS(11,12) & ((uint32_t)(regval) << 11))                        /*!< CTC remapping */
 
@@ -505,6 +529,8 @@ typedef FlagStatus bit_status;
 #define GPIO_TIMER2_PARTIAL_REMAP        ((uint32_t)0x001A0000U | PCF0_TIMER2_REMAP(2))                   /*!< TIMER2 partial remapping */
 #define GPIO_TIMER2_FULL_REMAP           ((uint32_t)0x001A0000U | PCF0_TIMER2_REMAP(3))                   /*!< TIMER2 full remapping */
 #define GPIO_TIMER3_REMAP                AFIO_PCF0_TIMER3_REMAP                                           /*!< TIMER3 remapping */
+#define GPIO_CAN0_PARTIAL_REMAP          ((uint32_t)0x001D0000U | PCF0_CAN0_REMAP(2))                     /*!< CAN0 partial remapping */
+#define GPIO_CAN0_FULL_REMAP             ((uint32_t)0x001D0000U | PCF0_CAN0_REMAP(3))                     /*!< CAN0 full remapping */
 #define GPIO_PD01_REMAP                  AFIO_PCF0_PD01_REMAP                                             /*!< PD01 remapping */
 #define GPIO_TIMER4CH3_IREMAP            ((uint32_t)0x00200000U | (AFIO_PCF0_TIMER4CH3_IREMAP >> 16))     /*!< TIMER4 channel3 internal remapping */
 #if (defined(GD32E50X_HD) || defined(GD32E50X_XD))
@@ -513,9 +539,10 @@ typedef FlagStatus bit_status;
 #define GPIO_ADC1_ETRGINS_REMAP          ((uint32_t)0x00200000U | (AFIO_PCF0_ADC1_ETRGINS_REMAP >> 16))   /*!< ADC1 external trigger inserted conversion remapping(only for GD32E50X_HD devices and GD32E50X_XD devices) */
 #define GPIO_ADC1_ETRGREG_REMAP          ((uint32_t)0x00200000U | (AFIO_PCF0_ADC1_ETRGREG_REMAP >> 16))   /*!< ADC1 external trigger regular conversion remapping(only for GD32E50X_HD devices and GD32E50X_XD devices) */
 #endif /* GD32E50X_HD||GD32E50X_XD */
-#ifdef GD32E50X_CL
+#if (defined(GD32E50X_CL) || defined(GD32EPRT))
 #define GPIO_ENET_REMAP                  ((uint32_t)0x00200000U | (AFIO_PCF0_ENET_REMAP >> 16))           /*!< ENET remapping(only for GD32E50X_CL devices) */
 #endif /* GD32E50X_CL */
+#define GPIO_CAN1_REMAP                  ((uint32_t)0x00200000U | (AFIO_PCF0_CAN1_REMAP >> 16))           /*!< CAN1 remapping(only for GD32E50X_CL devices) */
 #define GPIO_SWJ_NONJTRST_REMAP          ((uint32_t)0x00300000U | (PCF0_SWJ_CFG(1) >> 16))                /*!< full SWJ(JTAG-DP + SW-DP),but without NJTRST */
 #define GPIO_SWJ_SWDPENABLE_REMAP        ((uint32_t)0x00300000U | (PCF0_SWJ_CFG(2) >> 16))                /*!< JTAG-DP disabled and SW-DP enabled */
 #define GPIO_SWJ_DISABLE_REMAP           ((uint32_t)0x00300000U | (PCF0_SWJ_CFG(4) >> 16))                /*!< JTAG-DP disabled and SW-DP disabled */
@@ -574,8 +601,10 @@ typedef FlagStatus bit_status;
 #define AFIO_PA5_USBHS_CFG                AFIO_PCFA_PA5_AFCFG                                              /*!< configure PA5 alternate function to USBHS */
 #define AFIO_PA8_I2C2_CFG                 ((uint32_t)0x00300000U | (PCFA_PA8_AFCFG(1) >> 16))              /*!< configure PA8 alternate function to I2C2 */
 #define AFIO_PA8_SHRTIMER_CFG             ((uint32_t)0x00300000U | (PCFA_PA8_AFCFG(2) >> 16))              /*!< configure PA8 alternate function to SHRTIMER */
+#define AFIO_PA9_CAN2_CFG                 ((uint32_t)0x00320000U | (PCFA_PA9_AFCFG(1) >> 16))              /*!< configure PA9 alternate function to CAN2 */
 #define AFIO_PA9_I2C2_CFG                 ((uint32_t)0x00320000U | (PCFA_PA9_AFCFG(2) >> 16))              /*!< configure PA9 alternate function to I2C2 */
 #define AFIO_PA9_SHRTIMER_CFG             ((uint32_t)0x00320000U | (PCFA_PA9_AFCFG(3) >> 16))              /*!< configure PA9 alternate function to SHRTIMER */
+#define AFIO_PA10_CAN2_CFG                ((uint32_t)0x00340000U | (PCFA_PA10_AFCFG(1) >> 16))             /*!< configure PA10 alternate function to CAN2 */
 #define AFIO_PA10_CMP5_CFG                ((uint32_t)0x00340000U | (PCFA_PA10_AFCFG(2) >> 16))             /*!< configure PA10 alternate function to CMP5 */
 #define AFIO_PA10_SHRTIMER_CFG            ((uint32_t)0x00340000U | (PCFA_PA10_AFCFG(3) >> 16))             /*!< configure PA10 alternate function to SHRTIMER */
 #define AFIO_PA11_USART5_CFG              ((uint32_t)0x00360000U | (PCFA_PA11_AFCFG(1) >> 16))             /*!< configure PA11 alternate function to USART5 */
@@ -605,8 +634,10 @@ typedef FlagStatus bit_status;
 #define AFIO_PB8_SHRTIMER_CFG             ((uint32_t)0x01300000U | (PCFB_PB8_AFCFG(2) >> 16))               /*!< configure PB8 alternate function to SHRTIMER */
 #define AFIO_PB9_CMP1_CFG                 ((uint32_t)0x01320000U | (PCFB_PB9_AFCFG(1) >> 16))               /*!< configure PB9 alternate function to CMP1 */
 #define AFIO_PB9_SHRTIMER_CFG             ((uint32_t)0x01320000U | (PCFB_PB9_AFCFG(2) >> 16))               /*!< configure PB9 alternate function to SHRTIMER */
+#define AFIO_PB10_CAN2_CFG                ((uint32_t)0x01340000U | (PCFB_PB10_AFCFG(1) >> 16))              /*!< configure PB10 alternate function to CAN2 */
 #define AFIO_PB10_USBHS_CFG               ((uint32_t)0x01340000U | (PCFB_PB10_AFCFG(2) >> 16))              /*!< configure PB10 alternate function to USBHS */
 #define AFIO_PB10_SHRTIMER_CFG            ((uint32_t)0x01340000U | (PCFB_PB10_AFCFG(3) >> 16))              /*!< configure PB10 alternate function to SHRTIMER */
+#define AFIO_PB11_CAN2_CFG                ((uint32_t)0x01360000U | (PCFB_PB11_AFCFG(1) >> 16))              /*!< configure PB11 alternate function to CAN2 */
 #define AFIO_PB11_USBHS_CFG               ((uint32_t)0x01360000U | (PCFB_PB11_AFCFG(2) >> 16))              /*!< configure PB11 alternate function to USBHS */
 #define AFIO_PB11_SHRTIMER_CFG            ((uint32_t)0x01360000U | (PCFB_PB11_AFCFG(3) >> 16))              /*!< configure PB11 alternate function to SHRTIMER */
 #define AFIO_PB12_USBHS_CFG               ((uint32_t)0x01380000U | (PCFB_PB12_AFCFG(2) >> 16))              /*!< configure PB12 alternate function to USBHS */
@@ -641,7 +672,9 @@ typedef FlagStatus bit_status;
 #define AFIO_PD5_SHRTIMER_CFG             ((uint32_t)0x03000000U | AFIO_PCFD_PD5_AFCFG)                     /*!< configure PD5 alternate function to SHRTIMER */
 
 /* GPIOE AF function definitions */
+#define AFIO_PE0_CAN2_CFG                 ((uint32_t)0x04100000U | PCFE_PE0_AFCFG(1))                       /*!< configure PE0 alternate function to CAN2 */
 #define AFIO_PE0_SHRTIMER_CFG             ((uint32_t)0x04100000U | PCFE_PE0_AFCFG(2))                       /*!< configure PE0 alternate function to SHRTIMER */
+#define AFIO_PE1_CAN2_CFG                 ((uint32_t)0x04120000U | PCFE_PE1_AFCFG(1))                       /*!< configure PE1 alternate function to CAN2 */
 #define AFIO_PE1_SHRTIMER_CFG             ((uint32_t)0x04120000U | PCFE_PE1_AFCFG(2))                       /*!< configure PE1 alternate function to SHRTIMER */
 #define AFIO_PE8_CMP1_CFG                 ((uint32_t)0x04200000U | (AFIO_PCFE_PE8_AFCFG >> 16))             /*!< configure PE8 alternate function to CMP1 */
 #define AFIO_PE9_CMP3_CFG                 ((uint32_t)0x04200000U | (AFIO_PCFE_PE9_AFCFG >> 16))             /*!< configure PE9 alternate function to CMP3 */
@@ -661,11 +694,11 @@ typedef FlagStatus bit_status;
 #define AFIO_PG13_SHRTIMER_CFG            ((uint32_t)0x06200000U | (AFIO_PCFG_PG13_AFCFG >> 16))            /*!< configure PG13 alternate function to SHRTIMER */
 #define AFIO_PG14_USART5_CFG              ((uint32_t)0x06200000U | (AFIO_PCFG_PG14_AFCFG >> 16))            /*!< configure PG14 alternate function to USART5 */
 
-#ifdef GD32E50X_CL
+#if (defined(GD32E50X_CL) || defined(GD32EPRT))
 /* ethernet MII or RMII PHY selection */
 #define GPIO_ENET_PHY_MII                ((uint32_t)0x00000000U)                                            /*!< configure ethernet MAC for connection with an MII PHY */
 #define GPIO_ENET_PHY_RMII               AFIO_PCF0_ENET_PHY_SEL                                             /*!< configure ethernet MAC for connection with an RMII PHY */
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL||GD32EPRT */
 
 /* I/O compensation cell enable/disable */
 #define GPIO_COMPENSATION_ENABLE         AFIO_CPSCTL_CPS_EN                                                 /*!< I/O compensation cell is enable */
@@ -701,10 +734,10 @@ void gpio_pin_remap_config(uint32_t remap, ControlStatus newvalue);
 /* configure AFIO port alternate function */
 void gpio_afio_port_config(uint32_t afio_function, ControlStatus newvalue);
 
-#ifdef GD32E50X_CL
+#if (defined(GD32E50X_CL) || defined(GD32EPRT))
 /* select ethernet MII or RMII PHY */
 void gpio_ethernet_phy_select(uint32_t enet_sel);
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL||GD32EPRT */
 
 /* select GPIO pin exti sources */
 void gpio_exti_source_select(uint8_t output_port, uint8_t output_pin);

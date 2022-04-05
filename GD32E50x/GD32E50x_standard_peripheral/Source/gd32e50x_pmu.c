@@ -4,10 +4,12 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2020-12-15, V1.1.1, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -218,7 +220,6 @@ void pmu_to_sleepmode(uint8_t sleepmodecmd)
 */
 void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
 {
-    static uint32_t reg_snap[ 4 ];     
     /* clear stbmod and ldolp bits */
     PMU_CTL0 &= ~((uint32_t)(PMU_CTL0_STBMOD | PMU_CTL0_LDOLP));
     /* clear deep-sleep 1/2 mode enable bits  */
@@ -230,16 +231,6 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
     /* set sleepdeep bit of Cortex-M33 system control register */
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 
-    reg_snap[0] = REG32(0xE000E010U);
-    reg_snap[1] = REG32(0xE000E100U);
-    reg_snap[2] = REG32(0xE000E104U);
-    reg_snap[3] = REG32(0xE000E108U);
-    
-    REG32(0xE000E010U) &= 0x00010004U;
-    REG32(0xE000E180U)  = 0XFF7FF83DU;
-    REG32(0xE000E184U)  = 0XBFFFF8FFU;
-    REG32(0xE000E188U)  = 0xFF9FFFFFU;    
-    
     /* select WFI or WFE command to enter deepsleep mode */
     if(WFI_CMD == deepsleepmodecmd){
         __WFI();
@@ -248,11 +239,6 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
         __WFE();
         __WFE();
     }
-    
-    REG32(0xE000E010U) = reg_snap[0] ; 
-    REG32(0xE000E100U) = reg_snap[1] ;
-    REG32(0xE000E104U) = reg_snap[2] ;
-    REG32(0xE000E108U) = reg_snap[3] ;  
     
     /* reset sleepdeep bit of Cortex-M33 system control register */
     SCB->SCR &= ~((uint32_t)SCB_SCR_SLEEPDEEP_Msk);
@@ -272,8 +258,7 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
     \retval     none
 */
 void pmu_to_deepsleepmode_1(uint32_t ldo,uint8_t deepsleepmode1cmd)
-{
-    static uint32_t reg_snap[ 4 ];     
+{ 
     /* clear stbmod and ldolp bits */
     PMU_CTL0 &= ~((uint32_t)(PMU_CTL0_STBMOD | PMU_CTL0_LDOLP));
     /* clear deep-sleep 2 mode enable bit */
@@ -287,16 +272,6 @@ void pmu_to_deepsleepmode_1(uint32_t ldo,uint8_t deepsleepmode1cmd)
     /* set sleepdeep bit of Cortex-M33 system control register */
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 
-    reg_snap[0] = REG32(0xE000E010U);
-    reg_snap[1] = REG32(0xE000E100U);
-    reg_snap[2] = REG32(0xE000E104U);
-    reg_snap[3] = REG32(0xE000E108U);
-    
-    REG32(0xE000E010U) &= 0x00010004U;
-    REG32(0xE000E180U)  = 0XFF7FF83DU;
-    REG32(0xE000E184U)  = 0XBFFFF8FFU;
-    REG32(0xE000E188U)  = 0xFF9FFFFFU;    
-    
     /* select WFI or WFE command to enter deepsleep mode 1 */
     if(WFI_CMD == deepsleepmode1cmd){
         __WFI();
@@ -305,11 +280,6 @@ void pmu_to_deepsleepmode_1(uint32_t ldo,uint8_t deepsleepmode1cmd)
         __WFE();
         __WFE();
     }
-    
-    REG32(0xE000E010U) = reg_snap[0] ; 
-    REG32(0xE000E100U) = reg_snap[1] ;
-    REG32(0xE000E104U) = reg_snap[2] ;
-    REG32(0xE000E108U) = reg_snap[3] ;  
     
     /* reset sleepdeep bit of Cortex-M33 system control register */
     SCB->SCR &= ~((uint32_t)SCB_SCR_SLEEPDEEP_Msk);
@@ -331,7 +301,6 @@ void pmu_to_deepsleepmode_1(uint32_t ldo,uint8_t deepsleepmode1cmd)
 */
 void pmu_to_deepsleepmode_2(uint32_t ldo,uint8_t deepsleepmode2cmd)
 {
-    static uint32_t reg_snap[ 4 ];     
     /* clear stbmod and ldolp bits */
     PMU_CTL0 &= ~((uint32_t)(PMU_CTL0_STBMOD | PMU_CTL0_LDOLP));
     /* clear deep-sleep 1 mode enable bit */
@@ -344,16 +313,6 @@ void pmu_to_deepsleepmode_2(uint32_t ldo,uint8_t deepsleepmode2cmd)
     
     /* set sleepdeep bit of Cortex-M33 system control register */
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-
-    reg_snap[0] = REG32(0xE000E010U);
-    reg_snap[1] = REG32(0xE000E100U);
-    reg_snap[2] = REG32(0xE000E104U);
-    reg_snap[3] = REG32(0xE000E108U);
-    
-    REG32(0xE000E010U) &= 0x00010004U;
-    REG32(0xE000E180U)  = 0XFF7FF83DU;
-    REG32(0xE000E184U)  = 0XBFFFF8FFU;
-    REG32(0xE000E188U)  = 0xFF9FFFFFU;    
     
     /* select WFI or WFE command to enter deepsleep mode 2 */
     if(WFI_CMD == deepsleepmode2cmd){
@@ -363,12 +322,7 @@ void pmu_to_deepsleepmode_2(uint32_t ldo,uint8_t deepsleepmode2cmd)
         __WFE();
         __WFE();
     }
-    
-    REG32(0xE000E010U) = reg_snap[0] ; 
-    REG32(0xE000E100U) = reg_snap[1] ;
-    REG32(0xE000E104U) = reg_snap[2] ;
-    REG32(0xE000E108U) = reg_snap[3] ;  
-    
+
     /* reset sleepdeep bit of Cortex-M33 system control register */
     SCB->SCR &= ~((uint32_t)SCB_SCR_SLEEPDEEP_Msk);
     PMU_CTL1 &= ~PMU_CTL1_DPMOD2;
@@ -398,6 +352,7 @@ void pmu_to_standbymode(uint8_t standbymodecmd)
     if(WFI_CMD == standbymodecmd){
         __WFI();
     }else{
+        __WFE();
         __WFE();
     }
 }

@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -47,10 +48,10 @@ typedef struct _hid_mouse_info
 
 /* function declarations */
 /* initialize mouse function */
-usbh_status usbh_hid_mouse_init (usb_core_driver *pudev, usbh_host *puhost);
+usbh_status usbh_hid_mouse_init (usb_core_driver *udev, usbh_host *uhost);
 /* get mouse information */
-hid_mouse_info *usbh_hid_mouse_info_get (usb_core_driver *pudev, usbh_host *puhost);
+hid_mouse_info *usbh_hid_mouse_info_get (usb_core_driver *udev, usbh_host *uhost);
 /* mouse machine */
-void usbh_hid_mouse_machine (usb_core_driver *pudev, usbh_host *puhost);
+void usbh_hid_mouse_machine (usb_core_driver *udev, usbh_host *uhost);
 
 #endif /* __USBH_HID_MOUSE_H */

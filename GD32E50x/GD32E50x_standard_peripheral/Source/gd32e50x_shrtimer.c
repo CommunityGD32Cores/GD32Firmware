@@ -4,10 +4,12 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2020-09-16, V1.1.1, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -127,7 +129,7 @@ void shrtimer_baseinit_struct_para_init(shrtimer_baseinit_parameter_struct* base
     \param[in]  shrtimer_periph: SHRTIMER0
     \param[in]  timer_id: SHRTIMER_MASTER_TIMER, SHRTIMER_SLAVE_TIMERx(x=0..4)
     \param[in]  baseinit: SHRTIMER time base parameters struct
-                  period: period value, min value: 3*tSHRTIMER_CK clock, max value: 0xFFFF ¨C (1*tSHRTIMER_CK)
+                  period: period value, min value: 3*tSHRTIMER_CK clock, max value: 0xFFFF ï¿½C (1*tSHRTIMER_CK)
                   repetitioncounter: the counter repetition value, 0x00~0xFF
                   prescaler: SHRTIMER_PRESCALER_MULy(y=64,32,16,8,4,2), SHRTIMER_PRESCALER_DIVy(y=1,2,4)
                   counter_mode: SHRTIMER_COUNTER_MODE_CONTINOUS, SHRTIMER_COUNTER_MODE_SINGLEPULSE, SHRTIMER_COUNTER_MODE_SINGLEPULSE_RETRIGGERABLE
@@ -458,7 +460,7 @@ void shrtimer_comparecfg_struct_para_init(shrtimer_comparecfg_parameter_struct* 
     \param[in]  timer_id: SHRTIMER_SLAVE_TIMERx(x=0..4)
     \param[in]  comparex: SHRTIMER_COMPAREy(y=0..3)
     \param[in]  cmpcfg: compare unit configuration struct definitions
-                  compare_value: min value: 3*tSHRTIMER_CK clock, max value: 0xFFFF ¨C (1*tSHRTIMER_CK)
+                  compare_value: min value: 3*tSHRTIMER_CK clock, max value: 0xFFFF ï¿½C (1*tSHRTIMER_CK)
                   delayed_mode: SHRTIMER_DELAYEDMODE_DISABLE, SHRTIMER_DELAYEDMODE_NOTIMEOUT, SHRTIMER_DELAYEDMODE_TIMEOUTCMP0, SHRTIMER_DELAYEDMODE_TIMEOUTCMP2
                   timeout_value: 0x0000~((timeout_value + compare_value) < 0xFFFF)
     \param[out] none
@@ -816,8 +818,8 @@ void shrtimer_slavetimer_deadtime_config(uint32_t shrtimer_periph, uint32_t time
     dtctl_reg |= dtcfg->fallingsign_protect;
     dtctl_reg |= dtcfg->falling_protect;
     
-    SHRTIMER_STXDTCTL(shrtimer_periph, timer_id) = dtctl_reg;
     SHRTIMER_STXACTL(shrtimer_periph, timer_id) = stxactl;
+    SHRTIMER_STXDTCTL(shrtimer_periph, timer_id) = dtctl_reg;
 }
 
 /*!
@@ -912,7 +914,7 @@ void shrtimer_output_channel_disable(uint32_t shrtimer_periph, uint32_t chid)
     \param[in]  shrtimer_periph: SHRTIMER0
     \param[in]  timer_id: SHRTIMER_SLAVE_TIMERx(x=0..4)
     \param[in]  comparex: SHRTIMER_COMPAREy(y=0..3), SHRTIMER_COMPARE0_COMPOSITE
-    \param[in]  cmpvalue:  min value: 3 tSHRTIMER_CK clock, max value: 0xFFFF ¨C (1 tSHRTIMER_CK)
+    \param[in]  cmpvalue:  min value: 3 tSHRTIMER_CK clock, max value: 0xFFFF ï¿½C (1 tSHRTIMER_CK)
     \param[out] none
     \retval     none
 */
@@ -1010,7 +1012,7 @@ uint32_t shrtimer_slavetimer_compare_value_get(uint32_t shrtimer_periph, uint32_
     \brief      configure the compare value in Master_TIMER
     \param[in]  shrtimer_periph: SHRTIMER0
     \param[in]  comparex: SHRTIMER_COMPAREy(y=0..3)
-    \param[in]  cmpvalue: min value: 3*tSHRTIMER_CK clock, max value: 0xFFFF ¨C (1*tSHRTIMER_CK)
+    \param[in]  cmpvalue: min value: 3*tSHRTIMER_CK clock, max value: 0xFFFF ï¿½C (1*tSHRTIMER_CK)
     \param[out] none
     \retval     none
 */
@@ -1094,7 +1096,7 @@ uint32_t shrtimer_mastertimer_compare_value_get(uint32_t shrtimer_periph, uint32
     \brief      configure the counter value in Master_TIMER and Slave_TIMER
     \param[in]  shrtimer_periph: SHRTIMER0
     \param[in]  timer_id: SHRTIMER_MASTER_TIMER, SHRTIMER_SLAVE_TIMERx(x=0..4)
-    \param[in]  cntvalue: min value: 3*tSHRTIMER_CK clock, max value: 0xFFFF ¨C (1*tSHRTIMER_CK)
+    \param[in]  cntvalue: min value: 3*tSHRTIMER_CK clock, max value: 0xFFFF ï¿½C (1*tSHRTIMER_CK)
     \param[out] none
     \retval     none
 */
@@ -1105,7 +1107,7 @@ void shrtimer_timers_counter_value_config(uint32_t shrtimer_periph, uint32_t tim
     {
         case SHRTIMER_MASTER_TIMER:
         {
-            if(RESET != (SHRTIMER_MTCTL0(shrtimer_periph) & SHRTIMER_MTCTL0_MTCEN)){
+            if(RESET == (SHRTIMER_MTCTL0(shrtimer_periph) & SHRTIMER_MTCTL0_MTCEN)){
                 /* set the Master_TIMER counter value */
                 SHRTIMER_MTCNT(shrtimer_periph) = cntvalue;
             }
@@ -1113,7 +1115,7 @@ void shrtimer_timers_counter_value_config(uint32_t shrtimer_periph, uint32_t tim
         break;
         case SHRTIMER_SLAVE_TIMER0:
         {
-            if(RESET != (SHRTIMER_MTCTL0(shrtimer_periph) & SHRTIMER_MTCTL0_ST0CEN)){
+            if(RESET == (SHRTIMER_MTCTL0(shrtimer_periph) & SHRTIMER_MTCTL0_ST0CEN)){
                 /* set the Slave_TIMER0 compare value */
                 SHRTIMER_STXCNT(shrtimer_periph, timer_id) = cntvalue;
             }
@@ -1121,7 +1123,7 @@ void shrtimer_timers_counter_value_config(uint32_t shrtimer_periph, uint32_t tim
         break;
         case SHRTIMER_SLAVE_TIMER1:
         {
-            if(RESET != (SHRTIMER_MTCTL0(shrtimer_periph) & SHRTIMER_MTCTL0_ST1CEN)){
+            if(RESET == (SHRTIMER_MTCTL0(shrtimer_periph) & SHRTIMER_MTCTL0_ST1CEN)){
                 /* set the Slave_TIMER1 compare value */
                 SHRTIMER_STXCNT(shrtimer_periph, timer_id) = cntvalue;
             }
@@ -1129,7 +1131,7 @@ void shrtimer_timers_counter_value_config(uint32_t shrtimer_periph, uint32_t tim
         break;
         case SHRTIMER_SLAVE_TIMER2:
         {
-            if(RESET != (SHRTIMER_MTCTL0(shrtimer_periph) & SHRTIMER_MTCTL0_ST2CEN)){
+            if(RESET == (SHRTIMER_MTCTL0(shrtimer_periph) & SHRTIMER_MTCTL0_ST2CEN)){
                 /* set the Slave_TIMER2 compare value */
                 SHRTIMER_STXCNT(shrtimer_periph, timer_id) = cntvalue;
             }
@@ -1137,7 +1139,7 @@ void shrtimer_timers_counter_value_config(uint32_t shrtimer_periph, uint32_t tim
         break;
         case SHRTIMER_SLAVE_TIMER3:
         {
-            if(RESET != (SHRTIMER_MTCTL0(shrtimer_periph) & SHRTIMER_MTCTL0_ST3CEN)){
+            if(RESET == (SHRTIMER_MTCTL0(shrtimer_periph) & SHRTIMER_MTCTL0_ST3CEN)){
                 /* set the Slave_TIMER3 compare value */
                 SHRTIMER_STXCNT(shrtimer_periph, timer_id) = cntvalue;
             }
@@ -1145,7 +1147,7 @@ void shrtimer_timers_counter_value_config(uint32_t shrtimer_periph, uint32_t tim
         break;
         case SHRTIMER_SLAVE_TIMER4:
         {
-            if(RESET != (SHRTIMER_MTCTL0(shrtimer_periph) & SHRTIMER_MTCTL0_ST4CEN)){
+            if(RESET == (SHRTIMER_MTCTL0(shrtimer_periph) & SHRTIMER_MTCTL0_ST4CEN)){
                 /* set the Slave_TIMER4 counter value */
                 SHRTIMER_STXCNT(shrtimer_periph, timer_id) = cntvalue;
             }
@@ -1195,7 +1197,7 @@ uint32_t shrtimer_timers_counter_value_get(uint32_t shrtimer_periph, uint32_t ti
     \brief      configure the counter auto reload value in Master_TIMER and Slave_TIMER
     \param[in]  shrtimer_periph: SHRTIMER0
     \param[in]  timer_id: SHRTIMER_MASTER_TIMER, SHRTIMER_SLAVE_TIMERx(x=0..4)
-    \param[in]  carlvalue: min value: 3*tSHRTIMER_CK clock, max value: 0xFFFF ¨C (1*tSHRTIMER_CK)
+    \param[in]  carlvalue: min value: 3*tSHRTIMER_CK clock, max value: 0xFFFF ï¿½C (1*tSHRTIMER_CK)
     \param[out] none
     \retval     none
 */
@@ -1524,8 +1526,8 @@ void shrtimer_exevent_prescaler(uint32_t shrtimer_periph, uint32_t prescaler)
 void shrtimer_synccfg_struct_para_init(shrtimer_synccfg_parameter_struct* synccfg)
 {
     synccfg->input_source = SHRTIMER_SYNCINPUTSOURCE_DISABLE;
-    synccfg->output_polarity = SHRTIMER_SYNCOUTPUTSOURCE_MTSTART;
-    synccfg->output_source = SHRTIMER_SYNCOUTPUTPOLARITY_DISABLE;
+    synccfg->output_polarity = SHRTIMER_SYNCOUTPUTPOLARITY_DISABLE;
+    synccfg->output_source = SHRTIMER_SYNCOUTPUTSOURCE_MTSTART;
 }
 
 /*!
@@ -1648,7 +1650,7 @@ void shrtimer_fault_config(uint32_t shrtimer_periph, uint32_t fault_id, shrtimer
             fltincfg1 |= faultcfg->source;
             fltincfg1 |= faultcfg->polarity;
             fltincfg1 |= ((faultcfg->filter) << 3);
-            fltincfg0 |= (faultcfg->control);
+            fltincfg1 |= (faultcfg->control);
             fltincfg1 |= faultcfg->protect;
         }
         break;
@@ -2655,11 +2657,6 @@ void shrtimer_timers_interrupt_flag_clear(uint32_t shrtimer_periph, uint32_t tim
     \param[in]  shrtimer_periph: SHRTIMER0
     \param[in]  interrupt: interrupt source
                 only one parameter can be selected which is shown as below:
-      \arg         SHRTIMER_INT_FLT0: fault 0 interrupt
-      \arg         SHRTIMER_INT_FLT1: fault 1 interrupt
-      \arg         SHRTIMER_INT_FLT2: fault 2 interrupt
-      \arg         SHRTIMER_INT_FLT3: fault 3 interrupt
-      \arg         SHRTIMER_INT_FLT4: fault 4 interrupt
       \arg         SHRTIMER_INT_SYSFLT: system fault interrupt
       \arg         SHRTIMER_INT_DLLCAL: DLL calibration completed interrupt
       \arg         SHRTIMER_INT_BMPER: bunch mode period interrupt
@@ -2750,7 +2747,7 @@ void shrtimer_common_interrupt_flag_clear(uint32_t shrtimer_periph, uint32_t int
     \brief      configure Master_TIMER timer base 
     \param[in]  shrtimer_periph: SHRTIMER0
     \param[in]  master_baseinit: SHRTIMER time base parameters struct
-                  period: period value, min value: 3*tSHRTIMER_CK clock, max value: 0xFFFF ¨C (1*tSHRTIMER_CK)
+                  period: period value, min value: 3*tSHRTIMER_CK clock, max value: 0xFFFF ï¿½C (1*tSHRTIMER_CK)
                   repetitioncounter: the counter repetition value, 0x00~0xFF
                   prescaler: SHRTIMER_PRESCALER_MULy(y=64,32,16,8,4,2),SHRTIMER_PRESCALER_DIVy(y=1,2,4)
                   counter_mode: SHRTIMER_COUNTER_MODE_CONTINOUS, SHRTIMER_COUNTER_MODE_SINGLEPULSE, SHRTIMER_COUNTER_MODE_SINGLEPULSE_RETRIGGERABLE
@@ -2838,7 +2835,7 @@ static void master_timer_waveform_config(uint32_t shrtimer_periph, shrtimer_time
     \param[in]  shrtimer_periph: SHRTIMER0
     \param[in]  slave_id: SHRTIMER_SLAVE_TIMERx(x=0..4)
     \param[in]  slave_baseinit: SHRTIMER time base parameters struct
-                  period: period value, min value: 3*tSHRTIMER_CK clock, max value: 0xFFFF ¨C (1*tSHRTIMER_CK)
+                  period: period value, min value: 3*tSHRTIMER_CK clock, max value: 0xFFFF ï¿½C (1*tSHRTIMER_CK)
                   repetitioncounter: the counter repetition value, 0x00~0xFF
                   prescaler: SHRTIMER_PRESCALER_MULy(y=64,32,16,8,4,2),SHRTIMER_PRESCALER_DIVy(y=1,2,4)
                   counter_mode: SHRTIMER_COUNTER_MODE_CONTINOUS, SHRTIMER_COUNTER_MODE_SINGLEPULSE, SHRTIMER_COUNTER_MODE_SINGLEPULSE_RETRIGGERABLE

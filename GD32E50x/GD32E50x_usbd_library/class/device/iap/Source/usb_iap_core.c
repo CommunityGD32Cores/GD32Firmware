@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -35,7 +36,6 @@ OF SUCH DAMAGE.
 
 #include "usbd_transc.h"
 #include "usb_iap_core.h"
-
 #include <string.h>
 
 #define USBD_VID                     0x28E9U
@@ -64,6 +64,7 @@ usb_desc_dev iap_dev_desc =
     .bNumberConfigurations = USBD_CFG_MAX_NUM
 };
 
+/* USB device configure descriptor */
 usb_hid_desc_config_set iap_config_desc = 
 {
     .config = 
@@ -171,7 +172,7 @@ static usb_desc_str product_string =
     .unicode_string = {'G', 'D', '3', '2', '-', 'U', 'S', 'B', '_', 'I', 'A', 'P'}
 };
 
-/* USBD serial string */
+/* USB serial string */
 static usb_desc_str serial_string = 
 {
     .header = 
@@ -181,6 +182,7 @@ static usb_desc_str serial_string =
      }
 };
 
+/* USB string descriptor set */
 uint8_t* usbd_iap_strings[] = 
 {
     [STR_IDX_LANGID]  = (uint8_t *)&usbd_language_id_desc,
@@ -195,6 +197,7 @@ usb_desc iap_desc = {
     .strings     = usbd_iap_strings
 };
 
+/* local function prototypes ('static') */
 static uint8_t iap_init        (usb_dev *udev, uint8_t config_index);
 static uint8_t iap_deinit      (usb_dev *udev, uint8_t config_index);
 static uint8_t iap_req_handler (usb_dev *udev, usb_req *req);
@@ -241,8 +244,7 @@ static void iap_req_dnload    (usb_dev *udev);
 static void iap_req_optionbyte(usb_dev *udev);
 static void iap_req_leave     (usb_dev *udev);
 static void iap_address_send  (usb_dev *udev);
-
-static void iap_data_write (uint8_t *data, uint32_t addr, uint32_t len);
+static void iap_data_write    (uint8_t *data, uint32_t addr, uint32_t len);
 
 /*!
     \brief      initialize the HID device
@@ -255,10 +257,10 @@ static uint8_t iap_init (usb_dev *udev, uint8_t config_index)
 {
     static usbd_iap_handler iap_handler;
 
-    /* initialize Tx endpoint */
+    /* initialize TX endpoint */
     usbd_ep_init(udev, EP_BUF_SNG, INT_TX_ADDR, &(iap_config_desc.hid_epin));
 
-    /* initialize Rx endpoint */
+    /* initialize RX endpoint */
     usbd_ep_init(udev, EP_BUF_SNG, INT_RX_ADDR, &(iap_config_desc.hid_epout));
 
     /* unlock the internal flash */
@@ -407,7 +409,7 @@ static void iap_data_out (usb_dev *udev ,uint8_t ep_num)
 }
 
 /*!
-    \brief      send iap report
+    \brief      send IAP report
     \param[in]  udev: pointer to USB device instance
     \param[in]  report: pointer to HID report
     \param[in]  len: data length

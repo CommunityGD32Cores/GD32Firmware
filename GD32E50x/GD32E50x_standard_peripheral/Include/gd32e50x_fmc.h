@@ -4,10 +4,12 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2020-12-31, V1.1.1, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -51,7 +53,7 @@ OF SUCH DAMAGE.
 #define FMC_ADDR                   REG32(FMC + 0x00000014U)                         /*!< FMC address register */
 #define FMC_OBSTAT                 REG32(FMC + 0x0000001CU)                         /*!< FMC option bytes status register */
 #define FMC_WP                     REG32(FMC + 0x00000020U)                         /*!< FMC erase/program protection register */
-#define FMC_PID                    REG32(FMC + 0x00000100U)                         /*!< FMC product ID register */
+#define FMC_PID                    REG32(FMC + 0x00000104U)                         /*!< FMC product ID register */
 
 #define OP_BYTE(x)                 REG32(OB + ((uint32_t)((uint32_t)0x04U * (x))))  /*!< option bytes value */
 #define OB_SPC_USER                REG32(OB + 0x00000000U)                          /*!< option bytes security protection value and user value */
@@ -149,6 +151,12 @@ typedef enum
 /* option bytes reset or not entering standby mode */
 #define OB_STDBY_RST               ((uint8_t)0x00U)                                 /*!< generate a reset instead of entering standby mode */
 #define OB_STDBY_NRST              ((uint8_t)0x04U)                                 /*!< no reset when entering standby mode */
+
+/* option bytes BOR threshold value */
+#define OB_BOR_TH_VALUE3           ((uint8_t)0x00U)                                 /*!< BOR threshold value 3 */
+#define OB_BOR_TH_VALUE2           ((uint8_t)0x40U)                                 /*!< BOR threshold value 2 */
+#define OB_BOR_TH_VALUE1           ((uint8_t)0x80U)                                 /*!< BOR threshold value 1 */
+#define OB_BOR_TH_OFF              ((uint8_t)0xC0U)                                 /*!< no BOR function */
 
 /* option bytes write protection */
 #define OB_WP_NONE                 ((uint32_t)0x00000000U)                          /*!< disable all erase/program protection */
@@ -249,7 +257,7 @@ fmc_state_enum ob_write_protection_enable(uint32_t ob_wp);
 /* configure the option bytes security protection */
 fmc_state_enum ob_security_protection_config(uint8_t ob_spc);
 /* program option bytes USER */
-fmc_state_enum ob_user_write(uint8_t ob_fwdgt, uint8_t ob_deepsleep, uint8_t ob_stdby);
+fmc_state_enum ob_user_write(uint8_t ob_fwdgt, uint8_t ob_deepsleep, uint8_t ob_stdby, uint8_t ob_bor_th);
 /* program option bytes DATA */
 fmc_state_enum ob_data_program(uint16_t ob_data);
 /* get the value of option bytes USER */

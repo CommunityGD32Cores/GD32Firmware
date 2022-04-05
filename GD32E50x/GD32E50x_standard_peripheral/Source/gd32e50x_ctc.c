@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -141,7 +142,7 @@ void ctc_refsource_polarity_config(uint32_t polarity)
                 only one parameter can be selected which is shown as below:
       \arg        CTC_REFSOURCE_GPIO: GPIO is selected
       \arg        CTC_REFSOURCE_LXTAL: LXTAL is selected
-      \arg        CTC_REFSOURCE_USBSOF: USBD_SOF or USBHS_SOF is selected
+      \arg        CTC_REFSOURCE_USB_SOF: USBD_SOF or USBHS_SOF is selected
     \param[out] none
     \retval     none
 */

@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -76,23 +77,23 @@ typedef struct
 
 /* function declarations */
 /* send 'Inquiry' command to the device */
-usbh_status usbh_msc_scsi_inquiry (usbh_host *puhost, uint8_t lun, scsi_std_inquiry_data *inquiry);
+usbh_status usbh_msc_scsi_inquiry (usbh_host *uhost, uint8_t lun, scsi_std_inquiry_data *inquiry);
 /* send 'Test unit ready' command to the device */
-usbh_status usbh_msc_test_unitready (usbh_host *puhost, uint8_t lun);
+usbh_status usbh_msc_test_unitready (usbh_host *uhost, uint8_t lun);
 /* send the read capacity command to the device */
-usbh_status usbh_msc_read_capacity10 (usbh_host *puhost, uint8_t lun, scsi_capacity *capacity);
+usbh_status usbh_msc_read_capacity10 (usbh_host *uhost, uint8_t lun, scsi_capacity *capacity);
 /* send the mode sense6 command to the device */
-usbh_status usbh_msc_mode_sense6 (usbh_host *puhost, uint8_t lun);
+usbh_status usbh_msc_mode_sense6 (usbh_host *uhost, uint8_t lun);
 /* send the Request Sense command to the device */
-usbh_status usbh_msc_request_sense (usbh_host *puhost, uint8_t lun, msc_scsi_sense *sense_data);
+usbh_status usbh_msc_request_sense (usbh_host *uhost, uint8_t lun, msc_scsi_sense *sense_data);
 /* send the write10 command to the device */
-usbh_status usbh_msc_write10 (usbh_host *puhost,
+usbh_status usbh_msc_write10 (usbh_host *uhost,
                               uint8_t lun,
                               uint8_t *data_buf,
                               uint32_t addr,
                               uint32_t byte_num);
 /* send the read10 command to the device */
-usbh_status usbh_msc_read10 (usbh_host *puhost,
+usbh_status usbh_msc_read10 (usbh_host *uhost,
                              uint8_t lun,
                              uint8_t *data_buf,
                              uint32_t addr,

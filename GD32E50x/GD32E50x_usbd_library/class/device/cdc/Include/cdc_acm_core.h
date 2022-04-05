@@ -1,13 +1,14 @@
 /*!
     \file    cdc_acm_core.h
-    \brief   the header file of cdc acm driver
+    \brief   the header file of CDC ACM driver
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -74,7 +75,7 @@ OF SUCH DAMAGE.
 
 #pragma pack(1)
 
-/* CDC ACM line coding struct */
+/* CDC ACM line coding structure */
 typedef struct {
     uint32_t dwDTERate;                   /*!< data terminal rate */
     uint8_t  bCharFormat;                 /*!< stop bits */
@@ -91,14 +92,14 @@ typedef struct {
     uint16_t wLength;                     /*!< length of notification data */
 } acm_notification;
 
-/* header function struct */
+/* header function structure */
 typedef struct {
     usb_desc_header header;               /*!< descriptor header, including type and size. */
     uint8_t   bDescriptorSubtype;         /*!< bDescriptorSubtype: header function descriptor */
     uint16_t  bcdCDC;                     /*!< bcdCDC: low byte of spec release number (CDC1.10) */
 } usb_desc_header_func;
 
-/* call managment function struct */
+/* call management function structure */
 typedef struct {
     usb_desc_header header;               /*!< descriptor header, including type and size. */
     uint8_t  bDescriptorSubtype;          /*!< bDescriptorSubtype:  call management function descriptor */
@@ -106,14 +107,14 @@ typedef struct {
     uint8_t  bDataInterface;              /*!< bDataInterface: 1 interface used for call management */
 } usb_desc_call_managment_func;
 
-/* acm function struct */
+/* ACM function structure */
 typedef struct {
     usb_desc_header header;               /*!< descriptor header, including type and size. */
     uint8_t  bDescriptorSubtype;          /*!< bDescriptorSubtype: abstract control management descriptor */
     uint8_t  bmCapabilities;              /*!< bmCapabilities: D1 */
 } usb_desc_acm_func;
 
-/* union function struct */
+/* union function structure */
 typedef struct {
     usb_desc_header header;               /*!< descriptor header, including type and size. */
     uint8_t  bDescriptorSubtype;          /*!< bDescriptorSubtype: union function descriptor */
@@ -122,7 +123,7 @@ typedef struct {
 } usb_desc_union_func;
 
 #pragma pack()
-/* configuration descriptor struct */
+/* configuration descriptor structure */
 typedef struct {
     usb_desc_config                  config;
     usb_desc_itf                     cmd_itf;
@@ -158,7 +159,7 @@ extern usb_class cdc_class;
 void cdc_acm_data_receive(usb_dev *udev);
 /* send CDC ACM data */
 void cdc_acm_data_send(usb_dev *udev);
-/* check cdc acm is ready for data transfer */
+/* check CDC ACM is ready for data transfer */
 uint8_t cdc_acm_check_ready(usb_dev *udev);
 
 #endif  /* __CDC_ACM_CORE_H */

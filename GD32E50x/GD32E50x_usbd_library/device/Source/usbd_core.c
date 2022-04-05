@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -43,9 +44,8 @@ usbd_int_cb_struct *usbd_int_fops = NULL;
 /*!
     \brief      configure USB device initialization
     \param[in]  udev: pointer to USB core instance
-    \param[in]  core: endpoint address
+    \param[in]  desc: pointer to USB descriptor
     \param[in]  usbc: USB class
-    \param[in]  usbha: USB handler
     \param[out] none
     \retval     none
 */
@@ -123,9 +123,7 @@ void usbd_ep_send (usb_dev *udev, uint8_t ep_addr, uint8_t *pbuf, uint16_t buf_l
     uint16_t len = USB_MIN(buf_len, transc->max_len);
 
     /* configure the transaction level parameters */
-
     udev->drv_handler->ep_write(pbuf, ep_num, len);
 
     usb_transc_config(transc, pbuf + len, buf_len - len, len);
-
 }

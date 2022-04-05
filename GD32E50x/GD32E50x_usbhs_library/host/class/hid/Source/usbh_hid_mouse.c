@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -117,18 +118,18 @@ static const hid_report_item prop_y =
 };
 
 /* local function prototypes ('static') */
-static usbh_status usbh_hid_mouse_decode(usb_core_driver *pudev, usbh_host *puhost);
+static usbh_status usbh_hid_mouse_decode(usb_core_driver *udev, usbh_host *uhost);
 
 /*!
-    \brief      initialize mouse function
-    \param[in]  pudev: pointer to USB core instance
-    \param[in]  puhost: pointer to USB host
+    \brief      initialize the mouse function
+    \param[in]  udev: pointer to USB core instance
+    \param[in]  uhost: pointer to USB host
     \param[out] none
     \retval     none
 */
-usbh_status usbh_hid_mouse_init (usb_core_driver *pudev, usbh_host *puhost)
+usbh_status usbh_hid_mouse_init (usb_core_driver *udev, usbh_host *uhost)
 {
-    usbh_hid_handler *hid = (usbh_hid_handler *)puhost->active_class->class_data;
+    usbh_hid_handler *hid = (usbh_hid_handler *)uhost->active_class->class_data;
 
     mouse_info.x = 0U;
     mouse_info.y = 0U;
@@ -144,7 +145,7 @@ usbh_status usbh_hid_mouse_init (usb_core_driver *pudev, usbh_host *puhost)
 
     hid->pdata = (uint8_t *)(void *)mouse_report_data;
 
-    usbh_hid_fifo_init(&hid->fifo, puhost->dev_prop.data, HID_QUEUE_SIZE * sizeof(mouse_report_data));
+    usbh_hid_fifo_init(&hid->fifo, uhost->dev_prop.data, HID_QUEUE_SIZE * sizeof(mouse_report_data));
 
     usr_mouse_init();
 
@@ -153,14 +154,14 @@ usbh_status usbh_hid_mouse_init (usb_core_driver *pudev, usbh_host *puhost)
 
 /*!
     \brief      get mouse information
-    \param[in]  pudev: pointer to USB core instance
-    \param[in]  puhost: pointer to USB host
+    \param[in]  udev: pointer to USB core instance
+    \param[in]  uhost: pointer to USB host
     \param[out] none
     \retval     mouse information
 */
-hid_mouse_info *usbh_hid_mouse_info_get (usb_core_driver *pudev, usbh_host *puhost)
+hid_mouse_info *usbh_hid_mouse_info_get (usb_core_driver *udev, usbh_host *uhost)
 {
-    if(usbh_hid_mouse_decode(pudev, puhost)== USBH_OK) {
+    if(usbh_hid_mouse_decode(udev, uhost)== USBH_OK) {
         return &mouse_info;
     } else {
         return NULL;
@@ -168,36 +169,36 @@ hid_mouse_info *usbh_hid_mouse_info_get (usb_core_driver *pudev, usbh_host *puho
 }
 
 /*!
-    \brief      mouse machine
-    \param[in]  pudev: pointer to USB core instance
-    \param[in]  puhost: pointer to USB host
+    \brief      decode mouse data
+    \param[in]  udev: pointer to USB core instance
+    \param[in]  uhost: pointer to USB host
     \param[out] none
     \retval     none
 */
-void usbh_hid_mouse_machine (usb_core_driver *pudev, usbh_host *puhost)
+void usbh_hid_mouse_machine (usb_core_driver *udev, usbh_host *uhost)
 {
     hid_mouse_info *m_pinfo = NULL;
 
-    m_pinfo = usbh_hid_mouse_info_get(pudev, puhost);
+    m_pinfo = usbh_hid_mouse_info_get(udev, uhost);
 
-    if (m_pinfo != NULL) {
+    if (NULL != m_pinfo) {
         /* handle mouse data position */
         usr_mouse_process_data(&mouse_info);
     }
 }
 
 /*!
-    \brief      decode mouse data
-    \param[in]  pudev: pointer to USB core instance
-    \param[in]  puhost: pointer to USB host
+    \brief      decode mouse information
+    \param[in]  udev: pointer to USB core instance
+    \param[in]  uhost: pointer to USB host
     \param[out] none
     \retval     operation status
 */
-static usbh_status usbh_hid_mouse_decode(usb_core_driver *pudev, usbh_host *puhost)
+static usbh_status usbh_hid_mouse_decode(usb_core_driver *udev, usbh_host *uhost)
 {
-    usbh_hid_handler *hid = (usbh_hid_handler *)puhost->active_class->class_data;
+    usbh_hid_handler *hid = (usbh_hid_handler *)uhost->active_class->class_data;
 
-    if (hid->len == 0U) {
+    if (0U == hid->len) {
         return USBH_FAIL;
     }
 

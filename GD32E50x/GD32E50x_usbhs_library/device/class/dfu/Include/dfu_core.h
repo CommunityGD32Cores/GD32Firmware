@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -44,7 +45,7 @@ OF SUCH DAMAGE.
 /* DFU subclass code */
 #define USB_DFU_SUBCLASS_UPGRADE      0x01U
 
-/* DFU protocl code */
+/* DFU protocol code */
 #define USB_DFU_PROTOCL_RUNTIME       0x01U
 #define USB_DFU_PROTOCL_DFU           0x02U
 
@@ -67,7 +68,7 @@ OF SUCH DAMAGE.
 #define CMD_ERASE                     0U
 #define CMD_WRITE                     1U
 
-#define _BYTE1(x)                     (uint8_t)((x) & 0xFFU)               /*!< addressing cycle 1st byte */
+#define _BYTE1(x)                     (uint8_t)((x) & 0xFFU)                /*!< addressing cycle 1st byte */
 #define _BYTE2(x)                     (uint8_t)(((x) & 0xFF00U) >> 8U)      /*!< addressing cycle 2nd byte */
 #define _BYTE3(x)                     (uint8_t)(((x) & 0xFF0000U) >> 16U)   /*!< addressing cycle 3rd byte */
 
@@ -132,7 +133,7 @@ typedef enum {
 
 #pragma pack(1)
 
-/* USB dfu function descriptor structure */
+/* USB DFU function descriptor structure */
 typedef struct
 {
     usb_desc_header header;               /*!< descriptor header, including type and size */
@@ -169,9 +170,9 @@ typedef struct
     uint8_t buf[TRANSFER_SIZE];
 } usbd_dfu_handler;
 
-typedef void (*app_func) (void);
+typedef  void  (*app_func) (void);
 
 extern usb_desc dfu_desc;
 extern usb_class_core dfu_class;
 
-#endif /* __DFU_CORE_H */
+#endif  /* DFU_CORE_H */

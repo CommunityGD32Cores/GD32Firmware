@@ -4,10 +4,12 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2020-12-31, V1.1.1, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -44,7 +46,7 @@ OF SUCH DAMAGE.
 #define HIGH_16BITS_MASK                  ((uint32_t)0xFFFF0000U)
 
 /* USER of option bytes mask */
-#define OB_USER_MASK                      ((uint8_t)0xF8U)
+#define OB_USER_MASK                      ((uint8_t)0x38U)
 
 /* default offset */
 #define FMC_OBSTAT_USER_OFFSET            2U
@@ -535,6 +537,12 @@ fmc_state_enum ob_security_protection_config(uint8_t ob_spc)
                 only one parameter can be selected which is shown as below:
       \arg        OB_STDBY_NRST: no reset when entering standby mode
       \arg        OB_STDBY_RST: generate a reset instead of entering standby mode
+    \param[in]  ob_bor_th: option bytes BOR threshold value
+                only one parameter can be selected which is shown as below:
+      \arg        OB_BOR_TH_VALUE3: BOR threshold value 3
+      \arg        OB_BOR_TH_VALUE2: BOR threshold value 2
+      \arg        OB_BOR_TH_VALUE1: BOR threshold value 1
+      \arg        OB_BOR_TH_VALUE0: BOR threshold value 0
     \param[out] none
     \retval     state of FMC
       \arg        FMC_READY: the operation has been completed
@@ -544,7 +552,7 @@ fmc_state_enum ob_security_protection_config(uint8_t ob_spc)
       \arg        FMC_TOERR: timeout error
       \arg        FMC_OB_HSPC: high security protection
 */
-fmc_state_enum ob_user_write(uint8_t ob_fwdgt, uint8_t ob_deepsleep, uint8_t ob_stdby)
+fmc_state_enum ob_user_write(uint8_t ob_fwdgt, uint8_t ob_deepsleep, uint8_t ob_stdby, uint8_t ob_bor_th)
 {
     uint32_t temp_spc;
     uint8_t temp;
@@ -563,7 +571,7 @@ fmc_state_enum ob_user_write(uint8_t ob_fwdgt, uint8_t ob_deepsleep, uint8_t ob_
     for(i = 0U; i < 4U; i++){
         op_byte[i] = OP_BYTE(i);
     }
-    temp = ((uint8_t)((uint8_t)((uint8_t)(ob_fwdgt) | ob_deepsleep) | ob_stdby) | (OB_USER_MASK));    
+    temp = ((uint8_t)((uint8_t)((uint8_t)((uint8_t)(ob_fwdgt) | ob_deepsleep) | ob_stdby) | ob_bor_th) | (OB_USER_MASK));
     op_byte[0] = ((uint32_t)(temp) << 16U) | ((op_byte[0] & LOW_16BITS_MASK));
     
     if(FMC_READY == fmc_state){

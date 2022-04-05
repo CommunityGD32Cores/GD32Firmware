@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -39,7 +40,7 @@ OF SUCH DAMAGE.
 #include "usbd_enum.h"
 #include "usb_hid.h"
 
-#define DESC_LEN_REPORT             95U
+#define DESC_LEN_REPORT             96U
 #define DESC_LEN_CONFIG             41U
 #define NO_CMD                      0xFFU
 #define MAX_PERIPH_NUM              4U

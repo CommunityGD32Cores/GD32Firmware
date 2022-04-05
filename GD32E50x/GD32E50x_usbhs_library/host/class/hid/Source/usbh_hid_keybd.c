@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -271,18 +272,18 @@ static const int8_t hid_keybrd_shiftkey[] = {
 #endif
 
 /* local function prototypes ('static') */
-static usbh_status usbh_hid_keybrd_decode (usb_core_driver *pudev, usbh_host *puhost);
+static usbh_status usbh_hid_keybrd_decode (usb_core_driver *udev, usbh_host *uhost);
 
 /*!
     \brief      initialize the keyboard function
-    \param[in]  pudev: pointer to USB core instance
-    \param[in]  puhost: pointer to USB host handler
+    \param[in]  udev: pointer to USB core instance
+    \param[in]  uhost: pointer to USB host
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_hid_keybd_init (usb_core_driver *pudev, usbh_host *puhost)
+usbh_status usbh_hid_keybd_init (usb_core_driver *udev, usbh_host *uhost)
 {
-    usbh_hid_handler *hid = (usbh_hid_handler *)puhost->active_class->class_data;
+    usbh_hid_handler *hid = (usbh_hid_handler *)uhost->active_class->class_data;
 
     keybd_info.lctrl = keybd_info.lshift = 0U;
     keybd_info.lalt  = keybd_info.lgui   = 0U;
@@ -299,9 +300,9 @@ usbh_status usbh_hid_keybd_init (usb_core_driver *pudev, usbh_host *puhost)
 
     hid->pdata = (uint8_t*)(void *)keybd_report_data;
 
-    usbh_hid_fifo_init (&hid->fifo, puhost->dev_prop.data, HID_QUEUE_SIZE * sizeof(keybd_report_data));
+    usbh_hid_fifo_init (&hid->fifo, uhost->dev_prop.data, HID_QUEUE_SIZE * sizeof(keybd_report_data));
 
-    /* call user init*/
+    /* call user initialization*/
     usr_keybrd_init();
 
     return USBH_OK;
@@ -309,14 +310,14 @@ usbh_status usbh_hid_keybd_init (usb_core_driver *pudev, usbh_host *puhost)
 
 /*!
     \brief      get keyboard information
-    \param[in]  pudev: pointer to USB core instance
-    \param[in]  puhost: pointer to USB host handler
+    \param[in]  udev: pointer to USB core instance
+    \param[in]  uhost: pointer to USB host handler
     \param[out] none
     \retval     keyboard information
 */
-hid_keybd_info *usbh_hid_keybd_info_get (usb_core_driver *pudev, usbh_host *puhost)
+hid_keybd_info *usbh_hid_keybd_info_get (usb_core_driver *udev, usbh_host *uhost)
 {
-    if (usbh_hid_keybrd_decode(pudev, puhost) == USBH_OK) {
+    if (USBH_OK == usbh_hid_keybrd_decode(udev, uhost)) {
         return &keybd_info;
     } else {
         return NULL;
@@ -324,36 +325,35 @@ hid_keybd_info *usbh_hid_keybd_info_get (usb_core_driver *pudev, usbh_host *puho
 }
 
 /*!
-    \brief      get the ascii code of hid
-    \param[in]  info: pointer to keyboard information
+    \brief      get ASCII code
+    \param[in]  info: keyboard information
     \param[out] none
-    \retval     output value
+    \retval     output
 */
 uint8_t usbh_hid_ascii_code_get (hid_keybd_info *info)
 {
     uint8_t output;
-
-    if ((info->lshift == 1U) || (info->rshift)) {
-        output = (uint8_t)hid_keybrd_shiftkey[hid_keybrd_codes[info->keys[0]]];
+    if ((1U == info->lshift) || (info->rshift)) {
+        output = hid_keybrd_shiftkey[hid_keybrd_codes[info->keys[0]]];
     } else {
-        output = (uint8_t)hid_keybrd_key[hid_keybrd_codes[info->keys[0]]];
+        output = hid_keybrd_key[hid_keybrd_codes[info->keys[0]]];
     }
 
     return output;
 }
 
 /*!
-    \brief      keyboard machine
-    \param[in]  pudev: pointer to USB core instance
-    \param[in]  puhost: pointer to USB host handler
+    \brief      decode the pressed keys
+    \param[in]  udev: pointer to USB core instance
+    \param[in]  uhost: pointer to USB host
     \param[out] none
     \retval     none
 */
-void usbh_hid_keybrd_machine (usb_core_driver *pudev, usbh_host *puhost)
+void usbh_hid_keybrd_machine (usb_core_driver *udev, usbh_host *uhost)
 {
     hid_keybd_info *k_pinfo;
 
-    k_pinfo = usbh_hid_keybd_info_get(pudev, puhost);
+    k_pinfo = usbh_hid_keybd_info_get(udev, uhost);
 
     if (k_pinfo != NULL) {
         char c = usbh_hid_ascii_code_get(k_pinfo);
@@ -366,14 +366,14 @@ void usbh_hid_keybrd_machine (usb_core_driver *pudev, usbh_host *puhost)
 
 /*!
     \brief      decode keyboard information
-    \param[in]  pudev: pointer to USB core instance
-    \param[in]  puhost: pointer to USB host handler
+    \param[in]  udev: pointer to USB core instance
+    \param[in]  uhost: pointer to USB host
     \param[out] none
     \retval     operation status
 */
-static usbh_status usbh_hid_keybrd_decode (usb_core_driver *pudev, usbh_host *puhost)
+static usbh_status usbh_hid_keybrd_decode (usb_core_driver *udev, usbh_host *uhost)
 {
-    usbh_hid_handler *hid = (usbh_hid_handler *)puhost->active_class->class_data;
+    usbh_hid_handler *hid = (usbh_hid_handler *)uhost->active_class->class_data;
 
     if (hid->len == 0U) {
         return USBH_FAIL;

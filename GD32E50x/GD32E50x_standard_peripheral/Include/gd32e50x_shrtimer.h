@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -330,140 +331,140 @@ OF SUCH DAMAGE.
 #define SHRTIMER_STXDTCTL_DTFSVPROT                      BIT(31)             /*!< dead-time falling edge protection for value and sign */
 
 /* SHRTIMER_STxCH0SET */
-#define SHRTIMER_STXCH0SET_CH0SSEV                       BIT(0)              /*!< software event generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SRST                       BIT(1)              /*!< Slave_TIMERx reset event generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SPER                       BIT(2)              /*!< Slave_TIMERx period event generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SCMP0                      BIT(3)              /*!< Slave_TIMERx compare 0 event generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SCMP1                      BIT(4)              /*!< Slave_TIMERx compare 1 event generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SCMP2                      BIT(5)              /*!< Slave_TIMERx compare 2 event generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SCMP3                      BIT(6)              /*!< Slave_TIMERx compare 3 event generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SMTPER                     BIT(7)              /*!< Master_TIMER period event generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SMTCMP0                    BIT(8)              /*!< Master_TIMER compare 0 event generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SMTCMP1                    BIT(9)              /*!< Master_TIMER compare 1 event generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SMTCMP2                    BIT(10)             /*!< Master_TIMER compare 2 event generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SMTCMP3                    BIT(11)             /*!< Master_TIMER compare 3 event generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SSTEV0                     BIT(12)             /*!< Slave_TIMERx interconnection event 0 generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SSTEV1                     BIT(13)             /*!< Slave_TIMERx interconnection event 1 generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SSTEV2                     BIT(14)             /*!< Slave_TIMERx interconnection event 2 generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SSTEV3                     BIT(15)             /*!< Slave_TIMERx interconnection event 3 generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SSTEV4                     BIT(16)             /*!< Slave_TIMERx interconnection event 4 generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SSTEV5                     BIT(17)             /*!< Slave_TIMERx interconnection event 5 generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SSTEV6                     BIT(18)             /*!< Slave_TIMERx interconnection event 6 generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SSTEV7                     BIT(19)             /*!< Slave_TIMERx interconnection event 7 generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SSTEV8                     BIT(20)             /*!< Slave_TIMERx interconnection event 8 generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SEXEV0                     BIT(21)             /*!< external event 0 generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SEXEV1                     BIT(22)             /*!< external event 1 generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SEXEV2                     BIT(23)             /*!< external event 2 generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SEXEV3                     BIT(24)             /*!< external event 3 generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SEXEV4                     BIT(25)             /*!< external event 4 generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SEXEV5                     BIT(26)             /*!< external event 5 generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SEXEV6                     BIT(27)             /*!< external event 6 generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SEXEV7                     BIT(28)             /*!< external event 7 generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SEXEV8                     BIT(29)             /*!< external event 8 generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SEXEV9                     BIT(30)             /*!< external event 9 generates channel 0 ¡°set request¡± */
-#define SHRTIMER_STXCH0SET_CH0SUP                        BIT(31)             /*!< update event generates channel 0 ¡°set request¡± */
+#define SHRTIMER_STXCH0SET_CH0SSEV                       BIT(0)              /*!< software event generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SRST                       BIT(1)              /*!< Slave_TIMERx reset event generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SPER                       BIT(2)              /*!< Slave_TIMERx period event generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SCMP0                      BIT(3)              /*!< Slave_TIMERx compare 0 event generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SCMP1                      BIT(4)              /*!< Slave_TIMERx compare 1 event generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SCMP2                      BIT(5)              /*!< Slave_TIMERx compare 2 event generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SCMP3                      BIT(6)              /*!< Slave_TIMERx compare 3 event generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SMTPER                     BIT(7)              /*!< Master_TIMER period event generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SMTCMP0                    BIT(8)              /*!< Master_TIMER compare 0 event generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SMTCMP1                    BIT(9)              /*!< Master_TIMER compare 1 event generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SMTCMP2                    BIT(10)             /*!< Master_TIMER compare 2 event generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SMTCMP3                    BIT(11)             /*!< Master_TIMER compare 3 event generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SSTEV0                     BIT(12)             /*!< Slave_TIMERx interconnection event 0 generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SSTEV1                     BIT(13)             /*!< Slave_TIMERx interconnection event 1 generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SSTEV2                     BIT(14)             /*!< Slave_TIMERx interconnection event 2 generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SSTEV3                     BIT(15)             /*!< Slave_TIMERx interconnection event 3 generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SSTEV4                     BIT(16)             /*!< Slave_TIMERx interconnection event 4 generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SSTEV5                     BIT(17)             /*!< Slave_TIMERx interconnection event 5 generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SSTEV6                     BIT(18)             /*!< Slave_TIMERx interconnection event 6 generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SSTEV7                     BIT(19)             /*!< Slave_TIMERx interconnection event 7 generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SSTEV8                     BIT(20)             /*!< Slave_TIMERx interconnection event 8 generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SEXEV0                     BIT(21)             /*!< external event 0 generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SEXEV1                     BIT(22)             /*!< external event 1 generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SEXEV2                     BIT(23)             /*!< external event 2 generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SEXEV3                     BIT(24)             /*!< external event 3 generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SEXEV4                     BIT(25)             /*!< external event 4 generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SEXEV5                     BIT(26)             /*!< external event 5 generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SEXEV6                     BIT(27)             /*!< external event 6 generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SEXEV7                     BIT(28)             /*!< external event 7 generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SEXEV8                     BIT(29)             /*!< external event 8 generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SEXEV9                     BIT(30)             /*!< external event 9 generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0SET_CH0SUP                        BIT(31)             /*!< update event generates channel 0 ï¿½ï¿½set requestï¿½ï¿½ */
 
 /* SHRTIMER_STxCH0RST */
-#define SHRTIMER_STXCH0RST_CH0RSSEV                      BIT(0)              /*!< software event generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSRST                      BIT(1)              /*!< Slave_TIMERx reset event generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSPER                      BIT(2)              /*!< Slave_TIMERx period event generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSCMP0                     BIT(3)              /*!< Slave_TIMERx compare 0 event generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSCMP1                     BIT(4)              /*!< Slave_TIMERx compare 1 event generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSCMP2                     BIT(5)              /*!< Slave_TIMERx compare 2 event generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSCMP3                     BIT(6)              /*!< Slave_TIMERx compare 3 event generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSMTPER                    BIT(7)              /*!< Master_TIMER period event generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSMTCMP0                   BIT(8)              /*!< Master_TIMER compare 0 event generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSMTCMP1                   BIT(9)              /*!< Master_TIMER compare 1 event generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSMTCMP2                   BIT(10)             /*!< Master_TIMER compare 2 event generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSMTCMP3                   BIT(11)             /*!< Master_TIMER compare 3 event generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSSTEV0                    BIT(12)             /*!< Slave_TIMERx interconnection event 0 generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSSTEV1                    BIT(13)             /*!< Slave_TIMERx interconnection event 1 generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSSTEV2                    BIT(14)             /*!< Slave_TIMERx interconnection event 2 generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSSTEV3                    BIT(15)             /*!< Slave_TIMERx interconnection event 3 generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSSTEV4                    BIT(16)             /*!< Slave_TIMERx interconnection event 4 generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSSTEV5                    BIT(17)             /*!< Slave_TIMERx interconnection event 5 generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSSTEV6                    BIT(18)             /*!< Slave_TIMERx interconnection event 6 generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSSTEV7                    BIT(19)             /*!< Slave_TIMERx interconnection event 7 generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSSTEV8                    BIT(20)             /*!< Slave_TIMERx interconnection event 8 generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSEXEV0                    BIT(21)             /*!< external event 0 generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSEXEV1                    BIT(22)             /*!< external event 1 generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSEXEV2                    BIT(23)             /*!< external event 2 generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSEXEV3                    BIT(24)             /*!< external event 3 generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSEXEV4                    BIT(25)             /*!< external event 4 generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSEXEV5                    BIT(26)             /*!< external event 5 generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSEXEV6                    BIT(27)             /*!< external event 6 generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSEXEV7                    BIT(28)             /*!< external event 7 generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSEXEV8                    BIT(29)             /*!< external event 8 generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSEXEV9                    BIT(30)             /*!< external event 9 generates channel 0 ¡°reset request¡± */
-#define SHRTIMER_STXCH0RST_CH0RSUP                       BIT(31)             /*!< update event generates channel 0 ¡°reset request¡± */
+#define SHRTIMER_STXCH0RST_CH0RSSEV                      BIT(0)              /*!< software event generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSRST                      BIT(1)              /*!< Slave_TIMERx reset event generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSPER                      BIT(2)              /*!< Slave_TIMERx period event generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSCMP0                     BIT(3)              /*!< Slave_TIMERx compare 0 event generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSCMP1                     BIT(4)              /*!< Slave_TIMERx compare 1 event generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSCMP2                     BIT(5)              /*!< Slave_TIMERx compare 2 event generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSCMP3                     BIT(6)              /*!< Slave_TIMERx compare 3 event generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSMTPER                    BIT(7)              /*!< Master_TIMER period event generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSMTCMP0                   BIT(8)              /*!< Master_TIMER compare 0 event generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSMTCMP1                   BIT(9)              /*!< Master_TIMER compare 1 event generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSMTCMP2                   BIT(10)             /*!< Master_TIMER compare 2 event generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSMTCMP3                   BIT(11)             /*!< Master_TIMER compare 3 event generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSSTEV0                    BIT(12)             /*!< Slave_TIMERx interconnection event 0 generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSSTEV1                    BIT(13)             /*!< Slave_TIMERx interconnection event 1 generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSSTEV2                    BIT(14)             /*!< Slave_TIMERx interconnection event 2 generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSSTEV3                    BIT(15)             /*!< Slave_TIMERx interconnection event 3 generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSSTEV4                    BIT(16)             /*!< Slave_TIMERx interconnection event 4 generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSSTEV5                    BIT(17)             /*!< Slave_TIMERx interconnection event 5 generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSSTEV6                    BIT(18)             /*!< Slave_TIMERx interconnection event 6 generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSSTEV7                    BIT(19)             /*!< Slave_TIMERx interconnection event 7 generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSSTEV8                    BIT(20)             /*!< Slave_TIMERx interconnection event 8 generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSEXEV0                    BIT(21)             /*!< external event 0 generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSEXEV1                    BIT(22)             /*!< external event 1 generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSEXEV2                    BIT(23)             /*!< external event 2 generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSEXEV3                    BIT(24)             /*!< external event 3 generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSEXEV4                    BIT(25)             /*!< external event 4 generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSEXEV5                    BIT(26)             /*!< external event 5 generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSEXEV6                    BIT(27)             /*!< external event 6 generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSEXEV7                    BIT(28)             /*!< external event 7 generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSEXEV8                    BIT(29)             /*!< external event 8 generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSEXEV9                    BIT(30)             /*!< external event 9 generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH0RST_CH0RSUP                       BIT(31)             /*!< update event generates channel 0 ï¿½ï¿½reset requestï¿½ï¿½ */
 
 /* SHRTIMER_STxCH1SET */
-#define SHRTIMER_STXCH1SET_CH1SSEV                       BIT(0)              /*!< software event generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SRST                       BIT(1)              /*!< Slave_TIMERx reset event generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SPER                       BIT(2)              /*!< Slave_TIMERx period event generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SCMP0                      BIT(3)              /*!< Slave_TIMERx compare 0 event generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SCMP1                      BIT(4)              /*!< Slave_TIMERx compare 1 event generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SCMP2                      BIT(5)              /*!< Slave_TIMERx compare 2 event generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SCMP3                      BIT(6)              /*!< Slave_TIMERx compare 3 event generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SMTPER                     BIT(7)              /*!< Master_TIMER period event generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SMTCMP0                    BIT(8)              /*!< Master_TIMER compare 0 event generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SMTCMP1                    BIT(9)              /*!< Master_TIMER compare 1 event generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SMTCMP2                    BIT(10)             /*!< Master_TIMER compare 2 event generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SMTCMP3                    BIT(11)             /*!< Master_TIMER compare 3 event generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SSTEV0                     BIT(12)             /*!< Slave_TIMERx interconnection event 0 generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SSTEV1                     BIT(13)             /*!< Slave_TIMERx interconnection event 1 generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SSTEV2                     BIT(14)             /*!< Slave_TIMERx interconnection event 2 generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SSTEV3                     BIT(15)             /*!< Slave_TIMERx interconnection event 3 generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SSTEV4                     BIT(16)             /*!< Slave_TIMERx interconnection event 4 generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SSTEV5                     BIT(17)             /*!< Slave_TIMERx interconnection event 5 generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SSTEV6                     BIT(18)             /*!< Slave_TIMERx interconnection event 6 generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SSTEV7                     BIT(19)             /*!< Slave_TIMERx interconnection event 7 generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SSTEV8                     BIT(20)             /*!< Slave_TIMERx interconnection event 8 generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SEXEV0                     BIT(21)             /*!< external event 0 generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SEXEV1                     BIT(22)             /*!< external event 1 generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SEXEV2                     BIT(23)             /*!< external event 2 generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SEXEV3                     BIT(24)             /*!< external event 3 generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SEXEV4                     BIT(25)             /*!< external event 4 generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SEXEV5                     BIT(26)             /*!< external event 5 generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SEXEV6                     BIT(27)             /*!< external event 6 generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SEXEV7                     BIT(28)             /*!< external event 7 generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SEXEV8                     BIT(29)             /*!< external event 8 generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SEXEV9                     BIT(30)             /*!< external event 9 generates channel 1 ¡°set request¡± */
-#define SHRTIMER_STXCH1SET_CH1SUP                        BIT(31)             /*!< update event generates channel 1 ¡°set request¡± */
+#define SHRTIMER_STXCH1SET_CH1SSEV                       BIT(0)              /*!< software event generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SRST                       BIT(1)              /*!< Slave_TIMERx reset event generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SPER                       BIT(2)              /*!< Slave_TIMERx period event generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SCMP0                      BIT(3)              /*!< Slave_TIMERx compare 0 event generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SCMP1                      BIT(4)              /*!< Slave_TIMERx compare 1 event generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SCMP2                      BIT(5)              /*!< Slave_TIMERx compare 2 event generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SCMP3                      BIT(6)              /*!< Slave_TIMERx compare 3 event generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SMTPER                     BIT(7)              /*!< Master_TIMER period event generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SMTCMP0                    BIT(8)              /*!< Master_TIMER compare 0 event generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SMTCMP1                    BIT(9)              /*!< Master_TIMER compare 1 event generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SMTCMP2                    BIT(10)             /*!< Master_TIMER compare 2 event generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SMTCMP3                    BIT(11)             /*!< Master_TIMER compare 3 event generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SSTEV0                     BIT(12)             /*!< Slave_TIMERx interconnection event 0 generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SSTEV1                     BIT(13)             /*!< Slave_TIMERx interconnection event 1 generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SSTEV2                     BIT(14)             /*!< Slave_TIMERx interconnection event 2 generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SSTEV3                     BIT(15)             /*!< Slave_TIMERx interconnection event 3 generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SSTEV4                     BIT(16)             /*!< Slave_TIMERx interconnection event 4 generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SSTEV5                     BIT(17)             /*!< Slave_TIMERx interconnection event 5 generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SSTEV6                     BIT(18)             /*!< Slave_TIMERx interconnection event 6 generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SSTEV7                     BIT(19)             /*!< Slave_TIMERx interconnection event 7 generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SSTEV8                     BIT(20)             /*!< Slave_TIMERx interconnection event 8 generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SEXEV0                     BIT(21)             /*!< external event 0 generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SEXEV1                     BIT(22)             /*!< external event 1 generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SEXEV2                     BIT(23)             /*!< external event 2 generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SEXEV3                     BIT(24)             /*!< external event 3 generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SEXEV4                     BIT(25)             /*!< external event 4 generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SEXEV5                     BIT(26)             /*!< external event 5 generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SEXEV6                     BIT(27)             /*!< external event 6 generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SEXEV7                     BIT(28)             /*!< external event 7 generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SEXEV8                     BIT(29)             /*!< external event 8 generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SEXEV9                     BIT(30)             /*!< external event 9 generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1SET_CH1SUP                        BIT(31)             /*!< update event generates channel 1 ï¿½ï¿½set requestï¿½ï¿½ */
 
 /* SHRTIMER_STxCH1RST */
-#define SHRTIMER_STXCH1RST_CH1RSSEV                      BIT(0)              /*!< software event generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSRST                      BIT(1)              /*!< Slave_TIMERx reset event generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSPER                      BIT(2)              /*!< Slave_TIMERx period event generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSCMP0                     BIT(3)              /*!< Slave_TIMERx compare 0 event generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSCMP1                     BIT(4)              /*!< Slave_TIMERx compare 1 event generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSCMP2                     BIT(5)              /*!< Slave_TIMERx compare 2 event generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSCMP3                     BIT(6)              /*!< Slave_TIMERx compare 3 event generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSMTPER                    BIT(7)              /*!< Master_TIMER period event generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSMTCMP0                   BIT(8)              /*!< Master_TIMER compare 0 event generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSMTCMP1                   BIT(9)              /*!< Master_TIMER compare 1 event generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSMTCMP2                   BIT(10)             /*!< Master_TIMER compare 2 event generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSMTCMP3                   BIT(11)             /*!< Master_TIMER compare 3 event generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSSTEV0                    BIT(12)             /*!< Slave_TIMERx interconnection event 0 generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSSTEV1                    BIT(13)             /*!< Slave_TIMERx interconnection event 1 generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSSTEV2                    BIT(14)             /*!< Slave_TIMERx interconnection event 2 generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSSTEV3                    BIT(15)             /*!< Slave_TIMERx interconnection event 3 generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSSTEV4                    BIT(16)             /*!< Slave_TIMERx interconnection event 4 generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSSTEV5                    BIT(17)             /*!< Slave_TIMERx interconnection event 5 generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSSTEV6                    BIT(18)             /*!< Slave_TIMERx interconnection event 6 generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSSTEV7                    BIT(19)             /*!< Slave_TIMERx interconnection event 7 generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSSTEV8                    BIT(20)             /*!< Slave_TIMERx interconnection event 8 generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSEXEV0                    BIT(21)             /*!< external event 0 generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSEXEV1                    BIT(22)             /*!< external event 1 generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSEXEV2                    BIT(23)             /*!< external event 2 generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSEXEV3                    BIT(24)             /*!< external event 3 generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSEXEV4                    BIT(25)             /*!< external event 4 generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSEXEV5                    BIT(26)             /*!< external event 5 generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSEXEV6                    BIT(27)             /*!< external event 6 generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSEXEV7                    BIT(28)             /*!< external event 7 generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSEXEV8                    BIT(29)             /*!< external event 8 generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSEXEV9                    BIT(30)             /*!< external event 9 generates channel 1 ¡°reset request¡± */
-#define SHRTIMER_STXCH1RST_CH1RSUP                       BIT(31)             /*!< update event generates channel 1 ¡°reset request¡± */
+#define SHRTIMER_STXCH1RST_CH1RSSEV                      BIT(0)              /*!< software event generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSRST                      BIT(1)              /*!< Slave_TIMERx reset event generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSPER                      BIT(2)              /*!< Slave_TIMERx period event generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSCMP0                     BIT(3)              /*!< Slave_TIMERx compare 0 event generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSCMP1                     BIT(4)              /*!< Slave_TIMERx compare 1 event generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSCMP2                     BIT(5)              /*!< Slave_TIMERx compare 2 event generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSCMP3                     BIT(6)              /*!< Slave_TIMERx compare 3 event generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSMTPER                    BIT(7)              /*!< Master_TIMER period event generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSMTCMP0                   BIT(8)              /*!< Master_TIMER compare 0 event generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSMTCMP1                   BIT(9)              /*!< Master_TIMER compare 1 event generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSMTCMP2                   BIT(10)             /*!< Master_TIMER compare 2 event generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSMTCMP3                   BIT(11)             /*!< Master_TIMER compare 3 event generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSSTEV0                    BIT(12)             /*!< Slave_TIMERx interconnection event 0 generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSSTEV1                    BIT(13)             /*!< Slave_TIMERx interconnection event 1 generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSSTEV2                    BIT(14)             /*!< Slave_TIMERx interconnection event 2 generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSSTEV3                    BIT(15)             /*!< Slave_TIMERx interconnection event 3 generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSSTEV4                    BIT(16)             /*!< Slave_TIMERx interconnection event 4 generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSSTEV5                    BIT(17)             /*!< Slave_TIMERx interconnection event 5 generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSSTEV6                    BIT(18)             /*!< Slave_TIMERx interconnection event 6 generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSSTEV7                    BIT(19)             /*!< Slave_TIMERx interconnection event 7 generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSSTEV8                    BIT(20)             /*!< Slave_TIMERx interconnection event 8 generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSEXEV0                    BIT(21)             /*!< external event 0 generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSEXEV1                    BIT(22)             /*!< external event 1 generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSEXEV2                    BIT(23)             /*!< external event 2 generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSEXEV3                    BIT(24)             /*!< external event 3 generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSEXEV4                    BIT(25)             /*!< external event 4 generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSEXEV5                    BIT(26)             /*!< external event 5 generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSEXEV6                    BIT(27)             /*!< external event 6 generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSEXEV7                    BIT(28)             /*!< external event 7 generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSEXEV8                    BIT(29)             /*!< external event 8 generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSEXEV9                    BIT(30)             /*!< external event 9 generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_STXCH1RST_CH1RSUP                       BIT(31)             /*!< update event generates channel 1 ï¿½ï¿½reset requestï¿½ï¿½ */
 
 /* SHRTIMER_STxEXEVFCFG0 */
 #define SHRTIMER_STXEXEVFCFG0_EXEV0MEEN                  BIT(0)              /*!< external event 0 memory */
@@ -1081,7 +1082,7 @@ OF SUCH DAMAGE.
 /* SHRTIMER time base parameters struct definitions */
 typedef struct
 {
-    uint32_t period;                            /*!< period value, min value: 3*tSHRTIMER_CK clock, max value: 0xFFFF ¨C (1*tSHRTIMER_CK) */
+    uint32_t period;                            /*!< period value, min value: 3*tSHRTIMER_CK clock, max value: 0xFFFF ï¿½C (1*tSHRTIMER_CK) */
     uint32_t repetitioncounter;                 /*!< the counter repetition value, 0x00~0xFF */
     uint32_t prescaler;                         /*!< prescaler value, refer to: counter clock division */
     uint32_t counter_mode;                      /*!< counter operating mode, refer to: counter operating mode */
@@ -1113,7 +1114,7 @@ typedef struct {
 
 /* compare unit configuration struct definitions */
 typedef struct {
-    uint32_t compare_value;                     /*!< compare value, min value: 3*tSHRTIMER_CK clock, max value: 0xFFFF ¨C (1*tSHRTIMER_CK) */
+    uint32_t compare_value;                     /*!< compare value, min value: 3*tSHRTIMER_CK clock, max value: 0xFFFF ï¿½C (1*tSHRTIMER_CK) */
     uint32_t delayed_mode;                      /*!< defining whether the compare register is behaving in regular mode or in delayed mode, refer to: compare 3 or 1 delayed mode */
     uint32_t timeout_value;                     /*!< compare value for compare 0 or 2 when compare 3 or 1 is delayed mode with time out is selected , timeout_value + compare_value must be less than 0xFFFF */
 }shrtimer_comparecfg_parameter_struct;
@@ -1165,7 +1166,7 @@ typedef struct {
 /* external event configuration struct definitions */
 typedef struct {
     uint32_t source;                            /*!< the source of the external event,refer to: external event source  */ 
-    uint32_t polarity;                          /*!< the active level of external event 0 when EXEVyEG[1:0] = 2¡¯b00, refer to: external event polarity */ 
+    uint32_t polarity;                          /*!< the active level of external event 0 when EXEVyEG[1:0] = 2ï¿½ï¿½b00, refer to: external event polarity */ 
     uint32_t edge ;                             /*!< the sensitivity of the external event, external event edge sensitivity */ 
     uint32_t digital_filter;                    /*!< external event filter control, 0x0~0xF */ 
 }shrtimer_exeventcfg_parameter_struct;
@@ -1188,8 +1189,8 @@ typedef struct {
 /* channel output configuration struct definitions */
 typedef struct {
     uint32_t polarity;                          /*!< configure channel output polarity, refer to: channel output polarity */
-    uint32_t set_request;                       /*!< configure the event generates channel ¡°set request¡±, refer to channel set request */
-    uint32_t reset_request;                     /*!< configure the event generates channel ¡°reset request¡±, refer to: channel reset request */
+    uint32_t set_request;                       /*!< configure the event generates channel ï¿½ï¿½set requestï¿½ï¿½, refer to channel set request */
+    uint32_t reset_request;                     /*!< configure the event generates channel ï¿½ï¿½reset requestï¿½ï¿½, refer to: channel reset request */
     uint32_t idle_bunch;                        /*!< specifies whether channel output can be IDLE state in bunch mode, refer to: channel IDLE state enable in bunch mode */
     uint32_t idle_state;                        /*!< specifies channel output idle state, refer to channel output idle state */
     uint32_t fault_state;                       /*!< specifies the output level when in FAULT state, refer to: channel output in fault state */
@@ -1749,11 +1750,6 @@ typedef struct {
 #define SHRTIMER_ST_INT_DLYIDLE                          SHRTIMER_STXDMAINTEN_DLYIIE                              /*!< delayed IDLE mode entry interrupt */
 
 /* SHRTIMER common interrupt */
-#define SHRTIMER_INT_FLT0                                SHRTIMER_INTEN_FLT0IE                                    /*!< fault 0 interrupt */
-#define SHRTIMER_INT_FLT1                                SHRTIMER_INTEN_FLT1IE                                    /*!< fault 1 interrupt */
-#define SHRTIMER_INT_FLT2                                SHRTIMER_INTEN_FLT2IE                                    /*!< fault 2 interrupt */
-#define SHRTIMER_INT_FLT3                                SHRTIMER_INTEN_FLT3IE                                    /*!< fault 3 interrupt */
-#define SHRTIMER_INT_FLT4                                SHRTIMER_INTEN_FLT4IE                                    /*!< fault 4 interrupt */
 #define SHRTIMER_INT_SYSFLT                              SHRTIMER_INTEN_SYSFLTIE                                  /*!< system fault interrupt */
 #define SHRTIMER_INT_DLLCAL                              SHRTIMER_INTEN_DLLCALIE                                  /*!< DLL calibration completed interrupt */
 #define SHRTIMER_INT_BMPER                               SHRTIMER_INTEN_BMPERIE                                   /*!< bunch mode period interrupt */
@@ -1854,72 +1850,72 @@ typedef struct {
 #define SHRTIMER_CHANNEL_POLARITY_LOW                    (SHRTIMER_STXCHOCTL_CH0P)                                /*!< channel active low */
 
 /* channel set request */
-#define SHRTIMER_CHANNEL_SET_NONE                        ((uint32_t)0x00000000U)                                 /*!< clear all channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_RSTSYNI                     (SHRTIMER_STXCH0SET_CH0SRST)                             /*!< Slave_TIMERx reset event from synchronous input and software can generate channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_PER                         (SHRTIMER_STXCH0SET_CH0SPER)                             /*!< Slave_TIMERx period event can generate ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_CMP0                        (SHRTIMER_STXCH0SET_CH0SCMP0)                            /*!< Slave_TIMERx compare 0 event can generate ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_CMP1                        (SHRTIMER_STXCH0SET_CH0SCMP1)                            /*!< Slave_TIMERx compare 1 event can generate ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_CMP2                        (SHRTIMER_STXCH0SET_CH0SCMP2)                            /*!< Slave_TIMERx compare 2 event can generate ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_CMP3                        (SHRTIMER_STXCH0SET_CH0SCMP3)                            /*!< Slave_TIMERx compare 3 event can generate ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_MTPER                       (SHRTIMER_STXCH0SET_CH0SMTPER)                           /*!< Master_TIMER period event generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_MTCMP0                      (SHRTIMER_STXCH0SET_CH0SMTCMP0)                          /*!< Master_TIMER compare 0 event generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_MTCMP1                      (SHRTIMER_STXCH0SET_CH0SMTCMP1)                          /*!< Master_TIMER compare 1 event generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_MTCMP2                      (SHRTIMER_STXCH0SET_CH0SMTCMP2)                          /*!< Master_TIMER compare 2 event generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_MTCMP3                      (SHRTIMER_STXCH0SET_CH0SMTCMP3)                          /*!< Master_TIMER compare 3 event generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_STEV0                       (SHRTIMER_STXCH0SET_CH0SSTEV0)                           /*!< Slave_TIMERx interconnection event 0 generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_STEV1                       (SHRTIMER_STXCH0SET_CH0SSTEV1)                           /*!< Slave_TIMERx interconnection event 1 generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_STEV2                       (SHRTIMER_STXCH0SET_CH0SSTEV2)                           /*!< Slave_TIMERx interconnection event 2 generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_STEV3                       (SHRTIMER_STXCH0SET_CH0SSTEV3)                           /*!< Slave_TIMERx interconnection event 3 generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_STEV4                       (SHRTIMER_STXCH0SET_CH0SSTEV4)                           /*!< Slave_TIMERx interconnection event 4 generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_STEV5                       (SHRTIMER_STXCH0SET_CH0SSTEV5)                           /*!< Slave_TIMERx interconnection event 5 generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_STEV6                       (SHRTIMER_STXCH0SET_CH0SSTEV6)                           /*!< Slave_TIMERx interconnection event 6 generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_STEV7                       (SHRTIMER_STXCH0SET_CH0SSTEV7)                           /*!< Slave_TIMERx interconnection event 7 generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_STEV8                       (SHRTIMER_STXCH0SET_CH0SSTEV8)                           /*!< Slave_TIMERx interconnection event 8 generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_EXEV0                       (SHRTIMER_STXCH0SET_CH0SEXEV0)                           /*!< external event 0 generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_EXEV1                       (SHRTIMER_STXCH0SET_CH0SEXEV1)                           /*!< external event 1 generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_EXEV2                       (SHRTIMER_STXCH0SET_CH0SEXEV2)                           /*!< external event 2 generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_EXEV3                       (SHRTIMER_STXCH0SET_CH0SEXEV3)                           /*!< external event 3 generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_EXEV4                       (SHRTIMER_STXCH0SET_CH0SEXEV4)                           /*!< external event 4 generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_EXEV5                       (SHRTIMER_STXCH0SET_CH0SEXEV5)                           /*!< external event 5 generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_EXEV6                       (SHRTIMER_STXCH0SET_CH0SEXEV6)                           /*!< external event 6 generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_EXEV7                       (SHRTIMER_STXCH0SET_CH0SEXEV7)                           /*!< external event 7 generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_EXEV8                       (SHRTIMER_STXCH0SET_CH0SEXEV8)                           /*!< external event 8 generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_EXEV9                       (SHRTIMER_STXCH0SET_CH0SEXEV9)                           /*!< external event 9 generates channel ¡°set request¡± */
-#define SHRTIMER_CHANNEL_SET_UPDATE                      (SHRTIMER_STXCH0SET_CH0SUP)                              /*!< update event generates channel ¡°set request¡± */
+#define SHRTIMER_CHANNEL_SET_NONE                        ((uint32_t)0x00000000U)                                 /*!< clear all channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_RSTSYNI                     (SHRTIMER_STXCH0SET_CH0SRST)                             /*!< Slave_TIMERx reset event from synchronous input and software can generate channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_PER                         (SHRTIMER_STXCH0SET_CH0SPER)                             /*!< Slave_TIMERx period event can generate ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_CMP0                        (SHRTIMER_STXCH0SET_CH0SCMP0)                            /*!< Slave_TIMERx compare 0 event can generate ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_CMP1                        (SHRTIMER_STXCH0SET_CH0SCMP1)                            /*!< Slave_TIMERx compare 1 event can generate ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_CMP2                        (SHRTIMER_STXCH0SET_CH0SCMP2)                            /*!< Slave_TIMERx compare 2 event can generate ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_CMP3                        (SHRTIMER_STXCH0SET_CH0SCMP3)                            /*!< Slave_TIMERx compare 3 event can generate ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_MTPER                       (SHRTIMER_STXCH0SET_CH0SMTPER)                           /*!< Master_TIMER period event generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_MTCMP0                      (SHRTIMER_STXCH0SET_CH0SMTCMP0)                          /*!< Master_TIMER compare 0 event generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_MTCMP1                      (SHRTIMER_STXCH0SET_CH0SMTCMP1)                          /*!< Master_TIMER compare 1 event generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_MTCMP2                      (SHRTIMER_STXCH0SET_CH0SMTCMP2)                          /*!< Master_TIMER compare 2 event generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_MTCMP3                      (SHRTIMER_STXCH0SET_CH0SMTCMP3)                          /*!< Master_TIMER compare 3 event generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_STEV0                       (SHRTIMER_STXCH0SET_CH0SSTEV0)                           /*!< Slave_TIMERx interconnection event 0 generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_STEV1                       (SHRTIMER_STXCH0SET_CH0SSTEV1)                           /*!< Slave_TIMERx interconnection event 1 generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_STEV2                       (SHRTIMER_STXCH0SET_CH0SSTEV2)                           /*!< Slave_TIMERx interconnection event 2 generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_STEV3                       (SHRTIMER_STXCH0SET_CH0SSTEV3)                           /*!< Slave_TIMERx interconnection event 3 generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_STEV4                       (SHRTIMER_STXCH0SET_CH0SSTEV4)                           /*!< Slave_TIMERx interconnection event 4 generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_STEV5                       (SHRTIMER_STXCH0SET_CH0SSTEV5)                           /*!< Slave_TIMERx interconnection event 5 generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_STEV6                       (SHRTIMER_STXCH0SET_CH0SSTEV6)                           /*!< Slave_TIMERx interconnection event 6 generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_STEV7                       (SHRTIMER_STXCH0SET_CH0SSTEV7)                           /*!< Slave_TIMERx interconnection event 7 generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_STEV8                       (SHRTIMER_STXCH0SET_CH0SSTEV8)                           /*!< Slave_TIMERx interconnection event 8 generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_EXEV0                       (SHRTIMER_STXCH0SET_CH0SEXEV0)                           /*!< external event 0 generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_EXEV1                       (SHRTIMER_STXCH0SET_CH0SEXEV1)                           /*!< external event 1 generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_EXEV2                       (SHRTIMER_STXCH0SET_CH0SEXEV2)                           /*!< external event 2 generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_EXEV3                       (SHRTIMER_STXCH0SET_CH0SEXEV3)                           /*!< external event 3 generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_EXEV4                       (SHRTIMER_STXCH0SET_CH0SEXEV4)                           /*!< external event 4 generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_EXEV5                       (SHRTIMER_STXCH0SET_CH0SEXEV5)                           /*!< external event 5 generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_EXEV6                       (SHRTIMER_STXCH0SET_CH0SEXEV6)                           /*!< external event 6 generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_EXEV7                       (SHRTIMER_STXCH0SET_CH0SEXEV7)                           /*!< external event 7 generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_EXEV8                       (SHRTIMER_STXCH0SET_CH0SEXEV8)                           /*!< external event 8 generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_EXEV9                       (SHRTIMER_STXCH0SET_CH0SEXEV9)                           /*!< external event 9 generates channel ï¿½ï¿½set requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_SET_UPDATE                      (SHRTIMER_STXCH0SET_CH0SUP)                              /*!< update event generates channel ï¿½ï¿½set requestï¿½ï¿½ */
 
 /* channel reset request */
-#define SHRTIMER_CHANNEL_RESET_NONE                      ((uint32_t)0x00000000U)                                 /*!< clear all channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_RSTSYNI                   (SHRTIMER_STXCH0RST_CH0RSRST)                            /*!< Slave_TIMERx reset event from synchronous input and software can generate channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_PER                       (SHRTIMER_STXCH0RST_CH0RSPER)                            /*!< Slave_TIMERx period event can generate ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_CMP0                      (SHRTIMER_STXCH0RST_CH0RSCMP0)                           /*!< Slave_TIMERx compare 0 event can generate ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_CMP1                      (SHRTIMER_STXCH0RST_CH0RSCMP1)                           /*!< Slave_TIMERx compare 1 event can generate ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_CMP2                      (SHRTIMER_STXCH0RST_CH0RSCMP2)                           /*!< Slave_TIMERx compare 2 event can generate ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_CMP3                      (SHRTIMER_STXCH0RST_CH0RSCMP3)                           /*!< Slave_TIMERx compare 3 event can generate ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_MTPER                     (SHRTIMER_STXCH0RST_CH0RSMTPER)                          /*!< Master_TIMER period event generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_MTCMP0                    (SHRTIMER_STXCH0RST_CH0RSMTCMP0)                         /*!< Master_TIMER compare 0 event generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_MTCMP1                    (SHRTIMER_STXCH0RST_CH0RSMTCMP1)                         /*!< Master_TIMER compare 1 event generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_MTCMP2                    (SHRTIMER_STXCH0RST_CH0RSMTCMP2)                         /*!< Master_TIMER compare 2 event generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_MTCMP3                    (SHRTIMER_STXCH0RST_CH0RSMTCMP3)                         /*!< Master_TIMER compare 3 event generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_STEV0                     (SHRTIMER_STXCH0RST_CH0RSSTEV0)                          /*!< Slave_TIMERx interconnection event 0 generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_STEV1                     (SHRTIMER_STXCH0RST_CH0RSSTEV1)                          /*!< Slave_TIMERx interconnection event 1 generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_STEV2                     (SHRTIMER_STXCH0RST_CH0RSSTEV2)                          /*!< Slave_TIMERx interconnection event 2 generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_STEV3                     (SHRTIMER_STXCH0RST_CH0RSSTEV3)                          /*!< Slave_TIMERx interconnection event 3 generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_STEV4                     (SHRTIMER_STXCH0RST_CH0RSSTEV4)                          /*!< Slave_TIMERx interconnection event 4 generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_STEV5                     (SHRTIMER_STXCH0RST_CH0RSSTEV5)                          /*!< Slave_TIMERx interconnection event 5 generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_STEV6                     (SHRTIMER_STXCH0RST_CH0RSSTEV6)                          /*!< Slave_TIMERx interconnection event 6 generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_STEV7                     (SHRTIMER_STXCH0RST_CH0RSSTEV7)                          /*!< Slave_TIMERx interconnection event 7 generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_STEV8                     (SHRTIMER_STXCH0RST_CH0RSSTEV8)                          /*!< Slave_TIMERx interconnection event 8 generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_EXEV0                     (SHRTIMER_STXCH0RST_CH0RSEXEV0)                          /*!< external event 0 generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_EXEV1                     (SHRTIMER_STXCH0RST_CH0RSEXEV1)                          /*!< external event 1 generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_EXEV2                     (SHRTIMER_STXCH0RST_CH0RSEXEV2)                          /*!< external event 2 generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_EXEV3                     (SHRTIMER_STXCH0RST_CH0RSEXEV3)                          /*!< external event 3 generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_EXEV4                     (SHRTIMER_STXCH0RST_CH0RSEXEV4)                          /*!< external event 4 generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_EXEV5                     (SHRTIMER_STXCH0RST_CH0RSEXEV5)                          /*!< external event 5 generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_EXEV6                     (SHRTIMER_STXCH0RST_CH0RSEXEV6)                          /*!< external event 6 generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_EXEV7                     (SHRTIMER_STXCH0RST_CH0RSEXEV7)                          /*!< external event 7 generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_EXEV8                     (SHRTIMER_STXCH0RST_CH0RSEXEV8)                          /*!< external event 8 generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_EXEV9                     (SHRTIMER_STXCH0RST_CH0RSEXEV9)                          /*!< external event 9 generates channel ¡°reset request¡± */
-#define SHRTIMER_CHANNEL_RESET_UPDATE                    (SHRTIMER_STXCH0RST_CH0RSUP)                             /*!< update event generates channel ¡°reset request¡± */
+#define SHRTIMER_CHANNEL_RESET_NONE                      ((uint32_t)0x00000000U)                                 /*!< clear all channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_RSTSYNI                   (SHRTIMER_STXCH0RST_CH0RSRST)                            /*!< Slave_TIMERx reset event from synchronous input and software can generate channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_PER                       (SHRTIMER_STXCH0RST_CH0RSPER)                            /*!< Slave_TIMERx period event can generate ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_CMP0                      (SHRTIMER_STXCH0RST_CH0RSCMP0)                           /*!< Slave_TIMERx compare 0 event can generate ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_CMP1                      (SHRTIMER_STXCH0RST_CH0RSCMP1)                           /*!< Slave_TIMERx compare 1 event can generate ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_CMP2                      (SHRTIMER_STXCH0RST_CH0RSCMP2)                           /*!< Slave_TIMERx compare 2 event can generate ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_CMP3                      (SHRTIMER_STXCH0RST_CH0RSCMP3)                           /*!< Slave_TIMERx compare 3 event can generate ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_MTPER                     (SHRTIMER_STXCH0RST_CH0RSMTPER)                          /*!< Master_TIMER period event generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_MTCMP0                    (SHRTIMER_STXCH0RST_CH0RSMTCMP0)                         /*!< Master_TIMER compare 0 event generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_MTCMP1                    (SHRTIMER_STXCH0RST_CH0RSMTCMP1)                         /*!< Master_TIMER compare 1 event generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_MTCMP2                    (SHRTIMER_STXCH0RST_CH0RSMTCMP2)                         /*!< Master_TIMER compare 2 event generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_MTCMP3                    (SHRTIMER_STXCH0RST_CH0RSMTCMP3)                         /*!< Master_TIMER compare 3 event generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_STEV0                     (SHRTIMER_STXCH0RST_CH0RSSTEV0)                          /*!< Slave_TIMERx interconnection event 0 generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_STEV1                     (SHRTIMER_STXCH0RST_CH0RSSTEV1)                          /*!< Slave_TIMERx interconnection event 1 generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_STEV2                     (SHRTIMER_STXCH0RST_CH0RSSTEV2)                          /*!< Slave_TIMERx interconnection event 2 generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_STEV3                     (SHRTIMER_STXCH0RST_CH0RSSTEV3)                          /*!< Slave_TIMERx interconnection event 3 generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_STEV4                     (SHRTIMER_STXCH0RST_CH0RSSTEV4)                          /*!< Slave_TIMERx interconnection event 4 generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_STEV5                     (SHRTIMER_STXCH0RST_CH0RSSTEV5)                          /*!< Slave_TIMERx interconnection event 5 generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_STEV6                     (SHRTIMER_STXCH0RST_CH0RSSTEV6)                          /*!< Slave_TIMERx interconnection event 6 generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_STEV7                     (SHRTIMER_STXCH0RST_CH0RSSTEV7)                          /*!< Slave_TIMERx interconnection event 7 generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_STEV8                     (SHRTIMER_STXCH0RST_CH0RSSTEV8)                          /*!< Slave_TIMERx interconnection event 8 generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_EXEV0                     (SHRTIMER_STXCH0RST_CH0RSEXEV0)                          /*!< external event 0 generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_EXEV1                     (SHRTIMER_STXCH0RST_CH0RSEXEV1)                          /*!< external event 1 generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_EXEV2                     (SHRTIMER_STXCH0RST_CH0RSEXEV2)                          /*!< external event 2 generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_EXEV3                     (SHRTIMER_STXCH0RST_CH0RSEXEV3)                          /*!< external event 3 generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_EXEV4                     (SHRTIMER_STXCH0RST_CH0RSEXEV4)                          /*!< external event 4 generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_EXEV5                     (SHRTIMER_STXCH0RST_CH0RSEXEV5)                          /*!< external event 5 generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_EXEV6                     (SHRTIMER_STXCH0RST_CH0RSEXEV6)                          /*!< external event 6 generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_EXEV7                     (SHRTIMER_STXCH0RST_CH0RSEXEV7)                          /*!< external event 7 generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_EXEV8                     (SHRTIMER_STXCH0RST_CH0RSEXEV8)                          /*!< external event 8 generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_EXEV9                     (SHRTIMER_STXCH0RST_CH0RSEXEV9)                          /*!< external event 9 generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
+#define SHRTIMER_CHANNEL_RESET_UPDATE                    (SHRTIMER_STXCH0RST_CH0RSUP)                             /*!< update event generates channel ï¿½ï¿½reset requestï¿½ï¿½ */
 
 /* channel IDLE state enable in bunch mode */
 #define SHRTIMER_CHANNEL_BUNCH_IDLE_DISABLE              ((uint32_t)0x00000000U)                                 /*!< channel output is not affected by the bunch mode */
@@ -1943,7 +1939,7 @@ typedef struct {
 #define SHRTIMER_CHANNEL_BUNCH_ENTRY_REGULAR             ((uint32_t)0x00000000U)                                 /*!< the output enter IDLE immediately */
 #define SHRTIMER_CHANNEL_BUNCH_ENTRY_DEADTIME            ((uint32_t)0x00000080U)                                 /*!< dead-time is inserted before entering the IDLE state */
 
-/* software event generates channel ¡°set request¡± or ¡°reset request¡± */
+/* software event generates channel ï¿½ï¿½set requestï¿½ï¿½ or ï¿½ï¿½reset requestï¿½ï¿½ */
 #define SHRTIMER_CHANNEL_SOFTWARE_SET                    ((uint32_t)0x00000001U)                                 /*!< software event cannot generate request */
 #define SHRTIMER_CHANNEL_SOFTWARE_RESET                  ((uint32_t)0x00000002U)                                 /*!< software event can generate request */
 

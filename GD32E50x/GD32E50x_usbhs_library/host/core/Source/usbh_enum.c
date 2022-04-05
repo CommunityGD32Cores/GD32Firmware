@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -47,33 +48,33 @@ static void usbh_strdesc_parse (uint8_t *psrc, uint8_t *pdest, uint16_t len);
 
 /*!
     \brief      configure USB control status parameters
-    \param[in]  puhost: pointer to USB host
+    \param[in]  uhost: pointer to USB host
     \param[in]  buf: control transfer data buffer pointer
     \param[in]  len: length of the data buffer
     \param[out] none
     \retval     none
 */
-void usbh_ctlstate_config (usbh_host *puhost, uint8_t *buf, uint16_t len)
+void usbh_ctlstate_config (usbh_host *uhost, uint8_t *buf, uint16_t len)
 {
     /* prepare the transactions */
-    puhost->control.buf = buf;
-    puhost->control.ctl_len = len;
+    uhost->control.buf = buf;
+    uhost->control.ctl_len = len;
 
-    puhost->control.ctl_state = CTL_SETUP;
+    uhost->control.ctl_state = CTL_SETUP;
 }
 
 /*!
     \brief      get device descriptor from the USB device
-    \param[in]  puhost: pointer to USB host
+    \param[in]  uhost: pointer to USB host
     \param[in]  len: length of the descriptor
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_devdesc_get (usbh_host *puhost, uint8_t len)
+usbh_status usbh_devdesc_get (usbh_host *uhost, uint8_t len)
 {
     usbh_status status = USBH_BUSY;
 
-    usbh_control *usb_ctl = &puhost->control;
+    usbh_control *usb_ctl = &uhost->control;
 
     if (CTL_IDLE == usb_ctl->ctl_state) {
         usb_ctl->setup.req = (usb_req) {
@@ -84,14 +85,14 @@ usbh_status usbh_devdesc_get (usbh_host *puhost, uint8_t len)
             .wLength       = len
         };
 
-        usbh_ctlstate_config (puhost, puhost->dev_prop.data, (uint16_t)len);
+        usbh_ctlstate_config (uhost, uhost->dev_prop.data, (uint16_t)len);
     }
 
-    status = usbh_ctl_handler (puhost);
+    status = usbh_ctl_handler (uhost);
 
     if (USBH_OK == status) {
         /* commands successfully sent and response received */
-        usbh_devdesc_parse (&puhost->dev_prop.dev_desc, puhost->dev_prop.data, (uint16_t)len);
+        usbh_devdesc_parse (&uhost->dev_prop.dev_desc, uhost->dev_prop.data, (uint16_t)len);
     }
 
     return status;
@@ -99,23 +100,23 @@ usbh_status usbh_devdesc_get (usbh_host *puhost, uint8_t len)
 
 /*!
     \brief      get configuration descriptor from the USB device
-    \param[in]  puhost: pointer to USB host
+    \param[in]  uhost: pointer to USB host
     \param[in]  len: length of the descriptor
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_cfgdesc_get (usbh_host *puhost, uint16_t len)
+usbh_status usbh_cfgdesc_get (usbh_host *uhost, uint16_t len)
 {
     uint8_t *pdata = NULL;
 
     usbh_status status = USBH_BUSY;
 
-    usbh_control *usb_ctl = &puhost->control;
+    usbh_control *usb_ctl = &uhost->control;
 
 #if (USBH_KEEP_CFG_DESCRIPTOR == 1U)
-    pdata = puhost->dev_prop.cfgdesc_rawdata;
+    pdata = uhost->dev_prop.cfgdesc_rawdata;
 #else
-    pdata = puhost->dev_prop.data;
+    pdata = uhost->dev_prop.data;
 #endif
 
     if (CTL_IDLE == usb_ctl->ctl_state) {
@@ -127,16 +128,16 @@ usbh_status usbh_cfgdesc_get (usbh_host *puhost, uint16_t len)
             .wLength       = len
         };
 
-        usbh_ctlstate_config (puhost, pdata, len);
+        usbh_ctlstate_config (uhost, pdata, len);
     }
 
-    status = usbh_ctl_handler (puhost);
+    status = usbh_ctl_handler (uhost);
 
     if (USBH_OK == status) {
         if (len <= USB_CFG_DESC_LEN) {
-            usbh_cfgdesc_parse (&puhost->dev_prop.cfg_desc_set.cfg_desc, pdata);
+            usbh_cfgdesc_parse (&uhost->dev_prop.cfg_desc_set.cfg_desc, pdata);
         } else {
-            usbh_cfgset_parse (&puhost->dev_prop, pdata);
+            usbh_cfgset_parse (&uhost->dev_prop, pdata);
         }
     }
 
@@ -145,21 +146,21 @@ usbh_status usbh_cfgdesc_get (usbh_host *puhost, uint16_t len)
 
 /*!
     \brief      get string descriptor from the USB device
-    \param[in]  puhost: pointer to USB host
+    \param[in]  uhost: pointer to USB host
     \param[in]  str_index: index for the string descriptor
     \param[in]  buf: buffer pointer to the string descriptor
     \param[in]  len: length of the descriptor
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_strdesc_get (usbh_host *puhost,
+usbh_status usbh_strdesc_get (usbh_host *uhost,
                               uint8_t str_index, 
                               uint8_t *buf, 
                               uint16_t len)
 {
     usbh_status status = USBH_BUSY;
 
-    usbh_control *usb_ctl = &puhost->control;
+    usbh_control *usb_ctl = &uhost->control;
 
     if (CTL_IDLE == usb_ctl->ctl_state) {
         usb_ctl->setup.req = (usb_req) {
@@ -170,14 +171,14 @@ usbh_status usbh_strdesc_get (usbh_host *puhost,
             .wLength       = len
         };
 
-        usbh_ctlstate_config (puhost, puhost->dev_prop.data, len);
+        usbh_ctlstate_config (uhost, uhost->dev_prop.data, len);
     }
 
-    status = usbh_ctl_handler (puhost);
+    status = usbh_ctl_handler (uhost);
 
     if (USBH_OK == status) {
         /* commands successfully sent and response received */
-        usbh_strdesc_parse (puhost->dev_prop.data, buf, len);
+        usbh_strdesc_parse (uhost->dev_prop.data, buf, len);
     }
 
     return status;
@@ -185,16 +186,16 @@ usbh_status usbh_strdesc_get (usbh_host *puhost,
 
 /*!
     \brief      set the address to the connected device
-    \param[in]  puhost: pointer to USB host
+    \param[in]  uhost: pointer to USB host
     \param[in]  dev_addr: device address to assign
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_setaddress (usbh_host *puhost, uint8_t dev_addr)
+usbh_status usbh_setaddress (usbh_host *uhost, uint8_t dev_addr)
 {
     usbh_status status = USBH_BUSY;
 
-    usbh_control *usb_ctl = &puhost->control;
+    usbh_control *usb_ctl = &uhost->control;
 
     if (CTL_IDLE == usb_ctl->ctl_state) {
         usb_ctl->setup.req = (usb_req) {
@@ -205,26 +206,26 @@ usbh_status usbh_setaddress (usbh_host *puhost, uint8_t dev_addr)
             .wLength       = 0U
         };
 
-        usbh_ctlstate_config (puhost, NULL, 0U);
+        usbh_ctlstate_config (uhost, NULL, 0U);
     }
 
-    status = usbh_ctl_handler (puhost);
+    status = usbh_ctl_handler (uhost);
 
     return status;
 }
 
 /*!
     \brief      set the configuration value to the connected device
-    \param[in]  puhost: pointer to USB host
+    \param[in]  uhost: pointer to USB host
     \param[in]  config_index: configuration value
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_setcfg (usbh_host *puhost, uint16_t config_index)
+usbh_status usbh_setcfg (usbh_host *uhost, uint16_t config_index)
 {
     usbh_status status = USBH_BUSY;
 
-    usbh_control *usb_ctl = &puhost->control;
+    usbh_control *usb_ctl = &uhost->control;
 
     if (CTL_IDLE == usb_ctl->ctl_state) {
         usb_ctl->setup.req = (usb_req) {
@@ -235,27 +236,27 @@ usbh_status usbh_setcfg (usbh_host *puhost, uint16_t config_index)
             .wLength       = 0U
         };
 
-        usbh_ctlstate_config (puhost, NULL, 0U);
+        usbh_ctlstate_config (uhost, NULL, 0U);
     }
 
-    status = usbh_ctl_handler (puhost);
+    status = usbh_ctl_handler (uhost);
 
     return status;
 }
 
 /*!
     \brief      set the interface value to the connected device
-    \param[in]  puhost: pointer to USB host
+    \param[in]  uhost: pointer to USB host
     \param[in]  itf_num: interface number
     \param[in]  set: alternated setting value
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_setinterface (usbh_host *puhost, uint8_t itf_num, uint8_t set)
+usbh_status usbh_setinterface (usbh_host *uhost, uint8_t itf_num, uint8_t set)
 {
     usbh_status status = USBH_BUSY;
 
-    usbh_control *usb_ctl = &puhost->control;
+    usbh_control *usb_ctl = &uhost->control;
 
     if (CTL_IDLE == usb_ctl->ctl_state) {
         usb_ctl->setup.req = (usb_req) {
@@ -266,27 +267,27 @@ usbh_status usbh_setinterface (usbh_host *puhost, uint8_t itf_num, uint8_t set)
             .wLength       = 0U
         };
 
-        usbh_ctlstate_config (puhost, NULL, 0U);
+        usbh_ctlstate_config (uhost, NULL, 0U);
     }
 
-    status = usbh_ctl_handler (puhost);
+    status = usbh_ctl_handler (uhost);
 
     return status;
 }
 
 /*!
     \brief      set the interface value to the connected device
-    \param[in]  puhost: pointer to USB host
+    \param[in]  uhost: pointer to USB host
     \param[in]  feature_selector: feature selector
     \param[in]  windex: index value
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_setdevfeature (usbh_host *puhost, uint8_t feature_selector, uint16_t windex)
+usbh_status usbh_setdevfeature (usbh_host *uhost, uint8_t feature_selector, uint16_t windex)
 {
     usbh_status status = USBH_BUSY;
 
-    usbh_control *usb_ctl = &puhost->control;
+    usbh_control *usb_ctl = &uhost->control;
 
     if (CTL_IDLE == usb_ctl->ctl_state) {
         usb_ctl->setup.req = (usb_req) {
@@ -297,27 +298,27 @@ usbh_status usbh_setdevfeature (usbh_host *puhost, uint8_t feature_selector, uin
             .wLength       = 0U
         };
 
-        usbh_ctlstate_config (puhost, NULL, 0U);
+        usbh_ctlstate_config (uhost, NULL, 0U);
     } 
 
-    status = usbh_ctl_handler (puhost);
+    status = usbh_ctl_handler (uhost);
 
     return status;
 }
 
 /*!
     \brief      clear the interface value to the connected device
-    \param[in]  puhost: pointer to USB host
+    \param[in]  uhost: pointer to USB host
     \param[in]  feature_selector: feature selector
     \param[in]  windex: index value
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_clrdevfeature (usbh_host *puhost, uint8_t feature_selector, uint16_t windex)
+usbh_status usbh_clrdevfeature (usbh_host *uhost, uint8_t feature_selector, uint16_t windex)
 {
     usbh_status status = USBH_BUSY;
 
-    usbh_control *usb_ctl = &puhost->control;
+    usbh_control *usb_ctl = &uhost->control;
 
     if (CTL_IDLE == usb_ctl->ctl_state) {
         usb_ctl->setup.req = (usb_req) {
@@ -328,27 +329,27 @@ usbh_status usbh_clrdevfeature (usbh_host *puhost, uint8_t feature_selector, uin
             .wLength       = 0U
         };
 
-        usbh_ctlstate_config (puhost, NULL, 0U);
+        usbh_ctlstate_config (uhost, NULL, 0U);
     } 
 
-    status = usbh_ctl_handler (puhost);
+    status = usbh_ctl_handler (uhost);
 
     return status;
 }
 
 /*!
     \brief      clear or disable a specific feature
-    \param[in]  puhost: pointer to USB host
+    \param[in]  uhost: pointer to USB host
     \param[in]  ep_addr: endpoint address
     \param[in]  pp_num: pipe number
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_clrfeature (usbh_host *puhost, uint8_t ep_addr, uint8_t pp_num)
+usbh_status usbh_clrfeature (usbh_host *uhost, uint8_t ep_addr, uint8_t pp_num)
 {
     usbh_status status = USBH_BUSY;
-    usbh_control *usb_ctl = &puhost->control;
-    usb_core_driver *pudev = (usb_core_driver *)puhost->data;
+    usbh_control *usb_ctl = &uhost->control;
+    usb_core_driver *udev = (usb_core_driver *)uhost->data;
 
     if (CTL_IDLE == usb_ctl->ctl_state) {
         usb_ctl->setup.req = (usb_req) {
@@ -359,16 +360,16 @@ usbh_status usbh_clrfeature (usbh_host *puhost, uint8_t ep_addr, uint8_t pp_num)
             .wLength       = 0U
         };
 
-        if (EP_ID(ep_addr) == pudev->host.pipe[pp_num].ep.num) {
-            usbh_pipe_toggle_set(pudev, pp_num, 0U);
+        if (EP_ID(ep_addr) == udev->host.pipe[pp_num].ep.num) {
+            usbh_pipe_toggle_set(udev, pp_num, 0U);
         } else {
             return USBH_FAIL;
         }
 
-        usbh_ctlstate_config (puhost, NULL, 0U);
+        usbh_ctlstate_config (uhost, NULL, 0U);
     } 
 
-    status = usbh_ctl_handler (puhost);
+    status = usbh_ctl_handler (uhost);
 
     return status;
 }
@@ -376,7 +377,7 @@ usbh_status usbh_clrfeature (usbh_host *puhost, uint8_t ep_addr, uint8_t pp_num)
 /*!
     \brief      get the next descriptor header
     \param[in]  pbuf: pointer to buffer where the configuration descriptor set is available
-    \param[in]  ptr: data popinter inside the configuration descriptor set
+    \param[in]  ptr: data pointer inside the configuration descriptor set
     \param[out] none
     \retval     return descriptor header
 */
@@ -392,7 +393,7 @@ usb_desc_header *usbh_nextdesc_get (uint8_t *pbuf, uint16_t *ptr)
 }
 
 /*!
-    \brief      select a interface
+    \brief      get the next descriptor header
     \param[in]  udev: pointer to device property
     \param[in]  interface: interface number
     \param[out] none

@@ -4,10 +4,12 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2020-12-07, V1.1.1, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -198,9 +200,9 @@ usb_desc custom_hid_desc = {
 
 __ALIGN_BEGIN const uint8_t customhid_report_descriptor[DESC_LEN_REPORT] __ALIGN_END =
 {
-    0x05, 0x01,     /* USAGE_PAGE (Generic Desktop) */
-    0x09, 0x00,     /* USAGE (Custom Device)        */
-    0xa1, 0x01,     /* COLLECTION (Application)     */
+    0x06, 0x00, 0xFF,  /* USAGE_PAGE (Vendor Defined: 0xFF00) */
+    0x09, 0x00,        /* USAGE (Custom Device)               */
+    0xa1, 0x01,        /* COLLECTION (Application)            */
 
     /* led 1 */
     0x85, 0x11,     /* REPORT_ID (0x11)          */
@@ -220,7 +222,7 @@ __ALIGN_BEGIN const uint8_t customhid_report_descriptor[DESC_LEN_REPORT] __ALIGN
     0x95, 0x01,     /* REPORT_COUNT (1)          */
     0x91, 0x82,     /* OUTPUT (Data,Var,Abs,Vol) */
 
-    /* led 3 */        
+    /* led 3 */
     0x85, 0x13,     /* REPORT_ID (0x13)          */
     0x09, 0x03,     /* USAGE (LED 3)             */
     0x15, 0x00,     /* LOGICAL_MINIMUM (0)       */
@@ -238,27 +240,27 @@ __ALIGN_BEGIN const uint8_t customhid_report_descriptor[DESC_LEN_REPORT] __ALIGN
     0x95, 0x01,     /* REPORT_COUNT (1)          */
     0x91, 0x82,     /* OUTPUT (Data,Var,Abs,Vol) */
 
-    /* wakeup key */  
+    /* wakeup key */
     0x85, 0x15,     /* REPORT_ID (0x15)          */
     0x09, 0x05,     /* USAGE (Push Button)       */
     0x15, 0x00,     /* LOGICAL_MINIMUM (0)       */
     0x25, 0x01,     /* LOGICAL_MAXIMUM (1)       */
     0x75, 0x01,     /* REPORT_SIZE (1)           */
-    0x81, 0x82,     /* INPUT (Data,Var,Abs,Vol)  */
+    0x81, 0x02,     /* INPUT (Data,Var,Abs,Vol)  */
 
     0x75, 0x07,     /* REPORT_SIZE (7)           */
-    0x81, 0x83,     /* INPUT (Cnst,Var,Abs,Vol)  */
+    0x81, 0x03,     /* INPUT (Cnst,Var,Abs,Vol)  */
 
-    /* tamper key */  
+    /* tamper key */
     0x85, 0x16,     /* REPORT_ID (0x16)          */
     0x09, 0x06,     /* USAGE (Push Button)       */
     0x15, 0x00,     /* LOGICAL_MINIMUM (0)       */
     0x25, 0x01,     /* LOGICAL_MAXIMUM (1)       */
     0x75, 0x01,     /* REPORT_SIZE (1)           */
-    0x81, 0x82,     /* INPUT (Data,Var,Abs,Vol)  */
+    0x81, 0x02,     /* INPUT (Data,Var,Abs,Vol)  */
 
     0x75, 0x07,     /* REPORT_SIZE (7)           */
-    0x81, 0x83,     /* INPUT (Cnst,Var,Abs,Vol)  */
+    0x81, 0x03,     /* INPUT (Cnst,Var,Abs,Vol)  */
 
     0xc0            /* END_COLLECTION            */
 };
@@ -288,7 +290,7 @@ usb_class_core usbd_custom_hid_cb =
 /*!
     \brief      register HID interface operation functions
     \param[in]  udev: pointer to USB device instance
-    \param[in]  hid_fop: HID operation functuons structure
+    \param[in]  hid_fop: HID operation functions structure
     \param[out] none
     \retval     USB device operation status
 */
@@ -329,12 +331,12 @@ static uint8_t custom_hid_init (usb_dev *udev, uint8_t config_index)
 {
     static custom_hid_handler hid_handler;
 
-    memset((void *)&hid_handler, 0, sizeof(custom_hid_handler));
+    memset((void *)&hid_handler, 0U, sizeof(custom_hid_handler));
 
-    /* Initialize the data Tx endpoint */
+    /* initialize the data TX endpoint */
     usbd_ep_setup (udev, &(custom_hid_config_desc.hid_epin));
 
-    /* Initialize the data Rx endpoint */
+    /* Initialize the data RX endpoint */
     usbd_ep_setup (udev, &(custom_hid_config_desc.hid_epout));
 
     /* prepare receive data */
@@ -445,48 +447,45 @@ static uint8_t custom_hid_data_out (usb_dev *udev, uint8_t ep_num)
 {
     custom_hid_handler *hid = (custom_hid_handler *)udev->dev.class_data[CUSTOM_HID_INTERFACE];
 
-    if ((CUSTOMHID_OUT_EP & 0x7FU) == ep_num) {
-        switch (hid->data[0]){
-        case 0x11:
-            if (RESET != hid->data[1]) {
-                gd_eval_led_on(LED1);
-            } else {
-                gd_eval_led_off(LED1);
-            }
-            break;
-
-        case 0x12:
-            if (RESET != hid->data[1]) {
-                gd_eval_led_on(LED2);
-            } else {
-                gd_eval_led_off(LED2);
-            }
-            break;
-
-        case 0x13:
-            if (RESET != hid->data[1]) {
-                gd_eval_led_on(LED3);
-            } else {
-                gd_eval_led_off(LED3);
-            }
-            break;
-
-        case 0x14:
-            if (RESET != hid->data[1]) {
-                gd_eval_led_on(LED4);
-            } else {
-                gd_eval_led_off(LED4);
-            }
-            break;
-
-        default:
-            break;
+    switch (hid->data[0]){
+    case 0x11U:
+        if (RESET != hid->data[1]) {
+            gd_eval_led_on(LED1);
+        } else {
+            gd_eval_led_off(LED1);
         }
-    
-        usbd_ep_recev (udev, CUSTOMHID_IN_EP, hid->data, 2U);
+        break;
 
-        return USBD_OK;
-   }
+    case 0x12U:
+        if (RESET != hid->data[1]) {
+            gd_eval_led_on(LED2);
+        } else {
+            gd_eval_led_off(LED2);
+        }
+        break;
 
-   return USBD_FAIL;
+    case 0x13U:
+        if (RESET != hid->data[1]) {
+            gd_eval_led_on(LED3);
+        } else {
+            gd_eval_led_off(LED3);
+        }
+        break;
+
+    case 0x14U:
+        if (RESET != hid->data[1]) {
+            gd_eval_led_on(LED4);
+        } else {
+            gd_eval_led_off(LED4);
+        }
+        break;
+
+    default:
+        break;
+    }
+
+    usbd_ep_recev (udev, CUSTOMHID_IN_EP, hid->data, 2U);
+
+    return USBD_OK;
+
 }

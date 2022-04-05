@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -168,7 +169,7 @@ typedef struct
 
 typedef struct _usb_regs
 {
-    usb_gr       *gr;                               /*!< USBFS global registers */
+    usb_gr       *gr;                               /*!< USBHS global registers */
     usb_dr       *dr;                               /*!< Device control and status registers */
     usb_hr       *hr;                               /*!< Host control and status registers */
     usb_erin     *er_in[6];                         /*!< USB device IN endpoint register */

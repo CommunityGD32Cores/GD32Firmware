@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -95,8 +96,9 @@ void dbg_low_power_disable(uint32_t dbg_low_power)
                 only one parameter can be selected which is shown as below:
       \arg        DBG_FWDGT_HOLD : hold FWDGT counter when core is halted
       \arg        DBG_WWDGT_HOLD : hold WWDGT counter when core is halted
+      \arg        DBG_CANx_HOLD (x=0,1,2 CAN2 is only available for CL series): hold CANx receive register counter when core is halted
       \arg        DBG_I2Cx_HOLD (x=0,1,2): hold I2Cx smbus timeout when core is halted
-      \arg        DBG_TIMERx_HOLD (x=0,1,2,3,4,5,6,7,8,9,10,11,12,13): hold TIMERx counter when core is halted
+      \arg        DBG_TIMERx_HOLD (x=0,1,2,3,4,5,6,7,8,9,10,11,12,13,TIMER8..13 are not available for GD32EPRT series): hold TIMERx counter when core is halted
       \arg        DBG_SHRTIMER_HOLD : hold SHRTIMER counter when core is halted, except for GD32EPRT series
     \param[out] none
     \retval     none
@@ -112,8 +114,9 @@ void dbg_periph_enable(dbg_periph_enum dbg_periph)
                 only one parameter can be selected which is shown as below:
       \arg        DBG_FWDGT_HOLD : hold FWDGT counter when core is halted
       \arg        DBG_WWDGT_HOLD : hold WWDGT counter when core is halted
+      \arg        DBG_CANx_HOLD (x=0,1,2 CAN2 is only available for CL series): hold CANx receive register counter when core is halted
       \arg        DBG_I2Cx_HOLD (x=0,1,2): hold I2Cx smbus timeout when core is halted
-      \arg        DBG_TIMERx_HOLD (x=0,1,2,3,4,5,6,7,8,9,10,11,12,13): hold TIMERx counter when core is halted
+      \arg        DBG_TIMERx_HOLD (x=0,1,2,3,4,5,6,7,8,9,10,11,12,13,TIMER8..13 are not available for GD32EPRT series): hold TIMERx counter when core is halted
       \arg        DBG_SHRTIMER_HOLD : hold SHRTIMER counter when core is halted, except for GD32EPRT series
     \param[out] none
     \retval     none

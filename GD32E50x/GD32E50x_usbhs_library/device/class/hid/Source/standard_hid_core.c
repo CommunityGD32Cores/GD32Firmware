@@ -4,10 +4,12 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2020-12-07, V1.1.1, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -127,6 +129,80 @@ __ALIGN_BEGIN const usb_hid_desc_config_set hid_config_desc __ALIGN_END =
     }
 };
 
+__ALIGN_BEGIN const usb_hid_desc_config_set other_speed_hid_config_desc __ALIGN_END = 
+{
+    .config = 
+    {
+        .header = 
+         {
+             .bLength         = sizeof(usb_desc_config), 
+             .bDescriptorType = USB_DESCTYPE_OTHER_SPD_CONFIG 
+         },
+        .wTotalLength         = USB_HID_CONFIG_DESC_LEN,
+        .bNumInterfaces       = 0x01U,
+        .bConfigurationValue  = 0x01U,
+        .iConfiguration       = 0x00U,
+        .bmAttributes         = 0xA0U,
+        .bMaxPower            = 0x32U
+    },
+
+    .hid_itf = 
+    {
+        .header = 
+         {
+             .bLength         = sizeof(usb_desc_itf), 
+             .bDescriptorType = USB_DESCTYPE_ITF
+         },
+        .bInterfaceNumber     = 0x00U,
+        .bAlternateSetting    = 0x00U,
+        .bNumEndpoints        = 0x01U,
+        .bInterfaceClass      = USB_HID_CLASS,
+        .bInterfaceSubClass   = USB_HID_SUBCLASS_BOOT_ITF,
+        .bInterfaceProtocol   = USB_HID_PROTOCOL_KEYBOARD,
+        .iInterface           = 0x00U
+    },
+
+    .hid_vendor = 
+    {
+        .header = 
+         {
+             .bLength         = sizeof(usb_desc_hid), 
+             .bDescriptorType = USB_DESCTYPE_HID 
+         },
+        .bcdHID               = 0x0111U,
+        .bCountryCode         = 0x00U,
+        .bNumDescriptors      = 0x01U,
+        .bDescriptorType      = USB_DESCTYPE_REPORT,
+        .wDescriptorLength    = USB_HID_REPORT_DESC_LEN,
+    },
+
+    .hid_epin = 
+    {
+        .header = 
+         {
+             .bLength         = sizeof(usb_desc_ep), 
+             .bDescriptorType = USB_DESCTYPE_EP
+         },
+        .bEndpointAddress     = HID_IN_EP,
+        .bmAttributes         = USB_EP_ATTR_INT,
+        .wMaxPacketSize       = HID_IN_PACKET,
+        .bInterval            = 0x01U
+    }
+};
+
+__ALIGN_BEGIN const uint8_t usbd_qualifier_desc[10] __ALIGN_END = 
+{
+    0x0A, 
+    0x06,
+    0x00, 
+    0x02,
+    0x00, 
+    0x00,
+    0x00, 
+    0x40,
+    0x01, 
+    0x00
+};
 
 #if (1 == LPM_ENABLED)
 
@@ -208,6 +284,11 @@ usb_desc hid_desc = {
 #if (1 == LPM_ENABLED)
     .bos_desc = (uint8_t *)&usbd_bos_desc,
 #endif /* LPM_ENABLED */
+    
+#ifdef USE_USB_HS
+    .other_speed_config_desc = (uint8_t *)&other_speed_hid_config_desc,
+    .qualifier_desc = (uint8_t *)&usbd_qualifier_desc,
+#endif
     .strings     = usbd_hid_strings
 };
 
@@ -232,7 +313,9 @@ __ALIGN_BEGIN const uint8_t hid_report_desc[USB_HID_REPORT_DESC_LEN] __ALIGN_END
 
     0x95, 0x06,  /* REPORT_COUNT (6) */
     0x75, 0x08,  /* REPORT_SIZE (8) */
-    0x25, 0xFF,  /* LOGICAL_MAXIMUM (255) */
+    0x15, 0x00,  /* LOGICAL_MINIMUM (0) */
+    0x26, 0xFF, 0x00,  /* LOGICAL_MAXIMUM (255) */
+    0x05, 0x07,  /* USAGE_PAGE (Keyboard/Keypad) */
     0x19, 0x00,  /* USAGE_MINIMUM (Reserved (no event indicated)) */
     0x29, 0x65,  /* USAGE_MAXIMUM (Keyboard Application) */
     0x81, 0x00,  /* INPUT (Data,Ary,Abs) */
@@ -244,7 +327,7 @@ __ALIGN_BEGIN const uint8_t hid_report_desc[USB_HID_REPORT_DESC_LEN] __ALIGN_END
 static uint8_t hid_init    (usb_dev *udev, uint8_t config_index);
 static uint8_t hid_deinit  (usb_dev *udev, uint8_t config_index);
 static uint8_t hid_req     (usb_dev *udev, usb_req *req);
-static uint8_t hid_data_in (usb_dev *udev, uint8_t ep_num);
+static uint8_t hid_ctlx_in (usb_dev *udev);
 
 usb_class_core usbd_hid_cb = {
     .command         = NO_CMD,
@@ -253,13 +336,13 @@ usb_class_core usbd_hid_cb = {
     .init            = hid_init,
     .deinit          = hid_deinit,
     .req_proc        = hid_req,
-    .data_in         = hid_data_in
+    .ctlx_in         = hid_ctlx_in
 };
 
 /*!
     \brief      register HID interface operation functions
     \param[in]  udev: pointer to USB device instance
-    \param[in]  hid_fop: HID operation functuons structure
+    \param[in]  hid_fop: HID operation function structure
     \param[out] none
     \retval     USB device operation status
 */
@@ -304,9 +387,9 @@ static uint8_t hid_init (usb_dev *udev, uint8_t config_index)
 {
     static standard_hid_handler hid_handler;
 
-    memset((void *)&hid_handler, 0, sizeof(standard_hid_handler));
+    memset((void *)&hid_handler, 0U, sizeof(standard_hid_handler));
 
-    /* Initialize the data Tx endpoint */
+    /* initialize the data TX endpoint */
     usbd_ep_setup (udev, &(hid_config_desc.hid_epin));
 
     hid_handler.prev_transfer_complete = 1U;
@@ -383,6 +466,9 @@ static uint8_t hid_req (usb_dev *udev, usb_req *req)
             transc->xfer_buf = (uint8_t *)hid_report_desc;
 
             return REQ_SUPP;
+        } else if (USB_DESCTYPE_HID == (req->wValue >> 8U)) {
+            transc->remain_len = USB_MIN(9U, req->wLength);
+            transc->xfer_buf = (uint8_t *)(&(hid_config_desc.hid_vendor));
         }
         break;
 
@@ -400,11 +486,11 @@ static uint8_t hid_req (usb_dev *udev, usb_req *req)
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t hid_data_in (usb_dev *udev, uint8_t ep_num)
+static uint8_t hid_ctlx_in (usb_dev *udev)
 {
     standard_hid_handler *hid = (standard_hid_handler *)udev->dev.class_data[USBD_HID_INTERFACE];
 
-    if (hid->data[2] != 0U) {
+    if (0U != hid->data[2]) {
         hid->data[2] = 0x00U;
 
         usbd_ep_send(udev, HID_IN_EP, hid->data, HID_IN_PACKET);

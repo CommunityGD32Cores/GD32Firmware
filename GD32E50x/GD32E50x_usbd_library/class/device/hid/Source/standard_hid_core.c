@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -35,7 +36,6 @@ OF SUCH DAMAGE.
 
 #include "usbd_transc.h"
 #include "standard_hid_core.h"
-
 #include <string.h>
 
 #define USBD_VID                     0x28E9U
@@ -185,7 +185,7 @@ static usb_desc_str product_string =
     .unicode_string = {'G', 'D', '3', '2', '-', 'U', 'S', 'B', '_', 'K', 'e', 'y', 'b', 'o', 'a', 'r', 'd'}
 };
 
-/* USBD serial string */
+/* USB serial string */
 static usb_desc_str serial_string = 
 {
     .header = 
@@ -195,7 +195,8 @@ static usb_desc_str serial_string =
      }
 };
 
-uint8_t* usbd_hid_strings[] = 
+/* USB string descriptor set */
+static uint8_t* usbd_hid_strings[] = 
 {
     [STR_IDX_LANGID]  = (uint8_t *)&usbd_language_id_desc,
     [STR_IDX_MFC]     = (uint8_t *)&manufacturer_string,
@@ -212,6 +213,7 @@ usb_desc hid_desc = {
     .strings     = usbd_hid_strings
 };
 
+/* local function prototypes ('static') */
 static uint8_t hid_init            (usb_dev *udev, uint8_t config_index);
 static uint8_t hid_deinit          (usb_dev *udev, uint8_t config_index);
 static uint8_t hid_req_handler     (usb_dev *udev, usb_req *req);
@@ -245,7 +247,9 @@ const uint8_t hid_report_desc[USB_HID_REPORT_DESC_LEN] =
 
     0x95, 0x06,  /* REPORT_COUNT (6) */
     0x75, 0x08,  /* REPORT_SIZE (8) */
-    0x25, 0xFF,  /* LOGICAL_MAXIMUM (255) */
+    0x15, 0x00,  /* LOGICAL_MINIMUM (0) */
+    0x26, 0xFF, 0x00,  /* LOGICAL_MAXIMUM (255) */
+    0x05, 0x07,  /* USAGE_PAGE (Keyboard/Keypad) */
     0x19, 0x00,  /* USAGE_MINIMUM (Reserved (no event indicated)) */
     0x29, 0x65,  /* USAGE_MAXIMUM (Keyboard Application) */
     0x81, 0x00,  /* INPUT (Data,Ary,Abs) */
@@ -256,7 +260,7 @@ const uint8_t hid_report_desc[USB_HID_REPORT_DESC_LEN] =
 /*!
     \brief      register HID interface operation functions
     \param[in]  udev: pointer to USB device instance
-    \param[in]  hid_fop: HID operation functuons structure
+    \param[in]  hid_fop: HID operation functions structure
     \param[out] none
     \retval     USB device operation status
 */
@@ -272,7 +276,7 @@ uint8_t hid_itfop_register (usb_dev *udev, hid_fop_handler *hid_fop)
 }
 
 /*!
-    \brief      send keyboard report
+    \brief      send HID report
     \param[in]  udev: pointer to USB device instance
     \param[in]  report: pointer to HID report
     \param[in]  len: data length
@@ -304,7 +308,7 @@ static uint8_t hid_init (usb_dev *udev, uint8_t config_index)
 
     memset((void *)&hid_handler, 0, sizeof(standard_hid_handler));
 
-    /* initialize Tx endpoint */
+    /* initialize TX endpoint */
     usbd_ep_init(udev, EP_BUF_SNG, INT_TX_ADDR, &(hid_config_desc.hid_epin));
 
     udev->ep_transc[EP_ID(HID_IN_EP)][TRANSC_IN] = hid_class.data_in;
@@ -389,6 +393,11 @@ static uint8_t hid_req_handler (usb_dev *udev, usb_req *req)
                               0U);
 
             status = REQ_SUPP;
+        } else if (USB_DESCTYPE_HID == (req->wValue >> 8U)) {
+            usb_transc_config(&udev->transc_in[0U], 
+                              (uint8_t *)(&(hid_config_desc.hid_vendor)), 
+                              USB_MIN(9U, req->wLength), 
+                              0U);
         }
         break;
 

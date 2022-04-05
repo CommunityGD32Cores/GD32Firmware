@@ -61,9 +61,6 @@
 #define SEL_IRC8M       0x00
 #define SEL_HXTAL       0x01
 #define SEL_PLL         0x02
-#define RCU_MODIFY      {volatile uint32_t i; \
-                         RCU_CFG0 |= RCU_AHB_CKSYS_DIV2; \
-                         for(i=0;i<20000;i++);}
 
 /* set the system clock frequency and declare the system clock configuration function */
 #ifdef __SYSTEM_CLOCK_IRC8M
@@ -118,8 +115,6 @@ void SystemInit (void)
     /* Set IRC8MEN bit */
     RCU_CTL |= RCU_CTL_IRC8MEN;
 
-    RCU_MODIFY
-
     /* Reset CFG0 and CFG1 registers */
     RCU_CFG0 = 0x00000000U;
     RCU_CFG1 = 0x00000000U;
@@ -129,7 +124,7 @@ void SystemInit (void)
     RCU_CTL &= ~(RCU_CTL_PLLEN | RCU_CTL_CKMEN | RCU_CTL_HXTALEN);
     /* disable all interrupts */
     RCU_INT = 0x009f0000U;
-#elif defined(GD32E50X_CL)
+#elif (defined(GD32E50X_CL) || defined(GD32E508))
     /* Reset HXTALEN, CKMEN, PLLEN, PLL1EN and PLL2EN bits */
     RCU_CTL &= ~(RCU_CTL_PLLEN |RCU_CTL_PLL1EN | RCU_CTL_PLL2EN | RCU_CTL_CKMEN | RCU_CTL_HXTALEN);
     /* disable all interrupts */
@@ -588,7 +583,7 @@ static void system_clock_72m_hxtal(void)
     /* APB1 = AHB/2 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV2;
 
-#if (defined(GD32EPRT) || defined(GD32E50X_HD) || defined(GD32E50X_XD))
+#if (defined(GD32E50X_HD) || defined(GD32E50X_XD))
     /* select HXTAL/2 as clock source */
     RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PREDV0);
     RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | RCU_CFG0_PREDV0);
@@ -597,7 +592,7 @@ static void system_clock_72m_hxtal(void)
     RCU_CFG0 &= ~(RCU_CFG0_PLLMF | RCU_CFG0_PLLMF_4 | RCU_CFG0_PLLMF_5);
     RCU_CFG0 |= RCU_PLL_MUL18;
 
-#elif defined(GD32E50X_CL)
+#elif (defined(GD32E50X_CL) || defined(GD32E508))
     /* CK_PLL = (CK_PREDIV0) * 18 = 72 MHz */ 
     RCU_CFG0 &= ~(RCU_CFG0_PLLMF | RCU_CFG0_PLLMF_4 | RCU_CFG0_PLLMF_5);
     RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | RCU_PLL_MUL18);
@@ -611,7 +606,22 @@ static void system_clock_72m_hxtal(void)
     /* wait till PLL1 is ready */
     while((RCU_CTL & RCU_CTL_PLL1STB) == 0U){
     }
-#endif /* GD32F50X_EPRT and GD32F50X_HD and GD32F50X_XD */
+
+#elif defined(GD32EPRT)
+    /* CK_PLL = (CK_PREDIV0) * 18 = 72 MHz */ 
+    RCU_CFG0 &= ~(RCU_CFG0_PLLMF | RCU_CFG0_PLLMF_4 | RCU_CFG0_PLLMF_5);
+    RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | RCU_PLL_MUL18);
+
+    /* CK_PREDIV0 = (CK_HXTAL)/2 *8 /8 = 4 MHz */ 
+    RCU_CFG1 &= ~(RCU_CFG1_PLLPRESEL | RCU_CFG1_PREDV0SEL | RCU_CFG1_PLL1MF | RCU_CFG1_PREDV1 | RCU_CFG1_PREDV0);
+    RCU_CFG1 |= (RCU_PLLPRESRC_HXTAL | RCU_PREDV0SRC_CKPLL1 | RCU_PLL1_MUL8 | RCU_PREDV1_DIV2 | RCU_PREDV0_DIV8);
+
+    /* enable PLL1 */
+    RCU_CTL |= RCU_CTL_PLL1EN;
+    /* wait till PLL1 is ready */
+    while((RCU_CTL & RCU_CTL_PLL1STB) == 0U){
+    }
+#endif /* GD32F50X_HD and GD32F50X_XD */
 
     /* enable PLL */
     RCU_CTL |= RCU_CTL_PLLEN;
@@ -677,7 +687,7 @@ static void system_clock_120m_hxtal(void)
     /* APB1 = AHB/2 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV2;
 
-#if (defined(GD32EPRT) || defined(GD32E50X_HD) || defined(GD32E50X_XD))
+#if (defined(GD32E50X_HD) || defined(GD32E50X_XD))
     /* select HXTAL/2 as clock source */
     RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PREDV0);
     RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | RCU_CFG0_PREDV0);
@@ -686,7 +696,7 @@ static void system_clock_120m_hxtal(void)
     RCU_CFG0 &= ~(RCU_CFG0_PLLMF | RCU_CFG0_PLLMF_4 | RCU_CFG0_PLLMF_5);
     RCU_CFG0 |= RCU_PLL_MUL30;
 
-#elif defined(GD32E50X_CL)
+#elif (defined(GD32E50X_CL) || defined(GD32E508))
     /* CK_PLL = (CK_PREDIV0) * 30 = 120 MHz */ 
     RCU_CFG0 &= ~(RCU_CFG0_PLLMF | RCU_CFG0_PLLMF_4 | RCU_CFG0_PLLMF_5);
     RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | RCU_PLL_MUL30);
@@ -700,7 +710,22 @@ static void system_clock_120m_hxtal(void)
     /* wait till PLL1 is ready */
     while((RCU_CTL & RCU_CTL_PLL1STB) == 0U){
     }
-#endif /* GD32F50X_EPRT and GD32F50X_HD and GD32F50X_XD */
+
+#elif defined(GD32EPRT)
+    /* CK_PLL = (CK_PREDIV0) * 30 = 120 MHz */ 
+    RCU_CFG0 &= ~(RCU_CFG0_PLLMF | RCU_CFG0_PLLMF_4 | RCU_CFG0_PLLMF_5);
+    RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | RCU_PLL_MUL30);
+
+    /* CK_PREDIV0 = (CK_HXTAL)/2 *8 /8 = 4 MHz */ 
+    RCU_CFG1 &= ~(RCU_CFG1_PLLPRESEL | RCU_CFG1_PREDV0SEL | RCU_CFG1_PLL1MF | RCU_CFG1_PREDV1 | RCU_CFG1_PREDV0);
+    RCU_CFG1 |= (RCU_PLLPRESRC_HXTAL | RCU_PREDV0SRC_CKPLL1 | RCU_PLL1_MUL8 | RCU_PREDV1_DIV2 | RCU_PREDV0_DIV8);
+
+    /* enable PLL1 */
+    RCU_CTL |= RCU_CTL_PLL1EN;
+    /* wait till PLL1 is ready */
+    while((RCU_CTL & RCU_CTL_PLL1STB) == 0U){
+    }
+#endif /* GD32F50X_HD and GD32F50X_XD */
 
     /* enable PLL */
     RCU_CTL |= RCU_CTL_PLLEN;
@@ -767,7 +792,7 @@ static void system_clock_168m_hxtal(void)
     /* APB1 = AHB/2 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV2;
 
-#if (defined(GD32EPRT) || defined(GD32E50X_HD) || defined(GD32E50X_XD))
+#if (defined(GD32E50X_HD) || defined(GD32E50X_XD))
     /* select HXTAL/2 as clock source */
     RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PREDV0);
     RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | RCU_CFG0_PREDV0);
@@ -776,7 +801,7 @@ static void system_clock_168m_hxtal(void)
     RCU_CFG0 &= ~(RCU_CFG0_PLLMF | RCU_CFG0_PLLMF_4 | RCU_CFG0_PLLMF_5);
     RCU_CFG0 |= RCU_PLL_MUL42;
 
-#elif defined(GD32E50X_CL)
+#elif (defined(GD32E50X_CL) || defined(GD32E508))
     /* CK_PLL = (CK_PREDIV0) * 42 = 168 MHz */ 
     RCU_CFG0 &= ~(RCU_CFG0_PLLMF | RCU_CFG0_PLLMF_4 | RCU_CFG0_PLLMF_5);
     RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | RCU_PLL_MUL42);
@@ -790,7 +815,22 @@ static void system_clock_168m_hxtal(void)
     /* wait till PLL1 is ready */
     while((RCU_CTL & RCU_CTL_PLL1STB) == 0U){
     }
-#endif /* GD32F50X_EPRT and GD32F50X_HD and GD32F50X_XD */
+
+#elif defined(GD32EPRT)
+    /* CK_PLL = (CK_PREDIV0) * 42 = 168 MHz */ 
+    RCU_CFG0 &= ~(RCU_CFG0_PLLMF | RCU_CFG0_PLLMF_4 | RCU_CFG0_PLLMF_5);
+    RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | RCU_PLL_MUL42);
+
+    /* CK_PREDIV0 = (CK_HXTAL)/2 *8 /8 = 4 MHz */ 
+    RCU_CFG1 &= ~(RCU_CFG1_PLLPRESEL | RCU_CFG1_PREDV0SEL | RCU_CFG1_PLL1MF | RCU_CFG1_PREDV1 | RCU_CFG1_PREDV0);
+    RCU_CFG1 |= (RCU_PLLPRESRC_HXTAL | RCU_PREDV0SRC_CKPLL1 | RCU_PLL1_MUL8 | RCU_PREDV1_DIV2 | RCU_PREDV0_DIV8);
+
+    /* enable PLL1 */
+    RCU_CTL |= RCU_CTL_PLL1EN;
+    /* wait till PLL1 is ready */
+    while((RCU_CTL & RCU_CTL_PLL1STB) == 0U){
+    }
+#endif /* GD32F50X_HD and GD32F50X_XD */
 
     /* enable PLL */
     RCU_CTL |= RCU_CTL_PLLEN;
@@ -857,7 +897,7 @@ static void system_clock_180m_hxtal(void)
     /* APB1 = AHB/2 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV2;
 
-#if (defined(GD32EPRT) || defined(GD32E50X_HD) || defined(GD32E50X_XD))
+#if (defined(GD32E50X_HD) || defined(GD32E50X_XD))
     /* select HXTAL/2 as clock source */
     RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PREDV0);
     RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | RCU_CFG0_PREDV0);
@@ -866,7 +906,7 @@ static void system_clock_180m_hxtal(void)
     RCU_CFG0 &= ~(RCU_CFG0_PLLMF | RCU_CFG0_PLLMF_4 | RCU_CFG0_PLLMF_5);
     RCU_CFG0 |= RCU_PLL_MUL45;
 
-#elif defined(GD32E50X_CL)
+#elif (defined(GD32E50X_CL) || defined(GD32E508))
     /* CK_PLL = (CK_PREDIV0) * 45 = 180 MHz */ 
     RCU_CFG0 &= ~(RCU_CFG0_PLLMF | RCU_CFG0_PLLMF_4 | RCU_CFG0_PLLMF_5);
     RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | RCU_PLL_MUL45);
@@ -880,7 +920,22 @@ static void system_clock_180m_hxtal(void)
     /* wait till PLL1 is ready */
     while((RCU_CTL & RCU_CTL_PLL1STB) == 0U){
     }
-#endif /* GD32F50X_EPRT and GD32F50X_HD and GD32F50X_XD */
+
+#elif defined(GD32EPRT)
+    /* CK_PLL = (CK_PREDIV0) * 45 = 180 MHz */ 
+    RCU_CFG0 &= ~(RCU_CFG0_PLLMF | RCU_CFG0_PLLMF_4 | RCU_CFG0_PLLMF_5);
+    RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | RCU_PLL_MUL45);
+
+    /* CK_PREDIV0 = (CK_HXTAL)/2 *8 /8 = 4 MHz */ 
+    RCU_CFG1 &= ~(RCU_CFG1_PLLPRESEL | RCU_CFG1_PREDV0SEL | RCU_CFG1_PLL1MF | RCU_CFG1_PREDV1 | RCU_CFG1_PREDV0);
+    RCU_CFG1 |= (RCU_PLLPRESRC_HXTAL | RCU_PREDV0SRC_CKPLL1 | RCU_PLL1_MUL8 | RCU_PREDV1_DIV2 | RCU_PREDV0_DIV8);
+
+    /* enable PLL1 */
+    RCU_CTL |= RCU_CTL_PLL1EN;
+    /* wait till PLL1 is ready */
+    while((RCU_CTL & RCU_CTL_PLL1STB) == 0U){
+    }
+#endif /* GD32F50X_HD and GD32F50X_XD */
 
     /* enable PLL */
     RCU_CTL |= RCU_CTL_PLLEN;
@@ -917,10 +972,14 @@ static void system_clock_180m_hxtal(void)
 */
 void SystemCoreClockUpdate (void)
 {
-    uint32_t sws = 0U;
-    uint32_t pllmf = 0U, pllmf4 = 0U, pllsel = 0U, prediv = 0U, idx = 0U, clk_exp = 0U;
-    /* exponent of AHB clock divider */
-    const uint8_t ahb_exp[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
+    uint32_t sws;
+    uint32_t pllsel, pllpresel, predv0sel, pllmf, ck_src, idx, clk_exp;
+#if (defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508))
+    uint32_t predv0, predv1, pll1mf;
+#endif /* GD32E50X_CL and GD32EPRT*/
+
+    /* exponent of AHB, APB1 and APB2 clock divider */
+    uint8_t ahb_exp[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
 
     sws = GET_BITS(RCU_CFG0, 2, 3);
     switch(sws){
@@ -934,32 +993,73 @@ void SystemCoreClockUpdate (void)
         break;
     /* PLL is selected as CK_SYS */
     case SEL_PLL:
-        /* get the value of PLLMF[3:0] */
+        /* PLL clock source selection, HXTAL, IRC48M or IRC8M/2 */
+        pllsel = (RCU_CFG0 & RCU_CFG0_PLLSEL);
+
+        if(RCU_PLLSRC_HXTAL_IRC48M == pllsel) {
+            /* PLL clock source is HXTAL or IRC48M */
+            pllpresel = (RCU_CFG1 & RCU_CFG1_PLLPRESEL);
+            
+            if(RCU_PLLPRESRC_HXTAL == pllpresel){
+                /* PLL clock source is HXTAL */
+                ck_src = HXTAL_VALUE;
+            }else{
+                /* PLL clock source is IRC48 */
+                ck_src = IRC48M_VALUE;
+            }
+
+#if defined(GD32E50X_HD) || defined(GD32E50X_XD)
+            predv0sel = (RCU_CFG0 & RCU_CFG0_PREDV0);
+            /* PREDV0 input source clock divided by 2 */
+            if(RCU_CFG0_PREDV0 == predv0sel){
+                ck_src = HXTAL_VALUE/2U;
+            }
+#elif (defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508))
+            predv0sel = (RCU_CFG1 & RCU_CFG1_PREDV0SEL);
+            /* source clock use PLL1 */
+            if(RCU_PREDV0SRC_CKPLL1 == predv0sel){
+                predv1 = ((RCU_CFG1 & RCU_CFG1_PREDV1) >> ((uint32_t)4U)) + 1U;
+                pll1mf = (uint32_t)((RCU_CFG1 & RCU_CFG1_PLL1MF) >> ((uint32_t)8U)) + 2U;
+                if(15U == pll1mf){
+                    pll1mf = 20U;
+                }
+                ck_src = (ck_src/predv1)*pll1mf;
+            }
+            predv0 = (RCU_CFG1 & RCU_CFG1_PREDV0) + 1U;
+            ck_src /= predv0;
+#endif /* GD32E50X_HD and GD32E50X_XD */
+        }else{
+            /* PLL clock source is IRC8M/2 */
+            ck_src = IRC8M_VALUE/2U;
+        }
+
+        /* PLL multiplication factor */
         pllmf = GET_BITS(RCU_CFG0, 18, 21);
-        pllmf4 = GET_BITS(RCU_CFG0, 27, 27);
-        /* high 16 bits */
-        if(1U == pllmf4){
-            pllmf += 17U;
-        }else if(15U == pllmf){
-            pllmf = 16U;
-        }else{
+        if((RCU_CFG0 & RCU_CFG0_PLLMF_4)){
+            pllmf |= 0x10U;
+        }
+        if((RCU_CFG0 & RCU_CFG0_PLLMF_5)){
+            pllmf |= 0x20U;
+        }
+        if(pllmf < 15U){
             pllmf += 2U;
+        }else if((pllmf >= 15U) && (pllmf <= 64U)){
+            pllmf += 1U;
         }
-        
-        /* PLL clock source selection, HXTAL or IRC8M/2 */
-        pllsel = GET_BITS(RCU_CFG0, 16, 16);
-        if(0U != pllsel){
-            prediv = (GET_BITS(RCU_CFG1, 0, 3) + 1U);
-            SystemCoreClock = (HXTAL_VALUE / prediv) * pllmf;
-        }else{
-            SystemCoreClock = (IRC8M_VALUE >> 1) * pllmf;
+        SystemCoreClock = ck_src*pllmf;
+#if (defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508))
+        if(15U == pllmf){
+            SystemCoreClock = ck_src*6U + ck_src/2U;
         }
+#endif /* GD32E50X_CL and GD32EPRT and GD32E508 */
+
         break;
     /* IRC8M is selected as CK_SYS */
     default:
         SystemCoreClock = IRC8M_VALUE;
         break;
     }
+
     /* calculate AHB clock frequency */
     idx = GET_BITS(RCU_CFG0, 4, 7);
     clk_exp = ahb_exp[idx];

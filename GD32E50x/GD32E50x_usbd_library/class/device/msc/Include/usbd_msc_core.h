@@ -1,13 +1,15 @@
 /*!
-    \file    msc_core.h
+    \file    usbd_msc_core.h
     \brief   the header file of USB MSC device class core functions
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-02-20, V1.1.1, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -33,11 +35,10 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#ifndef __MSC_CORE_H
-#define __MSC_CORE_H
+#ifndef __USBD_MSC_CORE_H
+#define __USBD_MSC_CORE_H
 
 #include "usbd_core.h"
-#include "msc_bbb_scsi.h"
 
 /* mass storage device class code */
 #define USB_CLASS_MSC                     0x08U
@@ -66,10 +67,10 @@ OF SUCH DAMAGE.
 #define BBB_GET_MAX_LUN                   0xFEU
 #define BBB_RESET                         0xFFU
 
+#define USB_MSC_CONFIG_DESC_SIZE          32U
+
 #define MSC_EPIN_SIZE                     MSC_DATA_PACKET_SIZE
 #define MSC_EPOUT_SIZE                    MSC_DATA_PACKET_SIZE
-
-#define USB_MSC_CONFIG_DESC_LEN           32U
 
 /* USB configuration descriptor structure */
 typedef struct
@@ -79,9 +80,9 @@ typedef struct
     usb_desc_itf            msc_itf;
     usb_desc_ep             msc_epin;
     usb_desc_ep             msc_epout;
-} usb_msc_desc_config_set;
+} usb_desc_config_set;
 
 extern usb_desc msc_desc;
 extern usb_class msc_class;
 
-#endif /* __MSC_CORE_H */
+#endif /* __USBD_MSC_CORE_H */

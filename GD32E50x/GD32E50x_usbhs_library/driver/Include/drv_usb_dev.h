@@ -4,10 +4,12 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2020-12-07, V1.1.1, firmware for GD32E50x
+    \version 2020-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -69,6 +71,11 @@ typedef struct _usb_desc {
     uint8_t *dev_desc;                                                  /*!< device descriptor */
     uint8_t *config_desc;                                               /*!< config descriptor */
     uint8_t *bos_desc;                                                  /*!< BOS descriptor */
+    
+#ifdef USE_USB_HS
+    uint8_t *other_speed_config_desc;                                           /*!< other speed configuration descriptor */
+    uint8_t *qualifier_desc;                                                    /*!< qualifier descriptor */
+#endif
 
     void* const *strings;                                               /*!< string descriptor */
 } usb_desc;
@@ -88,7 +95,7 @@ typedef struct _usb_control {
     usb_req    req;                                                     /*!< USB standard device request */
 
     uint8_t    ctl_state;                                               /*!< USB control transfer state */
-    uint8_t    ctl_zlp;                                                 /*!< zero lenth package */
+    uint8_t    ctl_zlp;                                                 /*!< zero length package */
 } usb_control;
 
 typedef struct
@@ -103,14 +110,14 @@ typedef struct
     uint8_t        ep_stall;                                            /*!< USB endpoint stall status */
 
     uint8_t        frame_num;                                           /*!< number of frame */
-    uint16_t       max_len;                                             /*!< Maximum packet lenth */
+    uint16_t       max_len;                                             /*!< Maximum packet length */
 
     /* transaction level variables */
     uint8_t       *xfer_buf;                                            /*!< transmit buffer */
     uint32_t       xfer_len;                                            /*!< transmit buffer length */
     uint32_t       xfer_count;                                          /*!< transmit buffer count */
 
-    uint32_t       remain_len;                                          /*!< remain packet lenth */
+    uint32_t       remain_len;                                          /*!< remain packet length */
 
     uint32_t       dma_addr;                                            /*!< DMA address */
 } usb_transc;
@@ -119,8 +126,9 @@ typedef struct _usb_core_driver usb_dev;
 
 typedef struct _usb_class_core
 {
-    uint8_t  command;                                                           /*!< device class request command */
     uint8_t  alter_set;                                                         /*!< alternative set */
+
+    uint8_t  command;                                                           /*!< device class request command */
 
     uint8_t  (*init)                  (usb_dev *udev, uint8_t config_index);    /*!< initialize handler */
     uint8_t  (*deinit)                (usb_dev *udev, uint8_t config_index);    /*!< de-initialize handler */
@@ -129,6 +137,8 @@ typedef struct _usb_class_core
 
     uint8_t  (*set_intf)              (usb_dev *udev, usb_req *req);            /*!< device set interface callback */
 
+    uint8_t  (*ctlx_in)               (usb_dev *udev);                          /*!< device contrl in callback */
+    uint8_t  (*ctlx_out)              (usb_dev *udev);                          /*!< device contrl out callback */
     uint8_t  (*data_in)               (usb_dev *udev, uint8_t ep_num);          /*!< device data in handler */
     uint8_t  (*data_out)              (usb_dev *udev, uint8_t ep_num);          /*!< device data out handler */
 
@@ -177,7 +187,7 @@ typedef enum {
 /* static inline function definitions */
 
 /*!
-    \brief      config the USB device to be disconnected
+    \brief      configure the USB device to be disconnected
     \param[in]  udev: pointer to USB device
     \param[out] none
     \retval     operation status
@@ -188,7 +198,7 @@ __STATIC_INLINE void usb_dev_disconnect (usb_core_driver *udev)
 }
 
 /*!
-    \brief      config the USB device to be connected
+    \brief      configure the USB device to be connected
     \param[in]  udev: pointer to USB device
     \param[out] none
     \retval     operation status
@@ -258,7 +268,7 @@ __STATIC_INLINE uint32_t usb_iepintnum_read (usb_core_driver *udev)
 }
 
 /*!
-    \brief      set remote wakeup signalling
+    \brief      set remote wakeup signaling
     \param[in]  udev: pointer to USB device
     \param[out] none
     \retval     none
@@ -272,7 +282,7 @@ __STATIC_INLINE void usb_rwkup_set (usb_core_driver *udev)
 }
 
 /*!
-    \brief      reset remote wakeup signalling
+    \brief      reset remote wakeup signaling
     \param[in]  udev: pointer to USB device
     \param[out] none
     \retval     none
@@ -316,7 +326,7 @@ usb_status usb_devint_enable (usb_core_driver *udev);
 usb_status usb_transc0_active (usb_core_driver *udev, usb_transc *transc);
 /* active the USB transaction */
 usb_status usb_transc_active (usb_core_driver *udev, usb_transc *transc);
-/* deactive the USB transaction */
+/* deactivate the USB transaction */
 usb_status usb_transc_deactivate (usb_core_driver *udev, usb_transc *transc);
 /* configure USB transaction to start IN transfer */
 usb_status usb_transc_inxfer (usb_core_driver *udev, usb_transc *transc);
@@ -330,13 +340,13 @@ usb_status usb_transc_clrstall (usb_core_driver *udev, usb_transc *transc);
 uint32_t usb_iepintr_read (usb_core_driver *udev, uint8_t ep_num);
 /* configures OUT endpoint 0 to receive SETUP packets */
 void usb_ctlep_startout (usb_core_driver *udev);
-/* active remote wakeup signalling */
+/* active remote wakeup signaling */
 void usb_rwkup_active (usb_core_driver *udev);
 /* active USB core clock */
 void usb_clock_active (usb_core_driver *udev);
-/* usb device suspend */
+/* USB device suspend */
 void usb_dev_suspend (usb_core_driver *udev);
-/* stop the device and clean up fifos */
+/* stop the device and clean up FIFOs */
 void usb_dev_stop (usb_core_driver *udev);
 /* usb battery charging detect operation */
 bcd_type usbd_bcd_detect (usb_core_driver *udev);

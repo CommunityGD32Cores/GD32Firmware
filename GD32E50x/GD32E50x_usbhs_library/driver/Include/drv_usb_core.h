@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -39,7 +40,7 @@ OF SUCH DAMAGE.
 #include "drv_usb_regs.h"
 #include "usb_ch9_std.h"
 
-#define USB_FS_EP0_MAX_LEN                  64U                         /*!< maximum packet size of EndPoint0 */
+#define USB_FS_EP0_MAX_LEN                  64U                         /*!< maximum packet size of endpoint 0 */
 #define HC_MAX_PACKET_COUNT                 140U                        /*!< maximum packet count */
 
 #define EP_ID(x)                            ((uint8_t)((x) & 0x7FU))    /*!< endpoint number */
@@ -50,7 +51,7 @@ enum _usb_eptype {
     USB_EPTYPE_ISOC = 1U,                                               /*!< isochronous endpoint type */
     USB_EPTYPE_BULK = 2U,                                               /*!< bulk endpoint type */
     USB_EPTYPE_INTR = 3U,                                               /*!< interrupt endpoint type */
-    USB_EPTYPE_MASK = 3U,                                               /*!< endpoint type mask */
+    USB_EPTYPE_MASK = 3U                                                /*!< endpoint type mask */
 };
 
 typedef enum
@@ -114,17 +115,17 @@ __STATIC_INLINE void usb_set_rxfifo(usb_core_regs *usb_regs, uint16_t size)
 }
 
 /* function declarations */
-/* config core capabilities */
+/* configure core capabilities */
 usb_status usb_basic_init (usb_core_basic *usb_basic, usb_core_regs  *usb_regs);
 /*initializes the USB controller registers and prepares the core device mode or host mode operation*/
 usb_status usb_core_init (usb_core_basic usb_basic, usb_core_regs *usb_regs);
-/* write a packet into the Tx FIFO associated with the endpoint */
+/* write a packet into the TX FIFO associated with the endpoint */
 usb_status usb_txfifo_write (usb_core_regs *usb_regs, uint8_t *src_buf, uint8_t  fifo_num, uint16_t byte_count);
-/* read a packet from the Rx FIFO associated with the endpoint */
+/* read a packet from the RX FIFO associated with the endpoint */
 void *usb_rxfifo_read (usb_core_regs *usb_regs, uint8_t *dest_buf, uint16_t byte_count);
-/* flush a Tx FIFO or all Tx FIFOs */
+/* flush a TX FIFO or all TX FIFOs */
 usb_status usb_txfifo_flush (usb_core_regs *usb_regs, uint8_t fifo_num);
-/* flush the entire Rx FIFO */
+/* flush the entire RX FIFO */
 usb_status usb_rxfifo_flush (usb_core_regs *usb_regs);
 /* set endpoint or channel TX FIFO size */
 void usb_set_txfifo(usb_core_regs *usb_regs, uint8_t fifo, uint16_t size);

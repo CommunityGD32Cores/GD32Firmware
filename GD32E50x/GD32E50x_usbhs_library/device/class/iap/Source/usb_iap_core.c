@@ -4,10 +4,12 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2020-12-07, V1.1.1, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -247,7 +249,7 @@ __ALIGN_BEGIN const uint8_t iap_report_desc[USB_DESC_LEN_IAP_REPORT] __ALIGN_END
 };
 
 /*!
-    \brief      send iap report
+    \brief      send IAP report
     \param[in]  udev: pointer to USB device instance
     \param[in]  report: pointer to HID report
     \param[in]  len: data length
@@ -262,7 +264,7 @@ uint8_t iap_report_send (usb_dev *udev, uint8_t *report, uint32_t len)
 }
 
 /*!
-    \brief      initialize the HID device
+    \brief      initialize the IAP device
     \param[in]  udev: pointer to USB device instance
     \param[in]  config_index: configuration index
     \param[out] none
@@ -272,18 +274,18 @@ static uint8_t iap_init (usb_dev *udev, uint8_t config_index)
 {
     static usbd_iap_handler iap_handler;
 
-    /* initialize Tx endpoint */
+    /* initialize TX endpoint */
     usbd_ep_setup(udev, &(iap_config_desc.hid_epin));
 
-    /* initialize Rx endpoint */
+    /* initialize RX endpoint */
     usbd_ep_setup(udev, &(iap_config_desc.hid_epout));
 
     /* unlock the internal flash */
     fmc_unlock();
 
-    memset((void *)&iap_handler, 0, sizeof(usbd_iap_handler));
+    memset((void *)&iap_handler, 0U, sizeof(usbd_iap_handler));
 
-    /* prepare receive Data */
+    /* prepare receive data */
     usbd_ep_recev(udev, IAP_OUT_EP, iap_handler.report_buf, IAP_OUT_PACKET);
 
     iap_handler.base_address = APP_LOADED_ADDR;
@@ -294,7 +296,7 @@ static uint8_t iap_init (usb_dev *udev, uint8_t config_index)
 }
 
 /*!
-    \brief      de-initialize the HID device
+    \brief      deinitialize the IAP device
     \param[in]  udev: pointer to USB device instance
     \param[in]  config_index: configuration index
     \param[out] none
@@ -302,7 +304,7 @@ static uint8_t iap_init (usb_dev *udev, uint8_t config_index)
 */
 static uint8_t iap_deinit (usb_dev *udev, uint8_t config_index)
 {
-    /* deinitialize HID endpoints */
+    /* deinitialize IAP endpoints */
     usbd_ep_clear (udev, IAP_IN_EP);
     usbd_ep_clear (udev, IAP_OUT_EP);
 
@@ -313,7 +315,7 @@ static uint8_t iap_deinit (usb_dev *udev, uint8_t config_index)
 }
 
 /*!
-    \brief      handle the HID class-specific requests
+    \brief      handle the IAP class-specific requests
     \param[in]  udev: pointer to USB device instance
     \param[in]  req: device class-specific request
     \param[out] none
@@ -377,40 +379,38 @@ static uint8_t iap_data_out (usb_dev *udev ,uint8_t ep_num)
 {
     usbd_iap_handler *iap = (usbd_iap_handler *)udev->dev.class_data[USBD_IAP_INTERFACE];
 
-    if ((IAP_OUT_EP & 0x7FU) == ep_num) {
-        if (0x01U == iap->report_buf[0]) {
-            switch (iap->report_buf[1]) {
-            case IAP_DNLOAD:
-                iap_req_dnload(udev);
-                break;
+    if (0x01U == iap->report_buf[0]) {
+        switch (iap->report_buf[1]) {
+        case IAP_DNLOAD:
+            iap_req_dnload(udev);
+            break;
 
-            case IAP_ERASE:
-                iap_req_erase(udev);
-                break;
+        case IAP_ERASE:
+            iap_req_erase(udev);
+            break;
 
-            case IAP_OPTION_BYTE1:
-                iap_req_optionbyte(udev, 0x01U);
-                break;
+        case IAP_OPTION_BYTE1:
+            iap_req_optionbyte(udev, 0x01U);
+            break;
 
-            case IAP_LEAVE:
-                iap_req_leave(udev);
-                break;
+        case IAP_LEAVE:
+            iap_req_leave(udev);
+            break;
 
-            case IAP_GETBIN_ADDRESS:
-                iap_address_send(udev);
-                break;
+        case IAP_GETBIN_ADDRESS:
+            iap_address_send(udev);
+            break;
 
-            case IAP_OPTION_BYTE2:
-                iap_req_optionbyte(udev, 0x02U);
-                break;
+        case IAP_OPTION_BYTE2:
+            iap_req_optionbyte(udev, 0x02U);
+            break;
 
-            default:
-                break;
-            }
+        default:
+            break;
         }
-
-        usbd_ep_recev(udev, IAP_OUT_EP, iap->report_buf, IAP_OUT_PACKET);
     }
+
+    usbd_ep_recev(udev, IAP_OUT_EP, iap->report_buf, IAP_OUT_PACKET);
 
     return USBD_OK;
 }
@@ -508,10 +508,10 @@ static void iap_req_optionbyte(usb_dev *udev, uint8_t option_num)
 
     iap->option_byte[0]= 0x02U;
 
-    if (option_num == 0x01U) {
+    if (0x01U == option_num) {
         address = OPT_BYTE_ADDR1;
 #ifdef OPT_BYTE_ADDR2
-    } else if (option_num == 0x02U) {
+    } else if (0x02U == option_num) {
         address = OPT_BYTE_ADDR2;
 #endif
     } else {

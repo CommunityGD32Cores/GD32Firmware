@@ -4,10 +4,12 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50X
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2020-09-20, V1.1.1, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -42,7 +44,7 @@ OF SUCH DAMAGE.
 #define RCU                             RCU_BASE
 
 /* registers definitions */
-#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32EPRT))
+#if (defined(GD32E50X_HD) || defined(GD32E50X_XD))
 #define RCU_CTL                         REG32(RCU + 0x00000000U)        /*!< control register */
 #define RCU_CFG0                        REG32(RCU + 0x00000004U)        /*!< clock configuration register 0 */
 #define RCU_INT                         REG32(RCU + 0x00000008U)        /*!< clock interrupt register */
@@ -62,7 +64,7 @@ OF SUCH DAMAGE.
 #define RCU_CFG2                        REG32(RCU + 0x000000D4U)        /*!< clock configuration register 2 */
 #define RCU_ADDAPB1RST                  REG32(RCU + 0x000000E0U)        /*!< APB1 additional reset register */
 #define RCU_ADDAPB1EN                   REG32(RCU + 0x000000E4U)        /*!< APB1 additional enable register */
-#elif defined(GD32E50X_CL)
+#elif defined(GD32E50X_CL) || defined(GD32E508)
 #define RCU_CTL                         REG32(RCU + 0x00000000U)        /*!< control register */
 #define RCU_CFG0                        REG32(RCU + 0x00000004U)        /*!< clock configuration register 0 */
 #define RCU_INT                         REG32(RCU + 0x00000008U)        /*!< clock interrupt register */
@@ -83,11 +85,31 @@ OF SUCH DAMAGE.
 #define RCU_CFG2                        REG32(RCU + 0x000000D4U)        /*!< clock configuration register 2 */
 #define RCU_ADDAPB1RST                  REG32(RCU + 0x000000E0U)        /*!< APB1 additional reset register */
 #define RCU_ADDAPB1EN                   REG32(RCU + 0x000000E4U)        /*!< APB1 additional enable register */
-#endif /* GD32E50X_HD and GD32E50X_XD and GD32EPRT */
+#elif defined(GD32EPRT)
+#define RCU_CTL                         REG32(RCU + 0x00000000U)        /*!< control register */
+#define RCU_CFG0                        REG32(RCU + 0x00000004U)        /*!< clock configuration register 0 */
+#define RCU_INT                         REG32(RCU + 0x00000008U)        /*!< clock interrupt register */
+#define RCU_APB2RST                     REG32(RCU + 0x0000000CU)        /*!< APB2 reset register */
+#define RCU_APB1RST                     REG32(RCU + 0x00000010U)        /*!< APB1 reset register */
+#define RCU_AHBEN                       REG32(RCU + 0x00000014U)        /*!< AHB1 enable register */
+#define RCU_APB2EN                      REG32(RCU + 0x00000018U)        /*!< APB2 enable register */
+#define RCU_APB1EN                      REG32(RCU + 0x0000001CU)        /*!< APB1 enable register */
+#define RCU_BDCTL                       REG32(RCU + 0x00000020U)        /*!< backup domain control register */
+#define RCU_RSTSCK                      REG32(RCU + 0x00000024U)        /*!< reset source / clock register */
+#define RCU_AHBRST                      REG32(RCU + 0x00000028U)        /*!< AHB reset register */
+#define RCU_CFG1                        REG32(RCU + 0x0000002CU)        /*!< clock configuration register 1 */
+#define RCU_DSV                         REG32(RCU + 0x00000034U)        /*!< deep-sleep mode voltage register */
+#define RCU_ADDCTL                      REG32(RCU + 0x000000C0U)        /*!< Additional clock control register */
+#define RCU_ADDINT                      REG32(RCU + 0x000000CCU)        /*!< Additional clock interrupt register */
+#define RCU_PLLSSCTL                    REG32(RCU + 0x000000D0U)        /*!< PLL clock spread spectrum control register */
+#define RCU_CFG2                        REG32(RCU + 0x000000D4U)        /*!< clock configuration register 2 */
+#define RCU_ADDAPB1RST                  REG32(RCU + 0x000000E0U)        /*!< APB1 additional reset register */
+#define RCU_ADDAPB1EN                   REG32(RCU + 0x000000E4U)        /*!< APB1 additional enable register */
+#endif /* GD32E50X_HD and GD32E50X_XD */
 
 /* bits definitions */
 /* RCU_CTL */
-#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32EPRT))
+#if defined(GD32E50X_HD) || defined(GD32E50X_XD)
 #define RCU_CTL_IRC8MEN                 BIT(0)                    /*!< internal high speed oscillator enable */
 #define RCU_CTL_IRC8MSTB                BIT(1)                    /*!< IRC8M high speed internal oscillator stabilization flag */
 #define RCU_CTL_IRC8MADJ                BITS(3,7)                 /*!< high speed internal oscillator clock trim adjust value */
@@ -98,7 +120,7 @@ OF SUCH DAMAGE.
 #define RCU_CTL_CKMEN                   BIT(19)                   /*!< HXTAL clock monitor enable */
 #define RCU_CTL_PLLEN                   BIT(24)                   /*!< PLL enable */
 #define RCU_CTL_PLLSTB                  BIT(25)                   /*!< PLL clock stabilization flag */
-#elif defined(GD32E50X_CL)
+#elif defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508)
 #define RCU_CTL_IRC8MEN                 BIT(0)                    /*!< internal high speed oscillator enable */
 #define RCU_CTL_IRC8MSTB                BIT(1)                    /*!< IRC8M high speed internal oscillator stabilization flag */
 #define RCU_CTL_IRC8MADJ                BITS(3,7)                 /*!< high speed internal oscillator clock trim adjust value */
@@ -113,10 +135,10 @@ OF SUCH DAMAGE.
 #define RCU_CTL_PLL1STB                 BIT(27)                   /*!< PLL1 clock stabilization flag */
 #define RCU_CTL_PLL2EN                  BIT(28)                   /*!< PLL2 enable */
 #define RCU_CTL_PLL2STB                 BIT(29)                   /*!< PLL2 clock stabilization flag */
-#endif /* GD32E50X_HD and GD32E50X_XD and GD32EPRT */
+#endif /* GD32E50X_HD and GD32E50X_XD*/
 
 /* RCU_CFG0 */
-#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32EPRT))
+#if defined(GD32E50X_HD) || defined(GD32E50X_XD)
 #define RCU_CFG0_SCS                    BITS(0,1)                 /*!< system clock switch */
 #define RCU_CFG0_SCSS                   BITS(2,3)                 /*!< system clock switch status */
 #define RCU_CFG0_AHBPSC                 BITS(4,7)                 /*!< AHB prescaler selection */
@@ -132,7 +154,7 @@ OF SUCH DAMAGE.
 #define RCU_CFG0_ADCPSC_2               BIT(28)                   /*!< bit 2 of ADCPSC */
 #define RCU_CFG0_PLLMF_5                BIT(30)                   /*!< bit 5 of PLLMF */
 #define RCU_CFG0_USBDPSC_2              BIT(31)                   /*!< bit 2 of USBDPSC */
-#elif defined(GD32E50X_CL)
+#elif defined(GD32E50X_CL) || defined(GD32E508)
 #define RCU_CFG0_SCS                    BITS(0,1)                 /*!< system clock switch */
 #define RCU_CFG0_SCSS                   BITS(2,3)                 /*!< system clock switch status */
 #define RCU_CFG0_AHBPSC                 BITS(4,7)                 /*!< AHB prescaler selection */
@@ -148,10 +170,26 @@ OF SUCH DAMAGE.
 #define RCU_CFG0_PLLMF_4                BIT(29)                   /*!< bit 4 of PLLMF */
 #define RCU_CFG0_PLLMF_5                BIT(30)                   /*!< bit 5 of PLLMF */
 #define RCU_CFG0_USBHSPSC_2             BIT(31)                   /*!< bit 2 of USBHSPSC */
-#endif /* GD32E50X_HD and GD32E50X_XD and GD32EPRT */
+#elif defined(GD32EPRT)
+#define RCU_CFG0_SCS                    BITS(0,1)                 /*!< system clock switch */
+#define RCU_CFG0_SCSS                   BITS(2,3)                 /*!< system clock switch status */
+#define RCU_CFG0_AHBPSC                 BITS(4,7)                 /*!< AHB prescaler selection */
+#define RCU_CFG0_APB1PSC                BITS(8,10)                /*!< APB1 prescaler selection */
+#define RCU_CFG0_APB2PSC                BITS(11,13)               /*!< APB2 prescaler selection */
+#define RCU_CFG0_ADCPSC                 BITS(14,15)               /*!< ADC prescaler selection */
+#define RCU_CFG0_PLLSEL                 BIT(16)                   /*!< PLL clock source selection */
+#define RCU_CFG0_PREDV0_LSB             BIT(17)                   /*!< the LSB of PREDV0 division factor */
+#define RCU_CFG0_PLLMF                  BITS(18,21)               /*!< PLL clock multiplication factor */
+#define RCU_CFG0_USBDPSC                BITS(22,23)               /*!< USBD clock prescaler selection */
+#define RCU_CFG0_CKOUT0SEL              BITS(24,27)               /*!< CKOUT0 clock source selection */
+#define RCU_CFG0_ADCPSC_2               BIT(28)                   /*!< bit 2 of ADCPSC */
+#define RCU_CFG0_PLLMF_4                BIT(29)                   /*!< bit 4 of PLLMF */
+#define RCU_CFG0_PLLMF_5                BIT(30)                   /*!< bit 5 of PLLMF */
+#define RCU_CFG0_USBDPSC_2              BIT(31)                   /*!< bit 2 of USBDPSC */
+#endif /* GD32E50X_HD and GD32E50X_XD */
 
 /* RCU_INT */
-#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32EPRT))
+#if defined(GD32E50X_HD) || defined(GD32E50X_XD)
 #define RCU_INT_IRC40KSTBIF             BIT(0)                    /*!< IRC40K stabilization interrupt flag */
 #define RCU_INT_LXTALSTBIF              BIT(1)                    /*!< LXTAL stabilization interrupt flag */
 #define RCU_INT_IRC8MSTBIF              BIT(2)                    /*!< IRC8M stabilization interrupt flag */
@@ -169,7 +207,7 @@ OF SUCH DAMAGE.
 #define RCU_INT_HXTALSTBIC              BIT(19)                   /*!< HXTAL Stabilization interrupt clear */
 #define RCU_INT_PLLSTBIC                BIT(20)                   /*!< PLL stabilization interrupt clear */
 #define RCU_INT_CKMIC                   BIT(23)                   /*!< HXTAL clock stuck interrupt clear */
-#elif defined(GD32E50X_CL)
+#elif defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508)
 #define RCU_INT_IRC40KSTBIF             BIT(0)                    /*!< IRC40K stabilization interrupt flag */
 #define RCU_INT_LXTALSTBIF              BIT(1)                    /*!< LXTAL stabilization interrupt flag */
 #define RCU_INT_IRC8MSTBIF              BIT(2)                    /*!< IRC8M stabilization interrupt flag */
@@ -193,7 +231,7 @@ OF SUCH DAMAGE.
 #define RCU_INT_PLL1STBIC               BIT(21)                   /*!< PLL1 stabilization interrupt clear */
 #define RCU_INT_PLL2STBIC               BIT(22)                   /*!< PLL2 stabilization interrupt clear */
 #define RCU_INT_CKMIC                   BIT(23)                   /*!< HXTAL clock stuck interrupt clear */
-#endif /* GD32E50X_HD and GD32E50X_XD and GD32EPRT */
+#endif /* GD32E50X_HD and GD32E50X_XD */
 
 /* RCU_APB2RST */
 #define RCU_APB2RST_AFRST               BIT(0)                    /*!< alternate function I/O reset */
@@ -210,21 +248,21 @@ OF SUCH DAMAGE.
 #define RCU_APB2RST_SPI0RST             BIT(12)                   /*!< SPI0 reset */
 #define RCU_APB2RST_TIMER7RST           BIT(13)                   /*!< TIMER7 reset */
 #define RCU_APB2RST_USART0RST           BIT(14)                   /*!< USART0 reset */
-#ifndef GD32E50X_CL
+#if defined(GD32E50X_XD) || defined(GD32E50X_HD) || defined(GD32EPRT)
 #define RCU_APB2RST_ADC2RST             BIT(15)                   /*!< ADC2 reset */
-#endif /* GD32E50X_CL */
-#ifndef GD32E50X_HD
+#endif /* GD32E50X_XD and GD32E50X_HDand GD32EPRT */
+#ifndef GD32EPRT
 #define RCU_APB2RST_TIMER8RST           BIT(19)                   /*!< TIMER8 reset */
 #define RCU_APB2RST_TIMER9RST           BIT(20)                   /*!< TIMER9 reset */
 #define RCU_APB2RST_TIMER10RST          BIT(21)                   /*!< TIMER10 reset */
-#endif /* GD32E50X_HD */
+#endif /* GD32EPRT*/
 #define RCU_APB2RST_USART5RST           BIT(28)                   /*!< USART5 reset */
-#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32E50X_CL))
+#ifndef GD32EPRT
 #define RCU_APB2RST_SHRTIMERRST         BIT(29)                   /*!< HPTIME reset */
-#endif /* GD32E50X_HD and GD32E50X_XD and GD32E50X_CL*/
-#ifdef GD32E50X_CL
+#endif /* GD32EPRT */
+#if defined(GD32E50X_CL) || defined(GD32E508)
 #define RCU_APB2RST_CMPRST              BIT(31)                   /*!< CMP reset */
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL and GD32E508 */
 
 /* RCU_APB1RST */
 #define RCU_APB1RST_TIMER1RST           BIT(0)                    /*!< TIMER1 reset */
@@ -233,11 +271,11 @@ OF SUCH DAMAGE.
 #define RCU_APB1RST_TIMER4RST           BIT(3)                    /*!< TIMER4 reset */
 #define RCU_APB1RST_TIMER5RST           BIT(4)                    /*!< TIMER5 reset */
 #define RCU_APB1RST_TIMER6RST           BIT(5)                    /*!< TIMER6 reset */
-#ifndef GD32E50X_HD
+#ifndef GD32EPRT
 #define RCU_APB1RST_TIMER11RST          BIT(6)                    /*!< TIMER11 reset */
 #define RCU_APB1RST_TIMER12RST          BIT(7)                    /*!< TIMER12 reset */
 #define RCU_APB1RST_TIMER13RST          BIT(8)                    /*!< TIMER13 reset */
-#endif /* GD32E50X_HD */
+#endif /* GD32EPRT */
 #define RCU_APB1RST_WWDGTRST            BIT(11)                   /*!< WWDGT reset */
 #define RCU_APB1RST_SPI1RST             BIT(14)                   /*!< SPI1 reset */
 #define RCU_APB1RST_SPI2RST             BIT(15)                   /*!< SPI2 reset */
@@ -251,6 +289,10 @@ OF SUCH DAMAGE.
 #define RCU_APB1RST_USBDRST             BIT(23)                   /*!< USBD reset */
 #endif /* GD32E50X_HD and GD32E50X_XD and GD32EPRT */
 #define RCU_APB1RST_I2C2RST             BIT(24)                   /*!< I2C2 reset */
+#ifndef GD32EPRT
+#define RCU_APB1RST_CAN0RST             BIT(25)                   /*!< CAN0 reset */
+#define RCU_APB1RST_CAN1RST             BIT(26)                   /*!< CAN1 reset */
+#endif /* GD32EPRT */
 #define RCU_APB1RST_BKPIRST             BIT(27)                   /*!< backup interface reset */
 #define RCU_APB1RST_PMURST              BIT(28)                   /*!< PMU reset */
 #define RCU_APB1RST_DACRST              BIT(29)                   /*!< DAC reset */
@@ -264,16 +306,16 @@ OF SUCH DAMAGE.
 #define RCU_AHBEN_EXMCEN                BIT(8)                    /*!< EXMC clock enable */
 #if (defined(GD32E50X_HD) || defined(GD32E50X_XD))
 #define RCU_AHBEN_SDIOEN                BIT(10)                   /*!< SDIO clock enable */
-#elif defined(GD32E50X_CL)
+#elif defined(GD32E50X_CL) || defined(GD32E508)
 #define RCU_AHBEN_USBHSEN               BIT(12)                   /*!< USBHS clock enable */
 #define RCU_AHBEN_ULPIEN                BIT(13)                   /*!< ULPI clock enable */
 #define RCU_AHBEN_TMUEN                 BIT(30)                   /*!< TMU clock enable */
 #endif /* GD32E50X_HD and GD32E50X_XD */
-#if (defined(GD32E50X_CL) || defined(GD32EPRT))
+#if (defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508))
 #define RCU_AHBEN_ENETEN                BIT(14)                   /*!< ENET clock enable */
 #define RCU_AHBEN_ENETTXEN              BIT(15)                   /*!< Ethernet TX clock enable */
 #define RCU_AHBEN_ENETRXEN              BIT(16)                   /*!< Ethernet RX clock enable */
-#endif /* GD32E50X_CL and GD32EPRT */
+#endif /* GD32E50X_CL and GD32EPRT and GD32E508 */
 #define RCU_AHBEN_SQPIEN                BIT(31)                   /*!< SQPI clock enable */
 
 /* RCU_APB2EN */
@@ -291,21 +333,21 @@ OF SUCH DAMAGE.
 #define RCU_APB2EN_SPI0EN               BIT(12)                   /*!< SPI0 clock enable */
 #define RCU_APB2EN_TIMER7EN             BIT(13)                   /*!< TIMER7 clock enable */
 #define RCU_APB2EN_USART0EN             BIT(14)                   /*!< USART0 clock enable */
-#ifndef GD32E50X_CL
+#if defined(GD32E50X_XD) || defined(GD32E50X_HD) || defined(GD32EPRT)
 #define RCU_APB2EN_ADC2EN               BIT(15)                   /*!< ADC2 clock enable */
-#endif /* GD32E50X_CL */
-#ifndef GD32E50X_HD
+#endif /* GD32E50X_XD and GD32E50X_HDand GD32EPRT */
+#ifndef GD32EPRT
 #define RCU_APB2EN_TIMER8EN             BIT(19)                   /*!< TIMER8 clock enable */
 #define RCU_APB2EN_TIMER9EN             BIT(20)                   /*!< TIMER9 clock enable */
 #define RCU_APB2EN_TIMER10EN            BIT(21)                   /*!< TIMER10 clock enable */
-#endif /* GD32E50X_HD */
+#endif /* GD32EPRT */
 #define RCU_APB2EN_USART5EN             BIT(28)                   /*!< USART5 clock enable */
-#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32E50X_CL))
+#ifndef GD32EPRT
 #define RCU_APB2EN_SHRTIMEREN           BIT(29)                   /*!< SHRTIMER clock enable */
-#endif /* GD32E50X_HD and GD32E50X_XD and GD32E50X_CL*/
-#ifdef GD32E50X_CL
+#endif /* GD32EPRT */
+#if defined(GD32E50X_CL) || defined(GD32E508)
 #define RCU_APB2EN_CMPEN                BIT(31)                   /*!< CMP clock enable */
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL and GD32E508 */
 
 /* RCU_APB1EN */
 #define RCU_APB1EN_TIMER1EN             BIT(0)                    /*!< TIMER1 clock enable */
@@ -314,11 +356,11 @@ OF SUCH DAMAGE.
 #define RCU_APB1EN_TIMER4EN             BIT(3)                    /*!< TIMER4 clock enable */
 #define RCU_APB1EN_TIMER5EN             BIT(4)                    /*!< TIMER5 clock enable */
 #define RCU_APB1EN_TIMER6EN             BIT(5)                    /*!< TIMER6 clock enable */
-#ifndef GD32E50X_HD
+#ifndef GD32EPRT
 #define RCU_APB1EN_TIMER11EN            BIT(6)                    /*!< TIMER11 clock enable */
 #define RCU_APB1EN_TIMER12EN            BIT(7)                    /*!< TIMER12 clock enable */
 #define RCU_APB1EN_TIMER13EN            BIT(8)                    /*!< TIMER13 clock enable */
-#endif /* GD32E50X_HD */
+#endif /* GD32EPRT */
 #define RCU_APB1EN_WWDGTEN              BIT(11)                   /*!< WWDGT clock enable */
 #define RCU_APB1EN_SPI1EN               BIT(14)                   /*!< SPI1 clock enable */
 #define RCU_APB1EN_SPI2EN               BIT(15)                   /*!< SPI2 clock enable */
@@ -332,6 +374,10 @@ OF SUCH DAMAGE.
 #define RCU_APB1EN_USBDEN               BIT(23)                   /*!< USBD clock enable */
 #endif /* GD32E50X_HD and GD32E50X_XD and GD32EPRT */
 #define RCU_APB1EN_I2C2EN               BIT(24)                   /*!< I2C2 clock enable */
+#ifndef GD32EPRT
+#define RCU_APB1EN_CAN0EN               BIT(25)                   /*!< CAN0 clock enable */
+#define RCU_APB1EN_CAN1EN               BIT(26)                   /*!< CAN1 clock enable */
+#endif /* GD32EPRT */
 #define RCU_APB1EN_BKPIEN               BIT(27)                   /*!< backup interface clock enable */
 #define RCU_APB1EN_PMUEN                BIT(28)                   /*!< PMU clock enable */
 #define RCU_APB1EN_DACEN                BIT(29)                   /*!< DAC clock enable */
@@ -357,14 +403,14 @@ OF SUCH DAMAGE.
 #define RCU_RSTSCK_WWDGTRSTF            BIT(30)                   /*!< window watchdog timer reset flag */
 #define RCU_RSTSCK_LPRSTF               BIT(31)                   /*!< low-power reset flag */
 
-#ifdef GD32E50X_CL
+#if defined(GD32E50X_CL) || defined(GD32E508)
 /* RCU_AHBRST */
 #define RCU_AHBRST_USBHSRST             BIT(12)                   /*!< USBHS reset */
 #define RCU_AHBRST_TMURST               BIT(30)                   /*!< TMU reset */
-#endif /* GD32E50X_CL */
-#if (defined(GD32E50X_CL) || defined(GD32EPRT))
+#endif /* GD32E50X_CL and GD32E508 */
+#if (defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508))
 #define RCU_AHBRST_ENETRST              BIT(14)                   /*!< ENET reset */
-#endif /* GD32E50X_CL and GD32EPRT */
+#endif /* GD32E50X_CL and GD32EPRT and GD32E508 */
 #define RCU_AHBRST_SQPIRST              BIT(31)                   /*!< SQPI reset */
 
 /* RCU_CFG1 */
@@ -373,45 +419,51 @@ OF SUCH DAMAGE.
 #define RCU_CFG1_PLL1MF                 BITS(8,11)                /*!< PLL1 clock multiplication factor */
 #define RCU_CFG1_PLL2MF                 BITS(12,15)               /*!< PLL2 clock multiplication factor */
 #define RCU_CFG1_PREDV0SEL              BIT(16)                   /*!< PREDV0 input clock source selection */
+#if defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508)
 #define RCU_CFG1_I2S1SEL                BIT(17)                   /*!< I2S1 clock source selection */
 #define RCU_CFG1_I2S2SEL                BIT(18)                   /*!< I2S2 clock source selection  */
-#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32E50X_CL))
-#define RCU_CFG1_SHRTIMERSEL            BIT(19)                   /*!< SHRTIMER clock source selection  */
-#endif /* GD32E50X_HD and GD32E50X_XD and GD32E50X_CL*/
 #define RCU_CFG1_PLL2MF_5               BIT(28)                   /*!< bit 6 of PLL2MF */
+#define RCU_CFG1_PLL2MF_4               BIT(31)                   /*!< bit 5 of PLL2MF */
+#endif /* GD32E50X_CL and GD32EPRT and GD32E508 */
+#ifndef GD32EPRT
+#define RCU_CFG1_SHRTIMERSEL            BIT(19)                   /*!< SHRTIMER clock source selection  */
+#endif /* GD32EPRT */
 #define RCU_CFG1_ADCPSC_3               BIT(29)                   /*!< bit 4 of ADCPSC */
 #define RCU_CFG1_PLLPRESEL              BIT(30)                   /*!< PLL clock source selection */
-#define RCU_CFG1_PLL2MF_4               BIT(31)                   /*!< bit 5 of PLL2MF */
 
 /* RCU_DSV */
 #define RCU_DSV_DSLPVS                  BITS(0,2)                 /*!< deep-sleep mode voltage select */
 
 /* RCU_ADDCTL */
 #define RCU_ADDCTL_CK48MSEL             BITS(0,1)                 /*!< 48MHz clock selection */
-#ifdef GD32E50X_CL
+#if defined(GD32E50X_CL) || defined(GD32E508)
 #define RCU_ADDCTL_USBHSSEL             BIT(2)                    /*!< USBHS clock selection */
 #define RCU_ADDCTL_USBHSDV              BITS(3,5)                 /*!< USBHS clock divider factor */
 #define RCU_ADDCTL_USBSWEN              BIT(6)                    /*!< USB clock source selection enable */
 #define RCU_ADDCTL_PLLUSBEN             BIT(14)                   /*!< PLLUSB enable */
 #define RCU_ADDCTL_PLLUSBSTB            BIT(15)                   /*!< PLLUSB clock stabilization flag */
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL and GD32E508 */
 #define RCU_ADDCTL_IRC48MEN             BIT(16)                   /*!< internal 48MHz RC oscillator enable */
 #define RCU_ADDCTL_IRC48MSTB            BIT(17)                   /*!< internal 48MHz RC oscillator clock stabilization flag */
 #define RCU_ADDCTL_IRC48MCAL            BITS(24,31)               /*!< internal 48MHz RC oscillator calibration value register */
 
 /* RCU_ADDCFG */
+#if defined(GD32E50X_CL) || defined(GD32E508)
 #define RCU_ADDCFG_PLLUSBPREDV          BITS(0,3)                 /*!< PLLUSBPREDV division factor */
 #define RCU_ADDCFG_PLLUSBPRESEL         BIT(16)                   /*!< PLLUSB clock source preselection */
 #define RCU_ADDCFG_PLLUSBPREDVSEL       BIT(17)                   /*!< PLLUSBPREDV input Clock Source Selection */
 #define RCU_ADDCFG_PLLUSBMF             BITS(18,24)               /*!< The PLLUSB clock multiplication factor */
+#endif /* GD32E50X_CL and GD32E508 */
 
 /* RCU_ADDINT */
 #define RCU_ADDINT_IRC48MSTBIF          BIT(6)                    /*!< IRC48M stabilization interrupt flag */
-#define RCU_ADDINT_PLLUSBSTBIF          BIT(7)                    /*!< PLLUSB stabilization interrupt flag */
 #define RCU_ADDINT_IRC48MSTBIE          BIT(14)                   /*!< internal 48 MHz RC oscillator stabilization interrupt enable */
-#define RCU_ADDINT_PLLUSBSTBIE          BIT(15)                   /*!< PLLUSB stabilization interrupt enable */
 #define RCU_ADDINT_IRC48MSTBIC          BIT(22)                   /*!< internal 48 MHz RC oscillator stabilization interrupt clear */
+#if defined(GD32E50X_CL) || defined(GD32E508)
+#define RCU_ADDINT_PLLUSBSTBIF          BIT(7)                    /*!< PLLUSB stabilization interrupt flag */
+#define RCU_ADDINT_PLLUSBSTBIE          BIT(15)                   /*!< PLLUSB stabilization interrupt enable */
 #define RCU_ADDINT_PLLUSBSTBIC          BIT(23)                   /*!< PLLUSB stabilization interrupt clear */
+#endif /* GD32E50X_CL and GD32E508 */
 
 /* RCU_PLLSSCTL */
 #define RCU_PLLSSCTL_MODCNT             BITS(0,12)                /*!< these bits configure PLL spread spectrum modulation 
@@ -429,9 +481,15 @@ OF SUCH DAMAGE.
 
 /* RCU_ADDAPB1RST */
 #define RCU_ADDAPB1RST_CTCRST           BIT(27)                   /*!< CTC reset */
+#if defined(GD32E50X_CL) || defined(GD32E508)
+#define RCU_ADDAPB1RST_CAN2RST          BIT(31)                   /*!< CAN2 reset */
+#endif /* GD32E50X_CL and GD32E508 */
 
 /* RCU_ADDAPB1EN */
 #define RCU_ADDAPB1EN_CTCEN             BIT(27)                   /*!< CTC clock enable */
+#if defined(GD32E50X_CL) || defined(GD32E508)
+#define RCU_ADDAPB1EN_CAN2EN            BIT(31)                   /*!< CAN2 clock enable */
+#endif /* GD32E50X_CL and GD32E508 */
 
 /* constants definitions */
 /* define the peripheral clock enable bit position and its register index offset */
@@ -478,16 +536,16 @@ typedef enum
     RCU_EXMC      = RCU_REGIDX_BIT(AHBEN_REG_OFFSET, 8U),                   /*!< EXMC clock */
 #if (defined(GD32E50X_HD) || defined(GD32E50X_XD))
     RCU_SDIO      = RCU_REGIDX_BIT(AHBEN_REG_OFFSET, 10U),                  /*!< SDIO clock */
-#elif defined(GD32E50X_CL)
+#elif defined(GD32E50X_CL) || defined(GD32E508)
     RCU_USBHS     = RCU_REGIDX_BIT(AHBEN_REG_OFFSET, 12U),                  /*!< USBHS clock */
     RCU_ULPI      = RCU_REGIDX_BIT(AHBEN_REG_OFFSET, 13U),                  /*!< ULPI clock */ 
     RCU_TMU       = RCU_REGIDX_BIT(AHBEN_REG_OFFSET, 30U),                  /*!< TMU clock */
 #endif /* GD32E50X_HD and GD32E50X_XD */
-#if (defined(GD32E50X_CL) || defined(GD32EPRT))
+#if (defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508))
     RCU_ENET      = RCU_REGIDX_BIT(AHBEN_REG_OFFSET, 14U),                  /*!< ENET clock */   
     RCU_ENETTX    = RCU_REGIDX_BIT(AHBEN_REG_OFFSET, 15U),                  /*!< ENETTX clock */
     RCU_ENETRX    = RCU_REGIDX_BIT(AHBEN_REG_OFFSET, 16U),                  /*!< ENETRX clock */
-#endif /* GD32E50X_CL and GD32EPRT */
+#endif /* GD32E50X_CL and GD32EPRT and GD32E508 */
     RCU_SQPI      = RCU_REGIDX_BIT(AHBEN_REG_OFFSET, 31U),                  /*!< SQPI clock */
   
     /* APB1 peripherals */
@@ -497,11 +555,11 @@ typedef enum
     RCU_TIMER4    = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 3U),                  /*!< TIMER4 clock */
     RCU_TIMER5    = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 4U),                  /*!< TIMER5 clock */
     RCU_TIMER6    = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 5U),                  /*!< TIMER6 clock */
-#ifndef GD32E50X_HD
+#ifndef GD32EPRT
     RCU_TIMER11   = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 6U),                  /*!< TIMER11 clock */
     RCU_TIMER12   = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 7U),                  /*!< TIMER12 clock */
     RCU_TIMER13   = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 8U),                  /*!< TIMER13 clock */
-#endif /* GD32E50X_HD */
+#endif /* GD32EPRT */
     RCU_WWDGT     = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 11U),                 /*!< WWDGT clock */
     RCU_SPI1      = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 14U),                 /*!< SPI1 clock */
     RCU_SPI2      = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 15U),                 /*!< SPI2 clock */
@@ -515,11 +573,18 @@ typedef enum
     RCU_USBD      = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 23U),                 /*!< USBD clock */
 #endif /* GD32E50X_HD and GD32E50X_XD and GD32EPRT */
     RCU_I2C2      = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 24U),                 /*!< I2C2 clock */
+#ifndef GD32EPRT
+    RCU_CAN0      = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 25U),                 /*!< CAN0 clock */
+    RCU_CAN1      = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 26U),                 /*!< CAN1 clock */
+#endif /* GD32EPRT */
     RCU_BKPI      = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 27U),                 /*!< BKPI clock */
     RCU_PMU       = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 28U),                 /*!< PMU clock */
     RCU_DAC       = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 29U),                 /*!< DAC clock */
     RCU_RTC       = RCU_REGIDX_BIT(BDCTL_REG_OFFSET, 15U),                  /*!< RTC clock */
     RCU_CTC       = RCU_REGIDX_BIT(ADD_APB1EN_REG_OFFSET, 27U),             /*!< CTC clock */
+#if defined(GD32E50X_CL) || defined(GD32E508)
+    RCU_CAN2      = RCU_REGIDX_BIT(ADD_APB1EN_REG_OFFSET, 31U),             /*!< CAN2 clock */
+#endif /* GD32E50X_CL and GD32E508 */
 
     /* APB2 peripherals */
     RCU_AF        = RCU_REGIDX_BIT(APB2EN_REG_OFFSET, 0U),                  /*!< alternate function clock */
@@ -539,18 +604,18 @@ typedef enum
 #ifndef GD32E50X_CL
     RCU_ADC2      = RCU_REGIDX_BIT(APB2EN_REG_OFFSET, 15U),                 /*!< ADC2 clock */
 #endif /* GD32E50X_CL */
-#ifndef GD32E50X_HD
+#ifndef GD32EPRT
     RCU_TIMER8    = RCU_REGIDX_BIT(APB2EN_REG_OFFSET, 19U),                 /*!< TIMER8 clock */
     RCU_TIMER9    = RCU_REGIDX_BIT(APB2EN_REG_OFFSET, 20U),                 /*!< TIMER9 clock */
     RCU_TIMER10   = RCU_REGIDX_BIT(APB2EN_REG_OFFSET, 21U),                 /*!< TIMER10 clock */
-#endif /* GD32E50X_HD */
-#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32E50X_CL))
+#endif /* GD32EPRT */
+#ifndef GD32EPRT
     RCU_SHRTIMER  = RCU_REGIDX_BIT(APB2EN_REG_OFFSET, 29U),                 /*!< SHRTIMER clock */
-#endif /* GD32E50X_HD and GD32E50X_XD and GD32E50X_CL*/
+#endif /* GD32EPRT */
     RCU_USART5    = RCU_REGIDX_BIT(APB2EN_REG_OFFSET, 28U),                 /*!< USART5 clock */
-#ifdef GD32E50X_CL    
+#if defined(GD32E50X_CL) || defined(GD32E508)
     RCU_CMP       = RCU_REGIDX_BIT(APB2EN_REG_OFFSET, 31U),                 /*!< CMP clock */
-#endif /* GD32E50X_CL */    
+#endif /* GD32E50X_CL and GD32E508 */
 }rcu_periph_enum;
 
 /* peripheral clock enable when sleep mode*/
@@ -565,13 +630,13 @@ typedef enum
 typedef enum
 {
     /* AHB peripherals */
-#ifdef GD32E50X_CL
+#if defined(GD32E50X_CL) || defined(GD32E508)
     RCU_USBHSRST     = RCU_REGIDX_BIT(AHBRST_REG_OFFSET, 12U),              /*!< USBHS clock reset */
     RCU_TMURST       = RCU_REGIDX_BIT(AHBRST_REG_OFFSET, 30U),              /*!< TMU clock reset */ 
-#endif /* GD32E50X_CL */
-    #if (defined(GD32E50X_CL) || defined(GD32EPRT))
+#endif /* GD32E50X_CL and GD32E508 */
+    #if (defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508))
     RCU_ENETRST      = RCU_REGIDX_BIT(AHBRST_REG_OFFSET, 14U),              /*!< ENET clock reset */
-    #endif /* GD32E50X_CL and GD32EPRT */
+    #endif /* GD32E50X_CL and GD32EPRT and GD32E508 */
     RCU_SQPIRST      = RCU_REGIDX_BIT(AHBRST_REG_OFFSET, 31U),              /*!< SQPI clock reset */
     
     /* APB1 peripherals */
@@ -581,11 +646,11 @@ typedef enum
     RCU_TIMER4RST    = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 3U),              /*!< TIMER4 clock reset */
     RCU_TIMER5RST    = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 4U),              /*!< TIMER5 clock reset */
     RCU_TIMER6RST    = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 5U),              /*!< TIMER6 clock reset */
-#ifndef GD32E50X_HD
+#ifndef GD32EPRT
     RCU_TIMER11RST   = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 6U),              /*!< TIMER11 clock reset */
     RCU_TIMER12RST   = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 7U),              /*!< TIMER12 clock reset */
     RCU_TIMER13RST   = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 8U),              /*!< TIMER13 clock reset */
-#endif /* GD32E50X_HD */
+#endif /* GD32EPRT */
     RCU_WWDGTRST     = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 11U),             /*!< WWDGT clock reset */
     RCU_SPI1RST      = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 14U),             /*!< SPI1 clock reset */
     RCU_SPI2RST      = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 15U),             /*!< SPI2 clock reset */
@@ -599,10 +664,17 @@ typedef enum
     RCU_USBDRST      = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 23U),             /*!< USBD clock reset */
 #endif /* GD32E50X_HD and GD32E50X_XD and GD32EPRT */
     RCU_I2C2RST      = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 24U),             /*!< I2C2 clock reset */
+#ifndef GD32EPRT
+    RCU_CAN0RST      = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 25U),             /*!< CAN0 clock reset */
+    RCU_CAN1RST      = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 26U),             /*!< CAN1 clock reset */
+#endif /* GD32EPRT */
     RCU_BKPIRST      = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 27U),             /*!< BKPI clock reset */
     RCU_PMURST       = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 28U),             /*!< PMU clock reset */
     RCU_DACRST       = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 29U),             /*!< DAC clock reset */
     RCU_CTCRST       = RCU_REGIDX_BIT(ADD_APB1RST_REG_OFFSET, 27U),         /*!< CTC clock reset */
+#if defined(GD32E50X_CL) || defined(GD32E508)
+    RCU_CAN2RST      = RCU_REGIDX_BIT(ADD_APB1RST_REG_OFFSET, 31U),         /*!< CAN2 clock reset */
+#endif /* GD32E50X_CL and GD32E508 */
 
 /* APB2 peripherals */
     RCU_AFRST        = RCU_REGIDX_BIT(APB2RST_REG_OFFSET, 0U),              /*!< alternate function clock reset */
@@ -619,21 +691,21 @@ typedef enum
     RCU_SPI0RST      = RCU_REGIDX_BIT(APB2RST_REG_OFFSET, 12U),             /*!< SPI0 clock reset */
     RCU_TIMER7RST    = RCU_REGIDX_BIT(APB2RST_REG_OFFSET, 13U),             /*!< TIMER7 clock reset */
     RCU_USART0RST    = RCU_REGIDX_BIT(APB2RST_REG_OFFSET, 14U),             /*!< USART0 clock reset */
-#ifndef GD32E50X_CL
+#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32EPRT))
     RCU_ADC2RST      = RCU_REGIDX_BIT(APB2RST_REG_OFFSET, 15U),             /*!< ADC2 clock reset */
-#endif /* GD32E50X_CL */
-#ifndef GD32E50X_HD
+#endif /* GD32E50X_HD and GD32E50X_XD and GD32EPRT */
+#ifndef GD32EPRT
     RCU_TIMER8RST    = RCU_REGIDX_BIT(APB2RST_REG_OFFSET, 19U),             /*!< TIMER8 clock reset */
     RCU_TIMER9RST    = RCU_REGIDX_BIT(APB2RST_REG_OFFSET, 20U),             /*!< TIMER9 clock reset */
     RCU_TIMER10RST   = RCU_REGIDX_BIT(APB2RST_REG_OFFSET, 21U),             /*!< TIMER10 clock reset */  
-#endif /* GD32E50X_HD */
+#endif /* GD32EPRT */
     RCU_USART5RST    = RCU_REGIDX_BIT(APB2RST_REG_OFFSET, 28U),             /*!< USART5 clock reset */
-#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32E50X_CL))
+#ifndef GD32EPRT
     RCU_SHRTIMERRST  = RCU_REGIDX_BIT(APB2RST_REG_OFFSET, 29U),             /*!< HPTIEMR clock reset */
-#endif /* GD32E50X_HD and GD32E50X_XD and GD32E50X_CL*/
-#ifdef GD32E50X_CL
+#endif /* GD32EPRT */
+#if defined(GD32E50X_CL) || defined(GD32E508)
     RCU_CMPRST       = RCU_REGIDX_BIT(APB2RST_REG_OFFSET, 31U),             /*!< CMP clock reset */
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL and GD32E508 */
 }rcu_periph_reset_enum;
 
 /* clock stabilization and peripheral reset flags */
@@ -643,11 +715,13 @@ typedef enum
     RCU_FLAG_IRC8MSTB      = RCU_REGIDX_BIT(CTL_REG_OFFSET, 1U),            /*!< IRC8M stabilization flags */
     RCU_FLAG_HXTALSTB      = RCU_REGIDX_BIT(CTL_REG_OFFSET, 17U),           /*!< HXTAL stabilization flags */
     RCU_FLAG_PLLSTB        = RCU_REGIDX_BIT(CTL_REG_OFFSET, 25U),           /*!< PLL stabilization flags */
-#ifdef GD32E50X_CL
-    RCU_FLAG_PLLUSBSTB     = RCU_REGIDX_BIT(ADDCTL_REG_OFFSET, 15U),        /*!< PLLUSB stabilization flags */
+#if (defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508))
     RCU_FLAG_PLL1STB       = RCU_REGIDX_BIT(CTL_REG_OFFSET, 27U),           /*!< PLL1 stabilization flags */
     RCU_FLAG_PLL2STB       = RCU_REGIDX_BIT(CTL_REG_OFFSET, 29U),           /*!< PLL2 stabilization flags */
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL and GD32EPRT and GD32E508 */
+#if defined(GD32E50X_CL) || defined(GD32E508)
+    RCU_FLAG_PLLUSBSTB     = RCU_REGIDX_BIT(ADDCTL_REG_OFFSET, 15U),        /*!< PLLUSB stabilization flags */
+#endif /* GD32E50X_CL and GD32E508 */
     RCU_FLAG_LXTALSTB      = RCU_REGIDX_BIT(BDCTL_REG_OFFSET, 1U),          /*!< LXTAL stabilization flags */
     RCU_FLAG_IRC40KSTB     = RCU_REGIDX_BIT(RSTSCK_REG_OFFSET, 1U),         /*!< IRC40K stabilization flags */
     RCU_FLAG_IRC48MSTB     = RCU_REGIDX_BIT(ADDCTL_REG_OFFSET, 17U),        /*!< IRC48M stabilization flags */
@@ -670,11 +744,13 @@ typedef enum
     RCU_INT_FLAG_IRC8MSTB  = RCU_REGIDX_BIT(INT_REG_OFFSET, 2U),            /*!< IRC8M stabilization interrupt flag */
     RCU_INT_FLAG_HXTALSTB  = RCU_REGIDX_BIT(INT_REG_OFFSET, 3U),            /*!< HXTAL stabilization interrupt flag */
     RCU_INT_FLAG_PLLSTB    = RCU_REGIDX_BIT(INT_REG_OFFSET, 4U),            /*!< PLL stabilization interrupt flag */
-#ifdef GD32E50X_CL
+#if (defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508))
     RCU_INT_FLAG_PLL1STB   = RCU_REGIDX_BIT(INT_REG_OFFSET, 5U),            /*!< PLL1 stabilization interrupt flag */
     RCU_INT_FLAG_PLL2STB   = RCU_REGIDX_BIT(INT_REG_OFFSET, 6U),            /*!< PLL2 stabilization interrupt flag */
+#endif /* GD32E50X_CL and GD32EPRT and GD32E508 */
+#if defined(GD32E50X_CL) || defined(GD32E508)
     RCU_INT_FLAG_PLLUSBSTB = RCU_REGIDX_BIT(ADDINT_REG_OFFSET, 7U),         /*!< PLLUSB stabilization interrupt flag */  
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL and GD32E508 */
     RCU_INT_FLAG_CKM       = RCU_REGIDX_BIT(INT_REG_OFFSET, 7U),            /*!< HXTAL clock stuck interrupt flag */
     RCU_INT_FLAG_IRC48MSTB = RCU_REGIDX_BIT(ADDINT_REG_OFFSET, 6U),         /*!< IRC48M stabilization interrupt flag */
   
@@ -688,11 +764,13 @@ typedef enum
     RCU_INT_FLAG_IRC8MSTB_CLR  = RCU_REGIDX_BIT(INT_REG_OFFSET, 18U),       /*!< IRC8M stabilization interrupt flags clear */
     RCU_INT_FLAG_HXTALSTB_CLR  = RCU_REGIDX_BIT(INT_REG_OFFSET, 19U),       /*!< HXTAL stabilization interrupt flags clear */
     RCU_INT_FLAG_PLLSTB_CLR    = RCU_REGIDX_BIT(INT_REG_OFFSET, 20U),       /*!< PLL stabilization interrupt flags clear */
-#ifdef GD32E50X_CL
+#if (defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508))
     RCU_INT_FLAG_PLL1STB_CLR   = RCU_REGIDX_BIT(INT_REG_OFFSET, 21U),       /*!< PLL1 stabilization interrupt flags clear */
     RCU_INT_FLAG_PLL2STB_CLR   = RCU_REGIDX_BIT(INT_REG_OFFSET, 22U),       /*!< PLL2 stabilization interrupt flags clear */
+#endif /* GD32E50X_CL and GD32EPRT and GD32E508 */
+#if  defined(GD32E50X_CL) || defined(GD32E508)
     RCU_INT_FLAG_PLLUSBSTB_CLR = RCU_REGIDX_BIT(ADDINT_REG_OFFSET, 23U),    /*!< PLLUSB stabilization interrupt flags clear */
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL and GD32E508 */
     RCU_INT_FLAG_CKM_CLR       = RCU_REGIDX_BIT(INT_REG_OFFSET, 23U),       /*!< CKM interrupt flags clear */
     RCU_INT_FLAG_IRC48MSTB_CLR = RCU_REGIDX_BIT(ADDINT_REG_OFFSET, 22U),    /*!< internal 48 MHz RC oscillator stabilization interrupt clear */
 }rcu_int_flag_clear_enum;
@@ -705,11 +783,13 @@ typedef enum
     RCU_INT_IRC8MSTB        = RCU_REGIDX_BIT(INT_REG_OFFSET, 10U),          /*!< IRC8M stabilization interrupt */
     RCU_INT_HXTALSTB        = RCU_REGIDX_BIT(INT_REG_OFFSET, 11U),          /*!< HXTAL stabilization interrupt */
     RCU_INT_PLLSTB          = RCU_REGIDX_BIT(INT_REG_OFFSET, 12U),          /*!< PLL stabilization interrupt */
-#ifdef GD32E50X_CL
+#if (defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508))
     RCU_INT_PLL1STB         = RCU_REGIDX_BIT(INT_REG_OFFSET, 13U),          /*!< PLL1 stabilization interrupt */
     RCU_INT_PLL2STB         = RCU_REGIDX_BIT(INT_REG_OFFSET, 14U),          /*!< PLL2 stabilization interrupt */
+#endif /* GD32E50X_CL and GD32EPRT and GD32E508 */
+#if (defined(GD32E50X_CL) || defined(GD32E508))
     RCU_INT_PLLUSBSTB       = RCU_REGIDX_BIT(ADDINT_REG_OFFSET, 15U),       /*!< PLLUSB stabilization interrupt */
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL and GD32E508 */
     RCU_INT_IRC48MSTB       = RCU_REGIDX_BIT(ADDINT_REG_OFFSET, 14U),       /*!< internal 48 MHz RC oscillator stabilization interrupt */
 }rcu_int_enum;
 
@@ -722,11 +802,13 @@ typedef enum
     RCU_IRC48M     = RCU_REGIDX_BIT(ADDCTL_REG_OFFSET, 16U),                /*!< IRC48M */
     RCU_IRC40K     = RCU_REGIDX_BIT(RSTSCK_REG_OFFSET, 0U),                 /*!< IRC40K */
     RCU_PLL_CK     = RCU_REGIDX_BIT(CTL_REG_OFFSET, 24U),                   /*!< PLL */
-#ifdef GD32E50X_CL
+#if (defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508))
     RCU_PLL1_CK    = RCU_REGIDX_BIT(CTL_REG_OFFSET, 26U),                   /*!< PLL1 */
     RCU_PLL2_CK    = RCU_REGIDX_BIT(CTL_REG_OFFSET, 28U),                   /*!< PLL2 */
+#endif /* GD32E50X_CL and GD32EPRT and GD32E508*/
+#if defined(GD32E50X_CL) || defined(GD32E508)
     RCU_PLLUSB_CK  = RCU_REGIDX_BIT(ADDCTL_REG_OFFSET, 14U),                /*!< PLLUSB */  
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL and GD32E508 */
 }rcu_osci_type_enum;
 
 /* rcu clock frequency */
@@ -815,9 +897,9 @@ typedef enum
 #define RCU_PLL_MUL12                   CFG0_PLLMF(10)                      /*!< PLL source clock multiply by 12 */
 #define RCU_PLL_MUL13                   CFG0_PLLMF(11)                      /*!< PLL source clock multiply by 13 */
 #define RCU_PLL_MUL14                   CFG0_PLLMF(12)                      /*!< PLL source clock multiply by 14 */
-#if(defined(GD32E50X_HD) || defined(GD32E50X_XD))
+#if defined(GD32E50X_HD) || defined(GD32E50X_XD)
 #define RCU_PLL_MUL15                   CFG0_PLLMF(13)                      /*!< PLL source clock multiply by 15 */
-#elif defined(GD32E50X_CL)
+#elif defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508)
 #define RCU_PLL_MUL6_5                  CFG0_PLLMF(13)                      /*!< PLL source clock multiply by 6.5 */
 #endif /* GD32E50X_HD and GD32E50X_XD */
 #define RCU_PLL_MUL16                   CFG0_PLLMF(14)                      /*!< PLL source clock multiply by 16 */
@@ -870,11 +952,11 @@ typedef enum
 #define RCU_PLL_MUL63                   (PLLMF_4_5 | CFG0_PLLMF(14))        /*!< PLL source clock multiply by 63 */
 #define RCU_PLL_MUL64                   (PLLMF_4_5 | CFG0_PLLMF(15))        /*!< PLL source clock multiply by 64 */
 
-#if(defined(GD32E50X_HD) || defined(GD32E50X_XD))
+#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32EPRT))
 #define USBPSC_2 RCU_CFG0_USBDPSC_2
-#elif defined(GD32E50X_CL)
+#elif defined(GD32E50X_CL) || defined(GD32E508)
 #define USBPSC_2 RCU_CFG0_USBHSPSC_2
-#endif /* GD32E50X_HD and GD32E50X_XD */
+#endif /* GD32E50X_HD and GD32E50X_XD and GD32EPRT */
 
 /* USBD/USBHS prescaler select */
 #define CFG0_USBPSC(regval)             (BITS(22,23) & ((uint32_t)(regval) << 22))
@@ -893,15 +975,17 @@ typedef enum
 #define RCU_CKOUT0SRC_IRC8M             CFG0_CKOUT0SEL(5)                   /*!< internal 8M RC oscillator clock selected */
 #define RCU_CKOUT0SRC_HXTAL             CFG0_CKOUT0SEL(6)                   /*!< high speed crystal oscillator clock (HXTAL) selected */
 #define RCU_CKOUT0SRC_CKPLL_DIV2        CFG0_CKOUT0SEL(7)                   /*!< CK_PLL/2 clock selected */
-#ifdef GD32E50X_CL
+#if (defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508))
 #define RCU_CKOUT0SRC_CKPLL1            CFG0_CKOUT0SEL(8)                   /*!< CK_PLL1 clock selected */
 #define RCU_CKOUT0SRC_CKPLL2_DIV2       CFG0_CKOUT0SEL(9)                   /*!< CK_PLL2/2 clock selected */
 #define RCU_CKOUT0SRC_EXT1              CFG0_CKOUT0SEL(10)                  /*!< EXT1 selected, to provide the external clock for ENET */
 #define RCU_CKOUT0SRC_CKPLL2            CFG0_CKOUT0SEL(11)                  /*!< CK_PLL2 clock selected */
 #define RCU_CKOUT0SRC_CKIRC48M          CFG0_CKOUT0SEL(12)                  /*!< CK_IRC48M clock selected */
 #define RCU_CKOUT0SRC_CKIRC48M_DIV8     CFG0_CKOUT0SEL(13)                  /*!< CK_IRC48M/8 clock selected */
+#endif /* GD32E50X_CL and GD32EPRT and GD32E508*/
+#if defined(GD32E50X_CL) || defined(GD32E508)
 #define RCU_CKOUT0SRC_CKPLLUSB_DIV32    CFG0_CKOUT0SEL(14)                  /*!< CK_PLLUSB/32 clock selected */
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL and GD32E508 */
 
 /* LXTAL drive capability */
 #define BDCTL_LXTALDRI(regval)          (BITS(3,4) & ((uint32_t)(regval) << 3))
@@ -1029,7 +1113,7 @@ typedef enum
 #define RCU_PLL2_MUL64                  (PLL2MF_4_5 | CFG1_PLL2MF(14))      /*!< PLL2 source clock multiply by 64 */
 #define RCU_PLL2_MUL80                  (PLL2MF_4_5 | CFG1_PLL2MF(15))      /*!< PLL2 source clock multiply by 80 */
 
-#ifdef GD32E50X_CL
+#if (defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508))
 /* PREDV0 input clock source selection */
 #define RCU_PREDV0SRC_HXTAL_IRC48M      ((uint32_t)0x00000000U)             /*!< HXTAL or IRC48M selected as PREDV0 input source clock */
 #define RCU_PREDV0SRC_CKPLL1            RCU_CFG1_PREDV0SEL                  /*!< CK_PLL1 selected as PREDV0 input source clock */
@@ -1041,13 +1125,13 @@ typedef enum
 /* I2S2 clock source selection */
 #define RCU_I2S2SRC_CKSYS               ((uint32_t)0x00000000U)             /*!< system clock selected as I2S2 source clock */
 #define RCU_I2S2SRC_CKPLL2_MUL2         RCU_CFG1_I2S2SEL                    /*!< (CK_PLL2 x 2) selected as I2S2 source clock */
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL and GD32EPRT and GD32E508 */
 
 /* SHRTIMER clock source selection */
-#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32E50X_CL))
+#ifndef GD32EPRT
 #define RCU_SHRTIMERSRC_CKAPB2           ((uint32_t)0x00000000U)            /*!< APB2 clock selected as SHRTIMER source clock */
 #define RCU_SHRTIMERSRC_CKSYS            RCU_CFG1_SHRTIMERSEL               /*!< system clock selected as SHRTIMER source clock */
-#endif /* GD32E50X_HD and GD32E50X_XD and GD32E50X_CL*/
+#endif /* GD32EPRT */
 
 /* PLL input clock source selection */
 #define RCU_PLLPRESRC_HXTAL             ((uint32_t)0x00000000U)             /*!< HXTAL selected as PLL source clock */
@@ -1067,7 +1151,7 @@ typedef enum
 #define RCU_CK48MSRC_CKPLLUSB           ADDCTL_CK48MSEL(2)                  /*!< select CK_PLLUSB clock as CK48M clock source */
 #define RCU_CK48MSRC_CKPLL2             ADDCTL_CK48MSEL(3)                  /*!< select CK_PLL2 clock as CK48M clock source */
 
-#ifdef GD32E50X_CL
+#if defined(GD32E50X_CL) || defined(GD32E508)
 /* USBHSSEL clock source selection */
 #define RCU_USBHSSRC_48M               ((uint32_t)0x00000000U)              /*!< 48M clock selected as USBHS source clock */
 #define RCU_CK48MSRC_60M                RCU_ADDCTL_USBHSSEL                 /*!< 60M clock selected as USBHS source clock */
@@ -1223,7 +1307,7 @@ typedef enum
 #define RCU_PLLUSB_MUL125               ADDCFG_PLLUSBMF(125)                /*!< PLLUSB source clock multiply by 125 */
 #define RCU_PLLUSB_MUL126               ADDCFG_PLLUSBMF(126)                /*!< PLLUSB source clock multiply by 126 */
 #define RCU_PLLUSB_MUL127               ADDCFG_PLLUSBMF(127)                /*!< PLLUSB source clock multiply by 127 */
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL and GD32E508 */
 
 /* USART5 clock source selection */
 #define CFG2_USART5SRC(regval)         (BITS(0,1) & ((uint32_t)(regval) << 0))
@@ -1274,10 +1358,10 @@ void rcu_ckout0_config(uint32_t ckout0_src);
 void rcu_pll_config(uint32_t pll_src, uint32_t pll_mul);
 /* configure the PLL clock source preselection */
 void rcu_pllpresel_config(uint32_t pll_presel);
-#if(defined(GD32E50X_HD) || defined(GD32E50X_XD))
+#if defined(GD32E50X_HD) || defined(GD32E50X_XD)
 /* configure the PREDV0 division factor and clock source */
 void rcu_predv0_config(uint32_t predv0_div);
-#elif defined(GD32E50X_CL)
+#elif defined(GD32E50X_CL)  || defined(GD32EPRT) || defined(GD32E508)
 /* configure the PREDV0 division factor and clock source */
 void rcu_predv0_config(uint32_t predv0_source, uint32_t predv0_div);
 /* configure the PREDV1 division factor */
@@ -1286,13 +1370,15 @@ void rcu_predv1_config(uint32_t predv1_div);
 void rcu_pll1_config(uint32_t pll_mul);
 /* configure the PLL2 clock */
 void rcu_pll2_config(uint32_t pll_mul);
+#endif /* GD32E50X_HD and GD32E50X_XD */
+#if defined(GD32E50X_CL) || defined(GD32E508)
 /* configure the PLLUSB clock source preselection */
 void rcu_pllusbpresel_config(uint32_t pllusb_presel);
 /* configure the PLLUSBPREDV division factor and clock source */
 void rcu_pllusbpredv_config(uint32_t pllusbpredv_source, uint32_t pllusbpredv_div);
 /* configure the PLLUSB clock */
 void rcu_pllusb_config(uint32_t pllusb_mul);
-#endif /* GD32E50X_HD and GD32E50X_XD */
+#endif /* GD32E50X_CL and GD32E508 */
 
 /* configure the ADC division factor */
 void rcu_adc_clock_config(uint32_t adc_psc);
@@ -1300,26 +1386,28 @@ void rcu_adc_clock_config(uint32_t adc_psc);
 void rcu_usb_clock_config(uint32_t usb_psc);
 /* configure the RTC clock source selection */
 void rcu_rtc_clock_config(uint32_t rtc_clock_source);
-#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32E50X_CL))
+#ifndef GD32EPRT
 /* configure the SHRTIMER clock source selection */
 void rcu_shrtimer_clock_config(uint32_t shrtimer_clock_source);
-#endif /* GD32E50X_HD and GD32E50X_XD and GD32E50X_CL*/
+#endif /* GD32EPRT */
 /* configure the usart5 clock source selection */
 void rcu_usart5_clock_config(uint32_t usart5_clock_source);
 /* configure the I2C2 clock source selection */
 void rcu_i2c2_clock_config(uint32_t i2c2_clock_source);
-#ifdef GD32E50X_CL
+/* configure the CK48M clock selection */
+void rcu_ck48m_clock_config(uint32_t ck48m_clock_source);
+#if defined(GD32E50X_CL)  || defined(GD32EPRT) || defined(GD32E508)
 /* configure the I2S1 clock source selection */
 void rcu_i2s1_clock_config(uint32_t i2s_clock_source);
 /* configure the I2S2 clock source selection */
 void rcu_i2s2_clock_config(uint32_t i2s_clock_source);
-/* configure the CK48M clock selection */
-void rcu_ck48m_clock_config(uint32_t ck48m_clock_source);
+#endif /* GD32E50X_CL and GD32EPRT and GD32E508 */
+#if defined(GD32E50X_CL) || defined(GD32E508)
 /* configure the USBHSSEL source clock selection */
 void rcu_usbhssel_config(uint32_t usbhssel_clock_source);
 /* configure the USBHSDV division factor */
 void rcu_usbdv_config(uint32_t usbhs_dv);
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL and GD32E508 */
 
 /* get the clock stabilization and periphral reset flags */
 FlagStatus rcu_flag_get(rcu_flag_enum flag);

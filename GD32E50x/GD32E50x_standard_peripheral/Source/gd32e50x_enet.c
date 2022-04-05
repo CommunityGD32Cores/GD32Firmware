@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -36,7 +37,7 @@ OF SUCH DAMAGE.
 #include "gd32e50x_enet.h"
 #include <stdlib.h>
 
-#if (defined(GD32EPRT) || defined(GD32E50X_CL))
+#if (defined(GD32EPRT) || defined(GD32E50X_CL) || defined(GD32E508))
 
 #if defined   (__CC_ARM)                                    /*!< ARM compiler */
 __align(4) 
@@ -1700,10 +1701,10 @@ void enet_forward_feature_enable(uint32_t feature)
     \brief      disable ENET forward feature
     \param[in]  feature: the feature of ENET forward mode,
                 one or more parameters can be selected which are shown as below
-      \arg        ENET_AUTO_PADCRC_DROP: the automatic zero-quanta generation function
-      \arg        ENET_TYPEFRAME_CRC_DROP: the flow control operation in the MAC
-      \arg        ENET_FORWARD_ERRFRAMES: decoding function for the received pause frame and process it
-      \arg        ENET_FORWARD_UNDERSZ_GOODFRAMES: back pressure operation in the MAC(only use in half-dulex mode)
+      \arg        ENET_AUTO_PADCRC_DROP: the function of the MAC strips the Pad/FCS field on received frames
+      \arg        ENET_TYPEFRAME_CRC_DROP: the function that FCS field(last 4 bytes) of frame will be dropped before forwarding
+      \arg        ENET_FORWARD_ERRFRAMES: the function that all frame received with error except runt error are forwarded to memory
+      \arg        ENET_FORWARD_UNDERSZ_GOODFRAMES: the function that forwarding undersized good frames
     \param[out] none
     \retval     none
 */
@@ -3670,4 +3671,4 @@ static void enet_delay(uint32_t ncount)
 }
 #endif /* USE_DELAY */
 
-#endif /* GD32EPRT || GD32E50X_CL */
+#endif /* GD32EPRT || GD32E50X_CL || GD32E508 */

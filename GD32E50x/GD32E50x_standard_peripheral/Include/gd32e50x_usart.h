@@ -4,10 +4,12 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2020-12-21, V1.1.1, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -184,8 +186,6 @@ OF SUCH DAMAGE.
 #define USART5_CTL0_MEN                BIT(13)          /*!< mute mode enable */
 #define USART5_CTL0_AMIE               BIT(14)          /*!< ADDR match interrupt enable */
 #define USART5_CTL0_OVSMOD             BIT(15)          /*!< oversample mode */
-#define USART5_CTL0_DED                BITS(16,20)      /*!< driver enable de-assertion time */
-#define USART5_CTL0_DEA                BITS(21,25)      /*!< driver enable assertion time */
 #define USART5_CTL0_RTIE               BIT(26)          /*!< receiver timeout interrupt enable */
 #define USART5_CTL0_EBIE               BIT(27)          /*!< End of Block interrupt enable */
 
@@ -218,14 +218,9 @@ OF SUCH DAMAGE.
 #define USART5_CTL2_SCEN               BIT(5)           /*!< smartcard mode enable */
 #define USART5_CTL2_DENR               BIT(6)           /*!< DMA enable for reception */
 #define USART5_CTL2_DENT               BIT(7)           /*!< DMA enable for transmission */
-#define USART5_CTL2_RTSEN              BIT(8)           /*!< RTS enable */
-#define USART5_CTL2_CTSEN              BIT(9)           /*!< CTS enable */
-#define USART5_CTL2_CTSIE              BIT(10)          /*!< CTS interrupt enable */
 #define USART5_CTL2_OSB                BIT(11)          /*!< one sample bit mode */
 #define USART5_CTL2_OVRD               BIT(12)          /*!< overrun disable */
 #define USART5_CTL2_DDRE               BIT(13)          /*!< disable DMA on reception error */
-#define USART5_CTL2_DEM                BIT(14)          /*!< driver enable mode */
-#define USART5_CTL2_DEP                BIT(15)          /*!< driver enable polarity mode */
 #define USART5_CTL2_SCRTNUM            BITS(17,19)      /*!< smartcard auto-retry number */
 #define USART5_CTL2_WUM                BITS(20,21)      /*!< wakeup mode from deep-sleep mode */
 #define USART5_CTL2_WUIE               BIT(22)          /*!< wakeup from deep-sleep mode interrupt enable */
@@ -259,8 +254,6 @@ OF SUCH DAMAGE.
 #define USART5_STAT_TC                 BIT(6)           /*!< transmission completed */
 #define USART5_STAT_TBE                BIT(7)           /*!< transmit data register empty */
 #define USART5_STAT_LBDF               BIT(8)           /*!< LIN break detected flag */
-#define USART5_STAT_CTSF               BIT(9)           /*!< CTS change flag */
-#define USART5_STAT_CTS                BIT(10)          /*!< CTS level */
 #define USART5_STAT_RTF                BIT(11)          /*!< receiver timeout flag */
 #define USART5_STAT_EBF                BIT(12)          /*!< end of block flag */
 #define USART5_STAT_ABDE               BIT(14)          /*!< auto baudrate detection error */
@@ -281,7 +274,6 @@ OF SUCH DAMAGE.
 #define USART5_INTC_IDLEC              BIT(4)           /*!< idle line detected clear */
 #define USART5_INTC_TCC                BIT(6)           /*!< transmission complete clear */
 #define USART5_INTC_LBDC               BIT(8)           /*!< LIN break detected clear */
-#define USART5_INTC_CTSC               BIT(9)           /*!< CTS change clear */
 #define USART5_INTC_RTC                BIT(11)          /*!< receiver timeout clear */
 #define USART5_INTC_EBC                BIT(12)          /*!< end of timeout clear */
 #define USART5_INTC_AMC                BIT(17)          /*!< address match clear */
@@ -294,7 +286,6 @@ OF SUCH DAMAGE.
 #define USART5_TDATA_TDATA             BITS(0,8)        /*!< transmit data value */
 
 /* USART5_CHC */
-#define USART5_CHC_HCM                 BIT(0)           /*!< hardware flow control coherence mode */
 #define USART5_CHC_EPERR               BIT(8)           /*!< early parity error flag */
 
 /* USART5_RFCS */
@@ -372,8 +363,6 @@ typedef enum
     USART5_FLAG_ABDE = USART_REGIDX_BIT(USART5_STAT_REG_OFFSET, 14U),        /*!< auto baudrate detection error */
     USART5_FLAG_EB = USART_REGIDX_BIT(USART5_STAT_REG_OFFSET, 12U),          /*!< end of block flag */
     USART5_FLAG_RT = USART_REGIDX_BIT(USART5_STAT_REG_OFFSET, 11U),          /*!< receiver timeout flag */
-    USART5_FLAG_CTS = USART_REGIDX_BIT(USART5_STAT_REG_OFFSET, 10U),         /*!< CTS level */
-    USART5_FLAG_CTSF = USART_REGIDX_BIT(USART5_STAT_REG_OFFSET, 9U),         /*!< CTS change flag */
     USART5_FLAG_LBD = USART_REGIDX_BIT(USART5_STAT_REG_OFFSET, 8U),          /*!< LIN break detected flag */
     USART5_FLAG_TBE = USART_REGIDX_BIT(USART5_STAT_REG_OFFSET, 7U),          /*!< transmit data buffer empty */
     USART5_FLAG_TC = USART_REGIDX_BIT(USART5_STAT_REG_OFFSET, 6U),           /*!< transmission complete */
@@ -433,7 +422,6 @@ typedef enum
     USART5_INT_FLAG_LBD = USART_REGIDX_BIT2(USART5_CTL1_REG_OFFSET, 6U, USART5_STAT_REG_OFFSET, 8U),        /*!< LIN break detected interrupt and flag */
     /* interrupt flags in CTL2 register */
     USART5_INT_FLAG_WU = USART_REGIDX_BIT2(USART5_CTL2_REG_OFFSET, 22U, USART5_STAT_REG_OFFSET, 20U),       /*!< wakeup from deep-sleep mode interrupt and flag */
-    USART5_INT_FLAG_CTS = USART_REGIDX_BIT2(USART5_CTL2_REG_OFFSET, 10U, USART5_STAT_REG_OFFSET, 9U),       /*!< CTS interrupt and flag */
     USART5_INT_FLAG_ERR_NERR = USART_REGIDX_BIT2(USART5_CTL2_REG_OFFSET, 0U, USART5_STAT_REG_OFFSET, 2U),   /*!< error interrupt and noise error flag */
     USART5_INT_FLAG_ERR_ORERR = USART_REGIDX_BIT2(USART5_CTL2_REG_OFFSET, 0U, USART5_STAT_REG_OFFSET, 3U),  /*!< error interrupt and overrun error flag */
     USART5_INT_FLAG_ERR_FERR = USART_REGIDX_BIT2(USART5_CTL2_REG_OFFSET, 0U, USART5_STAT_REG_OFFSET, 1U),   /*!< error interrupt and frame error flag */
@@ -479,7 +467,6 @@ typedef enum
     USART5_INT_LBD = USART_REGIDX_BIT(USART5_CTL1_REG_OFFSET, 6U),         /*!< LIN break detected interrupt */
     /* interrupt in CTL2 register */
     USART5_INT_WU = USART_REGIDX_BIT(USART5_CTL2_REG_OFFSET, 22U),         /*!< wakeup from deep-sleep mode interrupt */
-    USART5_INT_CTS = USART_REGIDX_BIT(USART5_CTL2_REG_OFFSET, 10U),        /*!< CTS interrupt */
     USART5_INT_ERR = USART_REGIDX_BIT(USART5_CTL2_REG_OFFSET, 0U),         /*!< error interrupt */
     /* interrupt in RFCS register */
     USART5_INT_RFF = USART_REGIDX_BIT(USART5_RFCS_REG_OFFSET, 9U),         /*!< receive FIFO full interrupt */
@@ -639,21 +626,11 @@ typedef enum
 #define USART5_ABDM_FTOR              CTL1_ABDM(0)                   /*!< falling edge to rising edge measurement */
 #define USART5_ABDM_FTOF              CTL1_ABDM(1)                   /*!< falling edge to falling edge measurement */
 
-/* USART5 driver enable polarity mode */
-#define CTL2_DEP(regval)              (BIT(15) & ((uint32_t)(regval) << 15))
-#define USART5_DEP_HIGH               CTL2_DEP(0)                    /*!< DE signal is active high */
-#define USART5_DEP_LOW                CTL2_DEP(1)                    /*!< DE signal is active low */
-
 /* USART5 wakeup mode from deep-sleep mode */
 #define CTL2_WUM(regval)              (BITS(20,21) & ((uint32_t)(regval) << 20))
 #define USART5_WUM_ADDR               CTL2_WUM(0)                    /*!< WUF active on address match */
 #define USART5_WUM_STARTB             CTL2_WUM(2)                    /*!< WUF active on start bit */
 #define USART5_WUM_RBNE               CTL2_WUM(3)                    /*!< WUF active on RBNE */
-
-/* USART5 hardware flow control coherence mode */
-#define CHC_HCM(regval)               (BIT(0) & ((uint32_t)(regval) << 0))
-#define USART5_HCM_NONE               CHC_HCM(0)                    /*!< nRTS signal equals to the rxne status register */
-#define USART5_HCM_EN                 CHC_HCM(1)                    /*!< nRTS signal is set when the last data bit has been sampled */
 
 
 /* USARTx(x=0,1,2,5)/UARTx(x=3,4) function declarations */
@@ -749,12 +726,6 @@ void usart_prescaler_config(uint32_t usart_periph, uint8_t psc);
 /* configure IrDA low-power */
 void usart_irda_lowpower_config(uint32_t usart_periph, uint32_t irlp);
 
-/* hardware flow communication */
-/* configure hardware flow control RTS */
-void usart_hardware_flow_rts_config(uint32_t usart_periph, uint32_t rtsconfig);
-/* configure hardware flow control CTS */
-void usart_hardware_flow_cts_config(uint32_t usart_periph, uint32_t ctsconfig);
-
 /* DMA communication */
 /* configure USART DMA for reception */
 void usart_dma_receive_config(uint32_t usart_periph, uint32_t dmacmd);
@@ -762,6 +733,13 @@ void usart_dma_receive_config(uint32_t usart_periph, uint32_t dmacmd);
 void usart_dma_transmit_config(uint32_t usart_periph, uint32_t dmacmd);
 
 /* USARTx(x=0,1,2)/UARTx(x=3,4) function declarations */
+
+/* hardware flow communication */
+/* configure hardware flow control RTS */
+void usart_hardware_flow_rts_config(uint32_t usart_periph, uint32_t rtsconfig);
+/* configure hardware flow control CTS */
+void usart_hardware_flow_cts_config(uint32_t usart_periph, uint32_t ctsconfig);
+
 /* normal mode communication */
 /* data is transmitted/received with the LSB/MSB first */
 void usart_data_first_config(uint32_t usart_periph, uint32_t msbf);
@@ -830,21 +808,6 @@ void usart5_address_detection_mode_config(uint32_t usart_periph, uint32_t addmod
 void usart5_smartcard_mode_early_nack_enable(uint32_t usart_periph);
 /* disable early NACK in smartcard mode */
 void usart5_smartcard_mode_early_nack_disable(uint32_t usart_periph);
-
-/* coherence control */
-/* configure hardware flow control coherence mode */
-void usart5_hardware_flow_coherence_config(uint32_t usart_periph, uint32_t hcm);
-
-/* enable RS485 driver */
-void usart5_rs485_driver_enable(uint32_t usart_periph);
-/* disable RS485 driver */
-void usart5_rs485_driver_disable(uint32_t usart_periph);
-/* configure driver enable assertion time */
-void usart5_driver_assertime_config(uint32_t usart_periph, uint32_t deatime);
-/* configure driver enable de-assertion time */
-void usart5_driver_deassertime_config(uint32_t usart_periph, uint32_t dedtime);
-/* configure driver enable polarity mode */
-void usart5_depolarity_config(uint32_t usart_periph, uint32_t dep);
 
 /* DMA communication */
 /* enable DMA on reception error */

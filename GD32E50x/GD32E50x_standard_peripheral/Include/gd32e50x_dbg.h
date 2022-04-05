@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -53,6 +54,9 @@ OF SUCH DAMAGE.
 #define DBG_CTL_SLP_HOLD         BIT(0)                      /*!< keep debugger connection during sleep mode */
 #define DBG_CTL_DSLP_HOLD        BIT(1)                      /*!< keep debugger connection during deepsleep mode */
 #define DBG_CTL_STB_HOLD         BIT(2)                      /*!< keep debugger connection during standby mode */
+#ifdef GD32E50X_CL
+#define DBG_CTL_CAN2_HOLD        BIT(3)                      /*!< hold CAN2 receive register counter when core is halted */
+#endif /* GD32E50X_CL */
 #define DBG_CTL_TRACE_IOEN       BIT(5)                      /*!< enable trace pin assignment */
 #define DBG_CTL_TRACE_MODE       BITS(6,7)                   /*!< trace pin mode selection */
 #define DBG_CTL_FWDGT_HOLD       BIT(8)                      /*!< hold FWDGT counter when core is halted */
@@ -61,20 +65,22 @@ OF SUCH DAMAGE.
 #define DBG_CTL_TIMER1_HOLD      BIT(11)                     /*!< hold TIMER1 counter when core is halted */
 #define DBG_CTL_TIMER2_HOLD      BIT(12)                     /*!< hold TIMER2 counter when core is halted */
 #define DBG_CTL_TIMER3_HOLD      BIT(13)                     /*!< hold TIMER3 counter when core is halted */
+#define DBG_CTL_CAN0_HOLD        BIT(14)                     /*!< hold CAN0 receive register counter when core is halted */
 #define DBG_CTL_I2C0_HOLD        BIT(15)                     /*!< hold I2C0 smbus timeout when core is halted */
 #define DBG_CTL_I2C1_HOLD        BIT(16)                     /*!< hold I2C1 smbus timeout when core is halted */
 #define DBG_CTL_TIMER7_HOLD      BIT(17)                     /*!< hold TIMER7 counter when core is halted */
 #define DBG_CTL_TIMER4_HOLD      BIT(18)                     /*!< hold TIMER4 counter when core is halted */
 #define DBG_CTL_TIMER5_HOLD      BIT(19)                     /*!< hold TIMER5 counter when core is halted */
 #define DBG_CTL_TIMER6_HOLD      BIT(20)                     /*!< hold TIMER6 counter when core is halted */
+#define DBG_CTL_CAN1_HOLD        BIT(21)                     /*!< hold CAN1 receive register counter when core is halted */
 #define DBG_CTL_I2C2_HOLD        BIT(22)                     /*!< hold I2C2 smbus timeout when core is halted */
+#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32E50X_CL))
 #define DBG_CTL_TIMER11_HOLD     BIT(25)                     /*!< hold TIMER11 counter when core is halted */
 #define DBG_CTL_TIMER12_HOLD     BIT(26)                     /*!< hold TIMER12 counter when core is halted */
 #define DBG_CTL_TIMER13_HOLD     BIT(27)                     /*!< hold TIMER13 counter when core is halted */
 #define DBG_CTL_TIMER8_HOLD      BIT(28)                     /*!< hold TIMER8 counter when core is halted */
 #define DBG_CTL_TIMER9_HOLD      BIT(29)                     /*!< hold TIMER9 counter when core is halted */
 #define DBG_CTL_TIMER10_HOLD     BIT(30)                     /*!< hold TIMER10 counter when core is halted */
-#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32E50X_CL))
 #define DBG_CTL_SHRTIMER_HOLD    BIT(31)                     /*!< hold SHRTIMER counter when core is halted */
 #endif /* GD32E50X_HD and GD32E50X_XD and GD32E50X_CL */
 
@@ -93,26 +99,31 @@ OF SUCH DAMAGE.
 
 typedef enum
 {
+#ifdef GD32E50X_CL
+    DBG_CAN2_HOLD              = DBG_REGIDX_BIT(DBG_IDX_CTL, 3U),                    /*!< hold CAN2 receive register counter when core is halted */
+#endif /* GD32E50X_CL */
     DBG_FWDGT_HOLD             = DBG_REGIDX_BIT(DBG_IDX_CTL, 8U),                    /*!< hold FWDGT counter when core is halted */
     DBG_WWDGT_HOLD             = DBG_REGIDX_BIT(DBG_IDX_CTL, 9U),                    /*!< hold WWDGT counter when core is halted */
     DBG_TIMER0_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL, 10U),                   /*!< hold TIMER0 counter when core is halted */
     DBG_TIMER1_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL, 11U),                   /*!< hold TIMER1 counter when core is halted */
     DBG_TIMER2_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL, 12U),                   /*!< hold TIMER2 counter when core is halted */
     DBG_TIMER3_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL, 13U),                   /*!< hold TIMER3 counter when core is halted */
+    DBG_CAN0_HOLD              = DBG_REGIDX_BIT(DBG_IDX_CTL, 14U),                   /*!< hold CAN0 receive register counter when core is halted */
     DBG_I2C0_HOLD              = DBG_REGIDX_BIT(DBG_IDX_CTL, 15U),                   /*!< hold I2C0 smbus timeout when core is halted */
     DBG_I2C1_HOLD              = DBG_REGIDX_BIT(DBG_IDX_CTL, 16U),                   /*!< hold I2C1 smbus timeout when core is halted */
     DBG_TIMER7_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL, 17U),                   /*!< hold TIMER7 counter when core is halted */
     DBG_TIMER4_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL, 18U),                   /*!< hold TIMER4 counter when core is halted */
     DBG_TIMER5_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL, 19U),                   /*!< hold TIMER5 counter when core is halted */
     DBG_TIMER6_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL, 20U),                   /*!< hold TIMER6 counter when core is halted */
+    DBG_CAN1_HOLD              = DBG_REGIDX_BIT(DBG_IDX_CTL, 21U),                   /*!< hold CAN1 receive register counter when core is halted */
     DBG_I2C2_HOLD              = DBG_REGIDX_BIT(DBG_IDX_CTL, 22U),                   /*!< hold I2C2 smbus timeout when core is halted */
+#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32E50X_CL))
     DBG_TIMER11_HOLD           = DBG_REGIDX_BIT(DBG_IDX_CTL, 25U),                   /*!< hold TIMER11 counter when core is halted */
     DBG_TIMER12_HOLD           = DBG_REGIDX_BIT(DBG_IDX_CTL, 26U),                   /*!< hold TIMER12 counter when core is halted */
     DBG_TIMER13_HOLD           = DBG_REGIDX_BIT(DBG_IDX_CTL, 27U),                   /*!< hold TIMER13 counter when core is halted */
     DBG_TIMER8_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL, 28U),                   /*!< hold TIMER8 counter when core is halted */
     DBG_TIMER9_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL, 29U),                   /*!< hold TIMER9 counter when core is halted */
     DBG_TIMER10_HOLD           = DBG_REGIDX_BIT(DBG_IDX_CTL, 30U),                   /*!< hold TIMER10 counter when core is halted */
-#if (defined(GD32E50X_HD) || defined(GD32E50X_XD) || defined(GD32E50X_CL))
     DBG_SHRTIMER_HOLD          = DBG_REGIDX_BIT(DBG_IDX_CTL, 31U),                   /*!< hold SHRTIMER counter when core is halted */
 #endif /* GD32E50X_HD and GD32E50X_XD and GD32E50X_CL */
 }dbg_periph_enum;

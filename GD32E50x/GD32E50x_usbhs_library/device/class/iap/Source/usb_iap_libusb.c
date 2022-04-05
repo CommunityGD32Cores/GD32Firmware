@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -182,7 +183,7 @@ static void iap_req_leave     (usb_dev *udev);
 static void iap_address_send  (usb_dev *udev);
 
 /*!
-    \brief      send iap report
+    \brief      send IAP report
     \param[in]  udev: pointer to USB device instance
     \param[in]  report: pointer to HID report
     \param[in]  len: data length
@@ -197,7 +198,7 @@ uint8_t iap_data_send (usb_dev *udev, uint8_t *report, uint16_t len)
 }
 
 /*!
-    \brief      initialize the HID device
+    \brief      initialize the IAP device
     \param[in]  udev: pointer to USB device instance
     \param[in]  config_index: configuration index
     \param[out] none
@@ -205,10 +206,10 @@ uint8_t iap_data_send (usb_dev *udev, uint8_t *report, uint16_t len)
 */
 static uint8_t iap_init (usb_dev *udev, uint8_t config_index)
 {
-    /* initialize Tx endpoint */
+    /* initialize TX endpoint */
     usbd_ep_setup(udev, &(iap_config_desc.epin));
 
-    /* initialize Rx endpoint */
+    /* initialize RX endpoint */
     usbd_ep_setup(udev, &(iap_config_desc.epout));
 
     /* unlock the internal flash */
@@ -221,7 +222,7 @@ static uint8_t iap_init (usb_dev *udev, uint8_t config_index)
 }
 
 /*!
-    \brief      de-initialize the HID device
+    \brief      de-initialize the IAP device
     \param[in]  udev: pointer to USB device instance
     \param[in]  config_index: configuration index
     \param[out] none
@@ -229,7 +230,7 @@ static uint8_t iap_init (usb_dev *udev, uint8_t config_index)
 */
 static uint8_t iap_deinit (usb_dev *udev, uint8_t config_index)
 {
-    /* deinitialize HID endpoints */
+    /* deinitialize IAP endpoints */
     usbd_ep_clear (udev, IAP_IN_EP);
     usbd_ep_clear (udev, IAP_OUT_EP);
 
@@ -240,11 +241,10 @@ static uint8_t iap_deinit (usb_dev *udev, uint8_t config_index)
 }
 
 /*!
-    \brief      handle the HID class-specific requests
+    \brief      handle the IAP class-specific requests
     \param[in]  udev: pointer to USB device instance
     \param[in]  req: device class-specific request
-    \param[out] buf: buffer for save request data
-    \param[out] len: data length of class-specific request 
+    \param[out] none
     \retval     USB device operation status
 */
 static uint8_t iap_req_handler (usb_dev *udev, usb_req *req)
@@ -301,7 +301,7 @@ static uint8_t iap_data_out (usb_dev *udev ,uint8_t ep_num)
 
 /*!
     \brief      handle the IAP_DNLOAD request
-    \param[in]  udev: pointer to usb device instance
+    \param[in]  udev: pointer to USB device instance
     \param[out] none
     \retval     none
 */
@@ -327,7 +327,7 @@ static void iap_req_dnload(usb_dev *udev)
 
 /*!
     \brief      handle the IAP_ERASE request
-    \param[in]  udev: pointer to usb device instance
+    \param[in]  udev: pointer to USB device instance
     \param[out] none
     \retval     none
 */
@@ -375,7 +375,7 @@ static void iap_req_erase(usb_dev *udev)
 
 /*!
     \brief      handle the IAP_OPTION_BYTE request
-    \param[in]  udev: pointer to usb device instance
+    \param[in]  udev: pointer to USB device instance
     \param[in]  option_num: number of option byte
     \param[out] none
     \retval     none
@@ -407,7 +407,7 @@ static void iap_req_optionbyte(usb_dev *udev, uint8_t option_num)
 
 /*!
     \brief      handle the IAP_LEAVE request
-    \param[in]  udev: pointer to usb device instance
+    \param[in]  udev: pointer to USB device instance
     \param[out] none
     \retval     none
 */
@@ -422,7 +422,7 @@ static void iap_req_leave(usb_dev *udev)
 
 /*!
     \brief      handle the IAP_SEND_ADDRESS request
-    \param[in]  udev: pointer to usb device instance
+    \param[in]  udev: pointer to USB device instance
     \param[out] none
     \retval     none
 */

@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -89,7 +90,7 @@ void timer_deinit(uint32_t timer_periph)
         rcu_periph_reset_enable(RCU_TIMER7RST);
         rcu_periph_reset_disable(RCU_TIMER7RST);
         break;
-#ifndef GD32E50X_HD
+#ifndef GD32EPRT
     case TIMER8:
         /* reset TIMER8 */
         rcu_periph_reset_enable(RCU_TIMER8RST);
@@ -120,7 +121,7 @@ void timer_deinit(uint32_t timer_periph)
         rcu_periph_reset_enable(RCU_TIMER13RST);
         rcu_periph_reset_disable(RCU_TIMER13RST);
         break;
-#endif /* GD32E50X_HD */
+#endif /* GD32EPRT */
     default:
         break;
     }

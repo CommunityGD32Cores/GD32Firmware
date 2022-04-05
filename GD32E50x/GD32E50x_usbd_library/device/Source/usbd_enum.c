@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -187,11 +188,17 @@ static uint8_t* _usb_config_desc_get (usb_dev *udev, uint8_t index, uint16_t *le
 */
 static uint8_t* _usb_bos_desc_get (usb_dev *udev, uint8_t index, uint16_t *len)
 {
-    (void)index;
+    if (NULL != udev->desc->bos_desc) {
+        (void)index;
 
-    *len = (uint16_t)udev->desc->bos_desc[2] | (uint16_t)((uint16_t)udev->desc->bos_desc[3] << 8);
+        *len = (uint16_t)udev->desc->bos_desc[2] | (uint16_t)((uint16_t)udev->desc->bos_desc[3] << 8);
 
-    return udev->desc->bos_desc;
+        return udev->desc->bos_desc;
+    } else {
+        *len = 0U;
+
+        return NULL;
+    }
 }
 
 /*!
@@ -250,12 +257,14 @@ static usb_reqsta _usb_std_getstatus (usb_dev *udev, usb_req *req)
             break;
         }
         break;
+
     /* handle interface get status request */
     case USB_RECPTYPE_ITF:
         if (((uint8_t)USBD_CONFIGURED == udev->cur_status) && (recp < USBD_ITF_MAX_NUM)) {
             req_status = REQ_SUPP;
         }
         break;
+
     /* handle endpoint get status request */
     case USB_RECPTYPE_EP:
         if ((uint8_t)USBD_CONFIGURED == udev->cur_status) {
@@ -316,6 +325,8 @@ static usb_reqsta _usb_std_clearfeature (usb_dev *udev, usb_req *req)
             /* clear endpoint halt feature */
             if (((uint16_t)USB_FEATURE_EP_HALT == req->wValue) && (!CTL_EP(ep))) {
                 usbd_ep_clear_stall(udev, ep);
+                
+                udev->class_core->req_process(udev, req);
 
                 return REQ_SUPP;
             }
@@ -693,13 +704,13 @@ static void int_to_unicode (uint32_t value, uint8_t *pbuf, uint8_t len)
     uint8_t index = 0U;
 
     for (index = 0U; index < len; index++) {
-        if ((value >> 28) < 0x0AU) {
+        if ((value >> 28U) < 0x0AU) {
             pbuf[2U * index] = (uint8_t)((value >> 28) + '0');
         } else {
             pbuf[2U * index] = (uint8_t)((value >> 28) + 'A' - 10U);
         }
 
-        value = value << 4;
+        value = value << 4U;
 
         pbuf[2U * index + 1U] = 0U;
     }
@@ -707,13 +718,13 @@ static void int_to_unicode (uint32_t value, uint8_t *pbuf, uint8_t len)
 
 /*!
     \brief      convert hex 32bits value into unicode char
-    \param[in]  none
+    \param[in]  unicode_str: pointer to unicode string
     \param[out] none
     \retval     none
 */
 void serial_string_get (uint16_t *unicode_str)
 {
-    if ((unicode_str[0] & 0x00FFU) != 6U) {
+    if (6U != (unicode_str[0] & 0x00FFU)) {
         uint32_t DeviceSerial0, DeviceSerial1, DeviceSerial2;
 
         DeviceSerial0 = *(uint32_t*)DEVICE_ID1;
@@ -731,7 +742,7 @@ void serial_string_get (uint16_t *unicode_str)
 
         if (0U != device_serial) {
             unicode_str[1] = (uint16_t)(device_serial & 0x0000FFFFU);
-            unicode_str[2] = (uint16_t)((device_serial & 0xFFFF0000U) >> 16);
+            unicode_str[2] = (uint16_t)((device_serial & 0xFFFF0000U) >> 16U);
 
         }
     }

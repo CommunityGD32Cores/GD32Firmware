@@ -4,10 +4,12 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2020-12-07, V1.1.1, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -46,7 +48,7 @@ OF SUCH DAMAGE.
 static uint8_t dfu_init(usb_dev *udev, uint8_t config_index);
 static uint8_t dfu_deinit(usb_dev *udev, uint8_t config_index);
 static uint8_t dfu_req_handler(usb_dev *udev, usb_req *req);
-static uint8_t dfu_data_in(usb_dev *udev, uint8_t ep_num);
+static uint8_t dfu_ctlx_in(usb_dev *udev);
 static void dfu_detach(usb_dev *udev, usb_req *req);
 static void dfu_dnload(usb_dev *udev, usb_req *req);
 static void dfu_upload(usb_dev *udev, usb_req *req);
@@ -181,7 +183,7 @@ static __ALIGN_BEGIN usb_desc_str serial_string __ALIGN_END =
      }
 };
 
-/* USB config string */
+/* USB configure string */
 static const __ALIGN_BEGIN usb_desc_str config_string __ALIGN_END = 
 {
     .header = 
@@ -223,11 +225,11 @@ usb_class_core dfu_class = {
     .init            = dfu_init,
     .deinit          = dfu_deinit,
     .req_proc        = dfu_req_handler,
-    .data_in         = dfu_data_in
+    .ctlx_in         = dfu_ctlx_in
 };
 
 /*!
-    \brief      initialize the MSC device
+    \brief      initialize the DFU device
     \param[in]  udev: pointer to USB device instance
     \param[in]  config_index: configuration index
     \param[out] none
@@ -253,7 +255,7 @@ static uint8_t dfu_init (usb_dev *udev, uint8_t config_index)
 }
 
 /*!
-    \brief      de-initialize the MSC device
+    \brief      de-initialize the DFU device
     \param[in]  udev: pointer to USB device instance
     \param[in]  config_index: configuration index
     \param[out] none
@@ -276,7 +278,7 @@ static uint8_t dfu_deinit (usb_dev *udev, uint8_t config_index)
 }
 
 /*!
-    \brief      handle the MSC class-specific requests
+    \brief      handle the DFU class-specific requests
     \param[in]  udev: pointer to USB device instance
     \param[in]  req: device class-specific request
     \param[out] none
@@ -300,11 +302,9 @@ static uint8_t dfu_req_handler (usb_dev *udev, usb_req *req)
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t dfu_data_in (usb_dev *udev, uint8_t ep_num)
+static uint8_t dfu_ctlx_in (usb_dev *udev)
 {
-    if (0U == ep_num) {
-        dfu_getstatus_complete(udev);
-    }
+    dfu_getstatus_complete(udev);
 
     return USBD_OK;
 }
@@ -338,9 +338,9 @@ static void dfu_mode_leave (usb_dev *udev)
     \brief      handle data IN stage in control endpoint 0
     \param[in]  udev: pointer to USB device instance
     \param[out] none
-    \retval     usb device operation status
+    \retval     USB device operation status
   */
-static uint8_t  dfu_getstatus_complete (usb_dev *udev)
+static uint8_t dfu_getstatus_complete (usb_dev *udev)
 {
     uint32_t addr;
 
@@ -367,7 +367,7 @@ static uint8_t  dfu_getstatus_complete (usb_dev *udev)
             } else {
                 /* no operation */
             }
-        } else if (dfu->block_num > 1U) { /* regular download command */
+        } else if (dfu->block_num > 1U) {  /* regular download command */
             /* decode the required address */
             addr = (dfu->block_num - 2U) * TRANSFER_SIZE + dfu->base_addr;
 
@@ -497,7 +497,7 @@ static void dfu_upload (usb_dev *udev, usb_req *req)
         dfu->data_len = req->wLength;
 
         /* DFU get command */
-        if (dfu->block_num == 0U) {
+        if (0U == dfu->block_num) {
             /* update the state machine */
             dfu->bState = (dfu->data_len > 3U) ? STATE_DFU_IDLE : STATE_DFU_UPLOAD_IDLE;
 

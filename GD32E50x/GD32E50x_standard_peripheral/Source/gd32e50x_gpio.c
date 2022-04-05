@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -340,6 +341,8 @@ uint16_t gpio_output_port_get(uint32_t gpio_periph)
       \arg        GPIO_TIMER2_PARTIAL_REMAP: TIMER2 partial remapping
       \arg        GPIO_TIMER2_FULL_REMAP: TIMER2 full remapping
       \arg        GPIO_TIMER3_REMAP: TIMER3 remapping
+      \arg        GPIO_CAN0_PARTIAL_REMAP: CAN0 partial remapping(not support on GD32EPRT devices)
+      \arg        GPIO_CAN0_FULL_REMAP: CAN0 full remapping(not support on GD32EPRT devices)
       \arg        GPIO_PD01_REMAP: PD01 remapping
       \arg        GPIO_TIMER4CH3_IREMAP: TIMER4 channel3 internal remapping
       \arg        GPIO_ADC0_ETRGINS_REMAP: ADC0 external trigger inserted conversion remapping(only for GD32E50X_HD devices and GD32E50X_XD devices)
@@ -347,17 +350,18 @@ uint16_t gpio_output_port_get(uint32_t gpio_periph)
       \arg        GPIO_ADC1_ETRGINS_REMAP: ADC1 external trigger inserted conversion remapping(only for GD32E50X_HD devices and GD32E50X_XD devices)
       \arg        GPIO_ADC1_ETRGREG_REMAP: ADC1 external trigger regular conversion remapping(only for GD32E50X_HD devices and GD32E50X_XD devices)
       \arg        GPIO_ENET_REMAP: ENET remapping(only for GD32E50X_CL devices) 
+      \arg        GPIO_CAN1_REMAP: CAN1 remapping(not support on GD32EPRT devices)
       \arg        GPIO_SWJ_NONJTRST_REMAP: full SWJ(JTAG-DP + SW-DP),but without NJTRST
       \arg        GPIO_SWJ_SWDPENABLE_REMAP: JTAG-DP disabled and SW-DP enabled
       \arg        GPIO_SWJ_DISABLE_REMAP: JTAG-DP disabled and SW-DP disabled
       \arg        GPIO_SPI2_REMAP: SPI2 remapping 
       \arg        GPIO_TIMER1ITR0_REMAP: TIMER1 internal trigger 0 remapping(only for GD32E50X_CL devices)
       \arg        GPIO_PTP_PPS_REMAP: ethernet PTP PPS remapping(only for GD32E50X_CL devices) 
-      \arg        GPIO_TIMER8_REMAP: TIMER8 remapping
-      \arg        GPIO_TIMER9_REMAP: TIMER9 remapping
-      \arg        GPIO_TIMER10_REMAP: TIMER10 remapping
-      \arg        GPIO_TIMER12_REMAP: TIMER12 remapping
-      \arg        GPIO_TIMER13_REMAP: TIMER13 remapping
+      \arg        GPIO_TIMER8_REMAP: TIMER8 remapping(not support on GD32EPRT devices)
+      \arg        GPIO_TIMER9_REMAP: TIMER9 remapping(not support on GD32EPRT devices)
+      \arg        GPIO_TIMER10_REMAP: TIMER10 remapping(not support on GD32EPRT devices)
+      \arg        GPIO_TIMER12_REMAP: TIMER12 remapping(not support on GD32EPRT devices)
+      \arg        GPIO_TIMER13_REMAP: TIMER13 remapping(not support on GD32EPRT devices)
       \arg        GPIO_EXMC_NADV_REMAP: EXMC_NADV connect/disconnect
       \arg        GPIO_CTC_REMAP0: CTC remapping(PD15)
       \arg        GPIO_CTC_REMAP1: CTC remapping(PF0)
@@ -409,15 +413,17 @@ void gpio_pin_remap_config(uint32_t remap, ControlStatus newvalue)
 
 /*!
     \brief      configure AFIO port alternate function
-    \param[in]  afio_function: select the port AFIO function(SHRTIMER not support on GD32E50X_EPRT devices)
+    \param[in]  afio_function: select the port AFIO function(SHRTIMER not support on GD32EPRT devices)
                 only one parameter can be selected which are shown as below:
       \arg        AFIO_PA2_CMP1_CFG: configure PA2 alternate function to CMP1
       \arg        AFIO_PA3_USBHS_CFG: configure PA3 alternate function to USBHS
       \arg        AFIO_PA5_USBHS_CFG: configure PA5 alternate function to USBHS
       \arg        AFIO_PA8_I2C2_CFG: configure PA8 alternate function to I2C2
       \arg        AFIO_PA8_SHRTIMER_CFG: configure PA8 alternate function to SHRTIMER
+      \arg        AFIO_PA9_CAN2_CFG: configure PA9 alternate function to CAN2(not support on GD32EPRT devices)
       \arg        AFIO_PA9_I2C2_CFG: configure PA9 alternate function to I2C2
       \arg        AFIO_PA9_SHRTIMER_CFG: configure PA9 alternate function to SHRTIMER
+      \arg        AFIO_PA10_CAN2_CFG: configure PA10 alternate function to CAN2(not support on GD32EPRT devices)
       \arg        AFIO_PA10_CMP5_CFG: configure PA10 alternate function to CMP5
       \arg        AFIO_PA10_SHRTIMER_CFG: configure PA10 alternate function to SHRTIMER
       \arg        AFIO_PA11_USART5_CFG: configure PA11 alternate function to USART5
@@ -445,8 +451,10 @@ void gpio_pin_remap_config(uint32_t remap, ControlStatus newvalue)
       \arg        AFIO_PB8_SHRTIMER_CFG: configure PB8 alternate function to SHRTIMER
       \arg        AFIO_PB9_CMP1_CFG: configure PB9 alternate function to CMP1
       \arg        AFIO_PB9_SHRTIMER_CFG: configure PB9 alternate function to SHRTIMER
+      \arg        AFIO_PB10_CAN2_CFG: configure PB10 alternate function to CAN2(not support on GD32EPRT devices)
       \arg        AFIO_PB10_USBHS_CFG: configure PB10 alternate function to USBHS
       \arg        AFIO_PB10_SHRTIMER_CFG: configure PB10 alternate function to SHRTIMER
+      \arg        AFIO_PB11_CAN2_CFG: configure PB11 alternate function to CAN2(not support on GD32EPRT devices)
       \arg        AFIO_PB11_USBHS_CFG: configure PB11 alternate function to USBHS
       \arg        AFIO_PB11_SHRTIMER_CFG: configure PB11 alternate function to SHRTIMER
       \arg        AFIO_PB12_USBHS_CFG: configure PB12 alternate function to USBHS
@@ -475,7 +483,9 @@ void gpio_pin_remap_config(uint32_t remap, ControlStatus newvalue)
       \arg        AFIO_PC12_SHRTIMER_CFG: configure PC12 alternate function to SHRTIMER
       \arg        AFIO_PD4_SHRTIMER_CFG: configure PD4 alternate function to SHRTIMER
       \arg        AFIO_PD5_SHRTIMER_CFG: configure PD5 alternate function to SHRTIMER
+      \arg        AFIO_PE0_CAN2_CFG: configure PE0 alternate function to CAN2(not support on GD32EPRT devices)
       \arg        AFIO_PE0_SHRTIMER_CFG: configure PE0 alternate function to SHRTIMER
+      \arg        AFIO_PE1_CAN2_CFG: configure PE1 alternate function to CAN2(not support on GD32EPRT devices)
       \arg        AFIO_PE1_SHRTIMER_CFG: configure PE1 alternate function to SHRTIMER
       \arg        AFIO_PE8_CMP1_CFG: configure PE8 alternate function to CMP1
       \arg        AFIO_PE9_CMP3_CFG: configure PE9 alternate function to CMP3
@@ -524,7 +534,7 @@ void gpio_afio_port_config(uint32_t afio_function, ControlStatus newvalue)
     REG32(AFIO+0x0000003CU+((afio_function>>24)<<2)) = temp_reg;
 }
 
-#ifdef GD32E50X_CL
+#if (defined(GD32E50X_CL) || defined(GD32EPRT))
 /*!
     \brief      select ethernet MII or RMII PHY
     \param[in]  enet_sel: ethernet MII or RMII PHY selection
@@ -541,7 +551,7 @@ void gpio_ethernet_phy_select(uint32_t enet_sel)
     /* select MII or RMII PHY */
     AFIO_PCF0 |= (uint32_t)enet_sel;
 }
-#endif /* GD32E50X_CL */
+#endif /* GD32E50X_CL||GD32EPRT */
 
 /*!
     \brief      select GPIO pin exti sources

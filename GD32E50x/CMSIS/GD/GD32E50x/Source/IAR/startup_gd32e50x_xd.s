@@ -4,10 +4,11 @@
 ;
 ;    \version 2020-03-10, V1.0.0, firmware for GD32E50x
 ;    \version 2020-08-26, V1.1.0, firmware for GD32E50x
+;    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 ;*/
 ;
 ;/*
-;    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+;    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 ;
 ;    Redistribution and use in source and binary forms, with or without modification, 
 ;are permitted provided that the following conditions are met:
@@ -84,10 +85,10 @@ __vector_table
         DCD     DMA0_Channel5_IRQHandler            ; 32:DMA0 Channel5
         DCD     DMA0_Channel6_IRQHandler            ; 33:DMA0 Channel6
         DCD     ADC0_1_IRQHandler                   ; 34:ADC0 and ADC1
-        DCD     USBD_HP_IRQHandler                  ; 35:USBD HP
-        DCD     USBD_LP_IRQHandler                  ; 36:USBD LP
-        DCD     0                                   ; Reserved
-        DCD     0                                   ; Reserved
+        DCD     USBD_HP_CAN0_TX_IRQHandler          ; 35:USBD HP and CAN0 TX
+        DCD     USBD_LP_CAN0_RX0_IRQHandler         ; 36:USBD LP and CAN0 RX0
+        DCD     CAN0_RX1_IRQHandler                 ; 37:CAN0 RX1
+        DCD     CAN0_EWMC_IRQHandler                ; 38:CAN0 EWMC
         DCD     EXTI5_9_IRQHandler                  ; 39:EXTI5 to EXTI9
         DCD     TIMER0_BRK_TIMER8_IRQHandler        ; 40:TIMER0 Break and TIMER8
         DCD     TIMER0_UP_TIMER9_IRQHandler         ; 41:TIMER0 Update and TIMER9
@@ -128,10 +129,10 @@ __vector_table
         DCD     0                                   ; Reserved
         DCD     0                                   ; Reserved
         DCD     0                                   ; Reserved
-        DCD     0                                   ; Reserved
-        DCD     0                                   ; Reserved
-        DCD     0                                   ; Reserved
-        DCD     0                                   ; Reserved
+        DCD     CAN1_TX_IRQHandler                  ; 79:CAN1 TX
+        DCD     CAN1_RX0_IRQHandler                 ; 80:CAN1 RX0
+        DCD     CAN1_RX1_IRQHandler                 ; 81:CAN1 RX1
+        DCD     CAN1_EWMC_IRQHandler                ; 82:CAN1 EWMC
         DCD     0                                   ; Reserved
         DCD     0                                   ; Reserved
         DCD     SHRTIMER_IRQ2_IRQHandler            ; 85:SHRTIMER IRQ2
@@ -309,16 +310,26 @@ DMA0_Channel6_IRQHandler
 ADC0_1_IRQHandler
         B ADC0_1_IRQHandler
         
-        PUBWEAK USBD_HP_IRQHandler
+        PUBWEAK USBD_HP_CAN0_TX_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
-USBD_HP_IRQHandler
-        B USBD_HP_IRQHandler
+USBD_HP_CAN0_TX_IRQHandler
+        B USBD_HP_CAN0_TX_IRQHandler
         
-        PUBWEAK USBD_LP_IRQHandler
+        PUBWEAK USBD_LP_CAN0_RX0_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
-USBD_LP_IRQHandler
-        B USBD_LP_IRQHandler
-
+USBD_LP_CAN0_RX0_IRQHandler
+        B USBD_LP_CAN0_RX0_IRQHandler
+        
+        PUBWEAK CAN0_RX1_IRQHandler
+        SECTION .text:CODE:NOROOT:REORDER(1)
+CAN0_RX1_IRQHandler
+        B CAN0_RX1_IRQHandler
+        
+        PUBWEAK CAN0_EWMC_IRQHandler
+        SECTION .text:CODE:NOROOT:REORDER(1)
+CAN0_EWMC_IRQHandler
+        B CAN0_EWMC_IRQHandler
+        
         PUBWEAK EXTI5_9_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 EXTI5_9_IRQHandler
@@ -503,6 +514,26 @@ DMA1_Channel2_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 DMA1_Channel3_4_IRQHandler
         B DMA1_Channel3_4_IRQHandler
+
+        PUBWEAK CAN1_TX_IRQHandler
+        SECTION .text:CODE:NOROOT:REORDER(1)
+CAN1_TX_IRQHandler
+        B CAN1_TX_IRQHandler
+        
+        PUBWEAK CAN1_RX0_IRQHandler
+        SECTION .text:CODE:NOROOT:REORDER(1)
+CAN1_RX0_IRQHandler
+        B CAN1_RX0_IRQHandler
+        
+        PUBWEAK CAN1_RX1_IRQHandler
+        SECTION .text:CODE:NOROOT:REORDER(1)
+CAN1_RX1_IRQHandler
+        B CAN1_RX1_IRQHandler
+        
+        PUBWEAK CAN1_EWMC_IRQHandler
+        SECTION .text:CODE:NOROOT:REORDER(1)
+CAN1_EWMC_IRQHandler
+        B CAN1_EWMC_IRQHandler
 
         PUBWEAK SHRTIMER_IRQ2_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)

@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -40,7 +41,7 @@ OF SUCH DAMAGE.
 static void usb_core_reset (usb_core_regs *usb_regs);
 
 /*!
-    \brief      config USB core basic 
+    \brief      configure USB core basic 
     \param[in]  usb_basic: pointer to USB capabilities
     \param[in]  usb_regs: pointer to USB core registers
     \param[out] none
@@ -50,7 +51,7 @@ usb_status usb_basic_init (usb_core_basic *usb_basic, usb_core_regs  *usb_regs)
 {
     uint8_t i;
 
-    /* config USB default transfer mode as FIFO mode */
+    /* configure USB default transfer mode as FIFO mode */
     usb_basic->transfer_mode = (uint8_t)USB_USE_FIFO;
 
     /* USB default speed is full-speed */
@@ -141,7 +142,7 @@ usb_status usb_core_init (usb_core_basic usb_basic, usb_core_regs *usb_regs)
             usb_regs->gr->GCCFG |= GCCFG_SOFOEN;
         }
 
-        /* init the ULPI interface */
+        /* initialize the ULPI interface */
         usb_regs->gr->GUSBCS &= ~GUSBCS_ULPIEOI;
 
 #ifdef USBHS_EXTERNAL_VBUS_ENABLED
@@ -163,7 +164,7 @@ usb_status usb_core_init (usb_core_basic usb_basic, usb_core_regs *usb_regs)
         usb_regs->gr->GCCFG = 0U;
 
 #ifdef VBUS_SENSING_ENABLED
-        /* active the transceiver and enable vbus sensing */
+        /* active the transceiver and enable VBUS sensing */
         usb_regs->gr->GCCFG |=  GCCFG_VDEN | GCCFG_PWRON;
 #else
     #ifdef USE_HOST_MODE
@@ -233,7 +234,7 @@ usb_status usb_core_init (usb_core_basic usb_basic, usb_core_regs *usb_regs)
 }
 
 /*!
-    \brief      write a packet into the Tx FIFO associated with the endpoint
+    \brief      write a packet into the TX FIFO associated with the endpoint
     \param[in]  usb_regs: pointer to USB core registers
     \param[in]  src_buf: pointer to source buffer
     \param[in]  fifo_num: FIFO number which is in (0..5)
@@ -283,7 +284,7 @@ void *usb_rxfifo_read (usb_core_regs *usb_regs, uint8_t *dest_buf, uint16_t byte
 }
 
 /*!
-    \brief      flush a Tx FIFO or all Tx FIFOs
+    \brief      flush a TX FIFO or all TX FIFOs
     \param[in]  usb_regs: pointer to USB core registers
     \param[in]  fifo_num: FIFO number which is in (0..5)
     \param[out] none
@@ -314,7 +315,7 @@ usb_status usb_rxfifo_flush (usb_core_regs *usb_regs)
 {
     usb_regs->gr->GRSTCTL = GRSTCTL_RXFF;
 
-    /* wait for Rx FIFO flush bit is set */
+    /* wait for RX FIFO flush bit is set */
     while (usb_regs->gr->GRSTCTL & GRSTCTL_RXFF) {
         /* no operation */
     }
@@ -353,7 +354,7 @@ void usb_set_txfifo(usb_core_regs *usb_regs, uint8_t fifo, uint16_t size)
 }
 
 /*!
-    \brief      config USB core to soft reset
+    \brief      configure USB core to soft reset
     \param[in]  usb_regs: pointer to USB core registers
     \param[out] none
     \retval     none
@@ -368,6 +369,6 @@ static void usb_core_reset (usb_core_regs *usb_regs)
         /* no operation */
     }
 
-    /* wait for addtional 3 PHY clocks */
+    /* wait for additional 3 PHY clocks */
     usb_udelay(3U);
 }

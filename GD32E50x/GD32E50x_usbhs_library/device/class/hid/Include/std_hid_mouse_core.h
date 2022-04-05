@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -67,6 +68,6 @@ extern usb_class_core usbd_hid_cb;
 /* register HID interface operation functions */
 uint8_t hid_itfop_register (usb_dev *udev, mice_fop_handler *hid_fop);
 /* send mouse report */
-uint8_t hid_report_send (usb_dev *pudev, uint8_t *report, uint16_t len);
+uint8_t hid_report_send (usb_dev *udev, uint8_t *report, uint16_t len);
 
 #endif /* __STD_HID_MOUSE_CORE_H */

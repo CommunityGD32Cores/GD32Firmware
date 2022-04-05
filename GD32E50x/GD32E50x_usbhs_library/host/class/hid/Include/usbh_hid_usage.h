@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -39,7 +40,7 @@ OF SUCH DAMAGE.
 /* HID 1.11 usage pages */
 #define HID_USAGE_PAGE_UNDEFINED  uint16_t (0x00)   /* Undefined */
 
-/* Top level pages */
+/* top level pages */
 #define HID_USAGE_PAGE_GEN_DES    uint16_t (0x01)   /* Generic Desktop Controls*/
 #define HID_USAGE_PAGE_SIM_CTR    uint16_t (0x02)   /* Simulation Controls */
 #define HID_USAGE_PAGE_VR_CTR     uint16_t (0x03)   /* VR Controls */
@@ -56,6 +57,8 @@ OF SUCH DAMAGE.
 #define HID_USAGE_PAGE_PID        uint16_t (0x0F)   /* PID Page (force feedback and related devices) */
 #define HID_USAGE_PAGE_UNICODE    uint16_t (0x10)   /* Unicode */
 #define HID_USAGE_PAGE_ALNUM_DISP uint16_t (0x14)   /* Alphanumeric Display */
+/* end of top level pages */
+
 #define HID_USAGE_PAGE_MEDICAL    uint16_t (0x40)   /* Medical Instruments */
 #define HID_USAGE_PAGE_BARCODE    uint16_t (0x8C)   /* Bar Code Scanner page */
 #define HID_USAGE_PAGE_SCALE      uint16_t (0x8D)   /* Scale page */
@@ -64,7 +67,7 @@ OF SUCH DAMAGE.
 #define HID_USAGE_PAGE_CAMERA_CTR uint16_t (0x90)   /* Camera Control Page */
 #define HID_USAGE_PAGE_ARCADE     uint16_t (0x91)   /* Arcade Page */
 
-/* Usage definitions for the "Generic Desktop" page */
+/* usage definitions for the "generic desktop" page */
 #define HID_USAGE_UNDEFINED     uint16_t (0x00)   /* Undefined */
 #define HID_USAGE_POINTER       uint16_t (0x01)   /* Pointer (Physical Collection) */
 #define HID_USAGE_MOUSE         uint16_t (0x02)   /* Mouse (Application Collection) */

@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -37,8 +38,7 @@ OF SUCH DAMAGE.
 #include "diskio.h"
 #include "usbh_msc_core.h"
 
-/* disk status */
-static volatile DSTATUS state = STA_NOINIT;
+static volatile DSTATUS state = STA_NOINIT; /* disk status */
 
 extern usbh_host usb_host;
 
@@ -50,9 +50,9 @@ extern usbh_host usb_host;
 */
 DSTATUS disk_initialize (BYTE drv)
 {
-    usb_core_driver *pudev = (usb_core_driver *)usb_host.data;
+    usb_core_driver *udev = (usb_core_driver *)usb_host.data;
 
-    if (pudev->host.connect_status) {
+    if (udev->host.connect_status) {
         state &= ~STA_NOINIT;
     }
 
@@ -68,8 +68,7 @@ DSTATUS disk_initialize (BYTE drv)
 DSTATUS disk_status (BYTE drv)
 {
     if (drv) {
-        /* supports only single drive */
-        return STA_NOINIT;
+        return STA_NOINIT; /* supports only single drive */
     }
 
     return state;
@@ -87,7 +86,7 @@ DSTATUS disk_status (BYTE drv)
 DRESULT disk_read (BYTE drv, BYTE *buff, DWORD sector, UINT count)
 {
     BYTE status = USBH_OK;
-    usb_core_driver *pudev = (usb_core_driver *)usb_host.data;
+    usb_core_driver *udev = (usb_core_driver *)usb_host.data;
 
     if (drv || (!count)) {
         return RES_PARERR;
@@ -97,11 +96,11 @@ DRESULT disk_read (BYTE drv, BYTE *buff, DWORD sector, UINT count)
         return RES_NOTRDY;
     }
 
-    if (pudev->host.connect_status) {
+    if (udev->host.connect_status) {
         do {
             status = usbh_msc_read (&usb_host, drv, sector, buff, count);
 
-            if (!pudev->host.connect_status) {
+            if (!udev->host.connect_status) {
                 return RES_ERROR;
             }
         } while(status == USBH_BUSY);
@@ -128,7 +127,7 @@ DRESULT disk_read (BYTE drv, BYTE *buff, DWORD sector, UINT count)
 DRESULT disk_write (BYTE drv, const BYTE *buff, DWORD sector, UINT count)
 {
     BYTE status = USBH_OK;
-    usb_core_driver *pudev = (usb_core_driver *)usb_host.data;
+    usb_core_driver *udev = (usb_core_driver *)usb_host.data;
 
     if ((!count) || drv) {
         return RES_PARERR;
@@ -142,11 +141,11 @@ DRESULT disk_write (BYTE drv, const BYTE *buff, DWORD sector, UINT count)
         return RES_WRPRT;
     }
 
-    if (pudev->host.connect_status) {
+    if (udev->host.connect_status) {
         do {
             status = usbh_msc_write (&usb_host, drv, sector, (BYTE*)buff, count);
 
-            if (!pudev->host.connect_status) {
+            if (!udev->host.connect_status) {
                 return RES_ERROR;
             }
         } while(status == USBH_BUSY);
@@ -227,10 +226,10 @@ DRESULT disk_ioctl (BYTE drv, BYTE ctrl, void *buff)
 */
 DWORD get_fattime(void) {
 
-    return    ((DWORD)(2019U - 1980U) << 25U)   /* Year 2019 */
-            | ((DWORD)1U << 21U)                /* Month 1 */
-            | ((DWORD)1U << 16U)                /* Mday 1 */
-            | ((DWORD)0U << 11U)                /* Hour 0 */
-            | ((DWORD)0U << 5U)                 /* Min 0 */
-            | ((DWORD)0U >> 1U);                /* Sec 0 */
+    return    ((DWORD)(2019U - 1980U) << 25U)   /* year 2019 */
+            | ((DWORD)1U << 21U)                /* month 1 */
+            | ((DWORD)1U << 16U)                /* day 1 */
+            | ((DWORD)0U << 11U)                /* hour 0 */
+            | ((DWORD)0U << 5U)                 /* min 0 */
+            | ((DWORD)0U >> 1U);                /* sec 0 */
 }

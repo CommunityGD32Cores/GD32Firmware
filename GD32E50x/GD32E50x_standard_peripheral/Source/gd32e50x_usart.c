@@ -4,10 +4,12 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2020-12-21, V1.1.1, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -938,70 +940,6 @@ void usart_irda_lowpower_config(uint32_t usart_periph, uint32_t irlp)
 }
 
 /*!
-    \brief      configure hardware flow control RTS
-    \param[in]  usart_periph: USARTx(x=0,1,2,5)
-    \param[in]  rtsconfig: enable or disable RTS
-                only one parameter can be selected which is shown as below:
-      \arg        USART_RTS_ENABLE:  enable RTS
-      \arg        USART_RTS_DISABLE: disable RTS
-    \param[out] none
-    \retval     none
-*/
-void usart_hardware_flow_rts_config(uint32_t usart_periph, uint32_t rtsconfig)
-{
-    uint32_t ctl = 0U;
-
-    if(USART5 == usart_periph){
-        /* disable USART5 */
-        USART5_CTL0(usart_periph) &= ~(USART5_CTL0_UEN);
-
-        ctl = USART5_CTL2(usart_periph);
-        ctl &= ~USART5_CTL2_RTSEN;
-        ctl |= (USART5_CTL2_RTSEN & rtsconfig);
-        /* configure USART5 RTS */
-        USART5_CTL2(usart_periph) = ctl;
-    }else{
-        ctl = USART_CTL2(usart_periph);
-        ctl &= ~USART_CTL2_RTSEN;
-        ctl |= (USART_CTL2_RTSEN & rtsconfig);
-        /* configure USARTx(x=0,1,2) RTS */
-        USART_CTL2(usart_periph) = ctl;
-    }
-}
-
-/*!
-    \brief      configure hardware flow control CTS
-    \param[in]  usart_periph: USARTx(x=0,1,2,5)
-    \param[in]  ctsconfig: enable or disable CTS
-                only one parameter can be selected which is shown as below:
-      \arg        USART_CTS_ENABLE:  enable CTS
-      \arg        USART_CTS_DISABLE: disable CTS
-    \param[out] none
-    \retval     none
-*/
-void usart_hardware_flow_cts_config(uint32_t usart_periph, uint32_t ctsconfig)
-{
-    uint32_t ctl = 0U;
-
-    if(USART5 == usart_periph){
-        /* disable USART5 */
-        USART5_CTL0(usart_periph) &= ~(USART5_CTL0_UEN);
-
-        ctl = USART5_CTL2(usart_periph);
-        ctl &= ~USART5_CTL2_CTSEN;
-        ctl |= (USART5_CTL2_CTSEN & ctsconfig);
-        /* configure USART5 CTS */
-        USART5_CTL2(usart_periph) = ctl;
-    }else{
-        ctl = USART_CTL2(usart_periph);
-        ctl &= ~USART_CTL2_CTSEN;
-        ctl |= (USART_CTL2_CTSEN & ctsconfig);
-        /* configure USARTx(x=0,1,2) CTS */
-        USART_CTL2(usart_periph) = ctl;
-    }
-}
-
-/*!
     \brief      configure USART DMA reception
     \param[in]  usart_periph: USARTx(x=0,1,2,5)/UARTx(x=3,4)
     \param[in]  dmacmd: enable or disable DMA for reception
@@ -1057,6 +995,48 @@ void usart_dma_transmit_config(uint32_t usart_periph, uint32_t dmacmd)
         /* configure USARTx(x=0,1,2)/UARTx(x=3,4) DMA transmission */
         USART_CTL2(usart_periph) = ctl;
     }
+}
+
+/*!
+    \brief      configure hardware flow control RTS
+    \param[in]  usart_periph: USARTx(x=0,1,2)
+    \param[in]  rtsconfig: enable or disable RTS
+                only one parameter can be selected which is shown as below:
+      \arg        USART_RTS_ENABLE:  enable RTS
+      \arg        USART_RTS_DISABLE: disable RTS
+    \param[out] none
+    \retval     none
+*/
+void usart_hardware_flow_rts_config(uint32_t usart_periph, uint32_t rtsconfig)
+{
+    uint32_t ctl = 0U;
+
+    ctl = USART_CTL2(usart_periph);
+    ctl &= ~USART_CTL2_RTSEN;
+    ctl |= (USART_CTL2_RTSEN & rtsconfig);
+    /* configure USARTx(x=0,1,2) RTS */
+    USART_CTL2(usart_periph) = ctl;
+}
+
+/*!
+    \brief      configure hardware flow control CTS
+    \param[in]  usart_periph: USARTx(x=0,1,2)
+    \param[in]  ctsconfig: enable or disable CTS
+                only one parameter can be selected which is shown as below:
+      \arg        USART_CTS_ENABLE:  enable CTS
+      \arg        USART_CTS_DISABLE: disable CTS
+    \param[out] none
+    \retval     none
+*/
+void usart_hardware_flow_cts_config(uint32_t usart_periph, uint32_t ctsconfig)
+{
+    uint32_t ctl = 0U;
+
+    ctl = USART_CTL2(usart_periph);
+    ctl &= ~USART_CTL2_CTSEN;
+    ctl |= (USART_CTL2_CTSEN & ctsconfig);
+    /* configure USARTx(x=0,1,2) CTS */
+    USART_CTL2(usart_periph) = ctl;
 }
 
 /*!
@@ -1538,101 +1518,6 @@ void usart5_smartcard_mode_early_nack_disable(uint32_t usart_periph)
     USART5_RFCS(usart_periph) &= ~USART5_RFCS_ELNACK;
 }
 
- /*!
-    \brief      configure hardware flow control coherence mode
-    \param[in]  usart_periph: USART5
-    \param[in]  hcm:
-                only one parameter can be selected which is shown as below:
-      \arg        USART5_HCM_NONE: nRTS signal equals to the rxne status register
-      \arg        USART5_HCM_EN:   nRTS signal is set when the last data bit has been sampled
-    \param[out] none
-    \retval     none
-*/
-void usart5_hardware_flow_coherence_config(uint32_t usart_periph, uint32_t hcm)
-{
-    USART5_CHC(usart_periph) &= ~(USART5_CHC_HCM);
-    USART5_CHC(usart_periph) |= (USART5_CHC_HCM & hcm);
-}
-
-/*!
-    \brief      enable RS485 driver
-    \param[in]  usart_periph: USART5
-    \param[out] none
-    \retval     none
-*/
-void usart5_rs485_driver_enable(uint32_t usart_periph)
-{
-    /* disable USART5 */
-    USART5_CTL0(usart_periph) &= ~(USART5_CTL0_UEN);
-
-    USART5_CTL2(usart_periph) |= USART5_CTL2_DEM;
-}
-
-/*!
-    \brief      disable RS485 driver
-    \param[in]  usart_periph: USART5
-    \param[out] none
-    \retval     none
-*/
-void usart5_rs485_driver_disable(uint32_t usart_periph)
-{
-    /* disable USART5 */
-    USART5_CTL0(usart_periph) &= ~(USART5_CTL0_UEN);
-
-    USART5_CTL2(usart_periph) &= ~(USART5_CTL2_DEM);
-}
-
-/*!
-    \brief      configure driver enable assertion time
-    \param[in]  usart_periph: USART5
-    \param[in]  deatime: 0x00000000-0x0000001F
-    \param[out] none
-    \retval     none
-*/
-void usart5_driver_assertime_config(uint32_t usart_periph, uint32_t deatime)
-{
-    /* disable USART5 */
-    USART5_CTL0(usart_periph) &= ~(USART5_CTL0_UEN);
-
-    USART5_CTL0(usart_periph) &= ~(USART5_CTL0_DEA);
-    USART5_CTL0(usart_periph) |= (USART5_CTL0_DEA & ((deatime) << 21));
-}
-
-/*!
-    \brief      configure driver enable de-assertion time
-    \param[in]  usart_periph: USART5
-    \param[in]  dedtime: 0x00000000-0x0000001F
-    \param[out] none
-    \retval     none
-*/
-void usart5_driver_deassertime_config(uint32_t usart_periph, uint32_t dedtime)
-{
-    /* disable USART5 */
-    USART5_CTL0(usart_periph) &= ~(USART5_CTL0_UEN);
-
-    USART5_CTL0(usart_periph) &= ~(USART5_CTL0_DED);
-    USART5_CTL0(usart_periph) |= (USART5_CTL0_DED & ((dedtime) << 16));
-}
-
-/*!
-    \brief      configure driver enable polarity mode
-    \param[in]  usart_periph: USART5
-    \param[in]  dep: DE signal
-                only one parameter can be selected which is shown as below:
-      \arg        USART5_DEP_HIGH: DE signal is active high
-      \arg        USART5_DEP_LOW: DE signal is active low
-    \param[out] none
-    \retval     none
-*/
-void usart5_depolarity_config(uint32_t usart_periph, uint32_t dep)
-{
-    /* disable USART5 */
-    USART5_CTL0(usart_periph) &= ~(USART5_CTL0_UEN);
-    /* reset DEP bit */
-    USART5_CTL2(usart_periph) &= ~(USART5_CTL2_DEP);
-    USART5_CTL2(usart_periph) |= (USART5_CTL2_DEP & dep);
-}
-
 /*!
     \brief      enable DMA on reception error 
     \param[in]  usart_periph: USART5
@@ -1750,8 +1635,6 @@ uint8_t usart5_receive_fifo_counter_number(uint32_t usart_periph)
       \arg        USART5_FLAG_TC: transmission completed
       \arg        USART5_FLAG_TBE: transmit data register empty
       \arg        USART5_FLAG_LBD: LIN break detected flag
-      \arg        USART5_FLAG_CTSF: CTS change flag
-      \arg        USART5_FLAG_CTS: CTS level
       \arg        USART5_FLAG_RT: receiver timeout flag
       \arg        USART5_FLAG_EB: end of block flag
       \arg        USART5_FLAG_ABDE: auto baudrate detection error
@@ -1791,7 +1674,6 @@ FlagStatus usart5_flag_get(uint32_t usart_periph, usart5_flag_enum flag)
       \arg        USART5_FLAG_IDLE: idle line detected flag
       \arg        USART5_FLAG_TC: transmission complete flag
       \arg        USART5_FLAG_LBD: LIN break detected flag
-      \arg        USART5_FLAG_CTSF: CTS change flag
       \arg        USART5_FLAG_RT: receiver timeout flag
       \arg        USART5_FLAG_EB: end of block flag
       \arg        USART5_FLAG_AM: address match flag
@@ -1821,7 +1703,6 @@ void usart5_flag_clear(uint32_t usart_periph, usart5_flag_enum flag)
       \arg        USART5_INT_EB: end of block interrupt
       \arg        USART5_INT_LBD: LIN break detection interrupt
       \arg        USART5_INT_ERR: error interrupt enable in multibuffer communication
-      \arg        USART5_INT_CTS: CTS interrupt
       \arg        USART5_INT_WU: wakeup from deep-sleep mode interrupt
       \arg        USART5_INT_RFF: receive FIFO full interrupt enable
     \param[out] none
@@ -1848,7 +1729,6 @@ void usart5_interrupt_enable(uint32_t usart_periph, usart5_interrupt_enum interr
       \arg        USART5_INT_EB: end of block interrupt
       \arg        USART5_INT_LBD: LIN break detection interrupt
       \arg        USART5_INT_ERR: error interrupt enable in multibuffer communication
-      \arg        USART5_INT_CTS: CTS interrupt
       \arg        USART5_INT_WU: wakeup from deep-sleep mode interrupt
       \arg        USART5_INT_RFF: receive FIFO full interrupt enable
     \param[out] none
@@ -1893,7 +1773,6 @@ void usart5_command_enable(uint32_t usart_periph, uint32_t cmdtype)
       \arg        USART5_INT_FLAG_IDLE: IDLE line detected interrupt and flag
       \arg        USART5_INT_FLAG_LBD: LIN break detected interrupt and flag
       \arg        USART5_INT_FLAG_WU: wakeup from deep-sleep mode interrupt and flag
-      \arg        USART5_INT_FLAG_CTS: CTS interrupt and flag
       \arg        USART5_INT_FLAG_ERR_NERR: error interrupt and noise error flag
       \arg        USART5_INT_FLAG_ERR_ORERR: error interrupt and overrun error
       \arg        USART5_INT_FLAG_ERR_FERR: error interrupt and frame error flag
@@ -1929,7 +1808,6 @@ FlagStatus usart5_interrupt_flag_get(uint32_t usart_periph, usart5_interrupt_fla
       \arg        USART5_INT_FLAG_IDLE: IDLE line detected interrupt and flag
       \arg        USART5_INT_FLAG_TC: transmission complete interrupt and flag
       \arg        USART5_INT_FLAG_LBD: LIN break detected interrupt and flag
-      \arg        USART5_INT_FLAG_CTS: CTS interrupt and flag
       \arg        USART5_INT_FLAG_RT: receiver timeout interrupt and flag
       \arg        USART5_INT_FLAG_EB: end of block interrupt and flag
       \arg        USART5_INT_FLAG_AM: address match interrupt and flag

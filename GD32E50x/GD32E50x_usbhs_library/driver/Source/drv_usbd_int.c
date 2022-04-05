@@ -4,10 +4,11 @@
 
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
+    \version 2021-03-23, V1.2.0, firmware for GD32E50x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -232,7 +233,7 @@ void usbd_isr (usb_core_driver *udev)
 
 #ifdef VBUS_SENSING_ENABLED
 
-        /* Session request interrupt */
+        /* session request interrupt */
         if (intr & GINTF_SESIF) {
             udev->regs.gr->GINTF = GINTF_SESIF;
         }
@@ -243,10 +244,10 @@ void usbd_isr (usb_core_driver *udev)
 
             }
 
-            /* Clear OTG interrupt */
+            /* clear OTG interrupt */
             udev->regs.gr->GINTF = GINTF_OTGIF;
         }
-#endif
+#endif /* VBUS_SENSING_ENABLED */
     }
 }
 
@@ -393,7 +394,7 @@ static uint32_t usbd_int_rxfifo (usb_core_driver *udev)
             break;
 
         case RSTAT_SETUP_UPDT:
-            if ((transc->ep_addr.num == 0U) && (bcount == 8U) && (data_PID == DPID_DATA0)) {
+            if ((0U == transc->ep_addr.num) && (8U == bcount) && (DPID_DATA0 == data_PID)) {
                 /* copy the setup packet received in FIFO into the setup buffer in RAM */
                 (void)usb_rxfifo_read (&udev->regs, (uint8_t *)&udev->dev.control.req, (uint16_t)bcount);
 
@@ -424,7 +425,7 @@ static uint32_t usbd_int_reset (usb_core_driver *udev)
     /* clear the remote wakeup signaling */
     udev->regs.dr->DCTL &= ~DCTL_RWKUP;
 
-    /* flush the Tx FIFO */
+    /* flush the TX FIFO */
     (void)usb_txfifo_flush (&udev->regs, 0U);
 
     for (i = 0U; i < udev->bp.num_ep; i++) {
@@ -479,7 +480,7 @@ static uint32_t usbd_int_reset (usb_core_driver *udev)
 
     (void)usb_transc_active (udev, &udev->dev.transc_in[0]);
 
-    /* upon reset call usr call back */
+    /* upon reset call user call back */
     udev->dev.cur_status = (uint8_t)USBD_DEFAULT;
 
     return 1U;
@@ -533,7 +534,7 @@ static uint32_t usbd_int_suspend (usb_core_driver *udev)
     udev->dev.cur_status = (uint8_t)USBD_SUSPENDED;
 
     if (low_power && suspend && is_configured) {
-        /* switch-off the otg clocks */
+        /* switch-off the OTG clocks */
         *udev->regs.PWRCLKCTL |= PWRCLKCTL_SUCLK | PWRCLKCTL_SHCLK;
 
         /* enter DEEP_SLEEP mode with LDO in low power mode */
@@ -565,9 +566,9 @@ static uint32_t usbd_int_wakeup(usb_core_driver *udev)
 #endif /* LPM_ENABLED */
     {
         if(remote_wakeup && low_power){
-            /* resume MCU clk */
+            /* resume MCU CLK */
 
-            /* reset sleepdeep bit of Cortex-M33 system control register */
+            /* reset SLEEPDEEP bit of Cortex-M33 system control register */
             SCB->SCR &= ~((uint32_t)SCB_SCR_SLEEPDEEP_Msk);
         }
 
@@ -590,7 +591,7 @@ static uint32_t usbd_int_wakeup(usb_core_driver *udev)
 #if (1U == LPM_ENABLED)
 
 /*!
-    \brief      USB lpm interrupt handler
+    \brief      USB LPM interrupt handler
     \param[in]  udev: pointer to USB device instance
     \param[in]  active_type: active type
                 only one parameter can be selected which is shown as below:
@@ -609,13 +610,13 @@ static uint32_t usbd_int_lpm (usb_core_driver *udev, usb_lpm_type active_type)
     case LPM_L0_ACTIVE:
         udev->dev.cur_status = udev->dev.backup_status;
 
-        /* switch-on the otg clocks */
+        /* switch-on the OTG clocks */
         usb_clock_active(udev);
 
         if(low_power){
-            /* resume MCU clk */
+            /* resume MCU CLK */
 
-            /* reset sleepdeep bit of Cortex-M33 system control register */
+            /* reset SLEEPDEEP bit of Cortex-M33 system control register */
             SCB->SCR &= ~((uint32_t)SCB_SCR_SLEEPDEEP_Msk);
         }
         break;
@@ -627,7 +628,7 @@ static uint32_t usbd_int_lpm (usb_core_driver *udev, usb_lpm_type active_type)
         /* add delay */
         usb_mdelay(300);
 
-        /* switch-off the otg clocks */
+        /* switch-off the OTG clocks */
         *udev->regs.PWRCLKCTL |= PWRCLKCTL_SUCLK | PWRCLKCTL_SHCLK;
 
         if(low_power){
