@@ -348,20 +348,18 @@ static uint32_t usbd_int_rxfifo (usb_core_driver *udev)
     data_PID = (uint8_t)((devrxstat & GRSTATRP_DPID) >> 15U);
 
 #ifdef USE_USB_HS
-    #ifdef USE_ULPI_PHY
-        #ifndef USE_450Z_EVAL
-            /* ensure no-DMA mode can work */
-            if (0U == (udev->regs.er_out[ep_num]->DOEPLEN & DEPLEN_PCNT)) {
-                uint32_t devepctl = udev->regs.er_out[ep_num]->DOEPCTL;
+    #ifndef USE_450Z_EVAL
+    /* ensure no-DMA mode can work */
+    if ((1U == ep_num) && (0U == (udev->regs.er_out[ep_num]->DOEPLEN & DEPLEN_PCNT))) {
+        uint32_t devepctl = udev->regs.er_out[ep_num]->DOEPCTL;
 
-                devepctl |= DEPCTL_SNAK;
-                devepctl &= ~DEPCTL_EPEN;
-                devepctl &= ~DEPCTL_EPD;
+        devepctl |= DEPCTL_SNAK;
+        devepctl &= ~DEPCTL_EPEN;
+        devepctl &= ~DEPCTL_EPD;
 
-                udev->regs.er_out[ep_num]->DOEPCTL = devepctl;
-            }
-        #endif /* USE_450Z_EVAL */
-    #endif /* USE_ULPI_PHY */
+        udev->regs.er_out[ep_num]->DOEPCTL = devepctl;
+    }
+    #endif /* USE_450Z_EVAL */
 #endif /* USE_USB_HS */
 
     switch ((devrxstat & GRSTATRP_RPCKST) >> 17U) {

@@ -37,7 +37,7 @@ OF SUCH DAMAGE.
 #include "gd32f4xx_trng.h"
 
 /*!
-    \brief    deinitialize the TRNG
+    \brief      deinitialize the TRNG
     \param[in]  none
     \param[out] none
     \retval     none
@@ -49,7 +49,7 @@ void trng_deinit(void)
 }
 
 /*!
-    \brief    enable the TRNG interface
+    \brief      enable the TRNG interface
     \param[in]  none
     \param[out] none
     \retval     none
@@ -60,7 +60,7 @@ void trng_enable(void)
 }
 
 /*!
-    \brief    disable the TRNG interface
+    \brief      disable the TRNG interface
     \param[in]  none
     \param[out] none
     \retval     none
@@ -71,7 +71,7 @@ void trng_disable(void)
 }
 
 /*!
-    \brief    get the true random data
+    \brief      get the true random data
     \param[in]  none
     \param[out] none
     \retval     the generated random data
@@ -82,7 +82,7 @@ uint32_t trng_get_true_random_data(void)
 }
 
 /*!
-    \brief    enable the TRNG interrupt
+    \brief      enable the TRNG interrupt
     \param[in]  none
     \param[out] none
     \retval     none
@@ -93,7 +93,7 @@ void trng_interrupt_enable(void)
 }
 
 /*!
-    \brief    disable the TRNG interrupt
+    \brief      disable the TRNG interrupt
     \param[in]  none
     \param[out] none
     \retval     none
@@ -104,7 +104,7 @@ void trng_interrupt_disable(void)
 }
 
 /*!
-    \brief    get the trng status flags
+    \brief      get the trng status flags
     \param[in]  flag: trng status flag, refer to trng_flag_enum
                 only one parameter can be selected which is shown as below:
       \arg        TRNG_FLAG_DRDY: Random Data ready status
@@ -123,7 +123,7 @@ FlagStatus trng_flag_get(trng_flag_enum flag)
 }
 
 /*!
-    \brief    get the trng interrupt flags
+    \brief      get the trng interrupt flags
     \param[in]  int_flag: trng interrupt flag, refer to trng_int_flag_enum
                 only one parameter can be selected which is shown as below:
       \arg        TRNG_INT_FLAG_CEIF: clock error interrupt flag
@@ -141,7 +141,7 @@ FlagStatus trng_interrupt_flag_get(trng_int_flag_enum int_flag)
 }
 
 /*!
-    \brief    clear the trng interrupt flags
+    \brief      clear the trng interrupt flags
     \param[in]  int_flag: trng interrupt flag, refer to trng_int_flag_enum
                 only one parameter can be selected which is shown as below:
       \arg        TRNG_INT_FLAG_CEIF: clock error interrupt flag

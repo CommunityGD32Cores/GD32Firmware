@@ -42,7 +42,7 @@ OF SUCH DAMAGE.
 #define CFG_WIN(regval)             (BITS(0,6) & ((uint32_t)(regval) << 0))
 
 /*!
-    \brief    reset the window watchdog timer configuration
+    \brief      reset the window watchdog timer configuration
     \param[in]  none
     \param[out] none
     \retval     none
@@ -54,7 +54,7 @@ void wwdgt_deinit(void)
 }
 
 /*!
-    \brief    start the window watchdog timer counter
+    \brief      start the window watchdog timer counter
     \param[in]  none
     \param[out] none
     \retval     none
@@ -65,7 +65,7 @@ void wwdgt_enable(void)
 }
 
 /*!
-    \brief    configure the window watchdog timer counter value
+    \brief      configure the window watchdog timer counter value
     \param[in]  counter_value: 0x00 - 0x7F
     \param[out] none
     \retval     none
@@ -81,7 +81,7 @@ void wwdgt_counter_update(uint16_t counter_value)
 }
 
 /*!
-    \brief    configure counter value, window value, and prescaler divider value  
+    \brief      configure counter value, window value, and prescaler divider value  
     \param[in]  counter: 0x00 - 0x7F   
     \param[in]  window: 0x00 - 0x7F
     \param[in]  prescaler: wwdgt prescaler value
@@ -111,7 +111,7 @@ void wwdgt_config(uint16_t counter, uint16_t window, uint32_t prescaler)
 }
 
 /*!
-    \brief    enable early wakeup interrupt of WWDGT
+    \brief      enable early wakeup interrupt of WWDGT
     \param[in]  none
     \param[out] none
     \retval     none
@@ -122,7 +122,7 @@ void wwdgt_interrupt_enable(void)
 }
 
 /*!
-    \brief    check early wakeup interrupt state of WWDGT
+    \brief      check early wakeup interrupt state of WWDGT
     \param[in]  none
     \param[out] none
     \retval     FlagStatus: SET or RESET
@@ -137,7 +137,7 @@ FlagStatus wwdgt_flag_get(void)
 }
 
 /*!
-    \brief    clear early wakeup interrupt state of WWDGT
+    \brief      clear early wakeup interrupt state of WWDGT
     \param[in]  none
     \param[out] none
     \retval     none

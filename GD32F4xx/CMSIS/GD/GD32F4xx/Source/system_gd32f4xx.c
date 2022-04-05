@@ -49,7 +49,7 @@
 //#define __SYSTEM_CLOCK_168M_PLL_IRC16M          (uint32_t)(168000000)
 //#define __SYSTEM_CLOCK_168M_PLL_8M_HXTAL        (uint32_t)(168000000)
 //#define __SYSTEM_CLOCK_168M_PLL_25M_HXTAL       (uint32_t)(168000000)
-// #define __SYSTEM_CLOCK_200M_PLL_IRC16M          (uint32_t)(200000000)
+//#define __SYSTEM_CLOCK_200M_PLL_IRC16M          (uint32_t)(200000000)
 //#define __SYSTEM_CLOCK_200M_PLL_8M_HXTAL        (uint32_t)(200000000)
 #define __SYSTEM_CLOCK_200M_PLL_25M_HXTAL         (uint32_t)(200000000)
 
@@ -58,8 +58,6 @@
 #define SEL_PLLP        0x02U
 #define RCU_MODIFY      {volatile uint32_t i; \
                          RCU_CFG0 |= RCU_AHB_CKSYS_DIV2; \
-                         for(i=0;i<50000;i++); \
-                         RCU_CFG0 |= RCU_AHB_CKSYS_DIV4; \
                          for(i=0;i<50000;i++);}
                         
 /* set the system clock frequency and declare the system clock configuration function */
@@ -110,38 +108,34 @@ static void system_clock_config(void);
 */
 void SystemInit (void)
 {
-    /* FPU settings */
-#if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
+  /* FPU settings ------------------------------------------------------------*/
+  #if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
     SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));  /* set CP10 and CP11 Full Access */
-#endif
-    /* Reset the RCU clock configuration to the default reset state */
-    /* Set IRC16MEN bit */
-    RCU_CTL |= RCU_CTL_IRC16MEN;
+  #endif
+  /* Reset the RCU clock configuration to the default reset state ------------*/
+  /* Set IRC16MEN bit */
+  RCU_CTL |= RCU_CTL_IRC16MEN;
 
-    RCU_MODIFY
+  RCU_MODIFY
+    
+  /* Reset CFG0 register */
+  RCU_CFG0 = 0x00000000U;
 
-    /* Reset CFG0 register */
-    RCU_CFG0 = 0x00000000U;
+  /* Reset HXTALEN, CKMEN and PLLEN bits */
+  RCU_CTL &= ~(RCU_CTL_PLLEN | RCU_CTL_CKMEN | RCU_CTL_HXTALEN);
 
-    /* wait until IRC16M is selected as system clock */
-    while(0 != (RCU_CFG0 & RCU_SCSS_IRC16M)){
-    }
+  /* Reset PLLCFGR register */
+  RCU_PLL = 0x24003010U;
 
-    /* Reset HXTALEN, CKMEN and PLLEN bits */
-    RCU_CTL &= ~(RCU_CTL_PLLEN | RCU_CTL_CKMEN | RCU_CTL_HXTALEN);
+  /* Reset HSEBYP bit */
+  RCU_CTL &= ~(RCU_CTL_HXTALBPS);
 
-    /* Reset PLLCFGR register */
-    RCU_PLL = 0x24003010U;
-
-    /* Reset HSEBYP bit */
-    RCU_CTL &= ~(RCU_CTL_HXTALBPS);
-
-    /* Disable all interrupts */
-    RCU_INT = 0x00000000U;
+  /* Disable all interrupts */
+  RCU_INT = 0x00000000U;
          
-    /* Configure the System clock source, PLL Multiplier and Divider factors, 
-        AHB/APBx prescalers and Flash settings */
-    system_clock_config();
+  /* Configure the System clock source, PLL Multiplier and Divider factors, 
+     AHB/APBx prescalers and Flash settings ----------------------------------*/
+  system_clock_config();
 }
 /*!
     \brief      configure the system clock
@@ -877,7 +871,7 @@ static void system_clock_200m_25m_hxtal(void)
     \param[out] none
     \retval     none
 */
-void SystemCoreClockUpdate(void)
+void SystemCoreClockUpdate (void)
 {
     uint32_t sws;
     uint32_t pllpsc, plln, pllsel, pllp, ck_src, idx, clk_exp;
@@ -908,7 +902,7 @@ void SystemCoreClockUpdate(void)
         } else {
             ck_src = IRC16M_VALUE;
         }
-        SystemCoreClock = ((ck_src / pllpsc) * plln) / pllp;
+        SystemCoreClock = ((ck_src / pllpsc) * plln)/pllp;
         break;
     /* IRC16M is selected as CK_SYS */
     default:

@@ -39,7 +39,7 @@ OF SUCH DAMAGE.
 #define CRC_DATA_RESET_VALUE      ((uint32_t)0xFFFFFFFFU)
 #define CRC_FDATA_RESET_VALUE     ((uint32_t)0x00000000U)
 /*!
-    \brief    deinit CRC calculation unit
+    \brief      deinit CRC calculation unit
     \param[in]  none
     \param[out] none
     \retval     none
@@ -52,7 +52,7 @@ void crc_deinit(void)
 }
 
 /*!
-    \brief    reset data register(CRC_DATA) to the value of 0xFFFFFFFF
+    \brief      reset data register(CRC_DATA) to the value of 0xFFFFFFFF
     \param[in]  none
     \param[out] none
     \retval     none
@@ -63,7 +63,7 @@ void crc_data_register_reset(void)
 }
 
 /*!
-    \brief    read the value of the data register 
+    \brief      read the value of the data register 
     \param[in]  none
     \param[out] none
     \retval     32-bit value of the data register
@@ -76,7 +76,7 @@ uint32_t crc_data_register_read(void)
 }
 
 /*!
-    \brief    read the value of the free data register
+    \brief      read the value of the free data register
     \param[in]  none
     \param[out] none
     \retval     8-bit value of the free data register
@@ -89,7 +89,7 @@ uint8_t crc_free_data_register_read(void)
 }
 
 /*!
-    \brief    write data to the free data register
+    \brief      write data to the free data register
     \param[in]  free_data: specified 8-bit data
     \param[out] none
     \retval     none
@@ -100,7 +100,7 @@ void crc_free_data_register_write(uint8_t free_data)
 }
 
 /*!
-    \brief    calculate the CRC value of a 32-bit data
+    \brief      calculate the CRC value of a 32-bit data
     \param[in]  sdata: specified 32-bit data
     \param[out] none
     \retval     32-bit value calculated by CRC
@@ -112,7 +112,7 @@ uint32_t crc_single_data_calculate(uint32_t sdata)
 }
 
 /*!
-    \brief    calculate the CRC value of an array of 32-bit values
+    \brief      calculate the CRC value of an array of 32-bit values
     \param[in]  array: pointer to an array of 32-bit values
     \param[in]  size: size of the array
     \param[out] none

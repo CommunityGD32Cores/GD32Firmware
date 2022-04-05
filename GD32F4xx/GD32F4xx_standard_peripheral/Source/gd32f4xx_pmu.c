@@ -37,7 +37,7 @@ OF SUCH DAMAGE.
 #include "gd32f4xx_pmu.h"
 #include "core_cm4.h"
 /*!
-    \brief    reset PMU register
+    \brief      reset PMU register
     \param[in]  none
     \param[out] none
     \retval     none
@@ -50,7 +50,7 @@ void pmu_deinit(void)
 }
 
 /*!
-    \brief    select low voltage detector threshold
+    \brief      select low voltage detector threshold
     \param[in]  lvdt_n:
       \arg        PMU_LVDT_0: voltage threshold is 2.1V
       \arg        PMU_LVDT_1: voltage threshold is 2.3V
@@ -76,7 +76,7 @@ void pmu_lvd_select(uint32_t lvdt_n)
 }
 
 /*!
-    \brief    select LDO output voltage
+    \brief      select LDO output voltage
                 this bit set by software when the main PLL closed, before closing PLL, change the system clock to IRC16M or HXTAL
     \param[in]  ldo_output:
       \arg        PMU_LDOVS_LOW: low-driver mode enable in deep-sleep mode
@@ -92,7 +92,7 @@ void pmu_ldo_output_select(uint32_t ldo_output)
 }
 
 /*!
-    \brief    enable low-driver mode in deep-sleep mode
+    \brief      enable low-driver mode in deep-sleep mode
     \param[in]  lowdr_mode:
       \arg        PMU_LOWDRIVER_ENABLE: enable low-driver mode in deep-sleep mode
       \arg        PMU_LOWDRIVER_DISABLE: disable low-driver mode in deep-sleep mode
@@ -106,7 +106,7 @@ void pmu_low_driver_mode_enable(uint32_t lowdr_mode)
 }
 
 /*!
-    \brief    switch high-driver mode
+    \brief      switch high-driver mode
                 this bit set by software only when IRC16M or HXTAL used as system clock
     \param[in]  highdr_switch:
       \arg        PMU_HIGHDR_SWITCH_NONE: disable high-driver mode switch
@@ -124,7 +124,7 @@ void pmu_highdriver_switch_select(uint32_t highdr_switch)
 }
 
 /*!
-    \brief    enable high-driver mode
+    \brief      enable high-driver mode
                 this bit set by software only when IRC16M or HXTAL used as system clock
     \param[in]  none
     \param[out] none
@@ -136,7 +136,7 @@ void pmu_highdriver_mode_enable(void)
 }
 
 /*!
-    \brief    disable high-driver mode
+    \brief      disable high-driver mode
     \param[in]  none
     \param[out] none
     \retval     none
@@ -147,7 +147,7 @@ void pmu_highdriver_mode_disable(void)
 }
 
 /*!
-    \brief    disable PMU lvd
+    \brief      disable PMU lvd
     \param[in]  none
     \param[out] none
     \retval     none
@@ -159,7 +159,7 @@ void pmu_lvd_disable(void)
 }
 
 /*!
-    \brief    low-driver mode when use low power LDO
+    \brief      low-driver mode when use low power LDO
     \param[in]  mode:
       \arg        PMU_NORMALDR_LOWPWR:  normal driver when use low power LDO
       \arg        PMU_LOWDR_LOWPWR:  low-driver mode enabled when LDEN is 11 and use low power LDO
@@ -173,7 +173,7 @@ void pmu_lowdriver_lowpower_config(uint32_t mode)
 }
 
 /*!
-    \brief    low-driver mode when use normal power LDO
+    \brief      low-driver mode when use normal power LDO
     \param[in]  mode:
       \arg        PMU_NORMALDR_NORMALPWR: normal driver when use normal power LDO
       \arg        PMU_LOWDR_NORMALPWR: low-driver mode enabled when LDEN is 11 and use normal power LDO
@@ -187,7 +187,7 @@ void pmu_lowdriver_normalpower_config(uint32_t mode)
 }
 
 /*!
-    \brief    PMU work at sleep mode
+    \brief      PMU work at sleep mode
     \param[in]  sleepmodecmd:
       \arg        WFI_CMD: use WFI command
       \arg        WFE_CMD: use WFE command
@@ -208,7 +208,7 @@ void pmu_to_sleepmode(uint8_t sleepmodecmd)
 }
 
 /*!
-    \brief    PMU work at deepsleep mode
+    \brief      PMU work at deepsleep mode
     \param[in]  ldo
       \arg        PMU_LDO_NORMAL: LDO normal work when pmu enter deepsleep mode
       \arg        PMU_LDO_LOWPOWER: LDO work at low power mode when pmu enter deepsleep mode
@@ -259,7 +259,7 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
 }
 
 /*!
-    \brief    pmu work at standby mode
+    \brief      pmu work at standby mode
     \param[in]  standbymodecmd:
       \arg        WFI_CMD: use WFI command
       \arg        WFE_CMD: use WFE command
@@ -282,12 +282,11 @@ void pmu_to_standbymode(uint8_t standbymodecmd)
         __WFI();
     }else{
         __WFE();
-        __WFE();
     }
 }
 
 /*!
-    \brief    backup SRAM LDO on
+    \brief      backup SRAM LDO on
     \param[in]  bkp_ldo:
       \arg        PMU_BLDOON_OFF: backup SRAM LDO closed
       \arg        PMU_BLDOON_ON: open the backup SRAM LDO
@@ -301,7 +300,7 @@ void pmu_backup_ldo_config(uint32_t bkp_ldo)
 }
 
 /*!
-    \brief    reset flag bit
+    \brief      reset flag bit
     \param[in]  flag_reset:
       \arg        PMU_FLAG_RESET_WAKEUP: reset wakeup flag
       \arg        PMU_FLAG_RESET_STANDBY: reset standby flag
@@ -325,7 +324,7 @@ void pmu_flag_reset(uint32_t flag_reset)
 }
 
 /*!
-    \brief    get flag state
+    \brief      get flag state
     \param[in]  pmu_flag:
       \arg        PMU_FLAG_WAKEUP: wakeup flag
       \arg        PMU_FLAG_STANDBY: standby flag
@@ -348,7 +347,7 @@ FlagStatus pmu_flag_get(uint32_t pmu_flag)
 }
 
 /*!
-    \brief    enable backup domain write
+    \brief      enable backup domain write
     \param[in]  none
     \param[out] none
     \retval     none
@@ -359,7 +358,7 @@ void pmu_backup_write_enable(void)
 }
 
 /*!
-    \brief    disable backup domain write
+    \brief      disable backup domain write
     \param[in]  none
     \param[out] none
     \retval     none
@@ -370,7 +369,7 @@ void pmu_backup_write_disable(void)
 }
 
 /*!
-    \brief    enable wakeup pin
+    \brief      enable wakeup pin
     \param[in]  none
     \param[out] none
     \retval     none
@@ -381,7 +380,7 @@ void pmu_wakeup_pin_enable(void)
 }
 
 /*!
-    \brief    disable wakeup pin
+    \brief      disable wakeup pin
     \param[in]  none
     \param[out] none
     \retval     none

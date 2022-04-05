@@ -47,7 +47,7 @@ OF SUCH DAMAGE.
 
 
 /*!
-    \brief    reset most of the RTC registers
+    \brief      reset most of the RTC registers
     \param[in]  none
     \param[out] none
     \retval     ErrStatus: ERROR or SUCCESS
@@ -110,7 +110,7 @@ ErrStatus rtc_deinit(void)
 }
 
 /*!
-    \brief    initialize RTC registers
+    \brief      initialize RTC registers
     \param[in]  rtc_initpara_struct: pointer to a rtc_parameter_struct structure which contains 
                 parameters for initialization of the rtc peripheral
                 members of the structure and the member values are shown as below:
@@ -176,7 +176,7 @@ ErrStatus rtc_init(rtc_parameter_struct* rtc_initpara_struct)
 }
 
 /*!
-    \brief    enter RTC init mode
+    \brief      enter RTC init mode
     \param[in]  none
     \param[out] none
     \retval     ErrStatus: ERROR or SUCCESS
@@ -206,7 +206,7 @@ ErrStatus rtc_init_mode_enter(void)
 }
 
 /*!
-    \brief    exit RTC init mode
+    \brief      exit RTC init mode
     \param[in]  none
     \param[out] none
     \retval     none
@@ -217,7 +217,7 @@ void rtc_init_mode_exit(void)
 }
 
 /*!
-    \brief    wait until RTC_TIME and RTC_DATE registers are synchronized with APB clock, and the shadow 
+    \brief      wait until RTC_TIME and RTC_DATE registers are synchronized with APB clock, and the shadow 
                 registers are updated
     \param[in]  none
     \param[out] none
@@ -256,7 +256,7 @@ ErrStatus rtc_register_sync_wait(void)
 }
 
 /*!
-    \brief    get current time and date
+    \brief      get current time and date
     \param[in]  none
     \param[out] rtc_initpara_struct: pointer to a rtc_parameter_struct structure which contains 
                 parameters for initialization of the rtc peripheral
@@ -300,7 +300,7 @@ void rtc_current_time_get(rtc_parameter_struct* rtc_initpara_struct)
 }
 
 /*!
-    \brief    get current subsecond value
+    \brief      get current subsecond value
     \param[in]  none
     \param[out] none
     \retval     current subsecond value
@@ -317,7 +317,7 @@ uint32_t rtc_subsecond_get(void)
 }
 
 /*!
-    \brief    configure RTC alarm
+    \brief      configure RTC alarm
     \param[in]  rtc_alarm: RTC_ALARM0 or RTC_ALARM1
     \param[in]  rtc_alarm_time: pointer to a rtc_alarm_struct structure which contains 
                 parameters for RTC alarm configuration
@@ -362,7 +362,7 @@ void rtc_alarm_config(uint8_t rtc_alarm, rtc_alarm_struct* rtc_alarm_time)
 }
 
 /*!
-    \brief    configure subsecond of RTC alarm
+    \brief      configure subsecond of RTC alarm
     \param[in]  rtc_alarm: RTC_ALARM0 or RTC_ALARM1
     \param[in]  mask_subsecond: alarm subsecond mask
       \arg        RTC_MASKSSC_0_14: mask alarm subsecond configuration
@@ -401,7 +401,7 @@ void rtc_alarm_subsecond_config(uint8_t rtc_alarm, uint32_t mask_subsecond, uint
 }
 
 /*!
-    \brief    get RTC alarm
+    \brief      get RTC alarm
     \param[in]  rtc_alarm: RTC_ALARM0 or RTC_ALARM1
     \param[out] rtc_alarm_time: pointer to a rtc_alarm_struct structure which contains 
                 parameters for RTC alarm configuration
@@ -439,7 +439,7 @@ void rtc_alarm_get(uint8_t rtc_alarm, rtc_alarm_struct* rtc_alarm_time)
 }
 
 /*!
-    \brief    get RTC alarm subsecond
+    \brief      get RTC alarm subsecond
     \param[in]  rtc_alarm: RTC_ALARM0 or RTC_ALARM1
     \param[out] none
     \retval     RTC alarm subsecond value
@@ -454,7 +454,7 @@ uint32_t rtc_alarm_subsecond_get(uint8_t rtc_alarm)
 }
 
 /*!
-    \brief    enable RTC alarm
+    \brief      enable RTC alarm
     \param[in]  rtc_alarm: RTC_ALARM0 or RTC_ALARM1
     \param[out] none
     \retval     none
@@ -475,7 +475,7 @@ void rtc_alarm_enable(uint8_t rtc_alarm)
 }
 
 /*!
-    \brief    disable RTC alarm
+    \brief      disable RTC alarm
     \param[in]  rtc_alarm: RTC_ALARM0 or RTC_ALARM1
     \param[out] none
     \retval     ErrStatus: ERROR or SUCCESS
@@ -516,7 +516,7 @@ ErrStatus rtc_alarm_disable(uint8_t rtc_alarm)
 }
 
 /*!
-    \brief    enable RTC time-stamp
+    \brief      enable RTC time-stamp
     \param[in]  edge: specify which edge to detect of time-stamp
       \arg        RTC_TIMESTAMP_RISING_EDGE: rising edge is valid event edge for timestamp event
       \arg        RTC_TIMESTAMP_FALLING_EDGE: falling edge is valid event edge for timestamp event
@@ -544,7 +544,7 @@ void rtc_timestamp_enable(uint32_t edge)
 }
 
 /*!
-    \brief    disable RTC time-stamp
+    \brief      disable RTC time-stamp
     \param[in]  none
     \param[out] none
     \retval     none
@@ -563,7 +563,7 @@ void rtc_timestamp_disable(void)
 }
 
 /*!
-    \brief    get RTC timestamp time and date
+    \brief      get RTC timestamp time and date
     \param[in]  none
     \param[out] rtc_timestamp: pointer to a rtc_timestamp_struct structure which contains 
                 parameters for RTC time-stamp configuration
@@ -598,7 +598,7 @@ void rtc_timestamp_get(rtc_timestamp_struct* rtc_timestamp)
 }
 
 /*!
-    \brief    get RTC time-stamp subsecond
+    \brief      get RTC time-stamp subsecond
     \param[in]  none
     \param[out] none
     \retval     RTC time-stamp subsecond value
@@ -609,7 +609,7 @@ uint32_t rtc_timestamp_subsecond_get(void)
 }
 
 /*!
-    \brief    RTC time-stamp mapping 
+    \brief      RTC time-stamp mapping 
     \param[in]  rtc_af:
       \arg        RTC_AF0_TIMESTAMP: RTC_AF0 use for timestamp
       \arg        RTC_AF1_TIMESTAMP: RTC_AF1 use for timestamp
@@ -623,7 +623,7 @@ void rtc_timestamp_pin_map(uint32_t rtc_af)
 }
 
 /*!
-    \brief    enable RTC tamper
+    \brief      enable RTC tamper
     \param[in]  rtc_tamper: pointer to a rtc_tamper_struct structure which contains 
                 parameters for RTC tamper configuration
                 members of the structure and the member values are shown as below:
@@ -692,7 +692,7 @@ void rtc_tamper_enable(rtc_tamper_struct* rtc_tamper)
 }
 
 /*!
-    \brief    disable RTC tamper
+    \brief      disable RTC tamper
     \param[in]  source: specify which tamper source to be disabled
       \arg        RTC_TAMPER0
       \arg        RTC_TAMPER1
@@ -707,7 +707,7 @@ void rtc_tamper_disable(uint32_t source)
 }
 
 /*!
-    \brief    RTC tamper0 mapping 
+    \brief      RTC tamper0 mapping 
     \param[in]  rtc_af:
       \arg        RTC_AF0_TAMPER0: RTC_AF0 use for tamper0
       \arg        RTC_AF1_TAMPER0: RTC_AF1 use for tamper0
@@ -721,7 +721,7 @@ void rtc_tamper0_pin_map(uint32_t rtc_af)
 }
 
 /*!
-    \brief    enable specified RTC interrupt
+    \brief      enable specified RTC interrupt
     \param[in]  interrupt: specify which interrupt source to be enabled
       \arg        RTC_INT_TIMESTAMP: timestamp interrupt
       \arg        RTC_INT_ALARM0: alarm0 interrupt
@@ -747,7 +747,7 @@ void rtc_interrupt_enable(uint32_t interrupt)
 }
 
 /*!
-    \brief    disble specified RTC interrupt
+    \brief      disble specified RTC interrupt
     \param[in]  interrupt: specify which interrupt source to be disabled
       \arg        RTC_INT_TIMESTAMP: timestamp interrupt
       \arg        RTC_INT_ALARM0: alarm interrupt
@@ -773,7 +773,7 @@ void rtc_interrupt_disable(uint32_t interrupt)
 }
 
 /*!
-    \brief    check specified flag
+    \brief      check specified flag
     \param[in]  flag: specify which flag to check
       \arg        RTC_STAT_SCP: smooth calibration pending flag
       \arg        RTC_FLAG_TP1: RTC tamper 1 detected flag
@@ -804,7 +804,7 @@ FlagStatus rtc_flag_get(uint32_t flag)
 }
 
 /*!
-    \brief    clear specified flag
+    \brief      clear specified flag
       \arg        RTC_FLAG_TP1: RTC tamper 1 detected flag
       \arg        RTC_FLAG_TP0: RTC tamper 0 detected flag
       \arg        RTC_FLAG_TSOVR: time-stamp overflow flag
@@ -822,7 +822,7 @@ void rtc_flag_clear(uint32_t flag)
 }
 
 /*!
-    \brief    configure rtc alarm output source
+    \brief      configure rtc alarm output source
     \param[in]  source: specify signal to output
       \arg        RTC_ALARM0_HIGH: when the  alarm0 flag is set, the output pin is high
       \arg        RTC_ALARM0_LOW: when the  alarm0 flag is set, the output pin is low
@@ -854,7 +854,7 @@ void rtc_alarm_output_config(uint32_t source, uint32_t mode)
 }
 
 /*!
-    \brief    configure rtc calibration output source
+    \brief      configure rtc calibration output source
     \param[in]  source: specify signal to output
       \arg        RTC_CALIBRATION_512HZ: when the LSE freqency is 32768Hz and the RTC_PSC 
                                          is the default value, output 512Hz signal
@@ -878,7 +878,7 @@ void rtc_calibration_output_config(uint32_t source)
 
 
 /*!
-    \brief    adjust the daylight saving time by adding or substracting one hour from the current time
+    \brief      adjust the daylight saving time by adding or substracting one hour from the current time
     \param[in]  operation: hour adjustment operation
       \arg        RTC_CTL_A1H: add one hour
       \arg        RTC_CTL_S1H: substract one hour
@@ -898,7 +898,7 @@ void rtc_hour_adjust(uint32_t operation)
 }
 
 /*!
-    \brief    adjust RTC second or subsecond value of current time
+    \brief      adjust RTC second or subsecond value of current time
     \param[in]  add: add 1s to current time or not
       \arg        RTC_SHIFT_ADD1S_RESET: no effect
       \arg        RTC_SHIFT_ADD1S_SET: add 1s to current time
@@ -935,7 +935,7 @@ ErrStatus rtc_second_adjust(uint32_t add, uint32_t minus)
 }
 
 /*!
-    \brief    enable RTC bypass shadow registers function
+    \brief      enable RTC bypass shadow registers function
     \param[in]  none
     \param[out] none
     \retval     none
@@ -953,7 +953,7 @@ void rtc_bypass_shadow_enable(void)
 }
 
 /*!
-    \brief    disable RTC bypass shadow registers function
+    \brief      disable RTC bypass shadow registers function
     \param[in]  none
     \param[out] none
     \retval     none
@@ -971,7 +971,7 @@ void rtc_bypass_shadow_disable(void)
 }
 
 /*!
-    \brief    enable RTC reference clock detection function
+    \brief      enable RTC reference clock detection function
     \param[in]  none
     \param[out] none
     \retval     ErrStatus: ERROR or SUCCESS
@@ -1000,7 +1000,7 @@ ErrStatus rtc_refclock_detection_enable(void)
 }
 
 /*!
-    \brief    disable RTC reference clock detection function
+    \brief      disable RTC reference clock detection function
     \param[in]  none
     \param[out] none
     \retval     ErrStatus: ERROR or SUCCESS
@@ -1029,7 +1029,7 @@ ErrStatus rtc_refclock_detection_disable(void)
 }
 
 /*!
-    \brief    enable RTC auto wakeup function
+    \brief      enable RTC auto wakeup function
     \param[in]  none
     \param[out] none
     \retval     none
@@ -1047,7 +1047,7 @@ void rtc_wakeup_enable(void)
 }
 
 /*!
-    \brief    disable RTC auto wakeup function
+    \brief      disable RTC auto wakeup function
     \param[in]  none
     \param[out] none
     \retval     ErrStatus: ERROR or SUCCESS
@@ -1077,7 +1077,7 @@ ErrStatus rtc_wakeup_disable(void)
 }
 
 /*!
-    \brief    set RTC auto wakeup timer clock
+    \brief      set RTC auto wakeup timer clock
     \param[in]  wakeup_clock:
       \arg        WAKEUP_RTCCK_DIV16: RTC auto wakeup timer clock is RTC clock divided by 16 
       \arg        WAKEUP_RTCCK_DIV8: RTC auto wakeup timer clock is RTC clock divided by 8 
@@ -1116,7 +1116,7 @@ ErrStatus rtc_wakeup_clock_set(uint8_t wakeup_clock)
 }
 
 /*!
-    \brief    set wakeup timer value
+    \brief      set wakeup timer value
     \param[in]  wakeup_timer: 0x0000-0xffff
     \param[out] none
     \retval     ErrStatus: ERROR or SUCCESS
@@ -1146,7 +1146,7 @@ ErrStatus rtc_wakeup_timer_set(uint16_t wakeup_timer)
 }
 
 /*!
-    \brief    get wakeup timer value
+    \brief      get wakeup timer value
     \param[in]  none
     \param[out] none
     \retval     wakeup timer value
@@ -1157,7 +1157,7 @@ ErrStatus rtc_wakeup_timer_set(uint16_t wakeup_timer)
 }
 
 /*!
-    \brief    configure RTC smooth calibration
+    \brief      configure RTC smooth calibration
     \param[in]  window: select calibration window
       \arg        RTC_CALIBRATION_WINDOW_32S: 2exp20 RTCCLK cycles, 32s if RTCCLK = 32768 Hz
       \arg        RTC_CALIBRATION_WINDOW_16S: 2exp19 RTCCLK cycles, 16s if RTCCLK = 32768 Hz
@@ -1196,7 +1196,7 @@ ErrStatus rtc_smooth_calibration_config(uint32_t window, uint32_t plus, uint32_t
 }
 
 /*!
-    \brief    enable RTC coarse calibration
+    \brief      enable RTC coarse calibration
     \param[in]  none
     \param[out] none
     \retval     ErrStatus: ERROR or SUCCESS
@@ -1222,7 +1222,7 @@ ErrStatus rtc_coarse_calibration_enable(void)
 }
 
 /*!
-    \brief    disable RTC coarse calibration
+    \brief      disable RTC coarse calibration
     \param[in]  none
     \param[out] none
     \retval     ErrStatus: ERROR or SUCCESS
@@ -1248,7 +1248,7 @@ ErrStatus rtc_coarse_calibration_disable(void)
 }
 
 /*!
-    \brief    config coarse calibration direction and step
+    \brief      config coarse calibration direction and step
     \param[in]  direction: CALIB_INCREASE or CALIB_DECREASE      
     \param[in]  step: 0x00-0x1F
                 COSD=0:

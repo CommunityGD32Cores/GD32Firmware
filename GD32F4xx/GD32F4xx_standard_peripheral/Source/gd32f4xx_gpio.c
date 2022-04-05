@@ -37,7 +37,7 @@ OF SUCH DAMAGE.
 #include "gd32f4xx_gpio.h"
 
 /*!
-    \brief    reset GPIO port
+    \brief      reset GPIO port
     \param[in]  gpio_periph: GPIO port 
                 only one parameter can be selected which is shown as below:
       \arg        GPIOx(x = A,B,C,D,E,F,G,H,I)
@@ -98,7 +98,7 @@ void gpio_deinit(uint32_t gpio_periph)
 }
 
 /*!
-    \brief    set GPIO mode
+    \brief      set GPIO mode
     \param[in]  gpio_periph: GPIO port 
                 only one parameter can be selected which is shown as below:
       \arg        GPIOx(x = A,B,C,D,E,F,G,H,I)
@@ -144,7 +144,7 @@ void gpio_mode_set(uint32_t gpio_periph, uint32_t mode, uint32_t pull_up_down, u
 }
 
 /*!
-    \brief    set GPIO output type and speed
+    \brief      set GPIO output type and speed
     \param[in]  gpio_periph: GPIO port 
                 only one parameter can be selected which is shown as below:
       \arg        GPIOx(x = A,B,C,D,E,F,G,H,I)
@@ -188,7 +188,7 @@ void gpio_output_options_set(uint32_t gpio_periph, uint8_t otype, uint32_t speed
 }
 
 /*!
-    \brief    set GPIO pin bit
+    \brief      set GPIO pin bit
     \param[in]  gpio_periph: GPIO port 
                 only one parameter can be selected which is shown as below:
       \arg        GPIOx(x = A,B,C,D,E,F,G,H,I)
@@ -204,7 +204,7 @@ void gpio_bit_set(uint32_t gpio_periph, uint32_t pin)
 }
 
 /*!
-    \brief    reset GPIO pin bit
+    \brief      reset GPIO pin bit
     \param[in]  gpio_periph: GPIO port 
                 only one parameter can be selected which is shown as below:
       \arg        GPIOx(x = A,B,C,D,E,F,G,H,I)
@@ -220,7 +220,7 @@ void gpio_bit_reset(uint32_t gpio_periph, uint32_t pin)
 }
 
 /*!
-    \brief    write data to the specified GPIO pin
+    \brief      write data to the specified GPIO pin
     \param[in]  gpio_periph: GPIO port 
                 only one parameter can be selected which is shown as below:
       \arg        GPIOx(x = A,B,C,D,E,F,G,H,I)
@@ -243,7 +243,7 @@ void gpio_bit_write(uint32_t gpio_periph, uint32_t pin, bit_status bit_value)
 }
 
 /*!
-    \brief    write data to the specified GPIO port
+    \brief      write data to the specified GPIO port
     \param[in]  gpio_periph: GPIO port 
                 only one parameter can be selected which is shown as below:
       \arg        GPIOx(x = A,B,C,D,E,F,G,H,I)
@@ -257,7 +257,7 @@ void gpio_port_write(uint32_t gpio_periph, uint16_t data)
 }
 
 /*!
-    \brief    get GPIO pin input status
+    \brief      get GPIO pin input status
     \param[in]  gpio_periph: GPIO port 
                 only one parameter can be selected which is shown as below:
       \arg        GPIOx(x = A,B,C,D,E,F,G,H,I)
@@ -277,7 +277,7 @@ FlagStatus gpio_input_bit_get(uint32_t gpio_periph, uint32_t pin)
 }
 
 /*!
-    \brief    get GPIO all pins input status
+    \brief      get GPIO all pins input status
     \param[in]  gpio_periph: GPIO port 
                 only one parameter can be selected which is shown as below:
       \arg        GPIOx(x = A,B,C,D,E,F,G,H,I)
@@ -290,7 +290,7 @@ uint16_t gpio_input_port_get(uint32_t gpio_periph)
 }
 
 /*!
-    \brief    get GPIO pin output status
+    \brief      get GPIO pin output status
     \param[in]  gpio_periph: GPIO port 
                 only one parameter can be selected which is shown as below:
       \arg        GPIOx(x = A,B,C,D,E,F,G,H,I)
@@ -310,7 +310,7 @@ FlagStatus gpio_output_bit_get(uint32_t gpio_periph, uint32_t pin)
 }
 
 /*!
-    \brief    get GPIO all pins output status
+    \brief      get GPIO all pins output status
     \param[in]  gpio_periph: GPIO port 
                 only one parameter can be selected which is shown as below:
       \arg        GPIOx(x = A,B,C,D,E,F,G,H,I) 
@@ -323,7 +323,7 @@ uint16_t gpio_output_port_get(uint32_t gpio_periph)
 }
 
 /*!
-    \brief    set GPIO alternate function
+    \brief      set GPIO alternate function
     \param[in]  gpio_periph: GPIO port 
                 only one parameter can be selected which is shown as below:
       \arg        GPIOx(x = A,B,C,D,E,F,G,H,I)
@@ -379,7 +379,7 @@ void gpio_af_set(uint32_t gpio_periph, uint32_t alt_func_num, uint32_t pin)
 }
 
 /*!
-    \brief    lock GPIO pin bit
+    \brief      lock GPIO pin bit
     \param[in]  gpio_periph: GPIO port 
                 only one parameter can be selected which is shown as below:
       \arg        GPIOx(x = A,B,C,D,E,F,G,H,I)
@@ -403,7 +403,7 @@ void gpio_pin_lock(uint32_t gpio_periph, uint32_t pin)
 }
 
 /*!
-    \brief    toggle GPIO pin status
+    \brief      toggle GPIO pin status
     \param[in]  gpio_periph: GPIO port 
                 only one parameter can be selected which is shown as below:
       \arg        GPIOx(x = A,B,C,D,E,F,G,H,I)
@@ -419,7 +419,7 @@ void gpio_bit_toggle(uint32_t gpio_periph, uint32_t pin)
 }
 
 /*!
-    \brief    toggle GPIO port status
+    \brief      toggle GPIO port status
     \param[in]  gpio_periph: GPIO port 
                 only one parameter can be selected which is shown as below:
       \arg        GPIOx(x = A,B,C,D,E,F,G,H,I)

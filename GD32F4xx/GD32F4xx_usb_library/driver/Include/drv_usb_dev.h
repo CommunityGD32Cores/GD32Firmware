@@ -3,7 +3,6 @@
     \brief   USB device low level driver header file
 
     \version 2020-08-01, V3.0.0, firmware for GD32F4xx
-    \version 2020-12-07, V3.0.1, firmware for GD32F4xx
 */
 
 /*

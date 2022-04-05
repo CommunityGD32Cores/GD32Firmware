@@ -41,7 +41,7 @@ OF SUCH DAMAGE.
 #define CHXCTL_PERIEN_OFFSET            ((uint32_t)25U)
 
 /*!
-    \brief    deinitialize DMA a channel registers
+    \brief      deinitialize DMA a channel registers
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel is deinitialized
@@ -69,7 +69,7 @@ void dma_deinit(uint32_t dma_periph, dma_channel_enum channelx)
 }
 
 /*!
-    \brief    initialize the DMA single data mode parameters struct with the default values
+    \brief      initialize the DMA single data mode parameters struct with the default values
     \param[in]  init_struct: the initialization data needed to initialize DMA channel
     \param[out] none
     \retval     none
@@ -89,7 +89,7 @@ void dma_single_data_para_struct_init(dma_single_data_parameter_struct* init_str
 }
 
 /*!
-    \brief    initialize the DMA multi data mode parameters struct with the default values
+    \brief      initialize the DMA multi data mode parameters struct with the default values
     \param[in]  init_struct: the initialization data needed to initialize DMA channel
     \param[out] none
     \retval     none
@@ -112,7 +112,7 @@ void dma_multi_data_para_struct_init(dma_multi_data_parameter_struct* init_struc
 }
 
 /*!
-    \brief    initialize DMA single data mode
+    \brief      initialize DMA single data mode
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel is initialized
@@ -177,7 +177,7 @@ void dma_single_data_mode_init(uint32_t dma_periph, dma_channel_enum channelx, d
 }
 
 /*!
-    \brief    initialize DMA multi data mode
+    \brief      initialize DMA multi data mode
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel is initialized
@@ -246,7 +246,7 @@ void dma_multi_data_mode_init(uint32_t dma_periph, dma_channel_enum channelx, dm
 }
 
 /*!
-    \brief    set DMA peripheral base address
+    \brief      set DMA peripheral base address
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel to set peripheral base address
@@ -261,7 +261,7 @@ void dma_periph_address_config(uint32_t dma_periph, dma_channel_enum channelx, u
 }
 
 /*!
-    \brief    set DMA Memory0 base address
+    \brief      set DMA Memory0 base address
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel to set Memory base address 
@@ -281,7 +281,7 @@ void dma_memory_address_config(uint32_t dma_periph, dma_channel_enum channelx, u
 }
 
 /*!
-    \brief    set the number of remaining data to be transferred by the DMA
+    \brief      set the number of remaining data to be transferred by the DMA
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel to set number
@@ -296,7 +296,7 @@ void dma_transfer_number_config(uint32_t dma_periph, dma_channel_enum channelx, 
 }
 
 /*!
-    \brief    get the number of remaining data to be transferred by the DMA
+    \brief      get the number of remaining data to be transferred by the DMA
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel to set number 
@@ -310,7 +310,7 @@ uint32_t dma_transfer_number_get(uint32_t dma_periph, dma_channel_enum channelx)
 }
 
 /*!
-    \brief    configure priority level of DMA channel
+    \brief      configure priority level of DMA channel
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel
@@ -336,7 +336,7 @@ void dma_priority_config(uint32_t dma_periph, dma_channel_enum channelx, uint32_
 }
 
 /*!
-    \brief    configure transfer burst beats of memory
+    \brief      configure transfer burst beats of memory
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel
@@ -361,7 +361,7 @@ void dma_memory_burst_beats_config (uint32_t dma_periph, dma_channel_enum channe
 }
 
 /*!
-    \brief    configure transfer burst beats of peripheral
+    \brief      configure transfer burst beats of peripheral
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel
@@ -387,7 +387,7 @@ void dma_periph_burst_beats_config (uint32_t dma_periph, dma_channel_enum channe
 }
 
 /*!
-    \brief    configure transfer data size of memory
+    \brief      configure transfer data size of memory
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel
@@ -412,7 +412,7 @@ void dma_memory_width_config(uint32_t dma_periph, dma_channel_enum channelx, uin
 }
 
 /*!
-    \brief    configure transfer data size of peripheral 
+    \brief      configure transfer data size of peripheral 
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel 
@@ -437,7 +437,7 @@ void dma_periph_width_config (uint32_t dma_periph, dma_channel_enum channelx, ui
 }
 
 /*!
-    \brief    configure memory address generation generation_algorithm
+    \brief      configure memory address generation generation_algorithm
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel 
@@ -459,7 +459,7 @@ void dma_memory_address_generation_config(uint32_t dma_periph, dma_channel_enum 
 }
 
 /*!
-    \brief    configure peripheral address generation_algorithm
+    \brief      configure peripheral address generation_algorithm
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel 
@@ -485,7 +485,7 @@ void dma_peripheral_address_generation_config(uint32_t dma_periph, dma_channel_e
 }
 
 /*!
-    \brief    enable DMA circulation mode
+    \brief      enable DMA circulation mode
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel 
@@ -499,7 +499,7 @@ void dma_circulation_enable(uint32_t dma_periph, dma_channel_enum channelx)
 }
 
 /*!
-    \brief    disable DMA circulation mode
+    \brief      disable DMA circulation mode
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel 
@@ -513,7 +513,7 @@ void dma_circulation_disable(uint32_t dma_periph, dma_channel_enum channelx)
 }
 
 /*!
-    \brief    enable DMA channel
+    \brief      enable DMA channel
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel 
@@ -527,7 +527,7 @@ void dma_channel_enable(uint32_t dma_periph, dma_channel_enum channelx)
 }
 
 /*!
-    \brief    disable DMA channel
+    \brief      disable DMA channel
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel 
@@ -541,7 +541,7 @@ void dma_channel_disable(uint32_t dma_periph, dma_channel_enum channelx)
 }
 
 /*!
-    \brief    configure the direction of  data transfer on the channel
+    \brief      configure the direction of  data transfer on the channel
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel 
@@ -567,7 +567,7 @@ void dma_transfer_direction_config(uint32_t dma_periph, dma_channel_enum channel
 }
 
 /*!
-    \brief    DMA switch buffer mode config
+    \brief      DMA switch buffer mode config
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel 
@@ -590,7 +590,7 @@ void dma_switch_buffer_mode_config(uint32_t dma_periph, dma_channel_enum channel
 }
 
 /*!
-    \brief    DMA using memory get
+    \brief      DMA using memory get
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel 
@@ -608,7 +608,7 @@ uint32_t dma_using_memory_get(uint32_t dma_periph, dma_channel_enum channelx)
 }
 
 /*!
-    \brief    DMA channel peripheral select
+    \brief      DMA channel peripheral select
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel 
@@ -631,7 +631,7 @@ void dma_channel_subperipheral_select(uint32_t dma_periph, dma_channel_enum chan
 }
 
 /*!
-    \brief    DMA flow controller configure
+    \brief      DMA flow controller configure
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel 
@@ -653,7 +653,7 @@ void dma_flow_controller_config(uint32_t dma_periph, dma_channel_enum channelx, 
 }
 
 /*!
-    \brief    DMA switch buffer mode enable
+    \brief      DMA switch buffer mode enable
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel 
@@ -674,7 +674,7 @@ void dma_switch_buffer_mode_enable(uint32_t dma_periph, dma_channel_enum channel
 }
 
 /*!
-    \brief    DMA FIFO status get
+    \brief      DMA FIFO status get
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel 
@@ -688,7 +688,7 @@ uint32_t dma_fifo_status_get(uint32_t dma_periph, dma_channel_enum channelx)
 }
 
 /*!
-    \brief    get DMA flag is set or not 
+    \brief      get DMA flag is set or not 
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel to get flag
@@ -722,7 +722,7 @@ FlagStatus dma_flag_get(uint32_t dma_periph, dma_channel_enum channelx, uint32_t
 }
 
 /*!
-    \brief    clear DMA a channel flag
+    \brief      clear DMA a channel flag
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel to get flag
@@ -748,7 +748,7 @@ void dma_flag_clear(uint32_t dma_periph, dma_channel_enum channelx, uint32_t fla
 }
 
 /*!
-    \brief    get DMA interrupt flag is set or not 
+    \brief      get DMA interrupt flag is set or not 
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel to get interrupt flag
@@ -828,7 +828,7 @@ FlagStatus dma_interrupt_flag_get(uint32_t dma_periph, dma_channel_enum channelx
 }
 
 /*!
-    \brief    clear DMA a channel interrupt flag
+    \brief      clear DMA a channel interrupt flag
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel to clear interrupt flag
@@ -854,7 +854,7 @@ void dma_interrupt_flag_clear(uint32_t dma_periph, dma_channel_enum channelx, ui
 }
 
 /*!
-    \brief    enable DMA interrupt
+    \brief      enable DMA interrupt
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel 
@@ -879,7 +879,7 @@ void dma_interrupt_enable(uint32_t dma_periph, dma_channel_enum channelx, uint32
 }
 
 /*!
-    \brief    disable DMA interrupt
+    \brief      disable DMA interrupt
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel 

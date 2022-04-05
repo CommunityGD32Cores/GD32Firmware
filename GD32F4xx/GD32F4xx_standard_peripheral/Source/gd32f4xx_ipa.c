@@ -39,7 +39,7 @@ OF SUCH DAMAGE.
 #define IPA_DEFAULT_VALUE   0x00000000U
 
 /*!
-    \brief    deinitialize IPA registers
+    \brief      deinitialize IPA registers
     \param[in]  none
     \param[out] none
     \retval     none
@@ -51,7 +51,7 @@ void ipa_deinit(void)
 }
 
 /*!
-    \brief    enable IPA transfer
+    \brief      enable IPA transfer
     \param[in]  none
     \param[out] none
     \retval     none
@@ -62,7 +62,7 @@ void ipa_transfer_enable(void)
 }
 
 /*!
-    \brief    enable IPA transfer hang up
+    \brief      enable IPA transfer hang up
     \param[in]  none
     \param[out] none
     \retval     none
@@ -73,7 +73,7 @@ void ipa_transfer_hangup_enable(void)
 }
 
 /*!
-    \brief    disable IPA transfer hang up
+    \brief      disable IPA transfer hang up
     \param[in]  none
     \param[out] none
     \retval     none
@@ -84,7 +84,7 @@ void ipa_transfer_hangup_disable(void)
 }
 
 /*!
-    \brief    enable IPA transfer stop
+    \brief      enable IPA transfer stop
     \param[in]  none
     \param[out] none
     \retval     none
@@ -95,7 +95,7 @@ void ipa_transfer_stop_enable(void)
 }
 
 /*!
-    \brief    disable IPA transfer stop
+    \brief      disable IPA transfer stop
     \param[in]  none
     \param[out] none
     \retval     none
@@ -105,7 +105,7 @@ void ipa_transfer_stop_disable(void)
     IPA_CTL &= ~(IPA_CTL_TST);
 }
 /*!
-    \brief    enable IPA foreground LUT loading
+    \brief      enable IPA foreground LUT loading
     \param[in]  none
     \param[out] none
     \retval     none
@@ -116,7 +116,7 @@ void ipa_foreground_lut_loading_enable(void)
 }
 
 /*!
-    \brief    enable IPA background LUT loading
+    \brief      enable IPA background LUT loading
     \param[in]  none
     \param[out] none
     \retval     none
@@ -127,7 +127,7 @@ void ipa_background_lut_loading_enable(void)
 }
 
 /*!
-    \brief    set pixel format convert mode, the function is invalid when the IPA transfer is enabled
+    \brief      set pixel format convert mode, the function is invalid when the IPA transfer is enabled
     \param[in]  pfcm: pixel format convert mode
                 only one parameter can be selected which is shown as below:
       \arg        IPA_FGTODE: foreground memory to destination memory without pixel format convert 
@@ -143,7 +143,7 @@ void ipa_pixel_format_convert_mode_set(uint32_t pfcm)
 }
 
 /*!
-    \brief    initialize the structure of IPA foreground parameter struct with the default values, it is 
+    \brief      initialize the structure of IPA foreground parameter struct with the default values, it is 
                 suggested that call this function after an ipa_foreground_parameter_struct structure is defined
     \param[in]  none
     \param[out] foreground_struct: the data needed to initialize foreground
@@ -173,7 +173,7 @@ void ipa_foreground_struct_para_init(ipa_foreground_parameter_struct* foreground
 }
 
 /*!
-    \brief    initialize foreground parameters
+    \brief      initialize foreground parameters
     \param[in]  foreground_struct: the data needed to initialize foreground
                   foreground_memaddr: foreground memory base address
                   foreground_lineoff: foreground line offset
@@ -220,7 +220,7 @@ void ipa_foreground_init(ipa_foreground_parameter_struct* foreground_struct)
 }
 
 /*!
-    \brief    initialize the structure of IPA background parameter struct with the default values, it is 
+    \brief      initialize the structure of IPA background parameter struct with the default values, it is 
                 suggested that call this function after an ipa_background_parameter_struct structure is defined
     \param[in]  none
     \param[out] background_struct: the data needed to initialize background
@@ -250,7 +250,7 @@ void ipa_background_struct_para_init(ipa_background_parameter_struct* background
 }
 
 /*!
-    \brief    initialize background parameters
+    \brief      initialize background parameters
     \param[in]  background_struct: the data needed to initialize background
                   background_memaddr: background memory base address
                   background_lineoff: background line offset
@@ -297,7 +297,7 @@ void ipa_background_init(ipa_background_parameter_struct* background_struct)
 }
 
 /*!
-    \brief    initialize the structure of IPA destination parameter struct with the default values, it is 
+    \brief      initialize the structure of IPA destination parameter struct with the default values, it is 
                 suggested that call this function after an ipa_destination_parameter_struct structure is defined
     \param[in]  none
     \param[out] destination_struct: the data needed to initialize destination parameter
@@ -328,7 +328,7 @@ void ipa_destination_struct_para_init(ipa_destination_parameter_struct* destinat
 }
 
 /*!
-    \brief    initialize destination parameters
+    \brief      initialize destination parameters
     \param[in]  destination_struct: the data needed to initialize destination parameters
                   destination_pf: IPA_DPF_ARGB8888,IPA_DPF_RGB888,IPA_DPF_RGB565,IPA_DPF_ARGB1555,
                                 IPA_DPF_ARGB4444,refer to ipa_dpf_enum
@@ -411,7 +411,7 @@ void ipa_destination_init(ipa_destination_parameter_struct* destination_struct)
 }
 
 /*!
-    \brief    initialize IPA foreground LUT parameters
+    \brief      initialize IPA foreground LUT parameters
     \param[in]  fg_lut_num: foreground LUT number of pixel
     \param[in]  fg_lut_pf: foreground LUT pixel format(IPA_LUT_PF_ARGB8888, IPA_LUT_PF_RGB888)
     \param[in]  fg_lut_addr: foreground LUT memory base address
@@ -446,7 +446,7 @@ void ipa_foreground_lut_init(uint8_t fg_lut_num, uint8_t fg_lut_pf, uint32_t fg_
 }
 
 /*!
-    \brief    initialize IPA background LUT parameters
+    \brief      initialize IPA background LUT parameters
     \param[in]  bg_lut_num: background LUT number of pixel
     \param[in]  bg_lut_pf: background LUT pixel format(IPA_LUT_PF_ARGB8888, IPA_LUT_PF_RGB888)
     \param[in]  bg_lut_addr: background LUT memory base address
@@ -481,7 +481,7 @@ void ipa_background_lut_init(uint8_t bg_lut_num, uint8_t bg_lut_pf, uint32_t bg_
 }
 
 /*!
-    \brief    configure IPA line mark
+    \brief      configure IPA line mark
     \param[in]  line_num: line number
     \param[out] none
     \retval     none
@@ -493,7 +493,7 @@ void ipa_line_mark_config(uint16_t line_num)
 }
 
 /*!
-    \brief    inter-timer enable or disable
+    \brief      inter-timer enable or disable
     \param[in]  timer_cfg: IPA_INTER_TIMER_ENABLE,IPA_INTER_TIMER_DISABLE
     \param[out] none
     \retval     none
@@ -508,7 +508,7 @@ void ipa_inter_timer_config(uint8_t timer_cfg)
 }
 
 /*!
-    \brief    configure the number of clock cycles interval
+    \brief      configure the number of clock cycles interval
     \param[in]  clk_num: the number of clock cycles
     \param[out] none
     \retval     none
@@ -521,7 +521,7 @@ void ipa_interval_clock_num_config(uint8_t clk_num)
 }
 
 /*!
-    \brief    get IPA flag status in IPA_INTF register
+    \brief      get IPA flag status in IPA_INTF register
     \param[in]  flag: IPA flags
                 one or more parameters can be selected which are shown as below:
       \arg        IPA_FLAG_TAE: transfer access error interrupt flag
@@ -543,7 +543,7 @@ FlagStatus ipa_flag_get(uint32_t flag)
 }
 
 /*!
-    \brief    clear IPA flag in IPA_INTF register
+    \brief      clear IPA flag in IPA_INTF register
     \param[in]  flag: IPA flags
                 one or more parameters can be selected which are shown as below:
       \arg        IPA_FLAG_TAE: transfer access error interrupt flag
@@ -561,7 +561,7 @@ void ipa_flag_clear(uint32_t flag)
 }
 
 /*!
-    \brief    enable IPA interrupt
+    \brief      enable IPA interrupt
     \param[in]  int_flag: IPA interrupt flags
                 one or more parameters can be selected which are shown as below:
       \arg        IPA_INT_TAE: transfer access error interrupt
@@ -579,7 +579,7 @@ void ipa_interrupt_enable(uint32_t int_flag)
 }
 
 /*!
-    \brief    disable IPA interrupt
+    \brief      disable IPA interrupt
     \param[in]  int_flag: IPA interrupt flags
                 one or more parameters can be selected which are shown as below:
       \arg        IPA_INT_TAE: transfer access error interrupt
@@ -597,7 +597,7 @@ void ipa_interrupt_disable(uint32_t int_flag)
 }
 
 /*!
-    \brief    get IPA interrupt flag
+    \brief      get IPA interrupt flag
     \param[in]  int_flag: IPA interrupt flag flags
                 one or more parameters can be selected which are shown as below:
       \arg        IPA_INT_FLAG_TAE: transfer access error interrupt flag
@@ -619,7 +619,7 @@ FlagStatus ipa_interrupt_flag_get(uint32_t int_flag)
 }
 
 /*!
-    \brief    clear IPA interrupt flag
+    \brief      clear IPA interrupt flag
     \param[in]  int_flag: IPA interrupt flag flags
                 one or more parameters can be selected which are shown as below:
       \arg        IPA_INT_FLAG_TAE: transfer access error interrupt flag

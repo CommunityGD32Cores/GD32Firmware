@@ -124,7 +124,7 @@ OF SUCH DAMAGE.
 #define INTEN_INTS_OFFSET                 ((uint32_t)3U)
 
 /*!
-    \brief    deinitialize EXMC NOR/SRAM region
+    \brief      deinitialize EXMC NOR/SRAM region
     \param[in]  exmc_norsram_region: select the region of bank0
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_BANK0_NORSRAM_REGIONx(x=0..3)
@@ -140,7 +140,7 @@ void exmc_norsram_deinit(uint32_t exmc_norsram_region)
 }
 
 /*!
-    \brief    initialize exmc_norsram_parameter_struct with the default values
+    \brief      initialize exmc_norsram_parameter_struct with the default values
     \param[in]  none
     \param[out] exmc_norsram_init_struct: the initialized struct exmc_norsram_parameter_struct pointer
     \retval     none
@@ -180,7 +180,7 @@ void exmc_norsram_struct_para_init(exmc_norsram_parameter_struct* exmc_norsram_i
 }
 
 /*!
-    \brief    initialize EXMC NOR/SRAM region
+    \brief      initialize EXMC NOR/SRAM region
     \param[in]  exmc_norsram_parameter_struct: configure the EXMC NOR/SRAM parameter
                   norsram_region: EXMC_BANK0_NORSRAM_REGIONx, x=0..3
                   write_mode: EXMC_ASYN_WRITE, EXMC_SYN_WRITE
@@ -271,7 +271,7 @@ void exmc_norsram_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct)
 }
 
 /*!
-    \brief    enable EXMC NOR/PSRAM bank region
+    \brief      enable EXMC NOR/PSRAM bank region
     \param[in]  exmc_norsram_region: specifie the region of NOR/PSRAM bank
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_BANK0_NORSRAM_REGIONx(x=0..3)
@@ -284,7 +284,7 @@ void exmc_norsram_enable(uint32_t exmc_norsram_region)
 }
 
 /*!
-    \brief    disable EXMC NOR/PSRAM bank region
+    \brief      disable EXMC NOR/PSRAM bank region
     \param[in]  exmc_norsram_region: specifie the region of NOR/PSRAM Bank
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_BANK0_NORSRAM_REGIONx(x=0..3)
@@ -297,7 +297,7 @@ void exmc_norsram_disable(uint32_t exmc_norsram_region)
 }
 
 /*!
-    \brief    deinitialize EXMC NAND bank
+    \brief      deinitialize EXMC NAND bank
     \param[in]  exmc_nand_bank: select the bank of NAND
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_BANKx_NAND(x=1..2)
@@ -314,7 +314,7 @@ void exmc_nand_deinit(uint32_t exmc_nand_bank)
 }
 
 /*!
-    \brief    initialize exmc_norsram_parameter_struct with the default values
+    \brief      initialize exmc_norsram_parameter_struct with the default values
     \param[in]  none
     \param[out] the initialized struct exmc_norsram_parameter_struct pointer
     \retval     none
@@ -340,7 +340,7 @@ void exmc_nand_struct_para_init(exmc_nand_parameter_struct* exmc_nand_init_struc
 }
 
 /*!
-    \brief    initialize EXMC NAND bank
+    \brief      initialize EXMC NAND bank
     \param[in]  exmc_nand_parameter_struct: configure the EXMC NAND parameter
                   nand_bank: EXMC_BANK1_NAND,EXMC_BANK2_NAND
                   ecc_size: EXMC_ECC_SIZE_xBYTES,x=256,512,1024,2048,4096
@@ -391,7 +391,7 @@ void exmc_nand_init(exmc_nand_parameter_struct* exmc_nand_init_struct)
 }
 
 /*!
-    \brief    enable NAND bank
+    \brief      enable NAND bank
     \param[in]  exmc_nand_bank: specifie the NAND bank
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_BANKx_NAND(x=1,2)
@@ -404,7 +404,7 @@ void exmc_nand_enable(uint32_t exmc_nand_bank)
 }
 
 /*!
-    \brief    disable NAND bank
+    \brief      disable NAND bank
     \param[in]  exmc_nand_bank: specifie the NAND bank
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_BANKx_NAND(x=1,2)
@@ -417,7 +417,7 @@ void exmc_nand_disable(uint32_t exmc_nand_bank)
 }
 
 /*!
-    \brief    deinitialize EXMC PC card bank
+    \brief      deinitialize EXMC PC card bank
     \param[in]  none
     \param[out] none
     \retval     none
@@ -433,7 +433,7 @@ void exmc_pccard_deinit(void)
 }
 
 /*!
-    \brief    initialize exmc_pccard_parameter_struct with the default values
+    \brief      initialize exmc_pccard_parameter_struct with the default values
     \param[in]  none
     \param[out] the initialized struct exmc_pccard_parameter_struct pointer
     \retval     none
@@ -459,7 +459,7 @@ void exmc_pccard_struct_para_init(exmc_pccard_parameter_struct* exmc_pccard_init
 }
 
 /*!
-    \brief    initialize EXMC PC card bank
+    \brief      initialize EXMC PC card bank
     \param[in]  exmc_pccard_parameter_struct: configure the EXMC NAND parameter
                   atr_latency: EXMC_ALE_RE_DELAY_x_HCLK,x=1..16
                   ctr_latency: EXMC_CLE_RE_DELAY_x_HCLK,x=1..16
@@ -510,7 +510,7 @@ void exmc_pccard_init(exmc_pccard_parameter_struct* exmc_pccard_init_struct)
 }
 
 /*!
-    \brief    enable PC Card Bank
+    \brief      enable PC Card Bank
     \param[in]  none
     \param[out] none
     \retval     none
@@ -521,7 +521,7 @@ void exmc_pccard_enable(void)
 }
 
 /*!
-    \brief    disable PC Card Bank
+    \brief      disable PC Card Bank
     \param[in]  none
     \param[out] none
     \retval     none
@@ -532,7 +532,7 @@ void exmc_pccard_disable(void)
 }
 
 /*!
-    \brief    deinitialize EXMC SDRAM device
+    \brief      deinitialize EXMC SDRAM device
    \param[in]   exmc_sdram_device: select the SRAM device
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_SDRAM_DEVICEx(x=0, 1)
@@ -551,7 +551,7 @@ void exmc_sdram_deinit(uint32_t exmc_sdram_device)
 }
 
 /*!
-    \brief    initialize exmc_sdram_parameter_struct with the default values
+    \brief      initialize exmc_sdram_parameter_struct with the default values
     \param[in]  none
     \param[out] the initialized struct exmc_pccard_parameter_struct pointer
     \retval     none
@@ -580,7 +580,7 @@ void exmc_sdram_struct_para_init(exmc_sdram_parameter_struct* exmc_sdram_init_st
 }
 
 /*!
-    \brief    initialize EXMC SDRAM device
+    \brief      initialize EXMC SDRAM device
     \param[in]  exmc_sdram_parameter_struct: configure the EXMC SDRAM parameter
                   sdram_device: EXMC_SDRAM_DEVICE0,EXMC_SDRAM_DEVICE1
                   pipeline_read_delay: EXMC_PIPELINE_DELAY_x_HCLK,x=0..2
@@ -666,7 +666,7 @@ void exmc_sdram_init(exmc_sdram_parameter_struct* exmc_sdram_init_struct)
 }
 
 /*!
-    \brief    deinitialize exmc SQPIPSRAM
+    \brief      deinitialize exmc SQPIPSRAM
     \param[in]  none
     \param[out] none
     \retval     none
@@ -682,7 +682,7 @@ void exmc_sqpipsram_deinit(void)
 }
 
 /*!
-    \brief    initialize exmc_sqpipsram_parameter_struct with the default values
+    \brief      initialize exmc_sqpipsram_parameter_struct with the default values
     \param[in]  the struct exmc_sqpipsram_parameter_struct pointer
     \param[out] none
     \retval     none
@@ -697,7 +697,7 @@ void exmc_sqpipsram_struct_para_init(exmc_sqpipsram_parameter_struct* exmc_sqpip
 }
 
 /*!
-    \brief    initialize EXMC SQPIPSRAM
+    \brief      initialize EXMC SQPIPSRAM
     \param[in]  exmc_sqpipsram_parameter_struct: configure the EXMC SQPIPSRAM parameter
                   sample_polarity: EXMC_SQPIPSRAM_SAMPLE_RISING_EDGE,EXMC_SQPIPSRAM_SAMPLE_FALLING_EDGE
                   id_length: EXMC_SQPIPSRAM_ID_LENGTH_xB,x=8,16,32,64
@@ -716,7 +716,7 @@ void exmc_sqpipsram_init(exmc_sqpipsram_parameter_struct* exmc_sqpipsram_init_st
 }
 
 /*!
-    \brief    configure consecutive clock
+    \brief      configure consecutive clock
     \param[in]  clock_mode: specifie when the clock is generated
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_CLOCK_SYN_MODE: the clock is generated only during synchronous access
@@ -734,7 +734,7 @@ void exmc_norsram_consecutive_clock_config(uint32_t clock_mode)
 }
 
 /*!
-    \brief    configure CRAM page size
+    \brief      configure CRAM page size
     \param[in]  exmc_norsram_region: select the region of bank0
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_BANK0_NORSRAM_REGIONx(x=0..3)
@@ -758,7 +758,7 @@ void exmc_norsram_page_size_config(uint32_t exmc_norsram_region, uint32_t page_s
 }
 
 /*!
-    \brief    enable or disable the EXMC NAND ECC function
+    \brief      enable or disable the EXMC NAND ECC function
     \param[in]  exmc_nand_bank: specifie the NAND bank
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_BANKx_NAND(x=1,2)
@@ -778,7 +778,7 @@ void exmc_nand_ecc_config(uint32_t exmc_nand_bank, ControlStatus newvalue)
 }
 
 /*!
-    \brief    get the EXMC ECC value
+    \brief      get the EXMC ECC value
     \param[in]  exmc_nand_bank: specifie the NAND bank
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_BANKx_NAND(x=1,2)
@@ -791,7 +791,7 @@ uint32_t exmc_ecc_get(uint32_t exmc_nand_bank)
 }
 
 /*!
-    \brief    enable or disable read sample
+    \brief      enable or disable read sample
     \param[in]  newvalue: ENABLE or DISABLE
     \param[out] none
     \retval     none
@@ -806,7 +806,7 @@ void exmc_sdram_readsample_enable(ControlStatus newvalue)
 }
 
 /*!
-    \brief    configure the delayed sample clock of read data
+    \brief      configure the delayed sample clock of read data
     \param[in]  delay_cell: SDRAM the delayed sample clock of read data
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_SDRAM_x_DELAY_CELL(x=0..15)
@@ -829,7 +829,7 @@ void exmc_sdram_readsample_config(uint32_t delay_cell, uint32_t extra_hclk)
 }
 
 /*!
-    \brief    configure the SDRAM memory command
+    \brief      configure the SDRAM memory command
     \param[in]  exmc_sdram_command_init_struct: initialize EXMC SDRAM command 
                   mode_register_content:
                   auto_refresh_number: EXMC_SDRAM_AUTO_REFLESH_x_SDCLK, x=1..15
@@ -850,7 +850,7 @@ void exmc_sdram_command_config(exmc_sdram_command_parameter_struct* exmc_sdram_c
 }
 
 /*!
-    \brief    set auto-refresh interval
+    \brief      set auto-refresh interval
     \param[in]  exmc_count: the number SDRAM clock cycles unit between two successive auto-refresh commands, 0x0000~0x1FFF
     \param[out] none
     \retval     none
@@ -863,7 +863,7 @@ void exmc_sdram_refresh_count_set(uint32_t exmc_count)
 }
 
 /*!
-    \brief    set the number of successive auto-refresh command
+    \brief      set the number of successive auto-refresh command
     \param[in]  exmc_number: the number of successive Auto-refresh cycles will be send, 1~15
     \param[out] none
     \retval     none
@@ -876,7 +876,7 @@ void exmc_sdram_autorefresh_number_set(uint32_t exmc_number)
 }
 
 /*!
-    \brief    config the write protection function
+    \brief      config the write protection function
     \param[in]  exmc_sdram_device: specifie the SDRAM device
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_SDRAM_DEVICEx(x=0,1)
@@ -895,7 +895,7 @@ void exmc_sdram_write_protection_config(uint32_t exmc_sdram_device, ControlStatu
 }
 
 /*!
-    \brief    get the status of SDRAM device0 or device1
+    \brief      get the status of SDRAM device0 or device1
     \param[in]  exmc_sdram_device: specifie the SDRAM device
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_SDRAM_DEVICEx(x=0,1)
@@ -916,7 +916,7 @@ uint32_t exmc_sdram_bankstatus_get(uint32_t exmc_sdram_device)
 }
 
 /*!
-    \brief    set the read command
+    \brief      set the read command
     \param[in]  read_command_mode: configure SPI PSRAM read command mode
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_SQPIPSRAM_READ_MODE_DISABLE: not SPI mode
@@ -939,7 +939,7 @@ void exmc_sqpipsram_read_command_set(uint32_t read_command_mode,uint32_t read_wa
 }
 
 /*!
-    \brief    set the write command
+    \brief      set the write command
     \param[in]  write_command_mode: configure SPI PSRAM write command mode
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_SQPIPSRAM_WRITE_MODE_DISABLE: not SPI mode
@@ -962,7 +962,7 @@ void exmc_sqpipsram_write_command_set(uint32_t write_command_mode,uint32_t write
 }
 
 /*!
-    \brief    send SPI read ID command
+    \brief      send SPI read ID command
     \param[in]  none
     \param[out] none
     \retval     none
@@ -973,7 +973,7 @@ void exmc_sqpipsram_read_id_command_send(void)
 }
 
 /*!
-    \brief    send SPI special command which does not have address and data phase
+    \brief      send SPI special command which does not have address and data phase
     \param[in]  none
     \param[out] none
     \retval     none
@@ -984,7 +984,7 @@ void exmc_sqpipsram_write_cmd_send(void)
 }
 
 /*!
-    \brief    get the EXMC SPI ID low data
+    \brief      get the EXMC SPI ID low data
     \param[in]  none
     \param[out] none
     \retval     the ID low data
@@ -995,7 +995,7 @@ uint32_t exmc_sqpipsram_low_id_get(void)
 }
 
 /*!
-    \brief    get the EXMC SPI ID high data
+    \brief      get the EXMC SPI ID high data
     \param[in]  none
     \param[out] none
     \retval     the ID high data
@@ -1006,7 +1006,7 @@ uint32_t exmc_sqpipsram_high_id_get(void)
 }
 
 /*!
-    \brief    get the bit value of EXMC send write command bit or read ID command
+    \brief      get the bit value of EXMC send write command bit or read ID command
     \param[in]  send_command_flag: the send command flag
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_SEND_COMMAND_FLAG_RDID: EXMC_SRCMD_RDID flag bit
@@ -1035,7 +1035,7 @@ FlagStatus exmc_sqpipsram_send_command_state_get(uint32_t send_command_flag)
 }
 
 /*!
-    \brief    enable EXMC interrupt
+    \brief      enable EXMC interrupt
     \param[in]  exmc_bank: specifies the NAND bank,PC card bank or SDRAM device
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_BANK1_NAND: the NAND bank1
@@ -1064,7 +1064,7 @@ void exmc_interrupt_enable(uint32_t exmc_bank, uint32_t interrupt)
 }
 
 /*!
-    \brief    disable EXMC interrupt
+    \brief      disable EXMC interrupt
     \param[in]  exmc_bank: specifies the NAND bank , PC card bank or SDRAM device
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_BANK1_NAND: the NAND bank1
@@ -1093,7 +1093,7 @@ void exmc_interrupt_disable(uint32_t exmc_bank, uint32_t interrupt)
 }
 
 /*!
-    \brief    get EXMC flag status
+    \brief      get EXMC flag status
     \param[in]  exmc_bank: specifies the NAND bank , PC card bank or SDRAM device
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_BANK1_NAND: the NAND bank1
@@ -1134,7 +1134,7 @@ FlagStatus exmc_flag_get(uint32_t exmc_bank,uint32_t flag)
 }
 
 /*!
-    \brief    clear EXMC flag status
+    \brief      clear EXMC flag status
     \param[in]  exmc_bank: specifie the NAND bank , PCCARD bank or SDRAM device
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_BANK1_NAND: the NAND bank1
@@ -1165,7 +1165,7 @@ void exmc_flag_clear(uint32_t exmc_bank, uint32_t flag)
 }
 
 /*!
-    \brief    get EXMC interrupt flag
+    \brief      get EXMC interrupt flag
     \param[in]  exmc_bank: specifies the NAND bank , PC card bank or SDRAM device
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_BANK1_NAND: the NAND bank1
@@ -1208,7 +1208,7 @@ FlagStatus exmc_interrupt_flag_get(uint32_t exmc_bank, uint32_t interrupt)
 }
 
 /*!
-    \brief    clear EXMC interrupt flag
+    \brief      clear EXMC interrupt flag
     \param[in]  exmc_bank: specifies the NAND bank , PC card bank or SDRAM device
                 only one parameter can be selected which is shown as below:
       \arg        EXMC_BANK1_NAND: the NAND bank1

@@ -104,12 +104,7 @@ typedef struct _usb_desc {
     uint8_t *dev_desc;                                                          /*!< device descriptor */
     uint8_t *config_desc;                                                       /*!< configure descriptor */
     uint8_t *bos_desc;                                                          /*!< BOS descriptor */
-    
-#ifdef USE_USB_HS
-    uint8_t *other_speed_config_desc;                                           /*!< other speed configuration descriptor */
-    uint8_t *qualifier_desc;                                                    /*!< qualifier descriptor */
-#endif
-    
+
     void* const *strings;                                                       /*!< string descriptor */
 } usb_desc;
 
@@ -166,9 +161,6 @@ typedef struct _usb_class_core
     uint8_t  (*req_proc)              (usb_dev *udev, usb_req *req);            /*!< device request handler */
 
     uint8_t  (*set_intf)              (usb_dev *udev, usb_req *req);            /*!< device set interface callback */
-
-    uint8_t  (*ctlx_in)               (usb_dev *udev);                          /*!< device contrl in callback */
-    uint8_t  (*ctlx_out)              (usb_dev *udev); 
 
     uint8_t  (*data_in)               (usb_dev *udev, uint8_t ep_num);          /*!< device data in handler */
     uint8_t  (*data_out)              (usb_dev *udev, uint8_t ep_num);          /*!< device data out handler */

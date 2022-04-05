@@ -37,7 +37,7 @@ OF SUCH DAMAGE.
 #include "gd32f4xx_exti.h"
 
 /*!
-    \brief    deinitialize the EXTI
+    \brief      deinitialize the EXTI
     \param[in]  none
     \param[out] none
     \retval     none
@@ -53,7 +53,7 @@ void exti_deinit(void)
 }
 
 /*!
-    \brief    initialize the EXTI
+    \brief      initialize the EXTI
     \param[in]  linex: EXTI line number, refer to exti_line_enum
                 only one parameter can be selected which is shown as below:
       \arg        EXTI_x (x=0..22): EXTI line x
@@ -113,7 +113,7 @@ void exti_init(exti_line_enum linex, \
 }
 
 /*!
-    \brief    enable the interrupts from EXTI line x
+    \brief      enable the interrupts from EXTI line x
     \param[in]  linex: EXTI line number, refer to exti_line_enum
                 only one parameter can be selected which is shown as below:
       \arg        EXTI_x (x=0..22): EXTI line x
@@ -126,7 +126,7 @@ void exti_interrupt_enable(exti_line_enum linex)
 }
 
 /*!
-    \brief    disable the interrupt from EXTI line x
+    \brief      disable the interrupt from EXTI line x
     \param[in]  linex: EXTI line number, refer to exti_line_enum
                 only one parameter can be selected which is shown as below:
       \arg        EXTI_x (x=0..22): EXTI line x
@@ -139,7 +139,7 @@ void exti_interrupt_disable(exti_line_enum linex)
 }
 
 /*!
-    \brief    enable the events from EXTI line x
+    \brief      enable the events from EXTI line x
     \param[in]  linex: EXTI line number, refer to exti_line_enum
                 only one parameter can be selected which is shown as below:
       \arg        EXTI_x (x=0..22): EXTI line x
@@ -152,7 +152,7 @@ void exti_event_enable(exti_line_enum linex)
 }
 
 /*!
-    \brief    disable the events from EXTI line x
+    \brief      disable the events from EXTI line x
     \param[in]  linex: EXTI line number, refer to exti_line_enum
                 only one parameter can be selected which is shown as below:
       \arg        EXTI_x (x=0..22): EXTI line x
@@ -165,7 +165,7 @@ void exti_event_disable(exti_line_enum linex)
 }
 
 /*!
-    \brief    enable EXTI software interrupt event
+    \brief      enable EXTI software interrupt event
     \param[in]  linex: EXTI line number, refer to exti_line_enum
                 only one parameter can be selected which is shown as below:
       \arg        EXTI_x (x=0..22): EXTI line x
@@ -178,7 +178,7 @@ void exti_software_interrupt_enable(exti_line_enum linex)
 }
 
 /*!
-    \brief    disable EXTI software interrupt event
+    \brief      disable EXTI software interrupt event
     \param[in]  linex: EXTI line number, refer to exti_line_enum
                 only one parameter can be selected which is shown as below:
       \arg        EXTI_x (x=0..22): EXTI line x
@@ -191,7 +191,7 @@ void exti_software_interrupt_disable(exti_line_enum linex)
 }
 
 /*!
-    \brief    get EXTI lines flag
+    \brief      get EXTI lines flag
     \param[in]  linex: EXTI line number, refer to exti_line_enum
                 only one parameter can be selected which is shown as below:
       \arg        EXTI_x (x=0..22): EXTI line x
@@ -208,7 +208,7 @@ FlagStatus exti_flag_get(exti_line_enum linex)
 }
 
 /*!
-    \brief    clear EXTI lines pending flag
+    \brief      clear EXTI lines pending flag
     \param[in]  linex: EXTI line number, refer to exti_line_enum
                 only one parameter can be selected which is shown as below:
       \arg        EXTI_x (x=0..22): EXTI line x
@@ -221,7 +221,7 @@ void exti_flag_clear(exti_line_enum linex)
 }
 
 /*!
-    \brief    get EXTI lines flag when the interrupt flag is set
+    \brief      get EXTI lines flag when the interrupt flag is set
     \param[in]  linex: EXTI line number, refer to exti_line_enum
                 only one parameter can be selected which is shown as below:
       \arg        EXTI_x (x=0..22): EXTI line x
@@ -243,7 +243,7 @@ FlagStatus exti_interrupt_flag_get(exti_line_enum linex)
 }
 
 /*!
-    \brief    clear EXTI lines pending flag
+    \brief      clear EXTI lines pending flag
     \param[in]  linex: EXTI line number, refer to exti_line_enum
                 only one parameter can be selected which is shown as below:
       \arg        EXTI_x (x=0..22): EXTI line x

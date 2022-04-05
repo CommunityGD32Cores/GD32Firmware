@@ -37,7 +37,7 @@ OF SUCH DAMAGE.
 #include "gd32f4xx_syscfg.h"
 
 /*!
-    \brief    reset the SYSCFG registers
+    \brief      reset the SYSCFG registers
     \param[in]  none
     \param[out] none
     \retval     none
@@ -49,7 +49,7 @@ void syscfg_deinit(void)
 }
 
 /*!
-    \brief    configure the boot mode 
+    \brief      configure the boot mode 
     \param[in]  syscfg_bootmode: selects the memory remapping
                 only one parameter can be selected which is shown as below:
       \arg        SYSCFG_BOOTMODE_FLASH: main flash memory (0x08000000~0x083BFFFF) is mapped at address 0x00000000
@@ -68,7 +68,7 @@ void syscfg_bootmode_config(uint8_t syscfg_bootmode)
 }
 
 /*!
-    \brief    FMC memory mapping swap
+    \brief      FMC memory mapping swap
     \param[in]  syscfg_fmc_swap: selects the interal flash bank swapping
                 only one parameter can be selected which is shown as below:
       \arg        SYSCFG_FMC_SWP_BANK0: bank 0 is mapped at address 0x08000000 and bank 1 is mapped at address 0x08100000
@@ -86,7 +86,7 @@ void syscfg_fmc_swap_config(uint32_t syscfg_fmc_swap)
 }
 
 /*!
-    \brief    EXMC memory mapping swap
+    \brief      EXMC memory mapping swap
     \param[in]  syscfg_exmc_swap: selects the memories in EXMC swapping
                 only one parameter can be selected which is shown as below:
       \arg        SYSCFG_EXMC_SWP_ENABLE: SDRAM bank 0 and bank 1 are swapped with NAND bank 1 and PC card
@@ -105,7 +105,7 @@ void syscfg_exmc_swap_config(uint32_t syscfg_exmc_swap)
 }
 
 /*!
-    \brief    configure the GPIO pin as EXTI Line
+    \brief      configure the GPIO pin as EXTI Line
     \param[in]  exti_port: specify the GPIO port used in EXTI
                 only one parameter can be selected which is shown as below:
       \arg        EXTI_SOURCE_GPIOx(x = A,B,C,D,E,F,G,H,I): EXTI GPIO port
@@ -151,7 +151,7 @@ void syscfg_exti_line_config(uint8_t exti_port, uint8_t exti_pin)
 }
 
 /*!
-    \brief    configure the PHY interface for the ethernet MAC
+    \brief      configure the PHY interface for the ethernet MAC
     \param[in]  syscfg_enet_phy_interface: specifies the media interface mode.
                 only one parameter can be selected which is shown as below:
       \arg        SYSCFG_ENET_PHY_MII: MII mode is selected
@@ -170,7 +170,7 @@ void syscfg_enet_phy_interface_config(uint32_t syscfg_enet_phy_interface)
 }
 
 /*!
-    \brief    configure the I/O compensation cell
+    \brief      configure the I/O compensation cell
     \param[in]  syscfg_compensation: specifies the I/O compensation cell mode
                 only one parameter can be selected which is shown as below:
       \arg        SYSCFG_COMPENSATION_ENABLE: I/O compensation cell is enabled
@@ -189,7 +189,7 @@ void syscfg_compensation_config(uint32_t syscfg_compensation)
 }
 
 /*!
-    \brief    checks whether the I/O compensation cell ready flag is set or not
+    \brief      checks whether the I/O compensation cell ready flag is set or not
     \param[in]  none
     \param[out] none
     \retval     FlagStatus: SET or RESET

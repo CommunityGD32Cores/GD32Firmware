@@ -37,7 +37,7 @@ OF SUCH DAMAGE.
 #include "gd32f4xx_misc.h"
 
 /*!
-    \brief    set the priority group
+    \brief      set the priority group
     \param[in]  nvic_prigroup: the NVIC priority group
       \arg        NVIC_PRIGROUP_PRE0_SUB4:0 bits for pre-emption priority 4 bits for subpriority
       \arg        NVIC_PRIGROUP_PRE1_SUB3:1 bits for pre-emption priority 3 bits for subpriority
@@ -54,7 +54,7 @@ void nvic_priority_group_set(uint32_t nvic_prigroup)
 }
 
 /*!
-    \brief    enable NVIC request
+    \brief      enable NVIC request
     \param[in]  nvic_irq: the NVIC interrupt request, detailed in IRQn_Type
     \param[in]  nvic_irq_pre_priority: the pre-emption priority needed to set
     \param[in]  nvic_irq_sub_priority: the subpriority needed to set
@@ -96,7 +96,7 @@ void nvic_irq_enable(uint8_t nvic_irq, uint8_t nvic_irq_pre_priority,
 }
 
 /*!
-    \brief    disable NVIC request
+    \brief      disable NVIC request
     \param[in]  nvic_irq: the NVIC interrupt request, detailed in IRQn_Type
     \param[out] none
     \retval     none
@@ -108,7 +108,7 @@ void nvic_irq_disable(uint8_t nvic_irq)
 }
 
 /*!
-    \brief    set the NVIC vector table base address
+    \brief      set the NVIC vector table base address
     \param[in]  nvic_vict_tab: the RAM or FLASH base address
       \arg        NVIC_VECTTAB_RAM: RAM base address
       \are        NVIC_VECTTAB_FLASH: Flash base address
@@ -122,7 +122,7 @@ void nvic_vector_table_set(uint32_t nvic_vict_tab, uint32_t offset)
 }
 
 /*!
-    \brief    set the state of the low power mode
+    \brief      set the state of the low power mode
     \param[in]  lowpower_mode: the low power mode state
       \arg        SCB_LPM_SLEEP_EXIT_ISR: if chose this para, the system always enter low power 
                     mode by exiting from ISR
@@ -138,7 +138,7 @@ void system_lowpower_set(uint8_t lowpower_mode)
 }
 
 /*!
-    \brief    reset the state of the low power mode
+    \brief      reset the state of the low power mode
     \param[in]  lowpower_mode: the low power mode state
       \arg        SCB_LPM_SLEEP_EXIT_ISR: if chose this para, the system will exit low power 
                     mode by exiting from ISR
@@ -154,7 +154,7 @@ void system_lowpower_reset(uint8_t lowpower_mode)
 }
 
 /*!
-    \brief    set the systick clock source
+    \brief      set the systick clock source
     \param[in]  systick_clksource: the systick clock source needed to choose
       \arg        SYSTICK_CLKSOURCE_HCLK: systick clock source is from HCLK
       \arg        SYSTICK_CLKSOURCE_HCLK_DIV8: systick clock source is from HCLK/8

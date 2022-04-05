@@ -41,7 +41,7 @@ OF SUCH DAMAGE.
 #define CAN_ERROR_HANDLE(s)     do{}while(1)
 
 /*!
-    \brief    deinitialize CAN 
+    \brief      deinitialize CAN 
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[out] none
@@ -59,7 +59,7 @@ void can_deinit(uint32_t can_periph)
 }
 
 /*!
-    \brief    initialize CAN parameter struct with a default value
+    \brief      initialize CAN parameter struct with a default value
     \param[in]  type: the type of CAN parameter struct  
                 only one parameter can be selected which is shown as below:
       \arg        CAN_INIT_STRUCT: the CAN initial struct
@@ -138,7 +138,7 @@ void can_struct_para_init(can_struct_type_enum type, void* p_struct)
 }
 
 /*!
-    \brief    initialize CAN
+    \brief      initialize CAN
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[in]  can_parameter_init: parameters for CAN initializtion
@@ -232,7 +232,7 @@ ErrStatus can_init(uint32_t can_periph, can_parameter_struct* can_parameter_init
 }
 
 /*!
-    \brief    initialize CAN filter 
+    \brief      initialize CAN filter 
     \param[in]  can_filter_parameter_init: struct for CAN filter initialization
       \arg        filter_list_high: 0x0000 - 0xFFFF
       \arg        filter_list_low: 0x0000 - 0xFFFF
@@ -312,7 +312,7 @@ void can_filter_init(can_filter_parameter_struct* can_filter_parameter_init)
 }
 
 /*!
-    \brief    set CAN1 fliter start bank number
+    \brief      set CAN1 fliter start bank number
     \param[in]  start_bank: CAN1 start bank number
                 only one parameter can be selected which is shown as below:
       \arg        (1..27)
@@ -331,7 +331,7 @@ void can1_filter_start_bank(uint8_t start_bank)
 }
 
 /*!
-    \brief    enable CAN debug freeze
+    \brief      enable CAN debug freeze
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[out] none
@@ -349,7 +349,7 @@ void can_debug_freeze_enable(uint32_t can_periph)
 }
 
 /*!
-    \brief    disable CAN debug freeze
+    \brief      disable CAN debug freeze
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[out] none
@@ -367,7 +367,7 @@ void can_debug_freeze_disable(uint32_t can_periph)
 }
 
 /*!
-    \brief    enable CAN time trigger mode
+    \brief      enable CAN time trigger mode
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[out] none
@@ -386,7 +386,7 @@ void can_time_trigger_mode_enable(uint32_t can_periph)
 }
 
 /*!
-    \brief    disable CAN time trigger mode
+    \brief      disable CAN time trigger mode
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[out] none
@@ -405,7 +405,7 @@ void can_time_trigger_mode_disable(uint32_t can_periph)
 }
 
 /*!
-    \brief     transmit CAN message
+    \brief       transmit CAN message
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[in]  transmit_message: struct for CAN transmit message
@@ -467,7 +467,7 @@ uint8_t can_message_transmit(uint32_t can_periph, can_trasnmit_message_struct* t
 }
 
 /*!
-    \brief    get CAN transmit state 
+    \brief      get CAN transmit state 
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[in]  mailbox_number
@@ -526,7 +526,7 @@ can_transmit_state_enum can_transmit_states(uint32_t can_periph, uint8_t mailbox
 }
 
 /*!
-    \brief    stop CAN transmission
+    \brief      stop CAN transmission
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[in]  mailbox_number
@@ -555,7 +555,7 @@ void can_transmission_stop(uint32_t can_periph, uint8_t mailbox_number)
 }
 
 /*!
-    \brief    CAN receive message
+    \brief      CAN receive message
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[in]  fifo_number
@@ -608,7 +608,7 @@ void can_message_receive(uint32_t can_periph, uint8_t fifo_number, can_receive_m
 }
 
 /*!
-    \brief    release FIFO0
+    \brief      release FIFO0
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[in]  fifo_number
@@ -630,7 +630,7 @@ void can_fifo_release(uint32_t can_periph, uint8_t fifo_number)
 }
 
 /*!
-    \brief    CAN receive message length
+    \brief      CAN receive message length
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[in]  fifo_number
@@ -656,7 +656,7 @@ uint8_t can_receive_message_length_get(uint32_t can_periph, uint8_t fifo_number)
 }
 
 /*!
-    \brief    set CAN working mode
+    \brief      set CAN working mode
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[in]  can_working_mode
@@ -720,7 +720,7 @@ ErrStatus can_working_mode_set(uint32_t can_periph, uint8_t working_mode)
 }
 
 /*!
-    \brief    wake up CAN
+    \brief      wake up CAN
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[out] none
@@ -747,7 +747,7 @@ ErrStatus can_wakeup(uint32_t can_periph)
 }
 
 /*!
-    \brief    get CAN error type
+    \brief      get CAN error type
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[out] none
@@ -772,7 +772,7 @@ can_error_enum can_error_get(uint32_t can_periph)
 }
 
 /*!
-    \brief    get CAN receive error number
+    \brief      get CAN receive error number
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[out] none
@@ -788,7 +788,7 @@ uint8_t can_receive_error_number_get(uint32_t can_periph)
 }
 
 /*!
-    \brief    get CAN transmit error number
+    \brief      get CAN transmit error number
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[out] none
@@ -803,7 +803,7 @@ uint8_t can_transmit_error_number_get(uint32_t can_periph)
 }
 
 /*!
-    \brief    enable CAN interrupt 
+    \brief      enable CAN interrupt 
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[in]  interrupt 
@@ -831,7 +831,7 @@ void can_interrupt_enable(uint32_t can_periph, uint32_t interrupt)
 }
 
 /*!
-    \brief    disable CAN interrupt 
+    \brief      disable CAN interrupt 
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[in]  interrupt
@@ -859,7 +859,7 @@ void can_interrupt_disable(uint32_t can_periph, uint32_t interrupt)
 }
 
 /*!
-    \brief    get CAN flag state
+    \brief      get CAN flag state
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[in]  flag: CAN flags, refer to can_flag_enum
@@ -912,7 +912,7 @@ FlagStatus can_flag_get(uint32_t can_periph, can_flag_enum flag)
 }
 
 /*!
-    \brief    clear CAN flag state
+    \brief      clear CAN flag state
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[in]  flag: CAN flags, refer to can_flag_enum
@@ -945,7 +945,7 @@ void can_flag_clear(uint32_t can_periph, can_flag_enum flag)
 }
 
 /*!
-    \brief    get CAN interrupt flag state
+    \brief      get CAN interrupt flag state
     \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[in]  flag: CAN interrupt flags, refer to can_interrupt_flag_enum
@@ -994,7 +994,7 @@ FlagStatus can_interrupt_flag_get(uint32_t can_periph, can_interrupt_flag_enum f
 }
 
 /*!
-    \brief    clear CAN interrupt flag state
+    \brief      clear CAN interrupt flag state
      \param[in]  can_periph
       \arg        CANx(x=0,1)
     \param[in]  flag: CAN interrupt flags, refer to can_interrupt_flag_enum

@@ -61,7 +61,7 @@ OF SUCH DAMAGE.
 #define  ADC_OFFSET_SHIFT_LENGTH                    ((uint8_t)4U)
 
 /*!
-    \brief    reset ADC
+    \brief      reset ADC
     \param[in]  none
     \param[out] none
     \retval     none
@@ -73,7 +73,7 @@ void adc_deinit(void)
 }
 
 /*!
-    \brief    configure the ADC clock for all the ADCs
+    \brief      configure the ADC clock for all the ADCs
     \param[in]  prescaler: configure ADCs prescaler ratio
                 only one parameter can be selected which is shown as below:
       \arg        ADC_ADCCK_PCLK2_DIV2: PCLK2 div2
@@ -94,7 +94,7 @@ void adc_clock_config(uint32_t prescaler)
 }
 
 /*!
-    \brief    enable or disable ADC special function
+    \brief      enable or disable ADC special function
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  function: the function to config
                 only one parameter can be selected which is shown as below:
@@ -137,7 +137,7 @@ void adc_special_function_config(uint32_t adc_periph , uint32_t function , Contr
 }
 
 /*!
-    \brief    configure ADC data alignment 
+    \brief      configure ADC data alignment 
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  data_alignment: data alignment select
                 only one parameter can be selected which is shown as below:
@@ -158,7 +158,7 @@ void adc_data_alignment_config(uint32_t adc_periph , uint32_t data_alignment)
 }
 
 /*!
-    \brief    enable ADC interface
+    \brief      enable ADC interface
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[out] none
     \retval     none
@@ -172,7 +172,7 @@ void adc_enable(uint32_t adc_periph)
 }
 
 /*!
-    \brief    disable ADC interface
+    \brief      disable ADC interface
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[out] none
     \retval     none
@@ -184,7 +184,7 @@ void adc_disable(uint32_t adc_periph)
 }
 
 /*!
-    \brief    ADC calibration and reset calibration
+    \brief      ADC calibration and reset calibration
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[out] none
     \retval     none
@@ -204,7 +204,7 @@ void adc_calibration_enable(uint32_t adc_periph)
 }
 
 /*!
-    \brief    configure temperature sensor and internal reference voltage channel or VBAT channel function
+    \brief      configure temperature sensor and internal reference voltage channel or VBAT channel function
     \param[in]  function: temperature sensor and internal reference voltage channel or VBAT channel
                 only one parameter can be selected which is shown as below:
       \arg        ADC_VBAT_CHANNEL_SWITCH: channel 18 (1/4 voltate of external battery) switch of ADC0
@@ -237,7 +237,7 @@ void adc_channel_16_to_18(uint32_t function, ControlStatus newvalue)
 }
 
 /*!
-    \brief    configure ADC resolution
+    \brief      configure ADC resolution
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  resolution: ADC resolution
                 only one parameter can be selected which is shown as below:
@@ -255,7 +255,7 @@ void adc_resolution_config(uint32_t adc_periph , uint32_t resolution)
 }
 
 /*!
-    \brief    configure ADC oversample mode
+    \brief      configure ADC oversample mode
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  mode: ADC oversampling mode
                 only one parameter can be selected which is shown as below:
@@ -298,7 +298,7 @@ void adc_oversample_mode_config(uint32_t adc_periph , uint32_t mode , uint16_t s
 }
 
 /*!
-    \brief    enable ADC oversample mode
+    \brief      enable ADC oversample mode
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[out] none
     \retval     none
@@ -309,7 +309,7 @@ void adc_oversample_mode_enable(uint32_t adc_periph)
 }
 
 /*!
-    \brief    disable ADC oversample mode
+    \brief      disable ADC oversample mode
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[out] none
     \retval     none
@@ -320,7 +320,7 @@ void adc_oversample_mode_disable(uint32_t adc_periph)
 }
 
 /*!
-    \brief    enable DMA request
+    \brief      enable DMA request
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[out] none
     \retval     none
@@ -332,7 +332,7 @@ void adc_dma_mode_enable(uint32_t adc_periph)
 }
 
 /*!
-    \brief    disable DMA request
+    \brief      disable DMA request
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[out] none
     \retval     none
@@ -344,7 +344,7 @@ void adc_dma_mode_disable(uint32_t adc_periph)
 }
 
 /*!
-    \brief    when DMA=1, the DMA engine issues a request at end of each regular conversion
+    \brief      when DMA=1, the DMA engine issues a request at end of each regular conversion
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[out] none
     \retval     none
@@ -355,7 +355,7 @@ void adc_dma_request_after_last_enable(uint32_t adc_periph)
 }
 
 /*!
-    \brief    the DMA engine is disabled after the end of transfer signal from DMA controller is detected
+    \brief      the DMA engine is disabled after the end of transfer signal from DMA controller is detected
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[out] none
     \retval     none
@@ -366,7 +366,7 @@ void adc_dma_request_after_last_disable(uint32_t adc_periph)
 }
 
 /*!
-    \brief    configure ADC discontinuous mode
+    \brief      configure ADC discontinuous mode
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  adc_channel_group: select the channel group
                 only one parameter can be selected which is shown as below:
@@ -404,7 +404,7 @@ void adc_discontinuous_mode_config(uint32_t adc_periph , uint8_t adc_channel_gro
 }
 
 /*!
-    \brief    configure the length of regular channel group or inserted channel group
+    \brief      configure the length of regular channel group or inserted channel group
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  adc_channel_group: select the channel group
                 only one parameter can be selected which is shown as below:
@@ -437,7 +437,7 @@ void adc_channel_length_config(uint32_t adc_periph , uint8_t adc_channel_group ,
 }
 
 /*!
-    \brief    configure ADC regular channel
+    \brief      configure ADC regular channel
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  rank: the regular group sequencer rank,this parameter must be between 0 to 15
     \param[in]  adc_channel: the selected ADC channel
@@ -505,7 +505,7 @@ void adc_regular_channel_config(uint32_t adc_periph , uint8_t rank , uint8_t adc
 }
 
 /*!
-    \brief    configure ADC inserted channel
+    \brief      configure ADC inserted channel
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  rank: the inserted group sequencer rank,this parameter must be between 0 to 3
     \param[in]  adc_channel: the selected ADC channel
@@ -559,7 +559,7 @@ void adc_inserted_channel_config(uint32_t adc_periph , uint8_t rank , uint8_t ad
 }
 
 /*!
-    \brief    configure ADC inserted channel offset
+    \brief      configure ADC inserted channel offset
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  inserted_channel : insert channel select
                 only one parameter can be selected which is shown as below:
@@ -588,7 +588,7 @@ void adc_inserted_channel_offset_config(uint32_t adc_periph , uint8_t inserted_c
 }
 
 /*!
-    \brief    configure ADC external trigger source
+    \brief      configure ADC external trigger source
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  adc_channel_group: select the channel group
                 only one parameter can be selected which is shown as below:
@@ -653,7 +653,7 @@ void adc_external_trigger_source_config(uint32_t adc_periph , uint8_t adc_channe
 }
 
 /*!
-    \brief    enable ADC external trigger
+    \brief      enable ADC external trigger
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  adc_channel_group: select the channel group
                 only one parameter can be selected which is shown as below:
@@ -687,7 +687,7 @@ void adc_external_trigger_config(uint32_t adc_periph , uint8_t adc_channel_group
 }
 
 /*!
-    \brief    enable ADC software trigger
+    \brief      enable ADC software trigger
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  adc_channel_group: select the channel group
                 only one parameter can be selected which is shown as below:
@@ -713,7 +713,7 @@ void adc_software_trigger_enable(uint32_t adc_periph , uint8_t adc_channel_group
 }
 
 /*!
-    \brief    configure end of conversion mode
+    \brief      configure end of conversion mode
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  end_selection: end of conversion mode
                 only one parameter can be selected which is shown as below:
@@ -739,7 +739,7 @@ void adc_end_of_conversion_config(uint32_t adc_periph , uint8_t end_selection)
 }
 
 /*!
-    \brief    read ADC regular group data register
+    \brief      read ADC regular group data register
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  none
     \param[out] none
@@ -751,7 +751,7 @@ uint16_t adc_regular_data_read(uint32_t adc_periph)
 }
 
 /*!
-    \brief    read ADC inserted group data register
+    \brief      read ADC inserted group data register
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  inserted_channel : insert channel select
                 only one parameter can be selected which is shown as below:
@@ -791,7 +791,7 @@ uint16_t adc_inserted_data_read(uint32_t adc_periph , uint8_t inserted_channel)
 }
 
 /*!
-    \brief    disable ADC analog watchdog single channel
+    \brief      disable ADC analog watchdog single channel
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[out] none
     \retval     none
@@ -802,7 +802,7 @@ void adc_watchdog_single_channel_disable(uint32_t adc_periph )
 }
 
 /*!
-    \brief    enable ADC analog watchdog single channel
+    \brief      enable ADC analog watchdog single channel
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  adc_channel: the selected ADC channel
                 only one parameter can be selected which is shown as below:
@@ -820,7 +820,7 @@ void adc_watchdog_single_channel_enable(uint32_t adc_periph , uint8_t adc_channe
 }
 
 /*!
-    \brief    configure ADC analog watchdog group channel
+    \brief      configure ADC analog watchdog group channel
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  adc_channel_group: the channel group use analog watchdog
                 only one parameter can be selected which is shown as below:
@@ -853,7 +853,7 @@ void adc_watchdog_group_channel_enable(uint32_t adc_periph , uint8_t adc_channel
 }
 
 /*!
-    \brief    disable ADC analog watchdog
+    \brief      disable ADC analog watchdog
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  adc_channel_group: the channel group use analog watchdog 
                 only one parameter can be selected which is shown as below:
@@ -885,7 +885,7 @@ void adc_watchdog_disable(uint32_t adc_periph , uint8_t adc_channel_group)
 }
 
 /*!
-    \brief    configure ADC analog watchdog threshold
+    \brief      configure ADC analog watchdog threshold
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  low_threshold: analog watchdog low threshold,0..4095
     \param[in]  high_threshold: analog watchdog high threshold,0..4095
@@ -901,7 +901,7 @@ void adc_watchdog_threshold_config(uint32_t adc_periph , uint16_t low_threshold 
 }
 
 /*!
-    \brief    get the ADC flag bits
+    \brief      get the ADC flag bits
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  adc_flag: the adc flag bits
                 only one parameter can be selected which is shown as below:
@@ -925,7 +925,7 @@ FlagStatus adc_flag_get(uint32_t adc_periph , uint32_t adc_flag)
 }
 
 /*!
-    \brief    clear the ADC flag bits
+    \brief      clear the ADC flag bits
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  adc_flag: the adc flag bits
                 only one parameter can be selected which is shown as below:
@@ -944,7 +944,7 @@ void adc_flag_clear(uint32_t adc_periph , uint32_t adc_flag)
 }
 
 /*!
-    \brief    get the bit state of ADCx software start conversion
+    \brief      get the bit state of ADCx software start conversion
     \param[in]  adc_periph: ADCx, x=0,1,2 only one among these parameters can be selected
     \param[in]  none
     \param[out] none
@@ -960,7 +960,7 @@ FlagStatus adc_regular_software_startconv_flag_get(uint32_t adc_periph)
 }
 
 /*!
-    \brief    get the bit state of ADCx software inserted channel start conversion
+    \brief      get the bit state of ADCx software inserted channel start conversion
     \param[in]  adc_periph: ADCx, x=0,1,2 only one among these parameters can be selected
     \param[in]  none
     \param[out] none
@@ -976,7 +976,7 @@ FlagStatus adc_inserted_software_startconv_flag_get(uint32_t adc_periph)
 }
 
 /*!
-    \brief    get the ADC interrupt bits
+    \brief      get the ADC interrupt bits
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  adc_interrupt: the adc interrupt bits
                 only one parameter can be selected which is shown as below:
@@ -1028,7 +1028,7 @@ FlagStatus adc_interrupt_flag_get(uint32_t adc_periph , uint32_t adc_interrupt)
 }
 
 /*!
-    \brief    clear the ADC flag
+    \brief      clear the ADC flag
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  adc_interrupt: the adc status flag
                 only one parameter can be selected which is shown as below:
@@ -1045,7 +1045,7 @@ void adc_interrupt_flag_clear(uint32_t adc_periph , uint32_t adc_interrupt)
 }
 
 /*!
-    \brief    enable ADC interrupt
+    \brief      enable ADC interrupt
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  adc_interrupt: the adc interrupt flag
                 only one parameter can be selected which is shown as below:
@@ -1080,7 +1080,7 @@ void adc_interrupt_enable(uint32_t adc_periph , uint32_t adc_interrupt)
 }
 
 /*!
-    \brief    disable ADC interrupt
+    \brief      disable ADC interrupt
     \param[in]  adc_periph: ADCx,x=0,1,2
     \param[in]  adc_flag: the adc interrupt flag
                 only one parameter can be selected which is shown as below:
@@ -1113,7 +1113,7 @@ void adc_interrupt_disable(uint32_t adc_periph , uint32_t adc_interrupt)
 }
 
 /*!
-    \brief    configure the ADC sync mode
+    \brief      configure the ADC sync mode
     \param[in]  sync_mode: ADC sync mode 
                 only one parameter can be selected which is shown as below:
       \arg        ADC_SYNC_MODE_INDEPENDENT: all the ADCs work independently
@@ -1139,7 +1139,7 @@ void adc_sync_mode_config(uint32_t sync_mode)
 }
 
 /*!
-    \brief    configure the delay between 2 sampling phases in ADC sync modes
+    \brief      configure the delay between 2 sampling phases in ADC sync modes
     \param[in]  sample_delay:  the delay between 2 sampling phases in ADC sync modes 
                 only one parameter can be selected which is shown as below:
       \arg        ADC_SYNC_DELAY_xCYCLE: x=5..20,the delay between 2 sampling phases in ADC sync modes is x ADC clock cycles
@@ -1153,7 +1153,7 @@ void adc_sync_delay_config(uint32_t sample_delay)
 }
 
 /*!
-    \brief    configure ADC sync DMA mode selection
+    \brief      configure ADC sync DMA mode selection
     \param[in]  dma_mode:  ADC sync DMA mode
                 only one parameter can be selected which is shown as below:
       \arg        ADC_SYNC_DMA_DISABLE: ADC sync DMA disabled
@@ -1169,7 +1169,7 @@ void adc_sync_dma_config(uint32_t dma_mode )
 }
 
 /*!
-    \brief    configure ADC sync DMA engine is disabled after the end of transfer signal from DMA controller is detected
+    \brief      configure ADC sync DMA engine is disabled after the end of transfer signal from DMA controller is detected
     \param[in]  none
     \param[out] none
     \retval     none
@@ -1180,7 +1180,7 @@ void adc_sync_dma_request_after_last_enable(void)
 }
 
 /*!
-    \brief    configure ADC sync DMA engine issues requests according to the SYNCDMA bits
+    \brief      configure ADC sync DMA engine issues requests according to the SYNCDMA bits
     \param[in]  none
     \param[out] none
     \retval     none
@@ -1191,7 +1191,7 @@ void adc_sync_dma_request_after_last_disable(void)
 }
 
 /*!
-    \brief    read ADC sync regular data register
+    \brief      read ADC sync regular data register
     \param[in]  none
     \param[out] none
     \retval     sync regular data

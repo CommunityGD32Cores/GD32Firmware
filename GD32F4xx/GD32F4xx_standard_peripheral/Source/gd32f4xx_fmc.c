@@ -38,7 +38,7 @@ OF SUCH DAMAGE.
 #include "gd32f4xx_fmc.h"
 
 /*!
-    \brief    set the wait state counter value
+    \brief      set the wait state counter value
     \param[in]  wscnt: wait state counter value
                 only one parameter can be selected which is shown as below:
       \arg        WS_WSCNT_0: FMC 0 wait
@@ -71,7 +71,7 @@ void fmc_wscnt_set(uint32_t wscnt)
 }
 
 /*!
-    \brief    unlock the main FMC operation
+    \brief      unlock the main FMC operation
     \param[in]  none
     \param[out] none
     \retval     none
@@ -86,7 +86,7 @@ void fmc_unlock(void)
 }
 
 /*!
-    \brief    lock the main FMC operation
+    \brief      lock the main FMC operation
     \param[in]  none
     \param[out] none
     \retval     none
@@ -98,7 +98,7 @@ void fmc_lock(void)
 }
 
 /*!
-    \brief    erase sector
+    \brief      erase sector
     \param[in]  fmc_sector: select the sector to erase
                 only one parameter can be selected which is shown as below:
       \arg        CTL_SECTOR_NUMBER_0: sector 0 
@@ -139,26 +139,25 @@ void fmc_lock(void)
       \arg        FMC_WPERR: erase/program protection error
       \arg        FMC_OPERR: operation error
       \arg        FMC_PGERR: program error
-      \arg        FMC_TOERR: timeout error
 */
 fmc_state_enum fmc_sector_erase(uint32_t fmc_sector)
 {
     fmc_state_enum fmc_state = FMC_READY;
     /* wait for the FMC ready */
-    fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
-
-    if(FMC_READY == fmc_state){
+    fmc_state = fmc_ready_wait();
+  
+    if(FMC_READY == fmc_state){ 
         /* start sector erase */
         FMC_CTL &= ~FMC_CTL_SN;
         FMC_CTL |= (FMC_CTL_SER | fmc_sector);
         FMC_CTL |= FMC_CTL_START;
 
         /* wait for the FMC ready */
-        fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
-
+        fmc_state = fmc_ready_wait();
+    
         /* reset the SER bit */
         FMC_CTL &= (~FMC_CTL_SER);
-        FMC_CTL &= ~FMC_CTL_SN;
+        FMC_CTL &= ~FMC_CTL_SN; 
     }
 
     /* return the FMC state */
@@ -166,7 +165,7 @@ fmc_state_enum fmc_sector_erase(uint32_t fmc_sector)
 }
 
 /*!
-    \brief    erase whole chip
+    \brief      erase whole chip
     \param[in]  none
     \param[out] none
     \retval     state of FMC
@@ -178,21 +177,20 @@ fmc_state_enum fmc_sector_erase(uint32_t fmc_sector)
       \arg        FMC_WPERR: erase/program protection error
       \arg        FMC_OPERR: operation error
       \arg        FMC_PGERR: program error
-      \arg        FMC_TOERR: timeout error
 */
 fmc_state_enum fmc_mass_erase(void)
 {
     fmc_state_enum fmc_state = FMC_READY;
     /* wait for the FMC ready */
-    fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
+    fmc_state = fmc_ready_wait();
 
     if(FMC_READY == fmc_state){ 
-        /* start whole chip erase */
+        /* start whole chip erase */  
         FMC_CTL |= (FMC_CTL_MER0 | FMC_CTL_MER1);
         FMC_CTL |= FMC_CTL_START;
-
+    
         /* wait for the FMC ready */
-        fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
+        fmc_state = fmc_ready_wait();
 
         /* reset the MER bits */
         FMC_CTL &= ~(FMC_CTL_MER0 | FMC_CTL_MER1);
@@ -203,7 +201,7 @@ fmc_state_enum fmc_mass_erase(void)
 }
 
 /*!
-    \brief    erase all FMC sectors in bank0
+    \brief      erase all FMC sectors in bank0
     \param[in]  none
     \param[out] none
     \retval     state of FMC
@@ -215,21 +213,20 @@ fmc_state_enum fmc_mass_erase(void)
       \arg        FMC_WPERR: erase/program protection error
       \arg        FMC_OPERR: operation error
       \arg        FMC_PGERR: program error
-      \arg        FMC_TOERR: timeout error
 */
 fmc_state_enum fmc_bank0_erase(void)
 {
     fmc_state_enum fmc_state = FMC_READY;
     /* wait for the FMC ready */
-    fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
+    fmc_state = fmc_ready_wait();
 
     if(FMC_READY == fmc_state){
         /* start FMC bank0 erase */
         FMC_CTL |= FMC_CTL_MER0;
         FMC_CTL |= FMC_CTL_START;
-
+    
         /* wait for the FMC ready */
-        fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
+        fmc_state = fmc_ready_wait();
 
         /* reset the MER0 bit */
         FMC_CTL &= (~FMC_CTL_MER0);
@@ -240,7 +237,7 @@ fmc_state_enum fmc_bank0_erase(void)
 }
 
 /*!
-    \brief    erase all FMC sectors in bank1
+    \brief      erase all FMC sectors in bank1
     \param[in]  none
     \param[out] none
     \retval     state of FMC
@@ -252,21 +249,20 @@ fmc_state_enum fmc_bank0_erase(void)
       \arg        FMC_WPERR: erase/program protection error
       \arg        FMC_OPERR: operation error
       \arg        FMC_PGERR: program error
-      \arg        FMC_TOERR: timeout error
 */
 fmc_state_enum fmc_bank1_erase(void)
 {
     fmc_state_enum fmc_state = FMC_READY;
     /* wait for the FMC ready */
-    fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
-
+    fmc_state = fmc_ready_wait();
+  
    if(FMC_READY == fmc_state){
         /* start FMC bank1 erase */
         FMC_CTL |= FMC_CTL_MER1;
         FMC_CTL |= FMC_CTL_START;
-
+    
         /* wait for the FMC ready */
-        fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
+        fmc_state = fmc_ready_wait();
 
         /* reset the MER1 bit */
         FMC_CTL &= (~FMC_CTL_MER1);
@@ -277,7 +273,7 @@ fmc_state_enum fmc_bank1_erase(void)
 }
 
 /*!
-    \brief    program a word at the corresponding address
+    \brief      program a word at the corresponding address
     \param[in]  address: address to program
     \param[in]  data: word to program(0x00000000 - 0xFFFFFFFF)
     \param[out] none
@@ -290,35 +286,34 @@ fmc_state_enum fmc_bank1_erase(void)
       \arg        FMC_WPERR: erase/program protection error
       \arg        FMC_OPERR: operation error
       \arg        FMC_PGERR: program error
-      \arg        FMC_TOERR: timeout error
 */
 fmc_state_enum fmc_word_program(uint32_t address, uint32_t data)
 {
     fmc_state_enum fmc_state = FMC_READY;
     /* wait for the FMC ready */
-    fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
-
+    fmc_state = fmc_ready_wait();
+  
     if(FMC_READY == fmc_state){
         /* set the PG bit to start program */
         FMC_CTL &= ~FMC_CTL_PSZ;
         FMC_CTL |= CTL_PSZ_WORD;
         FMC_CTL |= FMC_CTL_PG; 
-
+  
         REG32(address) = data;
 
         /* wait for the FMC ready */
-        fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
-
+        fmc_state = fmc_ready_wait();
+    
         /* reset the PG bit */
-        FMC_CTL &= ~FMC_CTL_PG;
-    }
-
+        FMC_CTL &= ~FMC_CTL_PG; 
+    } 
+  
     /* return the FMC state */
     return fmc_state;
 }
 
 /*!
-    \brief    program a half word at the corresponding address
+    \brief      program a half word at the corresponding address
     \param[in]  address: address to program
     \param[in]  data: halfword to program(0x0000 - 0xFFFF)
     \param[out] none
@@ -331,35 +326,34 @@ fmc_state_enum fmc_word_program(uint32_t address, uint32_t data)
       \arg        FMC_WPERR: erase/program protection error
       \arg        FMC_OPERR: operation error
       \arg        FMC_PGERR: program error
-      \arg        FMC_TOERR: timeout error
 */
 fmc_state_enum fmc_halfword_program(uint32_t address, uint16_t data)
 {
     fmc_state_enum fmc_state = FMC_READY;
     /* wait for the FMC ready */
-    fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
-
-    if(FMC_READY == fmc_state){
+    fmc_state = fmc_ready_wait();
+  
+    if(FMC_READY == fmc_state){ 
         /* set the PG bit to start program */
         FMC_CTL &= ~FMC_CTL_PSZ;
         FMC_CTL |= CTL_PSZ_HALF_WORD;
-        FMC_CTL |= FMC_CTL_PG;
-
+        FMC_CTL |= FMC_CTL_PG; 
+  
         REG16(address) = data;
 
         /* wait for the FMC ready */
-        fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
-
+        fmc_state = fmc_ready_wait();
+    
         /* reset the PG bit */
-        FMC_CTL &= ~FMC_CTL_PG;
-    }
-
+        FMC_CTL &= ~FMC_CTL_PG; 
+    } 
+  
     /* return the FMC state */
     return fmc_state;
 }
 
 /*!
-    \brief    program a byte at the corresponding address
+    \brief      program a byte at the corresponding address
     \param[in]  address: address to program
     \param[in]  data: byte to program(0x00 - 0xFF)
     \param[out] none
@@ -372,35 +366,34 @@ fmc_state_enum fmc_halfword_program(uint32_t address, uint16_t data)
       \arg        FMC_WPERR: erase/program protection error
       \arg        FMC_OPERR: operation error
       \arg        FMC_PGERR: program error
-      \arg        FMC_TOERR: timeout error
 */
 fmc_state_enum fmc_byte_program(uint32_t address, uint8_t data)
 {
     fmc_state_enum fmc_state = FMC_READY;
     /* wait for the FMC ready */
-    fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
+    fmc_state = fmc_ready_wait();
   
     if(FMC_READY == fmc_state){
         /* set the PG bit to start program */
         FMC_CTL &= ~FMC_CTL_PSZ;
         FMC_CTL |= CTL_PSZ_BYTE;
         FMC_CTL |= FMC_CTL_PG;
-
+  
         REG8(address) = data;
 
         /* wait for the FMC ready */
-        fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
-
+        fmc_state = fmc_ready_wait();
+    
         /* reset the PG bit */
-        FMC_CTL &= ~FMC_CTL_PG;
+        FMC_CTL &= ~FMC_CTL_PG; 
     }
-
+  
     /* return the FMC state */
     return fmc_state;
 }
 
 /*!
-    \brief    unlock the option byte operation
+    \brief      unlock the option byte operation
     \param[in]  none
     \param[out] none
     \retval     none
@@ -415,7 +408,7 @@ void ob_unlock(void)
 }
 
 /*!
-    \brief    lock the option byte operation
+    \brief      lock the option byte operation
     \param[in]  none
     \param[out] none
     \retval     none
@@ -427,7 +420,7 @@ void ob_lock(void)
 }
 
 /*!
-    \brief    send option byte change command
+    \brief      send option byte change command
     \param[in]  none
     \param[out] none
     \retval     none
@@ -437,7 +430,7 @@ void ob_start(void)
     fmc_state_enum fmc_state = FMC_READY;
     /* set the OB_START bit in OBCTL0 register */
     FMC_OBCTL0 |= FMC_OBCTL0_OB_START;
-    fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
+    fmc_state = fmc_ready_wait();
         if(FMC_READY != fmc_state){
             while(1){
             }
@@ -445,7 +438,7 @@ void ob_start(void)
 }
 
 /*!
-    \brief    erase option byte
+    \brief      erase option byte
     \param[in]  none
     \param[out] none
     \retval     none
@@ -455,12 +448,12 @@ void ob_erase(void)
     uint32_t reg, reg1;
     fmc_state_enum fmc_state = FMC_READY;
     /* wait for the FMC ready */
-    fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
-
+    fmc_state = fmc_ready_wait();
+    
     if(FMC_READY == fmc_state){
         reg = FMC_OBCTL0;
         reg1 = FMC_OBCTL1;
-
+        
         /* reset the OB_FWDGT, OB_DEEPSLEEP and OB_STDBY, set according to ob_fwdgt ,ob_deepsleep and ob_stdby */
         reg |= (FMC_OBCTL0_NWDG_HW | FMC_OBCTL0_NRST_DPSLP | FMC_OBCTL0_NRST_STDBY);
         /* reset the BOR level */
@@ -483,7 +476,7 @@ void ob_erase(void)
 }
 
 /*!
-    \brief    enable write protection
+    \brief      enable write protection
     \param[in]  ob_wp: specify sector to be write protected
                 one or more parameters can be selected which are shown as below:
       \arg        OB_WP_x(x=0..22):sector x(x = 0,1,2...22)
@@ -502,7 +495,7 @@ void ob_write_protection_enable(uint32_t ob_wp)
         }
     }
     /* wait for the FMC ready */
-    fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
+    fmc_state = fmc_ready_wait();
 
     if(FMC_READY == fmc_state){
         reg0 &= (~((uint32_t)ob_wp << 16));
@@ -513,7 +506,7 @@ void ob_write_protection_enable(uint32_t ob_wp)
 }
 
 /*!
-    \brief    disable write protection
+    \brief      disable write protection
     \param[in]  ob_wp: specify sector to be write protected
                 one or more parameters can be selected which are shown as below:
       \arg        OB_WP_x(x=0..22):sector x(x = 0,1,2...22)
@@ -532,7 +525,7 @@ void ob_write_protection_disable(uint32_t ob_wp)
         }
     }
     /* wait for the FMC ready */
-    fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
+    fmc_state = fmc_ready_wait();
 
     if(FMC_READY == fmc_state){
         reg0 |= ((uint32_t)ob_wp << 16);
@@ -543,7 +536,7 @@ void ob_write_protection_disable(uint32_t ob_wp)
 }
 
 /*!
-    \brief    enable erase/program protection and D-bus read protection
+    \brief      enable erase/program protection and D-bus read protection
     \param[in]  ob_drp: enable the WPx bits used as erase/program protection and D-bus read protection of each sector 
                 one or more parameters can be selected which are shown as below:
       \arg        OB_DRP_x(x=0..22): sector x(x = 0,1,2...22)
@@ -566,7 +559,7 @@ void ob_drp_enable(uint32_t ob_drp)
         }
     }
     /* wait for the FMC ready */
-    fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
+    fmc_state = fmc_ready_wait();
 
     if(FMC_READY == fmc_state){
         reg0 &= ~FMC_OBCTL0_WP0;
@@ -580,7 +573,7 @@ void ob_drp_enable(uint32_t ob_drp)
 }
 
 /*!
-    \brief    disable erase/program protection and D-bus read protection
+    \brief      disable erase/program protection and D-bus read protection
     \param[in]  ob_drp: disable the WPx bits used as erase/program protection and D-bus read protection of each sector
                 one or more parameters can be selected which are shown as below:
       \arg        OB_DRP_x(x=0..22): sector x(x = 0,1,2...22)
@@ -595,34 +588,20 @@ void ob_drp_disable(uint32_t ob_drp)
     uint32_t reg1 = FMC_OBCTL1;
     fmc_state_enum fmc_state = FMC_READY;
     /* wait for the FMC ready */
-    fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
+    fmc_state = fmc_ready_wait();
 
     if(FMC_READY == fmc_state){
-        if(((uint8_t)(reg0 >> 8)) == (uint8_t)FMC_NSPC){
-            /* security protection should be set as low level protection before disable D-BUS read protection */
-            reg0 &= ~FMC_OBCTL0_SPC;
-            reg0 |= ((uint32_t)FMC_LSPC << 8);
-            FMC_OBCTL0 = reg0;
-            ob_start();
-            while(FMC_READY != fmc_ready_wait(FMC_TIMEOUT_COUNT));
-        }else if(((uint8_t)(reg0 >> 8)) == (uint8_t)FMC_HSPC){
-            return;
-        }
-
-        /* it is necessary to disable the security protection at the same time when D-BUS read protection is disabled */
-        reg0 &= ~FMC_OBCTL0_SPC;
-        reg0 |= ((uint32_t)FMC_NSPC << 8);
         reg0 |= FMC_OBCTL0_WP0;
         reg0 &= (~FMC_OBCTL0_DRP);
         FMC_OBCTL0 = reg0;
-
+        
         reg1 |= FMC_OBCTL1_WP1;
         FMC_OBCTL1 = reg1;
     }
 }
 
 /*!
-    \brief    configure security protection level
+    \brief      configure security protection level
     \param[in]  ob_spc: specify security protection level
                 only one parameter can be selected which is shown as below:
       \arg        FMC_NSPC: no security protection
@@ -635,11 +614,11 @@ void ob_security_protection_config(uint8_t ob_spc)
 {
     fmc_state_enum fmc_state = FMC_READY;
     /* wait for the FMC ready */
-    fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
+    fmc_state = fmc_ready_wait();
 
     if(FMC_READY == fmc_state){
         uint32_t reg;
-
+    
         reg = FMC_OBCTL0;
         /* reset the OBCTL0_SPC, set according to ob_spc */
         reg &= ~FMC_OBCTL0_SPC;
@@ -649,7 +628,7 @@ void ob_security_protection_config(uint8_t ob_spc)
 }
 
 /*!
-    \brief    program the FMC user option byte 
+    \brief      program the FMC user option byte 
     \param[in]  ob_fwdgt: option byte watchdog value
                 only one parameter can be selected which is shown as below:
       \arg        OB_FWDGT_SW: software free watchdog
@@ -670,11 +649,11 @@ void ob_user_write(uint32_t ob_fwdgt, uint32_t ob_deepsleep, uint32_t ob_stdby)
     fmc_state_enum fmc_state = FMC_READY;
 
     /* wait for the FMC ready */
-    fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
-
+    fmc_state = fmc_ready_wait();
+  
     if(FMC_READY == fmc_state){
         uint32_t reg;
-
+    
         reg = FMC_OBCTL0;
         /* reset the OB_FWDGT, OB_DEEPSLEEP and OB_STDBY, set according to ob_fwdgt ,ob_deepsleep and ob_stdby */
         reg &= ~(FMC_OBCTL0_NWDG_HW | FMC_OBCTL0_NRST_DPSLP | FMC_OBCTL0_NRST_STDBY);
@@ -683,7 +662,7 @@ void ob_user_write(uint32_t ob_fwdgt, uint32_t ob_deepsleep, uint32_t ob_stdby)
 }
 
 /*!
-    \brief    program the option byte BOR threshold value
+    \brief      program the option byte BOR threshold value
     \param[in]  ob_bor_th: user option byte
                 only one parameter can be selected which is shown as below:
       \arg        OB_BOR_TH_VALUE3: BOR threshold value 3
@@ -704,7 +683,7 @@ void ob_user_bor_threshold(uint32_t ob_bor_th)
 }
 
 /*!
-    \brief    configure the option byte boot bank value
+    \brief      configure the option byte boot bank value
     \param[in]  boot_mode: specifies the option byte boot bank value
                 only one parameter can be selected which is shown as below:
       \arg        OB_BB_DISABLE: boot from bank0
@@ -723,7 +702,7 @@ void ob_boot_mode_config(uint32_t boot_mode)
 }
 
 /*!
-    \brief    get the FMC user option byte
+    \brief      get the FMC user option byte
     \param[in]  none
     \param[out] none
     \retval     the FMC user option byte values: ob_fwdgt(Bit0), ob_deepsleep(Bit1), ob_stdby(Bit2)
@@ -734,7 +713,7 @@ uint8_t ob_user_get(void)
 }
 
 /*!
-    \brief    get the FMC option byte write protection
+    \brief      get the FMC option byte write protection
     \param[in]  none
     \param[out] none
     \retval     the FMC write protection option byte value
@@ -746,7 +725,7 @@ uint16_t ob_write_protection0_get(void)
 }
 
 /*!
-    \brief    get the FMC option byte write protection
+    \brief      get the FMC option byte write protection
     \param[in]  none
     \param[out] none
     \retval     the FMC write protection option byte value
@@ -758,7 +737,7 @@ uint16_t ob_write_protection1_get(void)
 }
 
 /*!
-    \brief    get the FMC D-bus read protection protection
+    \brief      get the FMC D-bus read protection protection
     \param[in]  none
     \param[out] none
     \retval     the FMC erase/program protection and D-bus read protection option bytes value
@@ -770,7 +749,7 @@ uint16_t ob_drp0_get(void)
 }
 
 /*!
-    \brief    get the FMC D-bus read protection protection
+    \brief      get the FMC D-bus read protection protection
     \param[in]  none
     \param[out] none
     \retval     the FMC erase/program protection and D-bus read protection option bytes value
@@ -782,7 +761,7 @@ uint16_t ob_drp1_get(void)
 }
 
 /*!
-    \brief    get the FMC option byte security protection
+    \brief      get the FMC option byte security protection
     \param[in]  none
     \param[out] none
     \retval     FlagStatus: SET or RESET
@@ -800,7 +779,7 @@ FlagStatus ob_spc_get(void)
 }
 
 /*!
-    \brief    get the FMC option byte BOR threshold value
+    \brief      get the FMC option byte BOR threshold value
     \param[in]  none
     \param[out] none
     \retval     the FMC BOR threshold value:OB_BOR_TH_OFF,OB_BOR_TH_VALUE1,OB_BOR_TH_VALUE2,OB_BOR_TH_VALUE3
@@ -812,7 +791,7 @@ uint8_t ob_user_bor_threshold_get(void)
 }
 
 /*!
-    \brief    enable FMC interrupt
+    \brief      enable FMC interrupt
     \param[in]  fmc_int: the FMC interrupt source
                 only one parameter can be selected which is shown as below:
       \arg        FMC_INT_END: enable FMC end of program interrupt
@@ -826,7 +805,7 @@ void fmc_interrupt_enable(uint32_t fmc_int)
 }
 
 /*!
-    \brief    disable FMC interrupt
+    \brief      disable FMC interrupt
     \param[in]  fmc_int: the FMC interrupt source
                 only one parameter can be selected which is shown as below:
       \arg        FMC_INT_END: disable FMC end of program interrupt
@@ -840,7 +819,7 @@ void fmc_interrupt_disable(uint32_t fmc_int)
 }
 
 /*!
-    \brief    get flag set or reset
+    \brief      get flag set or reset
     \param[in]  fmc_flag: check FMC flag
                 only one parameter can be selected which is shown as below:
       \arg        FMC_FLAG_BUSY: FMC busy flag bit
@@ -863,7 +842,7 @@ FlagStatus fmc_flag_get(uint32_t fmc_flag)
 }
 
 /*!
-    \brief    clear the FMC pending flag
+    \brief      clear the FMC pending flag
     \param[in]  FMC_flag: clear FMC flag
                 only one parameter can be selected which is shown as below:
       \arg        FMC_FLAG_RDDERR: FMC read D-bus protection error flag bit
@@ -882,7 +861,7 @@ void fmc_flag_clear(uint32_t fmc_flag)
 }
 
 /*!
-    \brief    get the FMC state
+    \brief      get the FMC state
     \param[in]  none
     \param[out] none
     \retval     state of FMC
@@ -925,7 +904,7 @@ fmc_state_enum fmc_state_get(void)
 }
 
 /*!
-    \brief    check whether FMC is ready or not
+    \brief      check whether FMC is ready or not
     \param[in]  none
     \param[out] none
     \retval     state of FMC
@@ -937,22 +916,17 @@ fmc_state_enum fmc_state_get(void)
       \arg        FMC_WPERR: erase/program protection error
       \arg        FMC_OPERR: operation error
       \arg        FMC_PGERR: program error
-      \arg        FMC_TOERR: timeout error
 */
-fmc_state_enum fmc_ready_wait(uint32_t timeout)
+fmc_state_enum fmc_ready_wait(void)
 {
     fmc_state_enum fmc_state = FMC_BUSY;
-
+  
     /* wait for FMC ready */
     do{
         /* get FMC state */
         fmc_state = fmc_state_get();
-        timeout--;
-    }while((FMC_BUSY == fmc_state) && (0U != timeout));
-
-    if(FMC_BUSY == fmc_state){
-        fmc_state = FMC_TOERR;
-    }
+    }while(FMC_BUSY == fmc_state);
+  
     /* return the FMC state */
     return fmc_state;
 }

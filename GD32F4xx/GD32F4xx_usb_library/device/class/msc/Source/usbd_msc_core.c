@@ -3,7 +3,6 @@
     \brief   USB MSC device class core functions
 
     \version 2020-08-01, V3.0.0, firmware for GD32F4xx
-    \version 2020-12-07, V3.0.1, firmware for GD32F4xx
 */
 
 /*
@@ -138,77 +137,6 @@ __ALIGN_BEGIN const usb_desc_config_set msc_config_desc __ALIGN_END =
     }
 };
 
-/* USB device configuration descriptor */
-__ALIGN_BEGIN const usb_desc_config_set other_speed_msc_config_desc __ALIGN_END = 
-{
-    .config = 
-    {
-        .header = {
-            .bLength         = sizeof(usb_desc_config), 
-            .bDescriptorType = USB_DESCTYPE_OTHER_SPD_CONFIG
-        },
-        .wTotalLength        = USB_MSC_CONFIG_DESC_SIZE,
-        .bNumInterfaces      = 0x01U,
-        .bConfigurationValue = 0x01U,
-        .iConfiguration      = 0x00U,
-        .bmAttributes        = 0xC0U,
-        .bMaxPower           = 0x32U
-    },
-
-    .msc_itf = 
-    {
-        .header = {
-            .bLength         = sizeof(usb_desc_itf), 
-            .bDescriptorType = USB_DESCTYPE_ITF
-        },
-        .bInterfaceNumber    = 0x00U,
-        .bAlternateSetting   = 0x00U,
-        .bNumEndpoints       = 0x02U,
-        .bInterfaceClass     = USB_CLASS_MSC,
-        .bInterfaceSubClass  = USB_MSC_SUBCLASS_SCSI,
-        .bInterfaceProtocol  = USB_MSC_PROTOCOL_BBB,
-        .iInterface          = 0x00U
-    },
-
-    .msc_epin = 
-    {
-        .header = {
-            .bLength         = sizeof(usb_desc_ep), 
-            .bDescriptorType = USB_DESCTYPE_EP
-        },
-        .bEndpointAddress    = MSC_IN_EP,
-        .bmAttributes        = USB_EP_ATTR_BULK,
-        .wMaxPacketSize      = 64U,
-        .bInterval           = 0x00U
-    },
-
-    .msc_epout = 
-    {
-        .header = {
-            .bLength         = sizeof(usb_desc_ep), 
-            .bDescriptorType = USB_DESCTYPE_EP
-        },
-        .bEndpointAddress    = MSC_OUT_EP,
-        .bmAttributes        = USB_EP_ATTR_BULK,
-        .wMaxPacketSize      = 64U,
-        .bInterval           = 0x00U
-    }
-};
-
-__ALIGN_BEGIN const uint8_t usbd_qualifier_desc[10] __ALIGN_END = 
-{
-    0x0A, 
-    0x06,
-    0x00, 
-    0x02,
-    0x00, 
-    0x00,
-    0x00, 
-    0x40,
-    0x01, 
-    0x00
-};
-
 /* USB language ID descriptor */
 static __ALIGN_BEGIN const usb_desc_LANGID usbd_language_id_desc __ALIGN_END = 
 {
@@ -264,12 +192,6 @@ static void *const usbd_msc_strings[] =
 usb_desc msc_desc = {
     .dev_desc    = (uint8_t *)&msc_dev_desc,
     .config_desc = (uint8_t *)&msc_config_desc,
-    
-#ifdef USE_USB_HS
-    .other_speed_config_desc = (uint8_t *)&other_speed_msc_config_desc,
-    .qualifier_desc = (uint8_t *)&usbd_qualifier_desc,
-#endif
-    
     .strings     = usbd_msc_strings
 };
 
@@ -376,7 +298,9 @@ static uint8_t msc_core_req (usb_dev *udev, usb_req *req)
 */
 static uint8_t msc_core_in (usb_dev *udev, uint8_t ep_num)
 {
-    msc_bbb_data_in(udev, ep_num);
+    if ((MSC_IN_EP & 0x7FU) == ep_num) {
+        msc_bbb_data_in(udev, ep_num);
+    }
 
     return USBD_OK;
 }
@@ -390,7 +314,9 @@ static uint8_t msc_core_in (usb_dev *udev, uint8_t ep_num)
 */
 static uint8_t msc_core_out (usb_dev *udev, uint8_t ep_num)
 {
-    msc_bbb_data_out (udev, ep_num);
+    if (MSC_OUT_EP == ep_num) {
+        msc_bbb_data_out (udev, ep_num);
+    }
 
     return USBD_OK;
 }

@@ -42,7 +42,7 @@ OF SUCH DAMAGE.
 #define DH_8BIT_OFFSET            ((uint32_t)8U)
 
 /*!
-    \brief    deinitialize DAC
+    \brief      deinitialize DAC
     \param[in]  none
     \param[out] none
     \retval     none
@@ -54,7 +54,7 @@ void dac_deinit(void)
 }
 
 /*!
-    \brief    enable DAC
+    \brief      enable DAC
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[out] none
     \retval     none
@@ -69,7 +69,7 @@ void dac_enable(uint32_t dac_periph)
 } 
 
 /*!
-    \brief    disable DAC
+    \brief      disable DAC
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[out] none
     \retval     none
@@ -84,7 +84,7 @@ void dac_disable(uint32_t dac_periph)
 }
 
 /*!
-    \brief    enable DAC DMA function
+    \brief      enable DAC DMA function
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[out] none
     \retval     none
@@ -99,7 +99,7 @@ void dac_dma_enable(uint32_t dac_periph)
 }
 
 /*!
-    \brief    disable DAC DMA function
+    \brief      disable DAC DMA function
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[out] none
     \retval     none
@@ -114,7 +114,7 @@ void dac_dma_disable(uint32_t dac_periph)
 }
 
 /*!
-    \brief    enable DAC output buffer
+    \brief      enable DAC output buffer
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[out] none
     \retval     none
@@ -129,7 +129,7 @@ void dac_output_buffer_enable(uint32_t dac_periph)
 }
 
 /*!
-    \brief    disable DAC output buffer
+    \brief      disable DAC output buffer
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[out] none
     \retval     none
@@ -144,7 +144,7 @@ void dac_output_buffer_disable(uint32_t dac_periph)
 }
 
 /*!
-    \brief    get DAC output value
+    \brief      get DAC output value
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[out] none
     \retval     DAC output data
@@ -163,7 +163,7 @@ uint16_t dac_output_value_get(uint32_t dac_periph)
 }
 
 /*!
-    \brief    set the DAC specified data holding register value
+    \brief      set the DAC specified data holding register value
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[in]  dac_align: data alignment
                 only one parameter can be selected which is shown as below:
@@ -214,7 +214,7 @@ void dac_data_set(uint32_t dac_periph, uint32_t dac_align, uint16_t data)
 }
 
 /*!
-    \brief    enable DAC trigger
+    \brief      enable DAC trigger
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[out] none
     \retval     none
@@ -229,7 +229,7 @@ void dac_trigger_enable(uint32_t dac_periph)
 }
 
 /*!
-    \brief    disable DAC trigger
+    \brief      disable DAC trigger
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[out] none
     \retval     none
@@ -244,7 +244,7 @@ void dac_trigger_disable(uint32_t dac_periph)
 }
 
 /*!
-    \brief    set DAC trigger source
+    \brief      set DAC trigger source
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[in]  triggersource: external triggers of DAC
                 only one parameter can be selected which is shown as below:
@@ -273,7 +273,7 @@ void dac_trigger_source_config(uint32_t dac_periph,uint32_t triggersource)
 }
 
 /*!
-    \brief    enable DAC software trigger
+    \brief      enable DAC software trigger
     \param[in]  dac_periph: DACx(x = 0,1)
     \retval     none
 */
@@ -287,7 +287,7 @@ void dac_software_trigger_enable(uint32_t dac_periph)
 }
 
 /*!
-    \brief    disable DAC software trigger
+    \brief      disable DAC software trigger
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[out] none
     \retval     none
@@ -302,7 +302,7 @@ void dac_software_trigger_disable(uint32_t dac_periph)
 }
 
 /*!
-    \brief    configure DAC wave mode
+    \brief      configure DAC wave mode
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[in]  wave_mode: noise wave mode
                 only one parameter can be selected which is shown as below:
@@ -326,7 +326,7 @@ void dac_wave_mode_config(uint32_t dac_periph, uint32_t wave_mode)
 }
 
 /*!
-    \brief    configure DAC wave bit width
+    \brief      configure DAC wave bit width
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[in]  bit_width: noise wave bit width
                 only one parameter can be selected which is shown as below:
@@ -359,7 +359,7 @@ void dac_wave_bit_width_config(uint32_t dac_periph, uint32_t bit_width)
 }
 
 /*!
-    \brief    configure DAC LFSR noise mode
+    \brief      configure DAC LFSR noise mode
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[in]  unmask_bits: unmask LFSR bits in DAC LFSR noise mode
                 only one parameter can be selected which is shown as below:
@@ -392,7 +392,7 @@ void dac_lfsr_noise_config(uint32_t dac_periph, uint32_t unmask_bits)
 }
 
 /*!
-    \brief    configure DAC triangle noise mode
+    \brief      configure DAC triangle noise mode
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[in]  amplitude: triangle amplitude in DAC triangle noise mode
                 only one parameter can be selected which is shown as below:
@@ -425,7 +425,7 @@ void dac_triangle_noise_config(uint32_t dac_periph, uint32_t amplitude)
 }
 
 /*!
-    \brief    enable DAC concurrent mode
+    \brief      enable DAC concurrent mode
     \param[in]  none
     \param[out] none
     \retval     none
@@ -438,7 +438,7 @@ void dac_concurrent_enable(void)
 }
 
 /*!
-    \brief    disable DAC concurrent mode
+    \brief      disable DAC concurrent mode
     \param[in]  none
     \param[out] none
     \retval     none
@@ -451,7 +451,7 @@ void dac_concurrent_disable(void)
 }
 
 /*!
-    \brief    enable DAC concurrent software trigger function
+    \brief      enable DAC concurrent software trigger function
     \param[in]  none
     \param[out] none
     \retval     none
@@ -464,7 +464,7 @@ void dac_concurrent_software_trigger_enable(void)
 }
 
 /*!
-    \brief    disable DAC concurrent software trigger function
+    \brief      disable DAC concurrent software trigger function
     \param[in]  none
     \param[out] none
     \retval     none
@@ -477,7 +477,7 @@ void dac_concurrent_software_trigger_disable(void)
 }
 
 /*!
-    \brief    enable DAC concurrent buffer function
+    \brief      enable DAC concurrent buffer function
     \param[in]  none
     \param[out] none
     \retval     none
@@ -490,7 +490,7 @@ void dac_concurrent_output_buffer_enable(void)
 }
 
 /*!
-    \brief    disable DAC concurrent buffer function
+    \brief      disable DAC concurrent buffer function
     \param[in]  none
     \param[out] none
     \retval     none
@@ -503,7 +503,7 @@ void dac_concurrent_output_buffer_disable(void)
 }
 
 /*!
-    \brief    set DAC concurrent mode data holding register value
+    \brief      set DAC concurrent mode data holding register value
     \param[in]  dac_align: data alignment
                 only one parameter can be selected which is shown as below:
       \arg        DAC_ALIGN_8B_R: data right 8b alignment
@@ -539,7 +539,7 @@ void dac_concurrent_data_set(uint32_t dac_align, uint16_t data0, uint16_t data1)
 }
 
 /*!
-    \brief    enable DAC concurrent interrupt funcution
+    \brief      enable DAC concurrent interrupt funcution
     \param[in]  none
     \param[out] none
     \retval     none
@@ -552,7 +552,7 @@ void dac_concurrent_interrupt_enable(void)
 }
 
 /*!
-    \brief    disable DAC concurrent interrupt funcution
+    \brief      disable DAC concurrent interrupt funcution
     \param[in]  none
     \param[out] none
     \retval     none
@@ -565,7 +565,7 @@ void dac_concurrent_interrupt_disable(void)
 }
 
 /*!
-    \brief    enable DAC interrupt(DAC DMA underrun interrupt)
+    \brief      enable DAC interrupt(DAC DMA underrun interrupt)
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[out] none
     \retval     none
@@ -580,7 +580,7 @@ void dac_interrupt_enable(uint32_t dac_periph)
 }
 
 /*!
-    \brief    disable DAC interrupt(DAC DMA underrun interrupt)
+    \brief      disable DAC interrupt(DAC DMA underrun interrupt)
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[out] none
     \retval     none
@@ -595,7 +595,7 @@ void dac_interrupt_disable(uint32_t dac_periph)
 }
 
 /*!
-    \brief    get the specified DAC flag (DAC DMA underrun flag)
+    \brief      get the specified DAC flag (DAC DMA underrun flag)
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[out] none
     \retval     FlagStatus: SET or RESET
@@ -618,7 +618,7 @@ FlagStatus dac_flag_get(uint32_t dac_periph)
 }
 
 /*!
-    \brief    clear the specified DAC flag (DAC DMA underrun flag)
+    \brief      clear the specified DAC flag (DAC DMA underrun flag)
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[out] none
     \retval     none
@@ -633,7 +633,7 @@ void dac_flag_clear(uint32_t dac_periph)
 }
 
 /*!
-    \brief    get the specified DAC interrupt flag (DAC DMA underrun interrupt flag)
+    \brief      get the specified DAC interrupt flag (DAC DMA underrun interrupt flag)
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[out] none
     \retval     FlagStatus: SET or RESET
@@ -662,7 +662,7 @@ FlagStatus dac_interrupt_flag_get(uint32_t dac_periph)
 }
 
 /*!
-    \brief    clear the specified DAC interrupt flag (DAC DMA underrun interrupt flag)
+    \brief      clear the specified DAC interrupt flag (DAC DMA underrun interrupt flag)
     \param[in]  dac_periph: DACx(x = 0,1)
     \param[out] none
     \retval     none

@@ -37,7 +37,7 @@ OF SUCH DAMAGE.
 #include "gd32f4xx_sdio.h"
 
 /*!
-    \brief    deinitialize the SDIO
+    \brief      deinitialize the SDIO
     \param[in]  none
     \param[out] none
     \retval     none
@@ -49,7 +49,7 @@ void sdio_deinit(void)
 }
 
 /*!
-    \brief    configure the SDIO clock
+    \brief      configure the SDIO clock
     \param[in]  clock_edge: SDIO_CLK clock edge
                 only one parameter can be selected which is shown as below:
       \arg        SDIO_SDIOCLKEDGE_RISING: select the rising edge of the SDIOCLK to generate SDIO_CLK
@@ -83,7 +83,7 @@ void sdio_clock_config(uint32_t clock_edge, uint32_t clock_bypass, uint32_t cloc
 }
 
 /*!
-    \brief    enable hardware clock control
+    \brief      enable hardware clock control
     \param[in]  none
     \param[out] none
     \retval     none
@@ -94,7 +94,7 @@ void sdio_hardware_clock_enable(void)
 }
 
 /*!
-    \brief    disable hardware clock control
+    \brief      disable hardware clock control
     \param[in]  none
     \param[out] none
     \retval     none
@@ -105,7 +105,7 @@ void sdio_hardware_clock_disable(void)
 }
 
 /*!
-    \brief    set different SDIO card bus mode
+    \brief      set different SDIO card bus mode
     \param[in]  bus_mode: SDIO card bus mode
                 only one parameter can be selected which is shown as below:
       \arg        SDIO_BUSMODE_1BIT: 1-bit SDIO card bus mode
@@ -122,7 +122,7 @@ void sdio_bus_mode_set(uint32_t bus_mode)
 }
 
 /*!
-    \brief    set the SDIO power state
+    \brief      set the SDIO power state
     \param[in]  power_state: SDIO power state
                 only one parameter can be selected which is shown as below:
       \arg        SDIO_POWER_ON: SDIO power on
@@ -136,7 +136,7 @@ void sdio_power_state_set(uint32_t power_state)
 }
 
 /*!
-    \brief    get the SDIO power state
+    \brief      get the SDIO power state
     \param[in]  none
     \param[out] none
     \retval     SDIO power state
@@ -149,7 +149,7 @@ uint32_t sdio_power_state_get(void)
 }
 
 /*!
-    \brief    enable SDIO_CLK clock output
+    \brief      enable SDIO_CLK clock output
     \param[in]  none
     \param[out] none
     \retval     none
@@ -160,7 +160,7 @@ void sdio_clock_enable(void)
 }
 
 /*!
-    \brief    disable SDIO_CLK clock output
+    \brief      disable SDIO_CLK clock output
     \param[in]  none
     \param[out] none
     \retval     none
@@ -171,7 +171,7 @@ void sdio_clock_disable(void)
 }
 
 /*!
-    \brief    configure the command and response
+    \brief      configure the command and response
     \param[in]  cmd_index: command index, refer to the related specifications
     \param[in]  cmd_argument: command argument, refer to the related specifications
     \param[in]  response_type: response type
@@ -198,7 +198,7 @@ void sdio_command_response_config(uint32_t cmd_index, uint32_t cmd_argument, uin
 }
 
 /*!
-    \brief    set the command state machine wait type
+    \brief      set the command state machine wait type
     \param[in]  wait_type: wait type
                 only one parameter can be selected which is shown as below:
       \arg        SDIO_WAITTYPE_NO: not wait interrupt
@@ -216,7 +216,7 @@ void sdio_wait_type_set(uint32_t wait_type)
 }
 
 /*!
-    \brief    enable the CSM(command state machine)
+    \brief      enable the CSM(command state machine)
     \param[in]  none
     \param[out] none
     \retval     none
@@ -227,7 +227,7 @@ void sdio_csm_enable(void)
 }
 
 /*!
-    \brief    disable the CSM(command state machine)
+    \brief      disable the CSM(command state machine)
     \param[in]  none
     \param[out] none
     \retval     none
@@ -238,7 +238,7 @@ void sdio_csm_disable(void)
 }
 
 /*!
-    \brief    get the last response command index
+    \brief      get the last response command index
     \param[in]  none
     \param[out] none
     \retval     last response command index
@@ -249,7 +249,7 @@ uint8_t sdio_command_index_get(void)
 }
 
 /*!
-    \brief    get the response for the last received command
+    \brief      get the response for the last received command
     \param[in]  sdio_responsex: SDIO response
                 only one parameter can be selected which is shown as below:
       \arg       SDIO_RESPONSE0: card response[31:0]/card response[127:96]
@@ -282,7 +282,7 @@ uint32_t sdio_response_get(uint32_t sdio_responsex)
 }
 
 /*!
-    \brief    configure the data timeout, data length and data block size
+    \brief      configure the data timeout, data length and data block size
     \param[in]  data_timeout: data timeout period in card bus clock periods
     \param[in]  data_length: number of data bytes to be transferred
     \param[in]  data_blocksize: size of data block for block transfer
@@ -318,7 +318,7 @@ void sdio_data_config(uint32_t data_timeout, uint32_t data_length, uint32_t data
 }
 
 /*!
-    \brief    configure the data transfer mode and direction
+    \brief      configure the data transfer mode and direction
     \param[in]  transfer_mode: mode of data transfer
                 only one parameter can be selected which is shown as below:
       \arg       SDIO_TRANSMODE_BLOCK: block transfer
@@ -341,7 +341,7 @@ void sdio_data_transfer_config(uint32_t transfer_mode, uint32_t transfer_directi
 }
 
 /*!
-    \brief    enable the DSM(data state machine) for data transfer
+    \brief      enable the DSM(data state machine) for data transfer
     \param[in]  none
     \param[out] none
     \retval     none
@@ -352,7 +352,7 @@ void sdio_dsm_enable(void)
 }
 
 /*!
-    \brief    disable the DSM(data state machine)
+    \brief      disable the DSM(data state machine)
     \param[in]  none
     \param[out] none
     \retval     none
@@ -363,7 +363,7 @@ void sdio_dsm_disable(void)
 }
 
 /*!
-    \brief    write data(one word) to the transmit FIFO
+    \brief      write data(one word) to the transmit FIFO
     \param[in]  data: 32-bit data write to card
     \param[out] none
     \retval     none
@@ -374,7 +374,7 @@ void sdio_data_write(uint32_t data)
 }
 
 /*!
-    \brief    read data(one word) from the receive FIFO
+    \brief      read data(one word) from the receive FIFO
     \param[in]  none
     \param[out] none
     \retval     received data
@@ -385,7 +385,7 @@ uint32_t sdio_data_read(void)
 }
 
 /*!
-    \brief    get the number of remaining data bytes to be transferred to card
+    \brief      get the number of remaining data bytes to be transferred to card
     \param[in]  none
     \param[out] none
     \retval     number of remaining data bytes to be transferred
@@ -396,7 +396,7 @@ uint32_t sdio_data_counter_get(void)
 }
 
 /*!
-    \brief    get the number of words remaining to be written or read from FIFO
+    \brief      get the number of words remaining to be written or read from FIFO
     \param[in]  none
     \param[out] none
     \retval     remaining number of words
@@ -407,7 +407,7 @@ uint32_t sdio_fifo_counter_get(void)
 }
 
 /*!
-    \brief    enable the DMA request for SDIO
+    \brief      enable the DMA request for SDIO
     \param[in]  none
     \param[out] none
     \retval     none
@@ -418,7 +418,7 @@ void sdio_dma_enable(void)
 }
 
 /*!
-    \brief    disable the DMA request for SDIO
+    \brief      disable the DMA request for SDIO
     \param[in]  none
     \param[out] none
     \retval     none
@@ -429,7 +429,7 @@ void sdio_dma_disable(void)
 }
 
 /*!
-    \brief    get the flags state of SDIO
+    \brief      get the flags state of SDIO
     \param[in]  flag: flags state of SDIO
                 one or more parameters can be selected which are shown as below:
       \arg        SDIO_FLAG_CCRCERR: command response received (CRC check failed) flag
@@ -469,7 +469,7 @@ FlagStatus sdio_flag_get(uint32_t flag)
 }
 
 /*!
-    \brief    clear the pending flags of SDIO
+    \brief      clear the pending flags of SDIO
     \param[in]  flag: flags state of SDIO
                 one or more parameters can be selected which are shown as below:
       \arg        SDIO_FLAG_CCRCERR: command response received (CRC check failed) flag
@@ -494,7 +494,7 @@ void sdio_flag_clear(uint32_t flag)
 }
 
 /*!
-    \brief    enable the SDIO interrupt
+    \brief      enable the SDIO interrupt
     \param[in]  int_flag: interrupt flags state of SDIO
                 one or more parameters can be selected which are shown as below:
       \arg        SDIO_INT_CCRCERR: SDIO CCRCERR interrupt
@@ -530,7 +530,7 @@ void sdio_interrupt_enable(uint32_t int_flag)
 }
 
 /*!
-    \brief    disable the SDIO interrupt
+    \brief      disable the SDIO interrupt
     \param[in]  int_flag: interrupt flags state of SDIO
                 one or more parameters can be selected which are shown as below:
       \arg        SDIO_INT_CCRCERR: SDIO CCRCERR interrupt
@@ -566,7 +566,7 @@ void sdio_interrupt_disable(uint32_t int_flag)
 }
 
 /*!
-    \brief    get the interrupt flags state of SDIO
+    \brief      get the interrupt flags state of SDIO
     \param[in]  int_flag: interrupt flags state of SDIO
                 one or more parameters can be selected which are shown as below:
       \arg        SDIO_INT_FLAG_CCRCERR: SDIO CCRCERR interrupt flag
@@ -606,7 +606,7 @@ FlagStatus sdio_interrupt_flag_get(uint32_t int_flag)
 }
 
 /*!
-    \brief    clear the interrupt pending flags of SDIO
+    \brief      clear the interrupt pending flags of SDIO
     \param[in]  int_flag: interrupt flags state of SDIO
                 one or more parameters can be selected which are shown as below:
       \arg        SDIO_INT_FLAG_CCRCERR: command response received (CRC check failed) flag
@@ -631,7 +631,7 @@ void sdio_interrupt_flag_clear(uint32_t int_flag)
 }
 
 /*!
-    \brief    enable the read wait mode(SD I/O only)
+    \brief      enable the read wait mode(SD I/O only)
     \param[in]  none
     \param[out] none
     \retval     none
@@ -642,7 +642,7 @@ void sdio_readwait_enable(void)
 }
 
 /*!
-    \brief    disable the read wait mode(SD I/O only)
+    \brief      disable the read wait mode(SD I/O only)
     \param[in]  none
     \param[out] none
     \retval     none
@@ -653,7 +653,7 @@ void sdio_readwait_disable(void)
 }
 
 /*!
-    \brief    enable the function that stop the read wait process(SD I/O only)
+    \brief      enable the function that stop the read wait process(SD I/O only)
     \param[in]  none
     \param[out] none
     \retval     none
@@ -664,7 +664,7 @@ void sdio_stop_readwait_enable(void)
 }
 
 /*!
-    \brief    disable the function that stop the read wait process(SD I/O only)
+    \brief      disable the function that stop the read wait process(SD I/O only)
     \param[in]  none
     \param[out] none
     \retval     none
@@ -675,7 +675,7 @@ void sdio_stop_readwait_disable(void)
 }
 
 /*!
-    \brief    set the read wait type(SD I/O only)
+    \brief      set the read wait type(SD I/O only)
     \param[in]  readwait_type: SD I/O read wait type
                 only one parameter can be selected which is shown as below:
       \arg        SDIO_READWAITTYPE_CLK: read wait control by stopping SDIO_CLK
@@ -693,7 +693,7 @@ void sdio_readwait_type_set(uint32_t readwait_type)
 }
 
 /*!
-    \brief    enable the SD I/O mode specific operation(SD I/O only)
+    \brief      enable the SD I/O mode specific operation(SD I/O only)
     \param[in]  none
     \param[out] none
     \retval     none
@@ -704,7 +704,7 @@ void sdio_operation_enable(void)
 }
 
 /*!
-    \brief    disable the SD I/O mode specific operation(SD I/O only)
+    \brief      disable the SD I/O mode specific operation(SD I/O only)
     \param[in]  none
     \param[out] none
     \retval     none
@@ -715,7 +715,7 @@ void sdio_operation_disable(void)
 }
 
 /*!
-    \brief    enable the SD I/O suspend operation(SD I/O only)
+    \brief      enable the SD I/O suspend operation(SD I/O only)
     \param[in]  none
     \param[out] none
     \retval     none
@@ -726,7 +726,7 @@ void sdio_suspend_enable(void)
 }
 
 /*!
-    \brief    disable the SD I/O suspend operation(SD I/O only)
+    \brief      disable the SD I/O suspend operation(SD I/O only)
     \param[in]  none
     \param[out] none
     \retval     none
@@ -737,7 +737,7 @@ void sdio_suspend_disable(void)
 }
 
 /*!
-    \brief    enable the CE-ATA command(CE-ATA only)
+    \brief      enable the CE-ATA command(CE-ATA only)
     \param[in]  none
     \param[out] none
     \retval     none
@@ -748,7 +748,7 @@ void sdio_ceata_command_enable(void)
 }
 
 /*!
-    \brief    disable the CE-ATA command(CE-ATA only)
+    \brief      disable the CE-ATA command(CE-ATA only)
     \param[in]  none
     \param[out] none
     \retval     none
@@ -759,7 +759,7 @@ void sdio_ceata_command_disable(void)
 }
 
 /*!
-    \brief    enable the CE-ATA interrupt(CE-ATA only)
+    \brief      enable the CE-ATA interrupt(CE-ATA only)
     \param[in]  none
     \param[out] none
     \retval     none
@@ -770,7 +770,7 @@ void sdio_ceata_interrupt_enable(void)
 }
 
 /*!
-    \brief    disable the CE-ATA interrupt(CE-ATA only)
+    \brief      disable the CE-ATA interrupt(CE-ATA only)
     \param[in]  none
     \param[out] none
     \retval     none
@@ -781,7 +781,7 @@ void sdio_ceata_interrupt_disable(void)
 }
 
 /*!
-    \brief    enable the CE-ATA command completion signal(CE-ATA only)
+    \brief      enable the CE-ATA command completion signal(CE-ATA only)
     \param[in]  none
     \param[out] none
     \retval     none
@@ -792,7 +792,7 @@ void sdio_ceata_command_completion_enable(void)
 }
 
 /*!
-    \brief    disable the CE-ATA command completion signal(CE-ATA only)
+    \brief      disable the CE-ATA command completion signal(CE-ATA only)
     \param[in]  none
     \param[out] none
     \retval     none

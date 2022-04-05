@@ -3,7 +3,6 @@
     \brief   IAP driver
 
     \version 2020-08-01, V3.0.0, firmware for GD32F4xx
-    \version 2020-12-07, V3.0.1, firmware for GD32F4xx
 */
 
 /*
@@ -381,38 +380,40 @@ static uint8_t iap_data_out (usb_dev *udev ,uint8_t ep_num)
 {
     usbd_iap_handler *iap = (usbd_iap_handler *)udev->dev.class_data[USBD_IAP_INTERFACE];
 
-    if (0x01U == iap->report_buf[0]) {
-        switch (iap->report_buf[1]) {
-        case IAP_DNLOAD:
-            iap_req_dnload(udev);
-            break;
+    if ((IAP_OUT_EP & 0x7FU) == ep_num) {
+        if (0x01U == iap->report_buf[0]) {
+            switch (iap->report_buf[1]) {
+            case IAP_DNLOAD:
+                iap_req_dnload(udev);
+                break;
 
-        case IAP_ERASE:
-            iap_req_erase(udev);
-            break;
+            case IAP_ERASE:
+                iap_req_erase(udev);
+                break;
 
-        case IAP_OPTION_BYTE1:
-            iap_req_optionbyte(udev, 0x01U);
-            break;
+            case IAP_OPTION_BYTE1:
+                iap_req_optionbyte(udev, 0x01U);
+                break;
 
-        case IAP_LEAVE:
-            iap_req_leave(udev);
-            break;
+            case IAP_LEAVE:
+                iap_req_leave(udev);
+                break;
 
-        case IAP_GETBIN_ADDRESS:
-            iap_address_send(udev);
-            break;
+            case IAP_GETBIN_ADDRESS:
+                iap_address_send(udev);
+                break;
 
-        case IAP_OPTION_BYTE2:
-            iap_req_optionbyte(udev, 0x02U);
-            break;
+            case IAP_OPTION_BYTE2:
+                iap_req_optionbyte(udev, 0x02U);
+                break;
 
-        default:
-            break;
+            default:
+                break;
+            }
         }
-    }
 
-    usbd_ep_recev(udev, IAP_OUT_EP, iap->report_buf, IAP_OUT_PACKET);
+        usbd_ep_recev(udev, IAP_OUT_EP, iap->report_buf, IAP_OUT_PACKET);
+    }
 
     return USBD_OK;
 }

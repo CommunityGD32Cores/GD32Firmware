@@ -38,7 +38,7 @@ OF SUCH DAMAGE.
 #include "usbd_enum.h"
 #include "usb_cdc.h"
 
-#define USB_CDC_RX_LEN      USB_CDC_DATA_PACKET_SIZE
+#define USB_CDC_RX_LEN      64
 
 typedef struct {
     uint8_t data[USB_CDC_RX_LEN];

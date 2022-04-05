@@ -40,7 +40,7 @@ OF SUCH DAMAGE.
 #define TLI_OPAQUE_VALUE    0x000000FFU
 
 /*!
-    \brief    deinitialize TLI registers
+    \brief      deinitialize TLI registers
     \param[in]  none
     \param[out] none
     \retval     none
@@ -52,7 +52,7 @@ void tli_deinit(void)
 }
 
 /*!
-    \brief    initialize the parameters of TLI parameter structure with the default values, it is suggested
+    \brief      initialize the parameters of TLI parameter structure with the default values, it is suggested
                 that call this function after a tli_parameter_struct structure is defined
     \param[in]  none
     \param[out] tli_struct: the data needed to initialize TLI
@@ -94,7 +94,7 @@ void tli_struct_para_init(tli_parameter_struct *tli_struct)
 }
 
 /*!
-    \brief    initialize TLI display timing parameters
+    \brief      initialize TLI display timing parameters
     \param[in]  tli_struct: the data needed to initialize TLI
                   synpsz_vpsz: size of the vertical synchronous pulse
                   synpsz_hpsz: size of the horizontal synchronous pulse
@@ -138,7 +138,7 @@ void tli_init(tli_parameter_struct *tli_struct)
 }
 
 /*!
-    \brief    configure TLI dither function
+    \brief      configure TLI dither function
     \param[in]  dither_stat
                 only one parameter can be selected which is shown as below:
       \arg        TLI_DITHER_ENABLE
@@ -156,7 +156,7 @@ void tli_dither_config(uint8_t dither_stat)
 }
 
 /*!
-    \brief    enable TLI 
+    \brief      enable TLI 
     \param[in]  none
     \param[out] none
     \retval     none
@@ -167,7 +167,7 @@ void tli_enable(void)
 }
 
 /*!
-    \brief    disable TLI 
+    \brief      disable TLI 
     \param[in]  none
     \param[out] none
     \retval     none
@@ -178,7 +178,7 @@ void tli_disable(void)
 }
 
 /*!
-    \brief    configure TLI reload mode
+    \brief      configure TLI reload mode
     \param[in]  reload_mod
                 only one parameter can be selected which is shown as below:
       \arg        TLI_FRAME_BLANK_RELOAD_EN
@@ -198,7 +198,7 @@ void tli_reload_config(uint8_t reload_mod)
 }
 
 /*!
-    \brief    initialize the parameters of TLI layer structure with the default values, it is suggested 
+    \brief      initialize the parameters of TLI layer structure with the default values, it is suggested 
                 that call this function after a tli_layer_parameter_struct structure is defined
     \param[in]  none
     \param[out] layer_struct: TLI Layer parameter struct
@@ -244,7 +244,7 @@ void tli_layer_struct_para_init(tli_layer_parameter_struct *layer_struct)
 }
 
 /*!
-    \brief    initialize TLI layer 
+    \brief      initialize TLI layer 
     \param[in]  layerx: LAYERx(x=0,1)
     \param[in]  layer_struct: TLI Layer parameter struct
                   layer_window_rightpos: window right position
@@ -304,7 +304,7 @@ void tli_layer_init(uint32_t layerx,tli_layer_parameter_struct *layer_struct)
 }
 
 /*!
-    \brief    reconfigure window position 
+    \brief      reconfigure window position 
     \param[in]  layerx: LAYERx(x=0,1)
     \param[in]  offset_x: new horizontal offset
     \param[in]  offset_y: new vertical offset
@@ -353,7 +353,7 @@ void tli_layer_window_offset_modify(uint32_t layerx,uint16_t offset_x,uint16_t o
 }
 
 /*!
-    \brief    initialize the parameters of TLI layer LUT structure with the default values, it is suggested 
+    \brief      initialize the parameters of TLI layer LUT structure with the default values, it is suggested 
                 that call this function after a tli_layer_lut_parameter_struct structure is defined
     \param[in]  none
     \param[out] lut_struct: TLI layer LUT parameter struct
@@ -373,7 +373,7 @@ void tli_lut_struct_para_init(tli_layer_lut_parameter_struct *lut_struct)
 }
 
 /*!
-    \brief    initialize TLI layer LUT 
+    \brief      initialize TLI layer LUT 
     \param[in]  layerx: LAYERx(x=0,1)
     \param[in]  lut_struct: TLI layer LUT parameter struct
                   layer_table_addr: look up table write address
@@ -392,7 +392,7 @@ void tli_lut_init(uint32_t layerx,tli_layer_lut_parameter_struct *lut_struct)
 }
 
 /*!
-    \brief    initialize TLI layer color key 
+    \brief      initialize TLI layer color key 
     \param[in]  layerx: LAYERx(x=0,1)
     \param[in]  redkey: color key red
     \param[in]  greenkey: color key green 
@@ -406,7 +406,7 @@ void tli_color_key_init(uint32_t layerx,uint8_t redkey,uint8_t greenkey,uint8_t 
 }
 
 /*!
-    \brief    enable TLI layer 
+    \brief      enable TLI layer 
     \param[in]  layerx: LAYERx(x=0,1)
     \param[out] none
     \retval     none
@@ -417,7 +417,7 @@ void tli_layer_enable(uint32_t layerx)
 }
 
 /*!
-    \brief    disable TLI layer 
+    \brief      disable TLI layer 
     \param[in]  layerx: LAYERx(x=0,1)
     \param[out] none
     \retval     none
@@ -428,7 +428,7 @@ void tli_layer_disable(uint32_t layerx)
 }
 
 /*!
-    \brief    enable TLI layer color keying 
+    \brief      enable TLI layer color keying 
     \param[in]  layerx: LAYERx(x=0,1)
     \param[out] none
     \retval     none
@@ -439,7 +439,7 @@ void tli_color_key_enable(uint32_t layerx)
 }
 
 /*!
-    \brief    disable TLI layer color keying 
+    \brief      disable TLI layer color keying 
     \param[in]  layerx: LAYERx(x=0,1)
     \param[out] none
     \retval     none
@@ -450,7 +450,7 @@ void tli_color_key_disable(uint32_t layerx)
 }
 
 /*!
-    \brief    enable TLI layer LUT 
+    \brief      enable TLI layer LUT 
     \param[in]  layerx: LAYERx(x=0,1)
     \param[out] none
     \retval     none
@@ -461,7 +461,7 @@ void tli_lut_enable(uint32_t layerx)
 }
 
 /*!
-    \brief    disable TLI layer LUT 
+    \brief      disable TLI layer LUT 
     \param[in]  layerx: LAYERx(x=0,1)
     \param[out] none
     \retval     none
@@ -472,7 +472,7 @@ void tli_lut_disable(uint32_t layerx)
 }
 
 /*!
-    \brief    set line mark value 
+    \brief      set line mark value 
     \param[in]  line_num: line number 
     \param[out] none
     \retval     none
@@ -484,7 +484,7 @@ void tli_line_mark_set(uint16_t line_num)
 }
 
 /*!
-    \brief    get current displayed position 
+    \brief      get current displayed position 
     \param[in]  none
     \param[out] none
     \retval     position of current pixel
@@ -495,7 +495,7 @@ uint32_t tli_current_pos_get(void)
 }
 
 /*!
-    \brief    enable TLI interrupt 
+    \brief      enable TLI interrupt 
     \param[in]  int_flag: TLI interrupt flags
                 one or more parameters can be selected which are shown as below:
       \arg        TLI_INT_LM: line mark interrupt 
@@ -511,7 +511,7 @@ void tli_interrupt_enable(uint32_t int_flag)
 }
 
 /*!
-    \brief    disable TLI interrupt 
+    \brief      disable TLI interrupt 
     \param[in]  int_flag: TLI interrupt flags
                 one or more parameters can be selected which are shown as below:
       \arg        TLI_INT_LM: line mark interrupt 
@@ -527,7 +527,7 @@ void tli_interrupt_disable(uint32_t int_flag)
 }
 
 /*!
-    \brief    get TLI interrupt flag 
+    \brief      get TLI interrupt flag 
     \param[in]  int_flag: TLI interrupt flags
                 one or more parameters can be selected which are shown as below:
       \arg        TLI_INT_FLAG_LM: line mark interrupt flag
@@ -551,7 +551,7 @@ FlagStatus tli_interrupt_flag_get(uint32_t int_flag)
 }
 
 /*!
-    \brief    clear TLI interrupt flag 
+    \brief      clear TLI interrupt flag 
     \param[in]  int_flag: TLI interrupt flags
                 one or more parameters can be selected which are shown as below:
       \arg        TLI_INT_FLAG_LM: line mark interrupt flag
@@ -567,7 +567,7 @@ void tli_interrupt_flag_clear(uint32_t int_flag)
 }
 
 /*!
-    \brief    get TLI flag or state in TLI_INTF register or TLI_STAT register
+    \brief      get TLI flag or state in TLI_INTF register or TLI_STAT register
     \param[in]  flag: TLI flags or states
                 only one parameter can be selected which is shown as below:
       \arg        TLI_FLAG_VDE: current VDE state 

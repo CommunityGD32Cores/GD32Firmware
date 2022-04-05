@@ -5,7 +5,6 @@
     \version 2016-08-15, V1.0.0, firmware for GD32F4xx
     \version 2018-12-12, V2.0.0, firmware for GD32F4xx
     \version 2020-09-30, V2.1.0, firmware for GD32F4xx
-    \version 2020-12-20, V2.1.1, firmware for GD32F4xx
 */
 
 /*
@@ -126,7 +125,6 @@ typedef enum
     FMC_WPERR,                                                    /*!< erase/program protection error */
     FMC_OPERR,                                                    /*!< operation error */
     FMC_PGERR,                                                    /*!< program error */
-    FMC_TOERR,                                                    /*!< timeout error */
 }fmc_state_enum;
 
 /* unlock key */
@@ -293,8 +291,8 @@ typedef enum
 #define CTL_PSZ_WORD               CTL_PSZ(2)                     /*!< FMC program by word access */
 
 /* FMC interrupt enable */
-#define FMC_INT_END                ((uint32_t)0x01000000U)        /*!< enable FMC end of program interrupt */
-#define FMC_INT_ERR                ((uint32_t)0x02000000U)        /*!< enable FMC error interrupt */
+#define FMC_INT_END              ((uint32_t)0x01000000U)        /*!< enable FMC end of program interrupt */
+#define FMC_INT_ERR              ((uint32_t)0x02000000U)        /*!< enable FMC error interrupt */
 
 /* FMC flags */
 #define FMC_FLAG_END               ((uint32_t)0x00000001U)        /*!< FMC end of operation flag bit */
@@ -303,10 +301,7 @@ typedef enum
 #define FMC_FLAG_PGMERR            ((uint32_t)0x00000040U)        /*!< FMC program size not match error flag bit */
 #define FMC_FLAG_PGSERR            ((uint32_t)0x00000080U)        /*!< FMC program sequence error flag bit */
 #define FMC_FLAG_RDDERR            ((uint32_t)0x00000100U)        /*!< FMC read D-bus protection error flag bit */
-#define FMC_FLAG_BUSY              ((uint32_t)0x00010000U)        /*!< FMC busy flag */
-
-/* FMC time out */
-#define FMC_TIMEOUT_COUNT          ((uint32_t)0xFFFFFFFFU)        /*!< count to judge of FMC timeout */
+#define FMC_FLAG_BUSY              ((uint32_t)0x00010000U)        /*!< FMC busy flag */ 
 
 /* function declarations */
 /* FMC main memory programming functions */
@@ -383,6 +378,6 @@ void fmc_flag_clear(uint32_t fmc_flag);
 /* return the FMC state */
 fmc_state_enum fmc_state_get(void);
 /* check FMC ready or not */
-fmc_state_enum fmc_ready_wait(uint32_t timeout);
+fmc_state_enum fmc_ready_wait(void);
 
 #endif /* GD32F4XX_FMC_H */

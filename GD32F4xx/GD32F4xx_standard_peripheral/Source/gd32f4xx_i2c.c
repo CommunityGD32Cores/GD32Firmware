@@ -48,7 +48,7 @@ OF SUCH DAMAGE.
 #define STAT1_PECV_OFFSET             ((uint32_t)8U)     /* bit offset of PECV in I2C_STAT1 */
 
 /*!
-    \brief    reset I2C
+    \brief      reset I2C
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[out] none
     \retval     none
@@ -77,7 +77,7 @@ void i2c_deinit(uint32_t i2c_periph)
 }
 
 /*!
-    \brief    configure I2C clock
+    \brief      configure I2C clock
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  clkspeed: I2C clock speed, supports standard mode (up to 100 kHz), fast mode (up to 400 kHz)
     \param[in]  dutycyc: duty cycle in fast mode
@@ -143,7 +143,7 @@ void i2c_clock_config(uint32_t i2c_periph, uint32_t clkspeed, uint32_t dutycyc)
 }
 
 /*!
-    \brief    configure I2C address 
+    \brief      configure I2C address 
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  mode:
                 only one parameter can be selected which is shown as below:
@@ -172,7 +172,7 @@ void i2c_mode_addr_config(uint32_t i2c_periph, uint32_t mode, uint32_t addformat
 }
 
 /*!
-    \brief    SMBus type selection
+    \brief      SMBus type selection
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  type:
                 only one parameter can be selected which is shown as below:
@@ -191,7 +191,7 @@ void i2c_smbus_type_config(uint32_t i2c_periph, uint32_t type)
 }
 
 /*!
-    \brief    whether or not to send an ACK
+    \brief      whether or not to send an ACK
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  ack:
                 only one parameter can be selected which is shown as below:
@@ -210,7 +210,7 @@ void i2c_ack_config(uint32_t i2c_periph, uint32_t ack)
 }
 
 /*!
-    \brief    configure I2C POAP position
+    \brief      configure I2C POAP position
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  pos:
                 only one parameter can be selected which is shown as below:
@@ -230,7 +230,7 @@ void i2c_ackpos_config(uint32_t i2c_periph, uint32_t pos)
 }
 
 /*!
-    \brief    master sends slave address
+    \brief      master sends slave address
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  addr: slave address  
     \param[in]  trandirection: transmitter or receiver
@@ -253,7 +253,7 @@ void i2c_master_addressing(uint32_t i2c_periph, uint32_t addr, uint32_t trandire
 }
 
 /*!
-    \brief    enable dual-address mode
+    \brief      enable dual-address mode
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  addr: the second address in dual-address mode
     \param[out] none
@@ -267,7 +267,7 @@ void i2c_dualaddr_enable(uint32_t i2c_periph, uint32_t addr)
 }
 
 /*!
-    \brief    disable dual-address mode
+    \brief      disable dual-address mode
     \param[in]  i2c_periph: I2Cx(x=0,1,2) 
     \param[out] none
     \retval     none
@@ -278,7 +278,7 @@ void i2c_dualaddr_disable(uint32_t i2c_periph)
 }
 
 /*!
-    \brief    enable I2C
+    \brief      enable I2C
     \param[in]  i2c_periph: I2Cx(x=0,1,2) 
     \param[out] none
     \retval     none
@@ -289,7 +289,7 @@ void i2c_enable(uint32_t i2c_periph)
 }
 
 /*!
-    \brief    disable I2C
+    \brief      disable I2C
     \param[in]  i2c_periph: I2Cx(x=0,1,2) 
     \param[out] none
     \retval     none
@@ -300,7 +300,7 @@ void i2c_disable(uint32_t i2c_periph)
 }
 
 /*!
-    \brief    generate a START condition on I2C bus
+    \brief      generate a START condition on I2C bus
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[out] none
     \retval     none
@@ -311,7 +311,7 @@ void i2c_start_on_bus(uint32_t i2c_periph)
 }
 
 /*!
-    \brief    generate a STOP condition on I2C bus
+    \brief      generate a STOP condition on I2C bus
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[out] none
     \retval     none
@@ -322,7 +322,7 @@ void i2c_stop_on_bus(uint32_t i2c_periph)
 }
 
 /*!
-    \brief    I2C transmit data function
+    \brief      I2C transmit data function
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  data: data of transmission 
     \param[out] none
@@ -334,7 +334,7 @@ void i2c_data_transmit(uint32_t i2c_periph, uint8_t data)
 }
 
 /*!
-    \brief    I2C receive data function
+    \brief      I2C receive data function
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[out] none
     \retval     data of received
@@ -345,7 +345,7 @@ uint8_t i2c_data_receive(uint32_t i2c_periph)
 }
 
 /*!
-    \brief    enable I2C DMA mode 
+    \brief      enable I2C DMA mode 
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  dmastate:
                 only one parameter can be selected which is shown as below:
@@ -366,7 +366,7 @@ void i2c_dma_enable(uint32_t i2c_periph, uint32_t dmastate)
 }
 
 /*!
-    \brief    configure whether next DMA EOT is DMA last transfer or not
+    \brief      configure whether next DMA EOT is DMA last transfer or not
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  dmalast:
                 only one parameter can be selected which is shown as below:
@@ -387,7 +387,7 @@ void i2c_dma_last_transfer_config(uint32_t i2c_periph, uint32_t dmalast)
 }
 
 /*!
-    \brief    whether to stretch SCL low when data is not ready in slave mode 
+    \brief      whether to stretch SCL low when data is not ready in slave mode 
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  stretchpara:
                 only one parameter can be selected which is shown as below:
@@ -408,7 +408,7 @@ void i2c_stretch_scl_low_config(uint32_t i2c_periph, uint32_t stretchpara)
 }
 
 /*!
-    \brief    whether or not to response to a general call 
+    \brief      whether or not to response to a general call 
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  gcallpara:
                 only one parameter can be selected which is shown as below:
@@ -429,7 +429,7 @@ void i2c_slave_response_to_gcall_config(uint32_t i2c_periph, uint32_t gcallpara)
 }
 
 /*!
-    \brief    software reset I2C 
+    \brief      software reset I2C 
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  sreset:
                 only one parameter can be selected which is shown as below:
@@ -450,7 +450,7 @@ void i2c_software_reset_config(uint32_t i2c_periph, uint32_t sreset)
 }
 
 /*!
-    \brief    I2C PEC calculation on or off
+    \brief      I2C PEC calculation on or off
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  pecstate:
                 only one parameter can be selected which is shown as below:
@@ -471,7 +471,7 @@ void i2c_pec_enable(uint32_t i2c_periph, uint32_t pecstate)
 }
 
 /*!
-    \brief    I2C whether to transfer PEC value
+    \brief      I2C whether to transfer PEC value
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  pecpara:
                 only one parameter can be selected which is shown as below:
@@ -492,7 +492,7 @@ void i2c_pec_transfer_enable(uint32_t i2c_periph, uint32_t pecpara)
 }
 
 /*!
-    \brief    get packet error checking value 
+    \brief      get packet error checking value 
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[out] none
     \retval     PEC value
@@ -503,7 +503,7 @@ uint8_t i2c_pec_value_get(uint32_t i2c_periph)
 }
 
 /*!
-    \brief    I2C issue alert through SMBA pin 
+    \brief      I2C issue alert through SMBA pin 
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  smbuspara:
                 only one parameter can be selected which is shown as below:
@@ -524,7 +524,7 @@ void i2c_smbus_issue_alert(uint32_t i2c_periph, uint32_t smbuspara)
 }
 
 /*!
-    \brief    enable or disable I2C ARP protocol in SMBus switch
+    \brief      enable or disable I2C ARP protocol in SMBus switch
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  arpstate:
                 only one parameter can be selected which is shown as below:
@@ -545,7 +545,7 @@ void i2c_smbus_arp_enable(uint32_t i2c_periph, uint32_t arpstate)
 }
 
 /*!
-    \brief    analog noise filter disable
+    \brief      analog noise filter disable
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[out] none
     \retval     none
@@ -556,7 +556,7 @@ void i2c_analog_noise_filter_disable(uint32_t i2c_periph)
 }
 
 /*!
-    \brief    analog noise filter enable
+    \brief      analog noise filter enable
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[out] none
     \retval     none
@@ -567,7 +567,7 @@ void i2c_analog_noise_filter_enable(uint32_t i2c_periph)
 }
 
 /*!
-    \brief    digital noise filter configuration
+    \brief      digital noise filter configuration
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  dfilterpara: refer to enum i2c_digital_filter_enum
     \param[out] none
@@ -579,7 +579,7 @@ void i2c_digital_noise_filter_config(uint32_t i2c_periph,i2c_digital_filter_enum
 }
 
 /*!
-    \brief    enable SAM_V interface
+    \brief      enable SAM_V interface
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[out] none
     \retval     none
@@ -590,7 +590,7 @@ void i2c_sam_enable(uint32_t i2c_periph)
 }
 
 /*!
-    \brief    disable SAM_V interface
+    \brief      disable SAM_V interface
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[out] none
     \retval     none
@@ -601,7 +601,7 @@ void i2c_sam_disable(uint32_t i2c_periph)
 }
 
 /*!
-    \brief    enable SAM_V interface timeout detect
+    \brief      enable SAM_V interface timeout detect
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[out] none
     \retval     none
@@ -612,7 +612,7 @@ void i2c_sam_timeout_enable(uint32_t i2c_periph)
 }
 
 /*!
-    \brief    disable SAM_V interface timeout detect
+    \brief      disable SAM_V interface timeout detect
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[out] none
     \retval     none
@@ -623,7 +623,7 @@ void i2c_sam_timeout_disable(uint32_t i2c_periph)
 }
 
 /*!
-    \brief    check I2C flag is set or not
+    \brief      check I2C flag is set or not
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  flag: I2C flags, refer to i2c_flag_enum
                 only one parameter can be selected which is shown as below:
@@ -665,7 +665,7 @@ FlagStatus i2c_flag_get(uint32_t i2c_periph, i2c_flag_enum flag)
 }
 
 /*!
-    \brief    clear I2C flag
+    \brief      clear I2C flag
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  flag: I2C flags, refer to i2c_flag_enum
                 only one parameter can be selected which is shown as below:
@@ -696,7 +696,7 @@ void i2c_flag_clear(uint32_t i2c_periph, i2c_flag_enum flag)
 }
 
 /*!
-    \brief    enable I2C interrupt
+    \brief      enable I2C interrupt
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  interrupt: I2C interrupts, refer to i2c_interrupt_enum
                 only one parameter can be selected which is shown as below:
@@ -716,7 +716,7 @@ void i2c_interrupt_enable(uint32_t i2c_periph, i2c_interrupt_enum interrupt)
 }
 
 /*!
-    \brief    disable I2C interrupt
+    \brief      disable I2C interrupt
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  interrupt: I2C interrupts, refer to i2c_flag_enum
                 only one parameter can be selected which is shown as below:
@@ -736,7 +736,7 @@ void i2c_interrupt_disable(uint32_t i2c_periph, i2c_interrupt_enum interrupt)
 }
 
 /*!
-    \brief    check I2C interrupt flag
+    \brief      check I2C interrupt flag
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  int_flag: I2C interrupt flags, refer to i2c_interrupt_flag_enum
                 only one parameter can be selected which is shown as below:
@@ -788,7 +788,7 @@ FlagStatus i2c_interrupt_flag_get(uint32_t i2c_periph, i2c_interrupt_flag_enum i
 }
 
 /*!
-    \brief    clear I2C interrupt flag
+    \brief      clear I2C interrupt flag
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  int_flag: I2C interrupt flags, refer to i2c_interrupt_flag_enum
                 only one parameter can be selected which is shown as below:

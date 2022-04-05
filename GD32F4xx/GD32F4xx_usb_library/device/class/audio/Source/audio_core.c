@@ -3,7 +3,6 @@
     \brief   USB audio device class core functions
 
     \version 2020-08-01, V3.0.0, firmware for GD32F4xx
-    \version 2020-12-07, V3.0.1, firmware for GD32F4xx
 */
 
 /*
@@ -50,7 +49,6 @@ extern const char wavetestdata[];
 static uint8_t audio_init (usb_dev *udev, uint8_t config_index);
 static uint8_t audio_deinit (usb_dev *udev, uint8_t config_index);
 static uint8_t audio_req_handler (usb_dev *udev, usb_req *req);
-static uint8_t audio_ctlx_out (usb_dev *udev);
 static uint8_t audio_data_in (usb_dev *udev, uint8_t ep_num);
 static uint8_t audio_data_out (usb_dev *udev, uint8_t ep_num);
 static uint8_t usbd_audio_sof (usb_dev *udev);
@@ -59,7 +57,6 @@ usb_class_core usbd_audio_cb = {
     .init      = audio_init,
     .deinit    = audio_deinit,
     .req_proc  = audio_req_handler,
-    .ctlx_out   = audio_ctlx_out,
     .data_in   = audio_data_in,
     .data_out  = audio_data_out,
     .SOF       = usbd_audio_sof
@@ -649,41 +646,6 @@ static uint8_t audio_req_handler (usb_dev *udev, usb_req *req)
 }
 
 /*!
-    \brief      handles the control transfer OUT callback
-    \param[in]  udev: pointer to USB device instance
-    \param[out] none
-    \retval     USB device operation status
-*/
-static uint8_t audio_ctlx_out (usb_dev *udev)
-{
-#ifdef USE_USB_AUDIO_SPEAKER
-    usbd_audio_handler *audio = (usbd_audio_handler *)udev->dev.class_data[USBD_AUDIO_INTERFACE];
-
-    /* handles audio control requests data */
-    /* check if an audio_control request has been issued */
-    if (AUDIO_REQ_SET_CUR == udev->dev.class_core->command) {
-        /* in this driver, to simplify code, only SET_CUR request is managed */
-
-        /* check for which addressed unit the audio_control request has been issued */
-        if (AUDIO_OUT_STREAMING_CTRL == audio->audioctl_unit) {
-            /* in this driver, to simplify code, only one unit is manage */
-
-            /* call the audio interface mute function */
-            audio_out_fops.audio_mute_ctl(audio->audioctl[0]);
-
-            /* reset the audioctl_cmd variable to prevent re-entering this function */
-            udev->dev.class_core->command = 0U;
-
-            audio->audioctl_len = 0U;
-        }
-    }
-#endif
-
-    return USBD_OK;
-}
-
-
-/*!
     \brief      handles the audio IN data stage
     \param[in]  udev: pointer to USB device instance
     \param[in]  ep_num: endpoint number
@@ -718,27 +680,47 @@ static uint8_t audio_data_out (usb_dev *udev, uint8_t ep_num)
 #ifdef USE_USB_AUDIO_SPEAKER
     usbd_audio_handler *audio = (usbd_audio_handler *)udev->dev.class_data[USBD_AUDIO_INTERFACE];
 
+    if (AUDIO_OUT_EP == ep_num) {
         /* increment the Buffer pointer or roll it back when all buffers are full */
-    if (audio->isoc_out_wrptr >= (audio->isoc_out_buff + (SPEAKER_OUT_PACKET * OUT_PACKET_NUM))) {
-        /* all buffers are full: roll back */
-        audio->isoc_out_wrptr = audio->isoc_out_buff;
+        if (audio->isoc_out_wrptr >= (audio->isoc_out_buff + (SPEAKER_OUT_PACKET * OUT_PACKET_NUM))) {
+            /* all buffers are full: roll back */
+            audio->isoc_out_wrptr = audio->isoc_out_buff;
+        } else {
+            /* increment the buffer pointer */
+            audio->isoc_out_wrptr += SPEAKER_OUT_PACKET;
+        }
+
+        /* Toggle the frame index */  
+        udev->dev.transc_out[ep_num].frame_num = 
+        (udev->dev.transc_out[ep_num].frame_num)? 0U:1U;
+
+        /* prepare out endpoint to receive next audio packet */
+        usbd_ep_recev (udev, AUDIO_OUT_EP, (uint8_t*)(audio->isoc_out_wrptr), SPEAKER_OUT_PACKET);
+
+        /* trigger the start of streaming only when half buffer is full */
+        if ((0U == audio->play_flag) && (audio->isoc_out_wrptr >= (audio->isoc_out_buff + ((SPEAKER_OUT_PACKET * OUT_PACKET_NUM) / 2U)))) {
+            /* enable start of streaming */
+            audio->play_flag = 1U;
+        }
     } else {
-        /* increment the buffer pointer */
-        audio->isoc_out_wrptr += SPEAKER_OUT_PACKET;
-    }
+        /* handles audio control requests data */
+        /* check if an audio_control request has been issued */
+        if (AUDIO_REQ_SET_CUR == udev->dev.class_core->command) {
+            /* in this driver, to simplify code, only SET_CUR request is managed */
 
-    /* Toggle the frame index */  
-    udev->dev.transc_out[ep_num].frame_num = 
-    (udev->dev.transc_out[ep_num].frame_num)? 0U:1U;
+            /* check for which addressed unit the audio_control request has been issued */
+            if (AUDIO_OUT_STREAMING_CTRL == audio->audioctl_unit) {
+                /* in this driver, to simplify code, only one unit is manage */
 
-    /* prepare out endpoint to receive next audio packet */
-    usbd_ep_recev (udev, AUDIO_OUT_EP, (uint8_t*)(audio->isoc_out_wrptr), SPEAKER_OUT_PACKET);
+                /* call the audio interface mute function */
+                audio_out_fops.audio_mute_ctl(audio->audioctl[0]);
 
-    /* trigger the start of streaming only when half buffer is full */
-    if ((0U == audio->play_flag) && (audio->isoc_out_wrptr >= (audio->isoc_out_buff + ((SPEAKER_OUT_PACKET * OUT_PACKET_NUM) / 2U)))) {
-        /* enable start of streaming */
-        audio->play_flag = 1U;
-        
+                /* reset the audioctl_cmd variable to prevent re-entering this function */
+                udev->dev.class_core->command = 0U;
+
+                audio->audioctl_len = 0U;
+            }
+        }
     }
 #endif
 

@@ -47,7 +47,7 @@ OF SUCH DAMAGE.
 #define SPI_I2SPSC_DEFAULT_VALUE        ((uint32_t)0x00000002U)  /*!< default value of SPI_I2SPSC register */
 
 /*!
-    \brief    deinitialize SPI and I2S 
+    \brief      deinitialize SPI and I2S 
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5),include I2S1_ADD and I2S2_ADD
     \param[out] none
     \retval     none
@@ -91,7 +91,7 @@ void spi_i2s_deinit(uint32_t spi_periph)
 }
 
 /*!
-    \brief    initialize the parameters of SPI struct with default values
+    \brief      initialize the parameters of SPI struct with default values
     \param[in]  none
     \param[out] spi_parameter_struct: the initialized struct spi_parameter_struct pointer
     \retval     none
@@ -108,7 +108,7 @@ void spi_struct_para_init(spi_parameter_struct *spi_struct)
     spi_struct->endian               = SPI_ENDIAN_MSB;
 }
 /*!
-    \brief    initialize SPI parameter
+    \brief      initialize SPI parameter
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[in]  spi_struct: SPI parameter initialization stuct members of the structure
                 and the member values are shown as below:
@@ -152,7 +152,7 @@ void spi_init(uint32_t spi_periph, spi_parameter_struct* spi_struct)
 }
 
 /*!
-    \brief    enable SPI 
+    \brief      enable SPI 
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[out] none
     \retval     none
@@ -163,7 +163,7 @@ void spi_enable(uint32_t spi_periph)
 }
 
 /*!
-    \brief    disable SPI 
+    \brief      disable SPI 
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[out] none
     \retval     none
@@ -174,7 +174,7 @@ void spi_disable(uint32_t spi_periph)
 }
 
 /*!
-    \brief    initialize I2S parameter 
+    \brief      initialize I2S parameter 
     \param[in]  spi_periph: SPIx(x=1,2)
     \param[in]  i2s_mode: I2S operation mode
                 only one parameter can be selected which is shown as below:
@@ -216,7 +216,7 @@ void i2s_init(uint32_t spi_periph, uint32_t i2s_mode, uint32_t i2s_standard, uin
 }
 
 /*!
-    \brief    configure I2S prescale
+    \brief      configure I2S prescale
     \param[in]  spi_periph: SPIx(x=1,2)
     \param[in]  i2s_audiosample: I2S audio sample rate
                 only one parameter can be selected which is shown as below:
@@ -323,7 +323,7 @@ void i2s_psc_config(uint32_t spi_periph, uint32_t i2s_audiosample, uint32_t i2s_
 }
 
 /*!
-    \brief    enable I2S 
+    \brief      enable I2S 
     \param[in]  spi_periph: SPIx(x=1,2)
     \param[out] none
     \retval     none
@@ -334,7 +334,7 @@ void i2s_enable(uint32_t spi_periph)
 }
 
 /*!
-    \brief    disable I2S 
+    \brief      disable I2S 
     \param[in]  spi_periph: SPIx(x=1,2)
     \param[out] none
     \retval     none
@@ -345,7 +345,7 @@ void i2s_disable(uint32_t spi_periph)
 }
 
 /*!
-    \brief    enable SPI nss output 
+    \brief      enable SPI nss output 
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[out] none
     \retval     none
@@ -356,7 +356,7 @@ void spi_nss_output_enable(uint32_t spi_periph)
 }
 
 /*!
-    \brief    disable SPI nss output 
+    \brief      disable SPI nss output 
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[out] none
     \retval     none
@@ -367,7 +367,7 @@ void spi_nss_output_disable(uint32_t spi_periph)
 }
 
 /*!
-    \brief    SPI nss pin high level in software mode
+    \brief      SPI nss pin high level in software mode
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[out] none
     \retval     none
@@ -378,7 +378,7 @@ void spi_nss_internal_high(uint32_t spi_periph)
 }
 
 /*!
-    \brief    SPI nss pin low level in software mode
+    \brief      SPI nss pin low level in software mode
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[out] none
     \retval     none
@@ -389,7 +389,7 @@ void spi_nss_internal_low(uint32_t spi_periph)
 }
 
 /*!
-    \brief    enable SPI DMA send or receive
+    \brief      enable SPI DMA send or receive
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[in]  spi_dma: SPI DMA mode
                 only one parameter can be selected which is shown as below:
@@ -408,7 +408,7 @@ void spi_dma_enable(uint32_t spi_periph, uint8_t spi_dma)
 }
 
 /*!
-    \brief    diable SPI DMA send or receive 
+    \brief      diable SPI DMA send or receive 
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[in]  spi_dma: SPI DMA mode
                 only one parameter can be selected which is shown as below:
@@ -427,7 +427,7 @@ void spi_dma_disable(uint32_t spi_periph, uint8_t spi_dma)
 }
 
 /*!
-    \brief    configure SPI/I2S data frame format
+    \brief      configure SPI/I2S data frame format
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[in]  frame_format: SPI frame size
                 only one parameter can be selected which is shown as below:
@@ -445,7 +445,7 @@ void spi_i2s_data_frame_format_config(uint32_t spi_periph, uint16_t frame_format
 }
 
 /*!
-    \brief    SPI transmit data
+    \brief      SPI transmit data
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[in]  data: 16-bit data
     \param[out] none
@@ -457,7 +457,7 @@ void spi_i2s_data_transmit(uint32_t spi_periph, uint16_t data)
 }
 
 /*!
-    \brief    SPI receive data
+    \brief      SPI receive data
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[out] none
     \retval     16-bit data
@@ -468,7 +468,7 @@ uint16_t spi_i2s_data_receive(uint32_t spi_periph)
 }
 
 /*!
-    \brief    configure SPI bidirectional transfer direction
+    \brief      configure SPI bidirectional transfer direction
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[in]  transfer_direction: SPI transfer direction
                 only one parameter can be selected which is shown as below:
@@ -488,7 +488,7 @@ void spi_bidirectional_transfer_config(uint32_t spi_periph, uint32_t transfer_di
 }
 
 /*!
-    \brief    set SPI CRC polynomial 
+    \brief      set SPI CRC polynomial 
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[in]  crc_poly: CRC polynomial value
     \param[out] none
@@ -496,12 +496,15 @@ void spi_bidirectional_transfer_config(uint32_t spi_periph, uint32_t transfer_di
 */
 void spi_crc_polynomial_set(uint32_t spi_periph,uint16_t crc_poly)
 {
+    /* enable SPI CRC */
+    SPI_CTL0(spi_periph) |= (uint32_t)SPI_CTL0_CRCEN;
+
     /* set SPI CRC polynomial */
     SPI_CRCPOLY(spi_periph) = (uint32_t)crc_poly;
 }
 
 /*!
-    \brief    get SPI CRC polynomial 
+    \brief      get SPI CRC polynomial 
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[out] none
     \retval     16-bit CRC polynomial
@@ -512,7 +515,7 @@ uint16_t spi_crc_polynomial_get(uint32_t spi_periph)
 }
 
 /*!
-    \brief    turn on CRC function 
+    \brief      turn on CRC function 
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[out] none
     \retval     none
@@ -523,7 +526,7 @@ void spi_crc_on(uint32_t spi_periph)
 }
 
 /*!
-    \brief    turn off CRC function 
+    \brief      turn off CRC function 
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[out] none
     \retval     none
@@ -534,7 +537,7 @@ void spi_crc_off(uint32_t spi_periph)
 }
 
 /*!
-    \brief    SPI next data is CRC value
+    \brief      SPI next data is CRC value
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[out] none
     \retval     none
@@ -545,7 +548,7 @@ void spi_crc_next(uint32_t spi_periph)
 }
 
 /*!
-    \brief    get SPI CRC send value or receive value
+    \brief      get SPI CRC send value or receive value
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[in]  spi_crc: SPI crc value
                 only one parameter can be selected which is shown as below:
@@ -564,7 +567,7 @@ uint16_t spi_crc_get(uint32_t spi_periph,uint8_t spi_crc)
 }
 
 /*!
-    \brief    enable SPI TI mode
+    \brief      enable SPI TI mode
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[out] none
     \retval     none
@@ -575,7 +578,7 @@ void spi_ti_mode_enable(uint32_t spi_periph)
 }
 
 /*!
-    \brief    disable SPI TI mode
+    \brief      disable SPI TI mode
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[out] none
     \retval     none
@@ -586,7 +589,7 @@ void spi_ti_mode_disable(uint32_t spi_periph)
 }
 
 /*!
-    \brief    configure i2s full duplex mode
+    \brief      configure i2s full duplex mode
     \param[in]  i2s_add_periph: I2Sx_ADD(x=1,2)
     \param[in]  i2s_mode: 
       \arg        I2S_MODE_SLAVETX : I2S slave transmit mode
@@ -641,7 +644,7 @@ void i2s_full_duplex_mode_config(uint32_t i2s_add_periph, uint32_t i2s_mode, uin
 }
 
 /*!
-    \brief    enable quad wire SPI  
+    \brief      enable quad wire SPI  
     \param[in]  spi_periph: SPIx(only x=5)
     \param[out] none
     \retval     none
@@ -652,7 +655,7 @@ void qspi_enable(uint32_t spi_periph)
 }
 
 /*!
-    \brief    disable quad wire SPI 
+    \brief      disable quad wire SPI 
     \param[in]  spi_periph: SPIx(only x=5)
     \param[out] none
     \retval     none
@@ -663,7 +666,7 @@ void qspi_disable(uint32_t spi_periph)
 }
 
 /*!
-    \brief    enable quad wire SPI write 
+    \brief      enable quad wire SPI write 
     \param[in]  spi_periph: SPIx(only x=5)
     \param[out] none
     \retval     none
@@ -674,7 +677,7 @@ void qspi_write_enable(uint32_t spi_periph)
 }
 
 /*!
-    \brief    enable quad wire SPI read 
+    \brief      enable quad wire SPI read 
     \param[in]  spi_periph: SPIx(only x=5)
     \param[out] none
     \retval     none
@@ -685,7 +688,7 @@ void qspi_read_enable(uint32_t spi_periph)
 }
 
 /*!
-    \brief    enable SPI_IO2 and SPI_IO3 pin output 
+    \brief      enable SPI_IO2 and SPI_IO3 pin output 
     \param[in]  spi_periph: SPIx(only x=5)
     \param[out] none
     \retval     none
@@ -696,7 +699,7 @@ void qspi_io23_output_enable(uint32_t spi_periph)
 }
 
  /*!
-    \brief    disable SPI_IO2 and SPI_IO3 pin output 
+    \brief      disable SPI_IO2 and SPI_IO3 pin output 
     \param[in]  spi_periph: SPIx(only x=5)
     \param[out] none
     \retval     none
@@ -707,7 +710,7 @@ void qspi_io23_output_enable(uint32_t spi_periph)
 }
 
 /*!
-    \brief    enable SPI and I2S interrupt 
+    \brief      enable SPI and I2S interrupt 
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[in]  spi_i2s_int: SPI/I2S interrupt
                 only one parameter can be selected which is shown as below:
@@ -739,7 +742,7 @@ void spi_i2s_interrupt_enable(uint32_t spi_periph, uint8_t spi_i2s_int)
 }
 
 /*!
-    \brief    disable SPI and I2S interrupt 
+    \brief      disable SPI and I2S interrupt 
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[in]  spi_i2s_int: SPI/I2S interrupt
                 only one parameter can be selected which is shown as below:
@@ -771,7 +774,7 @@ void spi_i2s_interrupt_disable(uint32_t spi_periph, uint8_t spi_i2s_int)
 }
 
 /*!
-    \brief    get SPI and I2S interrupt flag status
+    \brief      get SPI and I2S interrupt flag status
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[in]  spi_i2s_int: SPI/I2S interrupt flag status
       \arg        SPI_I2S_INT_FLAG_TBE: transmit buffer empty interrupt flag
@@ -837,7 +840,7 @@ FlagStatus spi_i2s_interrupt_flag_get(uint32_t spi_periph, uint8_t spi_i2s_int)
 }
 
 /*!
-    \brief    get SPI and I2S flag status
+    \brief      get SPI and I2S flag status
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[in]  spi_i2s_flag: SPI/I2S flag status
       \arg        SPI_FLAG_TBE: transmit buffer empty flag
@@ -867,7 +870,7 @@ FlagStatus spi_i2s_flag_get(uint32_t spi_periph, uint32_t spi_i2s_flag)
 }
 
 /*!
-    \brief    clear SPI CRC error flag status
+    \brief      clear SPI CRC error flag status
     \param[in]  spi_periph: SPIx(x=0,1,2,3,4,5)
     \param[out] none
     \retval     none

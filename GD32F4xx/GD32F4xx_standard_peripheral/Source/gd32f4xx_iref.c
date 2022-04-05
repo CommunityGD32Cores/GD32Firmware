@@ -37,7 +37,7 @@ OF SUCH DAMAGE.
 #include "gd32f4xx_iref.h"
 
 /*!
-    \brief    deinit IREF
+    \brief      deinit IREF
     \param[in]  none
     \param[out] none
     \retval     none
@@ -49,7 +49,7 @@ void iref_deinit(void)
 }
 
 /*!
-    \brief    enable IREF
+    \brief      enable IREF
     \param[in]  none
     \param[out] none
     \retval     none
@@ -60,7 +60,7 @@ void iref_enable(void)
 }
 
 /*!
-    \brief    disable IREF
+    \brief      disable IREF
     \param[in]  none
     \param[out] none
     \retval     none
@@ -71,7 +71,7 @@ void iref_disable(void)
 }
 
 /*!
-    \brief    set IREF mode
+    \brief      set IREF mode
     \param[in]  step
       \arg        IREF_MODE_LOW_POWER: 1uA step
       \arg        IREF_MODE_HIGH_CURRENT: 8uA step
@@ -85,7 +85,7 @@ void iref_mode_set(uint32_t step)
 }
 
 /*!
-    \brief    set IREF precision_trim_value
+    \brief      set IREF precision_trim_value
     \param[in]  precisiontrim
       \arg        IREF_CUR_PRECISION_TRIM_X(x=0..31): (-15+ x)%
     \param[out] none
@@ -98,7 +98,7 @@ void iref_precision_trim_value_set(uint32_t precisiontrim)
 }
 
 /*!
-    \brief    set IREF sink mode
+    \brief      set IREF sink mode
     \param[in]  sinkmode
       \arg        IREF_SOURCE_CURRENT : source current.
       \arg        IREF_SINK_CURRENT: sink current
@@ -112,7 +112,7 @@ void iref_sink_set(uint32_t sinkmode)
 }
 
 /*!
-    \brief    set IREF step data 
+    \brief      set IREF step data 
     \param[in]  stepdata
       \arg        IREF_CUR_STEP_DATA_X:(x=0..63): step*x
     \param[out] none

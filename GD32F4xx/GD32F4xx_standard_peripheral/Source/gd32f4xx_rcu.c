@@ -49,7 +49,7 @@ OF SUCH DAMAGE.
 #define RCU_IRC16M_ADJUST_OFFSET    ((uint32_t)3U)
 
 /*!
-    \brief    deinitialize the RCU
+    \brief      deinitialize the RCU
     \param[in]  none
     \param[out] none
     \retval     none
@@ -80,7 +80,7 @@ void rcu_deinit(void)
 }
 
 /*!
-    \brief    enable the peripherals clock
+    \brief      enable the peripherals clock
     \param[in]  periph: RCU peripherals, refer to rcu_periph_enum
                 only one parameter can be selected which is shown as below:
       \arg        RCU_GPIOx (x=A,B,C,D,E,F,G,H,I): GPIO ports clock
@@ -124,7 +124,7 @@ void rcu_periph_clock_enable(rcu_periph_enum periph)
 }
 
 /*!
-    \brief    disable the peripherals clock
+    \brief      disable the peripherals clock
     \param[in]  periph: RCU peripherals, refer to rcu_periph_enum
                 only one parameter can be selected which is shown as below:
       \arg        RCU_GPIOx (x=A,B,C,D,E,F,G,H,I): GPIO ports clock
@@ -168,7 +168,7 @@ void rcu_periph_clock_disable(rcu_periph_enum periph)
 }
 
 /*!
-    \brief    enable the peripherals clock when sleep mode
+    \brief      enable the peripherals clock when sleep mode
     \param[in]  periph: RCU peripherals, refer to rcu_periph_sleep_enum
                 only one parameter can be selected which is shown as below:
       \arg        RCU_GPIOx_SLP (x=A,B,C,D,E,F,G,H,I): GPIO ports clock
@@ -215,7 +215,7 @@ void rcu_periph_clock_sleep_enable(rcu_periph_sleep_enum periph)
 }
 
 /*!
-    \brief    disable the peripherals clock when sleep mode
+    \brief      disable the peripherals clock when sleep mode
     \param[in]  periph: RCU peripherals, refer to rcu_periph_sleep_enum
                 only one parameter can be selected which is shown as below:
       \arg        RCU_GPIOx_SLP (x=A,B,C,D,E,F,G,H,I): GPIO ports clock
@@ -262,7 +262,7 @@ void rcu_periph_clock_sleep_disable(rcu_periph_sleep_enum periph)
 }
 
 /*!
-    \brief    reset the peripherals
+    \brief      reset the peripherals
     \param[in]  periph_reset: RCU peripherals reset, refer to rcu_periph_reset_enum
                 only one parameter can be selected which is shown as below:
       \arg        RCU_GPIOxRST (x=A,B,C,D,E,F,G,H,I): reset GPIO ports
@@ -299,7 +299,7 @@ void rcu_periph_reset_enable(rcu_periph_reset_enum periph_reset)
 }
 
 /*!
-    \brief    disable reset the peripheral
+    \brief      disable reset the peripheral
     \param[in]  periph_reset: RCU peripherals reset, refer to rcu_periph_reset_enum
                 only one parameter can be selected which is shown as below:
       \arg        RCU_GPIOxRST (x=A,B,C,D,E,F,G,H,I): reset GPIO ports
@@ -336,7 +336,7 @@ void rcu_periph_reset_disable(rcu_periph_reset_enum periph_reset)
 }
 
 /*!
-    \brief    reset the BKP
+    \brief      reset the BKP
     \param[in]  none
     \param[out] none
     \retval     none
@@ -347,7 +347,7 @@ void rcu_bkp_reset_enable(void)
 }
 
 /*!
-    \brief    disable the BKP reset
+    \brief      disable the BKP reset
     \param[in]  none
     \param[out] none
     \retval     none
@@ -358,7 +358,7 @@ void rcu_bkp_reset_disable(void)
 }
 
 /*!
-    \brief    configure the system clock source
+    \brief      configure the system clock source
     \param[in]  ck_sys: system clock source select
                 only one parameter can be selected which is shown as below:
       \arg        RCU_CKSYSSRC_IRC16M: select CK_IRC16M as the CK_SYS source
@@ -378,7 +378,7 @@ void rcu_system_clock_source_config(uint32_t ck_sys)
 }
 
 /*!
-    \brief    get the system clock source
+    \brief      get the system clock source
     \param[in]  none
     \param[out] none
     \retval     which clock is selected as CK_SYS source
@@ -392,7 +392,7 @@ uint32_t rcu_system_clock_source_get(void)
 }
 
 /*!
-    \brief    configure the AHB clock prescaler selection
+    \brief      configure the AHB clock prescaler selection
     \param[in]  ck_ahb: AHB clock prescaler selection
                 only one parameter can be selected which is shown as below:
       \arg        RCU_AHB_CKSYS_DIVx, x=1, 2, 4, 8, 16, 64, 128, 256, 512
@@ -410,7 +410,7 @@ void rcu_ahb_clock_config(uint32_t ck_ahb)
 }
 
 /*!
-    \brief    configure the APB1 clock prescaler selection
+    \brief      configure the APB1 clock prescaler selection
     \param[in]  ck_apb1: APB1 clock prescaler selection
                 only one parameter can be selected which is shown as below:
       \arg        RCU_APB1_CKAHB_DIV1: select CK_AHB as CK_APB1
@@ -432,7 +432,7 @@ void rcu_apb1_clock_config(uint32_t ck_apb1)
 }
 
 /*!
-    \brief    configure the APB2 clock prescaler selection
+    \brief      configure the APB2 clock prescaler selection
     \param[in]  ck_apb2: APB2 clock prescaler selection
                 only one parameter can be selected which is shown as below:
       \arg        RCU_APB2_CKAHB_DIV1: select CK_AHB as CK_APB2
@@ -454,7 +454,7 @@ void rcu_apb2_clock_config(uint32_t ck_apb2)
 }
 
 /*!
-    \brief    configure the CK_OUT0 clock source and divider
+    \brief      configure the CK_OUT0 clock source and divider
     \param[in]  ckout0_src: CK_OUT0 clock source selection
                 only one parameter can be selected which is shown as below:
       \arg        RCU_CKOUT0SRC_IRC16M: IRC16M selected
@@ -477,7 +477,7 @@ void rcu_ckout0_config(uint32_t ckout0_src, uint32_t ckout0_div)
 }
 
 /*!
-    \brief    configure the CK_OUT1 clock source and divider
+    \brief      configure the CK_OUT1 clock source and divider
     \param[in]  ckout1_src: CK_OUT1 clock source selection
                 only one parameter can be selected which is shown as below:
       \arg        RCU_CKOUT1SRC_SYSTEMCLOCK: system clock selected
@@ -500,7 +500,7 @@ void rcu_ckout1_config(uint32_t ckout1_src, uint32_t ckout1_div)
 }
 
 /*!
-    \brief    configure the main PLL clock 
+    \brief      configure the main PLL clock 
     \param[in]  pll_src: PLL clock source selection
       \arg        RCU_PLLSRC_IRC16M: select IRC16M as PLL source clock
       \arg        RCU_PLLSRC_HXTAL: select HXTAL as PLL source clock
@@ -547,7 +547,7 @@ ErrStatus rcu_pll_config(uint32_t pll_src, uint32_t pll_psc, uint32_t pll_n, uin
 }
 
 /*!
-    \brief    configure the PLLI2S clock 
+    \brief      configure the PLLI2S clock 
     \param[in]  plli2s_n: the PLLI2S VCO clock multi factor
       \arg        this parameter should be selected between 50 and 500
     \param[in]  plli2s_r: the PLLI2S R output frequency division factor from PLLI2S VCO clock
@@ -570,7 +570,7 @@ ErrStatus rcu_plli2s_config(uint32_t plli2s_n, uint32_t plli2s_r)
 }
 
 /*!
-    \brief    configure the PLLSAI clock 
+    \brief      configure the PLLSAI clock 
     \param[in]  pllsai_n: the PLLSAI VCO clock multi factor
       \arg        this parameter should be selected between 50 and 500
     \param[in]  pllsai_p: the PLLSAI P output frequency division factor from PLL VCO clock
@@ -595,7 +595,7 @@ ErrStatus rcu_pllsai_config(uint32_t pllsai_n, uint32_t pllsai_p, uint32_t pllsa
 }
 
 /*!
-    \brief    configure the RTC clock source selection
+    \brief      configure the RTC clock source selection
     \param[in]  rtc_clock_source: RTC clock source selection
                 only one parameter can be selected which is shown as below:
       \arg        RCU_RTCSRC_NONE: no clock selected
@@ -616,7 +616,7 @@ void rcu_rtc_clock_config(uint32_t rtc_clock_source)
 }
 
 /*!
-    \brief    configure the frequency division of RTC clock when HXTAL was selected as its clock source 
+    \brief      configure the frequency division of RTC clock when HXTAL was selected as its clock source 
     \param[in]  rtc_div: RTC clock frequency division
                 only one parameter can be selected which is shown as below:
       \arg        RCU_RTC_HXTAL_NONE: no clock for RTC
@@ -636,7 +636,7 @@ void rcu_rtc_div_config(uint32_t rtc_div)
 
 
 /*!
-    \brief    configure the I2S clock source selection
+    \brief      configure the I2S clock source selection
     \param[in]  i2s_clock_source: I2S clock source selection
                 only one parameter can be selected which is shown as below:
       \arg        RCU_I2SSRC_PLLI2S: CK_PLLI2S selected as I2S source clock
@@ -655,7 +655,7 @@ void rcu_i2s_clock_config(uint32_t i2s_clock_source)
 }
 
 /*!
-    \brief    configure the CK48M clock source selection
+    \brief      configure the CK48M clock source selection
     \param[in]  ck48m_clock_source: CK48M clock source selection
                 only one parameter can be selected which is shown as below:
       \arg        RCU_CK48MSRC_PLL48M: CK_PLL48M selected as CK48M source clock
@@ -674,7 +674,7 @@ void rcu_ck48m_clock_config(uint32_t ck48m_clock_source)
 }
 
 /*!
-    \brief    configure the PLL48M clock source selection
+    \brief      configure the PLL48M clock source selection
     \param[in]  pll48m_clock_source: PLL48M clock source selection
                 only one parameter can be selected which is shown as below:
       \arg        RCU_PLL48MSRC_PLLQ: CK_PLLQ selected as PLL48M source clock
@@ -693,7 +693,7 @@ void rcu_pll48m_clock_config(uint32_t pll48m_clock_source)
 }
 
 /*!
-    \brief    configure the TIMER clock prescaler selection
+    \brief      configure the TIMER clock prescaler selection
     \param[in]  timer_clock_prescaler: TIMER clock selection
                 only one parameter can be selected which is shown as below:
       \arg        RCU_TIMER_PSC_MUL2: if APB1PSC/APB2PSC in RCU_CFG0 register is 0b0xx(CK_APBx = CK_AHB) 
@@ -718,7 +718,7 @@ void rcu_timer_clock_prescaler_config(uint32_t timer_clock_prescaler)
 }
 
 /*!
-    \brief    configure the PLLSAIR divider used as input of TLI
+    \brief      configure the PLLSAIR divider used as input of TLI
     \param[in]  pllsai_r_div: PLLSAIR divider used as input of TLI
                 only one parameter can be selected which is shown as below:
       \arg        RCU_PLLSAIR_DIVx(x=2,4,8,16): PLLSAIR divided x used as input of TLI
@@ -736,7 +736,7 @@ void rcu_tli_clock_div_config(uint32_t pllsai_r_div)
 }
 
 /*!
-    \brief    get the clock stabilization and periphral reset flags
+    \brief      get the clock stabilization and periphral reset flags
     \param[in]  flag: the clock stabilization and periphral reset flags, refer to rcu_flag_enum
                 only one parameter can be selected which is shown as below:
       \arg        RCU_FLAG_IRC16MSTB: IRC16M stabilization flag
@@ -768,7 +768,7 @@ FlagStatus rcu_flag_get(rcu_flag_enum flag)
 }
 
 /*!
-    \brief    clear all the reset flag
+    \brief      clear all the reset flag
     \param[in]  none
     \param[out] none
     \retval     none
@@ -779,7 +779,7 @@ void rcu_all_reset_flag_clear(void)
 }
 
 /*!
-    \brief    get the clock stabilization interrupt and ckm flags
+    \brief      get the clock stabilization interrupt and ckm flags
     \param[in]  int_flag: interrupt and ckm flags, refer to rcu_int_flag_enum
                 only one parameter can be selected which is shown as below:
       \arg        RCU_INT_FLAG_IRC32KSTB: IRC32K stabilization interrupt flag
@@ -805,7 +805,7 @@ FlagStatus rcu_interrupt_flag_get(rcu_int_flag_enum int_flag)
 }
 
 /*!
-    \brief    clear the interrupt flags
+    \brief      clear the interrupt flags
     \param[in]  int_flag: clock stabilization and stuck interrupt flags clear, refer to rcu_int_flag_clear_enum
                 only one parameter can be selected which is shown as below:
       \arg        RCU_INT_FLAG_IRC32KSTB_CLR: IRC32K stabilization interrupt flag clear
@@ -826,7 +826,7 @@ void rcu_interrupt_flag_clear(rcu_int_flag_clear_enum int_flag)
 }
 
 /*!
-    \brief    enable the stabilization interrupt
+    \brief      enable the stabilization interrupt
     \param[in]  interrupt: clock stabilization interrupt, refer to rcu_int_enum
                 Only one parameter can be selected which is shown as below:
       \arg        RCU_INT_IRC32KSTB: IRC32K stabilization interrupt enable
@@ -847,7 +847,7 @@ void rcu_interrupt_enable(rcu_int_enum interrupt)
 
 
 /*!
-    \brief    disable the stabilization interrupt
+    \brief      disable the stabilization interrupt
     \param[in]  interrupt: clock stabilization interrupt, refer to rcu_int_enum
                 only one parameter can be selected which is shown as below:
       \arg        RCU_INT_IRC32KSTB: IRC32K stabilization interrupt disable
@@ -867,7 +867,7 @@ void rcu_interrupt_disable(rcu_int_enum interrupt)
 }
 
 /*!
-    \brief    configure the LXTAL drive capability
+    \brief      configure the LXTAL drive capability
     \param[in]  lxtal_dricap: drive capability of LXTAL
                 only one parameter can be selected which is shown as below:
       \arg        RCU_LXTALDRI_LOWER_DRIVE: lower driving capability
@@ -887,7 +887,7 @@ void rcu_lxtal_drive_capability_config(uint32_t lxtal_dricap)
 }
 
 /*!
-    \brief    wait for oscillator stabilization flags is SET or oscillator startup is timeout
+    \brief      wait for oscillator stabilization flags is SET or oscillator startup is timeout
     \param[in]  osci: oscillator types, refer to rcu_osci_type_enum
                 only one parameter can be selected which is shown as below:
       \arg        RCU_HXTAL: HXTAL
@@ -1014,7 +1014,7 @@ ErrStatus rcu_osci_stab_wait(rcu_osci_type_enum osci)
 }
 
 /*!
-    \brief    turn on the oscillator
+    \brief      turn on the oscillator
     \param[in]  osci: oscillator types, refer to rcu_osci_type_enum
                 only one parameter can be selected which is shown as below:
       \arg        RCU_HXTAL: HXTAL
@@ -1034,7 +1034,7 @@ void rcu_osci_on(rcu_osci_type_enum osci)
 }
 
 /*!
-    \brief    turn off the oscillator
+    \brief      turn off the oscillator
     \param[in]  osci: oscillator types, refer to rcu_osci_type_enum
                 only one parameter can be selected which is shown as below:
       \arg        RCU_HXTAL: HXTAL
@@ -1054,7 +1054,7 @@ void rcu_osci_off(rcu_osci_type_enum osci)
 }
 
 /*!
-    \brief    enable the oscillator bypass mode, HXTALEN or LXTALEN must be reset before it
+    \brief      enable the oscillator bypass mode, HXTALEN or LXTALEN must be reset before it
     \param[in]  osci: oscillator types, refer to rcu_osci_type_enum
                 only one parameter can be selected which is shown as below:
       \arg        RCU_HXTAL: high speed crystal oscillator(HXTAL)
@@ -1092,7 +1092,7 @@ void rcu_osci_bypass_mode_enable(rcu_osci_type_enum osci)
 }
 
 /*!
-    \brief    disable the oscillator bypass mode, HXTALEN or LXTALEN must be reset before it
+    \brief      disable the oscillator bypass mode, HXTALEN or LXTALEN must be reset before it
     \param[in]  osci: oscillator types, refer to rcu_osci_type_enum
                 only one parameter can be selected which is shown as below:
       \arg        RCU_HXTAL: high speed crystal oscillator(HXTAL)
@@ -1130,7 +1130,7 @@ void rcu_osci_bypass_mode_disable(rcu_osci_type_enum osci)
 }
 
 /*!
-    \brief    enable the HXTAL clock monitor
+    \brief      enable the HXTAL clock monitor
     \param[in]  none
     \param[out] none
     \retval     none
@@ -1142,7 +1142,7 @@ void rcu_hxtal_clock_monitor_enable(void)
 }
 
 /*!
-    \brief    disable the HXTAL clock monitor
+    \brief      disable the HXTAL clock monitor
     \param[in]  none
     \param[out] none
     \retval     none
@@ -1153,7 +1153,7 @@ void rcu_hxtal_clock_monitor_disable(void)
 }
 
 /*!
-    \brief    set the IRC16M adjust value
+    \brief      set the IRC16M adjust value
     \param[in]  irc16m_adjval: IRC16M adjust value, must be between 0 and 0x1F
       \arg        0x00 - 0x1F
     \param[out] none
@@ -1170,7 +1170,7 @@ void rcu_irc16m_adjust_value_set(uint32_t irc16m_adjval)
 }
 
 /*!
-    \brief    unlock the voltage key
+    \brief      unlock the voltage key
     \param[in]  none
     \param[out] none
     \retval     none
@@ -1181,7 +1181,7 @@ void rcu_voltage_key_unlock(void)
 }
 
 /*!
-    \brief    deep-sleep mode voltage select
+    \brief      deep-sleep mode voltage select
     \param[in]  dsvol: deep sleep mode voltage
                 only one parameter can be selected which is shown as below:
       \arg        RCU_DEEPSLEEP_V_1_2: the core voltage is 1.2V
@@ -1198,7 +1198,7 @@ void rcu_deepsleep_voltage_set(uint32_t dsvol)
 }
 
 /*!
-    \brief    configure the spread spectrum modulation for the main PLL clock
+    \brief      configure the spread spectrum modulation for the main PLL clock
     \param[in]  spread_spectrum_type: PLL spread spectrum modulation type select
       \arg        RCU_SS_TYPE_CENTER: center spread type is selected
       \arg        RCU_SS_TYPE_DOWN: down spread type is selected
@@ -1220,7 +1220,7 @@ void rcu_spread_spectrum_config(uint32_t spread_spectrum_type, uint32_t modstep,
 }
 
 /*!
-    \brief    enable the PLL spread spectrum modulation
+    \brief      enable the PLL spread spectrum modulation
     \param[in]  none
     \param[out] none
     \retval     none
@@ -1231,7 +1231,7 @@ void rcu_spread_spectrum_enable(void)
 }
 
 /*!
-    \brief    disable the PLL spread spectrum modulation
+    \brief      disable the PLL spread spectrum modulation
     \param[in]  none
     \param[out] none
     \retval     none
@@ -1242,7 +1242,7 @@ void rcu_spread_spectrum_disable(void)
 }
 
 /*!
-    \brief    get the system clock, bus and peripheral clock frequency
+    \brief      get the system clock, bus and peripheral clock frequency
     \param[in]  clock: the clock frequency which to get
                 only one parameter can be selected which is shown as below:
       \arg        CK_SYS: system clock frequency
