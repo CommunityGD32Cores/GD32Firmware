@@ -1358,11 +1358,11 @@ typedef struct
 #define ENET_TX_MODE_STOREFORWARD                 ENET_DMA_CTL_TSFD                             /*!< TxFIFO operates in store-and-forward mode */
 #define ENET_TX_MODE_CUTTHROUGH                   ((uint32_t)0x00000000)                        /*!< TxFIFO operates in cut-through mode */
 
-#define ENET_FORWARD_ERRFRAMES_ENABLE             ENET_DMA_CTL_FERF                             /*!< all frame received with error except runt error are forwarded to memory */
+#define ENET_FORWARD_ERRFRAMES_ENABLE             (ENET_DMA_CTL_FERF<<2)                        /*!< all frame received with error except runt error are forwarded to memory */
 #define ENET_FORWARD_ERRFRAMES_DISABLE            ((uint32_t)0x00000000)                        /*!< RxFIFO drop error frame */
 #define ENET_FORWARD_ERRFRAMES                    (ENET_DMA_CTL_FERF<<2)                             /*!< the function that all frame received with error except runt error are forwarded to memory */
 
-#define ENET_FORWARD_UNDERSZ_GOODFRAMES_ENABLE    ENET_DMA_CTL_FUF                              /*!< forward undersized good frames */
+#define ENET_FORWARD_UNDERSZ_GOODFRAMES_ENABLE    (ENET_DMA_CTL_FUF<<2)                         /*!< forward undersized good frames */
 #define ENET_FORWARD_UNDERSZ_GOODFRAMES_DISABLE   ((uint32_t)0x00000000)                        /*!< RxFIFO drops all frames whose length is less than 64 bytes */  
 #define ENET_FORWARD_UNDERSZ_GOODFRAMES           (ENET_DMA_CTL_FUF<<2)                            /*!< the function that forwarding undersized good frames */
 

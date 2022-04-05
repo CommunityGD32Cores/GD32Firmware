@@ -896,12 +896,10 @@ static void system_clock_120m_hxtal(void)
     \param[out] none
     \retval     none
 */
-void SystemCoreClockUpdate(void)
+void SystemCoreClockUpdate (void)
 {
     uint32_t sws;
-    uint32_t pllsel, pllpresel, predv0sel, pllmf, ck_src, idx, clk_exp;
-    /* exponent of AHB, APB1 and APB2 clock divider */
-    const uint8_t ahb_exp[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
+    uint32_t pllsel, pllpresel, predv0sel, pllmf,ck_src;
 #ifdef GD32F30X_CL
     uint32_t predv0, predv1, pll1mf;
 #endif /* GD32F30X_CL */
@@ -921,7 +919,7 @@ void SystemCoreClockUpdate(void)
         /* PLL clock source selection, HXTAL, IRC48M or IRC8M/2 */
         pllsel = (RCU_CFG0 & RCU_CFG0_PLLSEL);
 
-        if(RCU_PLLSRC_HXTAL_IRC48M == pllsel){
+        if (RCU_PLLSRC_HXTAL_IRC48M == pllsel) {
             /* PLL clock source is HXTAL or IRC48M */
             pllpresel = (RCU_CFG1 & RCU_CFG1_PLLPRESEL);
             
@@ -937,7 +935,7 @@ void SystemCoreClockUpdate(void)
             predv0sel = (RCU_CFG0 & RCU_CFG0_PREDV0);
             /* PREDV0 input source clock divided by 2 */
             if(RCU_CFG0_PREDV0 == predv0sel){
-                ck_src = HXTAL_VALUE / 2U;
+                ck_src = HXTAL_VALUE/2U;
             }
 #elif defined(GD32F30X_CL)
             predv0sel = (RCU_CFG1 & RCU_CFG1_PREDV0SEL);
@@ -948,14 +946,14 @@ void SystemCoreClockUpdate(void)
                 if(17U == pll1mf){
                     pll1mf = 20U;
                 }
-                ck_src = (ck_src / predv1) * pll1mf;
+                ck_src = (ck_src/predv1)*pll1mf;
             }
             predv0 = (RCU_CFG1 & RCU_CFG1_PREDV0) + 1U;
             ck_src /= predv0;
 #endif /* GD32F30X_HD and GD32F30X_XD */
         }else{
             /* PLL clock source is IRC8M/2 */
-            ck_src = IRC8M_VALUE / 2U;
+            ck_src = IRC8M_VALUE/2U;
         }
 
         /* PLL multiplication factor */
@@ -976,12 +974,13 @@ void SystemCoreClockUpdate(void)
         if(pllmf > 61U){
             pllmf = 63U;
         }
-        SystemCoreClock = ck_src * pllmf;
+        SystemCoreClock = ck_src*pllmf;
     #ifdef GD32F30X_CL
         if(15U == pllmf){
-            SystemCoreClock = (ck_src * 6U) + (ck_src / 2U);
+            SystemCoreClock = ck_src*6U + ck_src/2U;
         }
     #endif /* GD32F30X_CL */
+
         break;
     /* IRC8M is selected as CK_SYS */
     default:
@@ -989,8 +988,4 @@ void SystemCoreClockUpdate(void)
         break;
     }
 
-    /* calculate AHB clock frequency */
-    idx = GET_BITS(RCU_CFG0, 4, 7);
-    clk_exp = ahb_exp[idx];
-    SystemCoreClock = SystemCoreClock >> clk_exp;
 }

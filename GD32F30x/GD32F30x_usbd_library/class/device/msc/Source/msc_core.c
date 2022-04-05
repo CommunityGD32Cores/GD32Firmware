@@ -1,9 +1,8 @@
 /*!
-    \file    usbd_msc_core.c
+    \file    msc_core.c
     \brief   USB MSC device class core functions
 
     \version 2020-08-01, V3.0.0, firmware for GD32F30x
-    \version 2021-02-20, V3.0.1, firmware for GD32F30x
 */
 
 /*
@@ -33,39 +32,20 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#include "usbd_enum.h"
-#include "usbd_msc_bbb.h"
-#include "usbd_msc_core.h"
+#include "msc_core.h"
+#include "msc_mem.h"
 #include "usbd_transc.h"
 #include <string.h>
 
-#define USBD_VID                    0x28E9U
-#define USBD_PID                    0x128FU
-
-/* local function prototypes ('static') */
-static uint8_t msc_core_init   (usb_dev *udev, uint8_t config_index);
-static uint8_t msc_core_deinit (usb_dev *udev, uint8_t config_index);
-static uint8_t msc_core_req    (usb_dev *udev, usb_req *req);
-static void msc_core_in     (usb_dev *udev, uint8_t ep_num);
-static void msc_core_out    (usb_dev *udev, uint8_t ep_num);
-
-usb_class msc_class = 
-{
-    .init     = msc_core_init,
-    .deinit   = msc_core_deinit,
-
-    .req_process = msc_core_req,
-
-    .data_in  = msc_core_in,
-    .data_out = msc_core_out
-};
+#define USBD_VID                     0x28E9U
+#define USBD_PID                     0x0989U
 
 /* note: it should use the C99 standard when compiling the below codes */
 /* USB standard device descriptor */
-const usb_desc_dev msc_dev_desc =
+usb_desc_dev msc_dev_desc =
 {
     .header = {
-        .bLength           = USB_DEV_DESC_LEN, 
+        .bLength           = USB_DEV_DESC_LEN,
         .bDescriptorType   = USB_DESCTYPE_DEV
     },
     .bcdUSB                = 0x0200U,
@@ -77,13 +57,13 @@ const usb_desc_dev msc_dev_desc =
     .idProduct             = USBD_PID,
     .bcdDevice             = 0x0100U,
     .iManufacturer         = STR_IDX_MFC,
-    .iProduct              = STR_IDX_PRODUCT,
+    .iProduct              = STR_IDX_PRODUCT ,
     .iSerialNumber         = STR_IDX_SERIAL,
     .bNumberConfigurations = USBD_CFG_MAX_NUM
 };
 
 /* USB device configuration descriptor */
-const usb_desc_config_set msc_config_desc = 
+usb_msc_desc_config_set msc_config_desc = 
 {
     .config = 
     {
@@ -91,7 +71,7 @@ const usb_desc_config_set msc_config_desc =
             .bLength         = sizeof(usb_desc_config), 
             .bDescriptorType = USB_DESCTYPE_CONFIG
         },
-        .wTotalLength        = USB_MSC_CONFIG_DESC_SIZE,
+        .wTotalLength        = USB_MSC_CONFIG_DESC_LEN,
         .bNumInterfaces      = 0x01U,
         .bConfigurationValue = 0x01U,
         .iConfiguration      = 0x00U,
@@ -140,7 +120,7 @@ const usb_desc_config_set msc_config_desc =
 };
 
 /* USB language ID descriptor */
-const usb_desc_LANGID usbd_language_id_desc = 
+usb_desc_LANGID usbd_language_id_desc = 
 {
     .header = 
      {
@@ -151,7 +131,7 @@ const usb_desc_LANGID usbd_language_id_desc =
 };
 
 /* USB manufacture string */
-static const usb_desc_str manufacturer_string = 
+static usb_desc_str manufacturer_string = 
 {
     .header = 
      {
@@ -162,7 +142,7 @@ static const usb_desc_str manufacturer_string =
 };
 
 /* USB product string */
-static const usb_desc_str product_string = 
+static usb_desc_str product_string = 
 {
     .header = 
      {
@@ -197,7 +177,20 @@ usb_desc msc_desc = {
     .strings     = usbd_msc_strings
 };
 
-static uint8_t usbd_msc_maxlun = 0U;
+/* local function prototypes ('static') */
+static uint8_t msc_init             (usb_dev *udev, uint8_t config_index);
+static uint8_t msc_deinit           (usb_dev *udev, uint8_t config_index);
+static uint8_t msc_req_handler      (usb_dev *udev, usb_req *req);
+static void msc_data_in_handler     (usb_dev *udev, uint8_t ep_num);
+static void msc_data_out_handler    (usb_dev *udev, uint8_t ep_num);
+
+usb_class msc_class = {
+    .init             = msc_init,
+    .deinit           = msc_deinit,
+    .req_process      = msc_req_handler,
+    .data_in          = msc_data_in_handler,
+    .data_out         = msc_data_out_handler
+};
 
 /*!
     \brief      initialize the MSC device
@@ -206,13 +199,13 @@ static uint8_t usbd_msc_maxlun = 0U;
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t msc_core_init (usb_dev *udev, uint8_t config_index)
+static uint8_t msc_init (usb_dev *udev, uint8_t config_index)
 {
+    uint8_t i = 0U;
+
     static usbd_msc_handler msc_handler;
 
-    memset((void *)&msc_handler, 0U, sizeof(usbd_msc_handler));
-
-    udev->class_data[USBD_MSC_INTERFACE] = (void *)&msc_handler;
+    memset((void *)&msc_handler, 0, sizeof(usbd_msc_handler));
 
     /* initialize Tx endpoint */
     usbd_ep_init(udev, EP_BUF_SNG, BULK_TX_ADDR, &(msc_config_desc.msc_epin));
@@ -223,27 +216,39 @@ static uint8_t msc_core_init (usb_dev *udev, uint8_t config_index)
     udev->ep_transc[EP_ID(MSC_IN_EP)][TRANSC_IN] = msc_class.data_in;
     udev->ep_transc[MSC_OUT_EP][TRANSC_OUT] = msc_class.data_out;
 
-    /* initialize the BBB layer */
-    msc_bbb_init(udev);
+    for (i = 0U; i < MEM_LUN_NUM; i ++) {
+        usbd_mem_fops->mem_init(i);
+    }
+
+    msc_handler.bbb_transport_stage = MSC_STAGE_CMD;
+
+    /* prepare endpoint to receive first bbb_cbw */
+    usbd_ep_recev (udev, MSC_OUT_EP, (uint8_t *)&msc_handler.bbb_cbw, BBB_CBW_LENGTH);
+
+    udev->class_data[USBD_MSC_INTERFACE] = (void *)&msc_handler;
 
     return USBD_OK;
 }
 
 /*!
-    \brief      deinitialize the MSC device
+    \brief      de-initialize the MSC device
     \param[in]  udev: pointer to USB device instance
     \param[in]  config_index: configuration index
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t msc_core_deinit (usb_dev *udev, uint8_t config_index)
+static uint8_t msc_deinit (usb_dev *udev, uint8_t config_index)
 {
-    /* clear MSC endpoints */
+    usbd_msc_handler *msc = (usbd_msc_handler *)udev->class_data[USBD_MSC_INTERFACE];
+
+    /* deinitialize MSC endpoints */
     usbd_ep_deinit (udev, MSC_IN_EP);
     usbd_ep_deinit (udev, MSC_OUT_EP);
 
-    /* deinitialize the BBB layer */
-    msc_bbb_deinit(udev);
+    msc->bbb_transport_stage = MSC_STAGE_CMD;
+
+    /* prepare endpoint to receive first bbb_cbw */
+    usbd_ep_recev (udev, MSC_OUT_EP, (uint8_t *)&msc->bbb_cbw, BBB_CBW_LENGTH);
 
     return USBD_OK;
 }
@@ -255,62 +260,79 @@ static uint8_t msc_core_deinit (usb_dev *udev, uint8_t config_index)
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t msc_core_req (usb_dev *udev, usb_req *req)
+static uint8_t msc_req_handler (usb_dev *udev, usb_req *req)
 {
+    uint8_t status = REQ_NOTSUPP;
+
+    usbd_msc_handler *msc = (usbd_msc_handler *)udev->class_data[USBD_MSC_INTERFACE];
+
     switch (req->bRequest) {
-    case BBB_GET_MAX_LUN :
-        if((0U == req->wValue) && 
-            (1U == req->wLength) &&
-            (0x80U == (req->bmRequestType & 0x80U))) {
-            usbd_msc_maxlun = (uint8_t)usbd_mem_fops->mem_maxlun();
+    case BBB_GET_MAX_LUN:
+        msc->usbd_msc_maxlun = (uint8_t)usbd_mem_fops->mem_maxlun();
 
-            usb_transc_config(&udev->transc_in[0], &usbd_msc_maxlun, 1U, 0U);
-        } else {
-            return USBD_FAIL; 
-        }
+        msc->bbb_transport_stage = MSC_STAGE_CMD;
+
+        usb_transc_config(&udev->transc_in[0], &msc->usbd_msc_maxlun, 1U, 0U);
+
+        status = REQ_SUPP;
         break;
 
-    case BBB_RESET :
-        if((0U == req->wValue) && 
-            (0U == req->wLength) &&
-             (0x80U != (req->bmRequestType & 0x80U))) {
-            msc_bbb_reset(udev);
-        } else {
-            return USBD_FAIL; 
-        }
-        break;
+    case BBB_RESET:
+        msc->bbb_transport_stage = MSC_STAGE_CMD;
 
-    case USB_CLEAR_FEATURE:
-        msc_bbb_clrfeature (udev, (uint8_t)req->wIndex);
+        /* prepare endpoint to receive first bbb_cbw */
+        usbd_ep_recev (udev, MSC_OUT_EP, (uint8_t *)&msc->bbb_cbw, BBB_CBW_LENGTH);
+
+        status = REQ_SUPP;
         break;
 
     default:
-        return USBD_FAIL;
+        break;
     }
 
-    return USBD_OK;
+    return status;
 }
 
 /*!
-    \brief      handle data in stage
+    \brief      handle data stage
     \param[in]  udev: pointer to USB device instance
-    \param[in]  ep_num: the endpoint number
+    \param[in]  ep_num: the endpoint ID
     \param[out] none
     \retval     none
 */
-static void msc_core_in (usb_dev *udev, uint8_t ep_num)
+static void msc_data_in_handler (usb_dev *udev, uint8_t ep_num)
 {
-    msc_bbb_data_in(udev, ep_num);
+    usb_transc *transc = &udev->transc_in[ep_num];
+
+    usbd_msc_handler *msc = (usbd_msc_handler *)udev->class_data[USBD_MSC_INTERFACE];
+
+    if (transc->xfer_len) {
+        usbd_ep_send (udev, ep_num, transc->xfer_buf, transc->xfer_len);
+    } else {
+        if (MSC_STAGE_CMD != msc->bbb_transport_stage) {
+            process_scsi_command(msc->bbb_cbw.bCBWLUN, udev); 
+        }
+    }
 }
 
 /*!
     \brief      handle data out stage
     \param[in]  udev: pointer to USB device instance
-    \param[in]  ep_num: the endpoint number
+    \param[in]  ep_num: the endpoint ID
     \param[out] none
     \retval     none
 */
-static void msc_core_out (usb_dev *udev, uint8_t ep_num)
+static void msc_data_out_handler (usb_dev *udev, uint8_t ep_num)
 {
-    msc_bbb_data_out (udev, ep_num);
+    usbd_msc_handler *msc = (usbd_msc_handler *)udev->class_data[USBD_MSC_INTERFACE];
+
+    if (MSC_STAGE_CMD == msc->bbb_transport_stage){
+        scsi_command_parse(udev);
+
+        process_scsi_command(msc->bbb_cbw.bCBWLUN, udev);
+    } else if (MSC_STAGE_DATA_OUT == msc->bbb_transport_stage) {
+        process_scsi_command(msc->bbb_cbw.bCBWLUN, udev); 
+    } else {
+        /* no operation */
+    }
 }

@@ -186,8 +186,8 @@ uint8_t usbd_out_transc (usb_core_driver *udev, uint8_t ep_num)
 
         case USB_CTL_LAST_DATA_OUT:
             if (udev->dev.cur_status == (uint8_t)USBD_CONFIGURED) {
-                if (udev->dev.class_core->ctlx_out != NULL) {
-                    (void)udev->dev.class_core->ctlx_out (udev);
+                if (udev->dev.class_core->data_out != NULL) {
+                    (void)udev->dev.class_core->data_out (udev, 0U);
                 }
             }
 
@@ -240,8 +240,8 @@ uint8_t usbd_in_transc (usb_core_driver *udev, uint8_t ep_num)
                 udev->dev.control.ctl_zlp = 0U;
             } else {
                 if (udev->dev.cur_status == (uint8_t)USBD_CONFIGURED) {
-                    if (udev->dev.class_core->ctlx_in != NULL) {
-                        (void)udev->dev.class_core->ctlx_in (udev);
+                    if (udev->dev.class_core->data_in != NULL) {
+                        (void)udev->dev.class_core->data_in (udev, 0U);
                     }
                 }
 

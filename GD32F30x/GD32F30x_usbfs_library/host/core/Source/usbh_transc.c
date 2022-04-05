@@ -35,7 +35,6 @@ OF SUCH DAMAGE.
 #include "drv_usb_hw.h"
 #include "usbh_pipe.h"
 #include "usbh_transc.h"
-#include <string.h>
 
 /* local function prototypes ('static') */
 static usb_urb_state usbh_urb_wait (usbh_host *puhost, uint8_t pp_num, uint32_t wait_time);

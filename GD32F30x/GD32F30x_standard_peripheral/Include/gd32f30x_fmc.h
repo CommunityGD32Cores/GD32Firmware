@@ -288,7 +288,7 @@ typedef enum
 #define OB_WP_ALL                  ((uint32_t)0xFFFFFFFFU)        /*!< erase/program protection of all sectors */
 
 /* FMC timeout */
-#define FMC_TIMEOUT_COUNT          ((uint32_t)0x0FFF0000U)        /*!< FMC timeout count value */
+#define FMC_TIMEOUT_COUNT          ((uint32_t)0x000F0000U)        /*!< FMC timeout count value */
 
 /* FMC BANK address */
 #define FMC_BANK0_END_ADDRESS      ((uint32_t)0x0807FFFFU)        /*!< FMC bank0 end address */

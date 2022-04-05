@@ -1,9 +1,8 @@
 /*!
-    \file    usbd_msc_data.h
-    \brief   the header file of the usbd_msc_data.c file
+    \file    msc_mem.h 
+    \brief   the header file of msc_mem.c
 
     \version 2020-08-01, V3.0.0, firmware for GD32F30x
-    \version 2021-02-20, V3.0.1, firmware for GD32F30x
 */
 
 /*
@@ -33,18 +32,29 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#ifndef __USBD_MSC_DATA_H
-#define __USBD_MSC_DATA_H
+#ifndef __MSC_MEM_H
+#define __MSC_MEM_H
 
 #include "usbd_conf.h"
 
-#define MODE_SENSE6_LENGTH                 8U
-#define MODE_SENSE10_LENGTH                8U
-#define INQUIRY_PAGE00_LENGTH              96U
-#define FORMAT_CAPACITIES_LENGTH           20U
+#define USBD_STD_INQUIRY_LENGTH              36U
+#define USBD_STD_READ_TOC_CMD_LENGTH         20U
 
-extern const uint8_t msc_page00_inquiry_data[];
-extern const uint8_t msc_mode_sense6_data[];
-extern const uint8_t msc_mode_sense10_data[];
+typedef struct
+{
+    int8_t (*mem_init)         (uint8_t lun);
+    int8_t (*mem_ready)        (uint8_t lun);
+    int8_t (*mem_protected)    (uint8_t lun);
+    int8_t (*mem_read)         (uint8_t lun, uint8_t *buf, uint32_t block_addr, uint16_t block_len);
+    int8_t (*mem_write)        (uint8_t lun, uint8_t *buf, uint32_t block_addr, uint16_t block_len);
+    int8_t (*mem_maxlun)       (void);
 
-#endif /* __USBD_MSC_DATA_H */
+    uint8_t *mem_toc_data;
+    uint8_t *mem_inquiry_data[MEM_LUN_NUM];
+    uint32_t mem_block_size[MEM_LUN_NUM];
+    uint32_t mem_block_len[MEM_LUN_NUM];
+} usbd_mem_cb;
+
+extern usbd_mem_cb *usbd_mem_fops;
+
+#endif /* __MSC_MEM_H */

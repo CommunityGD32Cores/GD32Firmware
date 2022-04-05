@@ -1702,10 +1702,10 @@ void enet_forward_feature_enable(uint32_t feature)
     \brief      disable ENET forward feature
     \param[in]  feature: the feature of ENET forward mode,
                 one or more parameters can be selected which are shown as below
-      \arg        ENET_AUTO_PADCRC_DROP: the function of the MAC strips the Pad/FCS field on received frames
-      \arg        ENET_TYPEFRAME_CRC_DROP: the function that FCS field(last 4 bytes) of frame will be dropped before forwarding
-      \arg        ENET_FORWARD_ERRFRAMES: the function that all frame received with error except runt error are forwarded to memory
-      \arg        ENET_FORWARD_UNDERSZ_GOODFRAMES: the function that forwarding undersized good frames
+      \arg        ENET_AUTO_PADCRC_DROP: the automatic zero-quanta generation function
+      \arg        ENET_TYPEFRAME_CRC_DROP: the flow control operation in the MAC
+      \arg        ENET_FORWARD_ERRFRAMES: decoding function for the received pause frame and process it
+      \arg        ENET_FORWARD_UNDERSZ_GOODFRAMES: back pressure operation in the MAC(only use in half-dulex mode)
     \param[out] none
     \retval     none
 */

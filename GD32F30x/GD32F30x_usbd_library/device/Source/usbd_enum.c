@@ -184,17 +184,11 @@ static uint8_t* _usb_config_desc_get (usb_dev *udev, uint8_t index, uint16_t *le
 */
 static uint8_t* _usb_bos_desc_get (usb_dev *udev, uint8_t index, uint16_t *len)
 {
-    if (NULL != udev->desc->bos_desc) {
-        (void)index;
+    (void)index;
 
-        *len = (uint16_t)udev->desc->bos_desc[2] | (uint16_t)((uint16_t)udev->desc->bos_desc[3] << 8);
+    *len = (uint16_t)udev->desc->bos_desc[2] | (uint16_t)((uint16_t)udev->desc->bos_desc[3] << 8);
 
-        return udev->desc->bos_desc;
-    } else {
-        *len = 0U;
-
-        return NULL;
-    }
+    return udev->desc->bos_desc;
 }
 
 /*!
@@ -319,8 +313,6 @@ static usb_reqsta _usb_std_clearfeature (usb_dev *udev, usb_req *req)
             /* clear endpoint halt feature */
             if (((uint16_t)USB_FEATURE_EP_HALT == req->wValue) && (!CTL_EP(ep))) {
                 usbd_ep_clear_stall(udev, ep);
-                
-                udev->class_core->req_process(udev, req);
 
                 return REQ_SUPP;
             }

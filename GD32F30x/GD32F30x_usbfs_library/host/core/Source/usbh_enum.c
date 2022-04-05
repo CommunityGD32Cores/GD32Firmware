@@ -35,7 +35,6 @@ OF SUCH DAMAGE.
 #include "usbh_pipe.h"
 #include "usbh_transc.h"
 #include "usbh_enum.h"
-#include <string.h>
 
 /* local function prototypes ('static') */
 static void usbh_devdesc_parse (usb_desc_dev *dev_desc, uint8_t *buf, uint16_t len);
