@@ -5,12 +5,11 @@
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.1, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -203,7 +202,7 @@ void usart_disable(uint32_t usart_periph)
     \param[in]  txconfig: enable or disable USART transmitter
                 only one parameter can be selected which is shown as below:
       \arg        USART_TRANSMIT_ENABLE: enable USART transmission
-      \arg        USART_TRANSMIT_DISABLE: enable USART transmission
+      \arg        USART_TRANSMIT_DISABLE: disable USART transmission
     \param[out] none
     \retval     none
 */
@@ -246,7 +245,7 @@ void usart_receive_config(uint32_t usart_periph, uint32_t rxconfig)
     \param[out] none
     \retval     none
 */
-void usart_data_transmit(uint32_t usart_periph, uint32_t data)
+void usart_data_transmit(uint32_t usart_periph, uint16_t data)
 {
     USART_DATA(usart_periph) = USART_DATA_DATA & data;
 }
@@ -548,7 +547,7 @@ void usart_irda_lowpower_config(uint32_t usart_periph, uint32_t irlp)
 /*!
     \brief      configure hardware flow control RTS
     \param[in]  usart_periph: USARTx(x=0,1,2)
-    \param[in]  hardwareflow: enable or disable RTS
+    \param[in]  rtsconfig: enable or disable RTS
                 only one parameter can be selected which is shown as below:
       \arg        USART_RTS_ENABLE:  enable RTS
       \arg        USART_RTS_DISABLE: disable RTS
@@ -569,7 +568,7 @@ void usart_hardware_flow_rts_config(uint32_t usart_periph, uint32_t rtsconfig)
 /*!
     \brief      configure hardware flow control CTS
     \param[in]  usart_periph: USARTx(x=0,1,2)
-    \param[in]  hardwareflow: enable or disable CTS
+    \param[in]  ctsconfig: enable or disable CTS
                 only one parameter can be selected which is shown as below:
       \arg        USART_CTS_ENABLE:  enable CTS
       \arg        USART_CTS_DISABLE: disable CTS
@@ -732,7 +731,7 @@ void usart_interrupt_disable(uint32_t usart_periph, uint32_t int_flag)
       \arg        USART_INT_FLAG_ERR_NERR: error interrupt and noise error flag
       \arg        USART_INT_FLAG_ERR_FERR: error interrupt and frame error flag
     \param[out] none
-    \retval     FlagStatus
+    \retval     FlagStatus: SET or RESET
 */
 FlagStatus usart_interrupt_flag_get(uint32_t usart_periph, uint32_t int_flag)
 {

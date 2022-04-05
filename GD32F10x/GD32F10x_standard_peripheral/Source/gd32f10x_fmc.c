@@ -1,16 +1,15 @@
 /*!
-    \file  gd32f10x_fmc.c
-    \brief FMC driver
+    \file    gd32f10x_fmc.c
+    \brief   FMC driver
 
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -377,7 +376,7 @@ fmc_state_enum fmc_word_program(uint32_t address, uint32_t data)
 fmc_state_enum fmc_halfword_program(uint32_t address, uint16_t data)
 {
     fmc_state_enum fmc_state = FMC_READY;
-    if(FMC_BANK0_SIZE > FMC_SIZE){
+    if(FMC_BANK0_SIZE < FMC_SIZE){
         if(FMC_BANK0_END_ADDRESS > address){
             fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT); 
   
@@ -825,19 +824,19 @@ void fmc_flag_clear(uint32_t flag)
 */
 FlagStatus fmc_interrupt_flag_get(fmc_interrupt_flag_enum flag)
 {
-    FlagStatus ret1 = RESET;
-    FlagStatus ret2 = RESET;
+    uint32_t ret1 = RESET;
+    uint32_t ret2 = RESET;
     
     if(FMC_STAT0_REG_OFFSET == FMC_REG_OFFSET_GET(flag)){
         /* get the staus of interrupt flag */
-        ret1 = (FlagStatus)(FMC_REG_VALS(flag) & BIT(FMC_BIT_POS0(flag)));
+        ret1 = (uint32_t)(FMC_REG_VALS(flag) & BIT(FMC_BIT_POS0(flag)));
         /* get the staus of interrupt enale bit */
-        ret2 = (FlagStatus)(FMC_CTL0 & BIT(FMC_BIT_POS1(flag)));
+        ret2 = (uint32_t)(FMC_CTL0 & BIT(FMC_BIT_POS1(flag)));
     }else{
         /* get the staus of interrupt flag */
-        ret1 = (FlagStatus)(FMC_REG_VALS(flag) & BIT(FMC_BIT_POS0(flag)));
+        ret1 = (uint32_t)(FMC_REG_VALS(flag) & BIT(FMC_BIT_POS0(flag)));
         /* get the staus of interrupt enale bit */
-        ret2 = (FlagStatus)(FMC_CTL1 & BIT(FMC_BIT_POS1(flag)));
+        ret2 = (uint32_t)(FMC_CTL1 & BIT(FMC_BIT_POS1(flag)));
     }
 
     if(ret1 && ret2){

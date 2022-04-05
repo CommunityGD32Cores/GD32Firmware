@@ -1,16 +1,15 @@
 /*!
-    \file  gd32f10x_gpio.c
-    \brief GPIO driver
+    \file    gd32f10x_gpio.c
+    \brief   GPIO driver
     
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -264,7 +263,7 @@ void gpio_port_write(uint32_t gpio_periph,uint16_t data)
     \brief      get GPIO pin input status
     \param[in]  gpio_periph: GPIOx(x = A,B,C,D,E,F,G) 
     \param[in]  pin: GPIO pin
-                only one parameter can be selected which are shown as below:
+                one or more parameters can be selected which are shown as below:
       \arg        GPIO_PIN_x(x=0..15), GPIO_PIN_ALL
     \param[out] none
     \retval     input status of gpio pin: SET or RESET
@@ -293,7 +292,7 @@ uint16_t gpio_input_port_get(uint32_t gpio_periph)
     \brief      get GPIO pin output status
     \param[in]  gpio_periph: GPIOx(x = A,B,C,D,E,F,G) 
     \param[in]  pin: GPIO pin
-                only one parameter can be selected which are shown as below:
+                one or more parameters can be selected which are shown as below:
       \arg        GPIO_PIN_x(x=0..15), GPIO_PIN_ALL
     \param[out] none
     \retval     output status of gpio pin: SET or RESET
@@ -350,7 +349,7 @@ uint16_t gpio_output_port_get(uint32_t gpio_periph)
       \arg        GPIO_SWJ_NONJTRST_REMAP: full SWJ(JTAG-DP + SW-DP),but without NJTRST
       \arg        GPIO_SWJ_SWDPENABLE_REMAP: JTAG-DP disabled and SW-DP enabled
       \arg        GPIO_SWJ_DISABLE_REMAP: JTAG-DP disabled and SW-DP disabled
-      \arg        GPIO_SPI2_REMAP: SPI2 remapping(only for GD32F10X_CL devices) 
+      \arg        GPIO_SPI2_REMAP: SPI2 remapping(only for GD32F10X_CL, GD32F10X_HD and GD32F10X_XD devices) 
       \arg        GPIO_TIMER1ITI1_REMAP: TIMER1 internal trigger 1 remapping(only for GD32F10X_CL devices) 
       \arg        GPIO_PTP_PPS_REMAP: ethernet PTP PPS remapping(only for GD32F10X_CL devices) 
       \arg        GPIO_TIMER8_REMAP: TIMER8 remapping

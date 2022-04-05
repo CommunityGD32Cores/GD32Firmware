@@ -5,12 +5,11 @@
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -437,7 +436,7 @@ void sdio_dma_disable(void)
 /*!
     \brief      get the flags state of SDIO
     \param[in]  flag: flags state of SDIO
-                only one parameter can be selected which is shown as below:
+                one or more parameters can be selected which are shown as below:
       \arg        SDIO_FLAG_CCRCERR: command response received (CRC check failed) flag
       \arg        SDIO_FLAG_DTCRCERR: data block sent/received (CRC check failed) flag
       \arg        SDIO_FLAG_CMDTMOUT: command response timeout flag
@@ -477,7 +476,7 @@ FlagStatus sdio_flag_get(uint32_t flag)
 /*!
     \brief      clear the pending flags of SDIO
     \param[in]  flag: flags state of SDIO
-                only one parameter can be selected which is shown as below:
+                one or more parameters can be selected which are shown as below:
       \arg        SDIO_FLAG_CCRCERR: command response received (CRC check failed) flag
       \arg        SDIO_FLAG_DTCRCERR: data block sent/received (CRC check failed) flag
       \arg        SDIO_FLAG_CMDTMOUT: command response timeout flag
@@ -502,7 +501,7 @@ void sdio_flag_clear(uint32_t flag)
 /*!
     \brief      enable the SDIO interrupt
     \param[in]  int_flag: interrupt flags state of SDIO
-                only one parameter can be selected which is shown as below:
+                one or more parameters can be selected which are shown as below:
       \arg        SDIO_INT_CCRCERR: SDIO CCRCERR interrupt
       \arg        SDIO_INT_DTCRCERR: SDIO DTCRCERR interrupt
       \arg        SDIO_INT_CMDTMOUT: SDIO CMDTMOUT interrupt
@@ -538,7 +537,7 @@ void sdio_interrupt_enable(uint32_t int_flag)
 /*!
     \brief      disable the SDIO interrupt
     \param[in]  int_flag: interrupt flags state of SDIO
-                only one parameter can be selected which is shown as below:
+                one or more parameters can be selected which are shown as below:
       \arg        SDIO_INT_CCRCERR: SDIO CCRCERR interrupt
       \arg        SDIO_INT_DTCRCERR: SDIO DTCRCERR interrupt
       \arg        SDIO_INT_CMDTMOUT: SDIO CMDTMOUT interrupt
@@ -574,44 +573,38 @@ void sdio_interrupt_disable(uint32_t int_flag)
 /*!
     \brief      get the interrupt flags state of SDIO
     \param[in]  int_flag: interrupt flags state of SDIO
-                only one parameter can be selected which is shown as below:
-      \arg        SDIO_INT_FLAG_CCRCERR: SDIO CCRCERR interrupt
-      \arg        SDIO_INT_FLAG_DTCRCERR: SDIO DTCRCERR interrupt
-      \arg        SDIO_INT_FLAG_CMDTMOUT: SDIO CMDTMOUT interrupt
-      \arg        SDIO_INT_FLAG_DTTMOUT: SDIO DTTMOUT interrupt
-      \arg        SDIO_INT_FLAG_TXURE: SDIO TXURE interrupt
-      \arg        SDIO_INT_FLAG_RXORE: SDIO RXORE interrupt
-      \arg        SDIO_INT_FLAG_CMDRECV: SDIO CMDRECV interrupt
-      \arg        SDIO_INT_FLAG_CMDSEND: SDIO CMDSEND interrupt
-      \arg        SDIO_INT_FLAG_DTEND: SDIO DTEND interrupt
-      \arg        SDIO_INT_FLAG_STBITE: SDIO STBITE interrupt
-      \arg        SDIO_INT_FLAG_DTBLKEND: SDIO DTBLKEND interrupt
-      \arg        SDIO_INT_FLAG_CMDRUN: SDIO CMDRUN interrupt
-      \arg        SDIO_INT_FLAG_TXRUN: SDIO TXRUN interrupt
-      \arg        SDIO_INT_FLAG_RXRUN: SDIO RXRUN interrupt
-      \arg        SDIO_INT_FLAG_TFH: SDIO TFH interrupt
-      \arg        SDIO_INT_FLAG_RFH: SDIO RFH interrupt
-      \arg        SDIO_INT_FLAG_TFF: SDIO TFF interrupt
-      \arg        SDIO_INT_FLAG_RFF: SDIO RFF interrupt
-      \arg        SDIO_INT_FLAG_TFE: SDIO TFE interrupt
-      \arg        SDIO_INT_FLAG_RFE: SDIO RFE interrupt
-      \arg        SDIO_INT_FLAG_TXDTVAL: SDIO TXDTVAL interrupt
-      \arg        SDIO_INT_FLAG_RXDTVAL: SDIO RXDTVAL interrupt
-      \arg        SDIO_INT_FLAG_SDIOINT: SDIO SDIOINT interrupt
-      \arg        SDIO_INT_FLAG_ATAEND: SDIO ATAEND interrupt
+                one or more parameters can be selected which are shown as below:
+      \arg        SDIO_INT_FLAG_CCRCERR: SDIO CCRCERR interrupt flag
+      \arg        SDIO_INT_FLAG_DTCRCERR: SDIO DTCRCERR interrupt flag
+      \arg        SDIO_INT_FLAG_CMDTMOUT: SDIO CMDTMOUT interrupt flag
+      \arg        SDIO_INT_FLAG_DTTMOUT: SDIO DTTMOUT interrupt flag
+      \arg        SDIO_INT_FLAG_TXURE: SDIO TXURE interrupt flag
+      \arg        SDIO_INT_FLAG_RXORE: SDIO RXORE interrupt flag
+      \arg        SDIO_INT_FLAG_CMDRECV: SDIO CMDRECV interrupt flag
+      \arg        SDIO_INT_FLAG_CMDSEND: SDIO CMDSEND interrupt flag
+      \arg        SDIO_INT_FLAG_DTEND: SDIO DTEND interrupt flag
+      \arg        SDIO_INT_FLAG_STBITE: SDIO STBITE interrupt flag
+      \arg        SDIO_INT_FLAG_DTBLKEND: SDIO DTBLKEND interrupt flag
+      \arg        SDIO_INT_FLAG_CMDRUN: SDIO CMDRUN interrupt flag
+      \arg        SDIO_INT_FLAG_TXRUN: SDIO TXRUN interrupt flag
+      \arg        SDIO_INT_FLAG_RXRUN: SDIO RXRUN interrupt flag
+      \arg        SDIO_INT_FLAG_TFH: SDIO TFH interrupt flag
+      \arg        SDIO_INT_FLAG_RFH: SDIO RFH interrupt flag
+      \arg        SDIO_INT_FLAG_TFF: SDIO TFF interrupt flag
+      \arg        SDIO_INT_FLAG_RFF: SDIO RFF interrupt flag
+      \arg        SDIO_INT_FLAG_TFE: SDIO TFE interrupt flag
+      \arg        SDIO_INT_FLAG_RFE: SDIO RFE interrupt flag
+      \arg        SDIO_INT_FLAG_TXDTVAL: SDIO TXDTVAL interrupt flag
+      \arg        SDIO_INT_FLAG_RXDTVAL: SDIO RXDTVAL interrupt flag
+      \arg        SDIO_INT_FLAG_SDIOINT: SDIO SDIOINT interrupt flag
+      \arg        SDIO_INT_FLAG_ATAEND: SDIO ATAEND interrupt flag
     \param[out] none
     \retval     FlagStatus: SET or RESET
 */
 FlagStatus sdio_interrupt_flag_get(uint32_t int_flag)
 {
-    uint32_t state = 0U;
-    state = SDIO_STAT;
-    if(state & int_flag){
-        state = SDIO_INTEN;
-        /* check whether the corresponding bit in SDIO_INTEN is set or not */
-        if(state & int_flag){
-            return SET;
-        }
+    if(RESET != (SDIO_STAT & int_flag)){
+        return SET;
     }
     return RESET;
 }
@@ -619,7 +612,7 @@ FlagStatus sdio_interrupt_flag_get(uint32_t int_flag)
 /*!
     \brief      clear the interrupt pending flags of SDIO
     \param[in]  int_flag: interrupt flags state of SDIO
-                only one parameter can be selected which is shown as below:
+                one or more parameters can be selected which are shown as below:
       \arg        SDIO_INT_FLAG_CCRCERR: command response received (CRC check failed) flag
       \arg        SDIO_INT_FLAG_DTCRCERR: data block sent/received (CRC check failed) flag
       \arg        SDIO_INT_FLAG_CMDTMOUT: command response timeout flag

@@ -5,12 +5,11 @@
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -1206,15 +1205,15 @@ typedef struct
 #define ENET_TX_MODE_STOREFORWARD                 ENET_DMA_CTL_TSFD                             /*!< TxFIFO operates in store-and-forward mode */
 #define ENET_TX_MODE_CUTTHROUGH                   ((uint32_t)0x00000000)                        /*!< TxFIFO operates in cut-through mode */
 
-#define ENET_FORWARD_ERRFRAMES_ENABLE             (ENET_DMA_CTL_FERF<<2)                        /*!< all frame received with error except runt error are forwarded to memory */
+#define ENET_FORWARD_ERRFRAMES_ENABLE             (ENET_DMA_CTL_FERF << 2)                      /*!< all frame received with error except runt error are forwarded to memory */
 #define ENET_FORWARD_ERRFRAMES_DISABLE            ((uint32_t)0x00000000)                        /*!< RxFIFO drop error frame */
-#define ENET_FORWARD_ERRFRAMES                    (ENET_DMA_CTL_FERF<<2)                             /*!< the function that all frame received with error except runt error are forwarded to memory */
+#define ENET_FORWARD_ERRFRAMES                    (ENET_DMA_CTL_FERF << 2)                      /*!< the function that all frame received with error except runt error are forwarded to memory */
 
-#define ENET_FORWARD_UNDERSZ_GOODFRAMES_ENABLE    (ENET_DMA_CTL_FUF<<2)                         /*!< forward undersized good frames */
-#define ENET_FORWARD_UNDERSZ_GOODFRAMES_DISABLE   ((uint32_t)0x00000000)                        /*!< RxFIFO drops all frames whose length is less than 64 bytes */  
-#define ENET_FORWARD_UNDERSZ_GOODFRAMES           (ENET_DMA_CTL_FUF<<2)                            /*!< the function that forwarding undersized good frames */
+#define ENET_FORWARD_UNDERSZ_GOODFRAMES_ENABLE    (ENET_DMA_CTL_FUF << 2)                       /*!< forward undersized good frames */
+#define ENET_FORWARD_UNDERSZ_GOODFRAMES_DISABLE   ((uint32_t)0x00000000)                        /*!< RxFIFO drops all frames whose length is less than 64 bytes */
+#define ENET_FORWARD_UNDERSZ_GOODFRAMES           (ENET_DMA_CTL_FUF << 2)                       /*!< the function that forwarding undersized good frames */
 
-#define ENET_SECONDFRAME_OPT_ENABLE               ((uint32_t)0x00000000)                              /*!< TxDMA controller operate on second frame mode enable*/
+#define ENET_SECONDFRAME_OPT_ENABLE               ((uint32_t)0x00000000)                        /*!< TxDMA controller operate on second frame mode enable*/
 #define ENET_SECONDFRAME_OPT_DISABLE              ((uint32_t)0x00000000)                        /*!< TxDMA controller operate on second frame mode disable */
 #define ENET_SECONDFRAME_OPT                      ENET_DMA_CTL_OSF                              /*!< TxDMA controller operate on second frame function */
 
@@ -1362,9 +1361,9 @@ ErrStatus enet_phyloopback_disable(void);
 void enet_forward_feature_enable(uint32_t feature);
 /* disable ENET forward feature */
 void enet_forward_feature_disable(uint32_t feature);
-/* enable ENET fliter feature */
+/* enable ENET filter feature */
 void enet_fliter_feature_enable(uint32_t feature);
-/* disable ENET fliter feature */
+/* disable ENET filter feature */
 void enet_fliter_feature_disable(uint32_t feature);
 
 /* flow control function */

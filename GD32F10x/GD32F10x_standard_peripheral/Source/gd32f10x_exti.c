@@ -5,12 +5,11 @@
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -35,7 +34,6 @@ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWIS
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
 OF SUCH DAMAGE.
 */
-
 #include "gd32f10x_exti.h"
 
 #define EXTI_REG_RESET_VALUE            ((uint32_t)0x00000000U)
@@ -65,11 +63,12 @@ void exti_deinit(void)
                 only one parameter can be selected which is shown as below:
       \arg        EXTI_INTERRUPT: interrupt mode
       \arg        EXTI_EVENT: event mode
-    \param[in]  trig_type: trigger type, refer to exti_trig_type_enum
+    \param[in]  trig_type: interrupt trigger type, refer to exti_trig_type_enum
                 only one parameter can be selected which is shown as below:
       \arg        EXTI_TRIG_RISING: rising edge trigger
-      \arg        EXTI_TRIG_FALLING: falling edge trigger
-      \arg        EXTI_TRIG_BOTH: rising edge and falling edge trigger
+      \arg        EXTI_TRIG_FALLING: falling trigger
+      \arg        EXTI_TRIG_BOTH: rising and falling trigger
+      \arg        EXTI_TRIG_NONE: without rising edge or falling edge trigger
     \param[out] none
     \retval     none
 */
@@ -107,6 +106,7 @@ void exti_init(exti_line_enum linex, exti_mode_enum mode, exti_trig_type_enum tr
         EXTI_RTEN |= (uint32_t)linex;
         EXTI_FTEN |= (uint32_t)linex;
         break;
+    case EXTI_TRIG_NONE:
     default:
         break;
     }
@@ -204,12 +204,7 @@ void exti_flag_clear(exti_line_enum linex)
 */
 FlagStatus exti_interrupt_flag_get(exti_line_enum linex)
 {
-    uint32_t flag_left, flag_right;
-    
-    flag_left = EXTI_PD & (uint32_t)linex;
-    flag_right = EXTI_INTEN & (uint32_t)linex;
-    
-    if((RESET != flag_left) && (RESET != flag_right)){
+    if(RESET != (EXTI_PD & (uint32_t)linex)){
         return SET;
     }else{
         return RESET;

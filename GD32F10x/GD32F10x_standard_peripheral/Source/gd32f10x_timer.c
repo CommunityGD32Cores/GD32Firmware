@@ -1,16 +1,15 @@
 /*!
-    \file  gd32f10x_timer.c
-    \brief TIMER driver
+    \file    gd32f10x_timer.c
+    \brief   TIMER driver
 
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -325,7 +324,7 @@ void timer_prescaler_config(uint32_t timer_periph, uint16_t prescaler, uint32_t 
     \param[out] none
     \retval     none
 */
-void timer_repetition_value_config(uint32_t timer_periph, uint16_t repetition)
+void timer_repetition_value_config(uint32_t timer_periph, uint8_t repetition)
 {
     TIMER_CREP(timer_periph) = (uint32_t)repetition;
 } 
@@ -900,7 +899,7 @@ void timer_channel_output_mode_config(uint32_t timer_periph, uint16_t channel, u
     \param[out] none
     \retval     none
 */
-void timer_channel_output_pulse_value_config(uint32_t timer_periph, uint16_t channel, uint32_t pulse)
+void timer_channel_output_pulse_value_config(uint32_t timer_periph, uint16_t channel, uint16_t pulse)
 {
     switch(channel){
     /* configure TIMER_CH_0 */
@@ -1245,8 +1244,7 @@ void timer_channel_input_struct_para_init(timer_ic_parameter_struct* icpara)
       \arg        TIMER_CH_2: TIMER channel 2(TIMERx(x=0..4,7))
       \arg        TIMER_CH_3: TIMER channel 3(TIMERx(x=0..4,7))
     \param[in]  icpara: TIMER channel intput parameter struct
-                  icpolarity: TIMER_IC_POLARITY_RISING, TIMER_IC_POLARITY_FALLING,
-                              TIMER_IC_POLARITY_BOTH_EDGE(only for TIMER1~TIMER8)
+                  icpolarity: TIMER_IC_POLARITY_RISING, TIMER_IC_POLARITY_FALLING
                   icselection: TIMER_IC_SELECTION_DIRECTTI, TIMER_IC_SELECTION_INDIRECTTI,
                                TIMER_IC_SELECTION_ITS
                   icprescaler: TIMER_IC_PSC_DIV1, TIMER_IC_PSC_DIV2, TIMER_IC_PSC_DIV4,
@@ -1666,7 +1664,7 @@ void timer_master_slave_mode_config(uint32_t timer_periph, uint32_t masterslave)
     \param[out] none
     \retval     none
 */
-void timer_external_trigger_config(uint32_t timer_periph, uint32_t extprescaler, uint32_t extpolarity, uint32_t extfilter)
+void timer_external_trigger_config(uint32_t timer_periph, uint32_t extprescaler, uint32_t extpolarity, uint8_t extfilter)
 {
     TIMER_SMCFG(timer_periph) &= (~(uint32_t)(TIMER_SMCFG_ETP | TIMER_SMCFG_ETPSC | TIMER_SMCFG_ETFC));
     TIMER_SMCFG(timer_periph) |= (uint32_t)(extprescaler | extpolarity);
@@ -1752,7 +1750,7 @@ void timer_internal_trigger_as_external_clock_config(uint32_t timer_periph, uint
     \param[out] none
     \retval     none
 */
-void timer_external_trigger_as_external_clock_config(uint32_t timer_periph, uint32_t extrigger, uint16_t extpolarity, uint32_t extfilter)
+void timer_external_trigger_as_external_clock_config(uint32_t timer_periph, uint32_t extrigger, uint16_t extpolarity, uint8_t extfilter)
 {
     if(TIMER_SMCFG_TRGSEL_CI1FE1 == extrigger){
         /* reset the CH1EN bit */
@@ -1768,7 +1766,7 @@ void timer_external_trigger_as_external_clock_config(uint32_t timer_periph, uint
         /* reset the CH1CAPFLT bit */
         TIMER_CHCTL0(timer_periph) &= (~(uint32_t)TIMER_CHCTL0_CH1CAPFLT);
         /* set the CH1CAPFLT bit */
-        TIMER_CHCTL0(timer_periph) |= (uint32_t)(extfilter << 8U);
+        TIMER_CHCTL0(timer_periph) |= (uint32_t)(extfilter << 12U);
         /* set the CH1EN bit */
         TIMER_CHCTL2(timer_periph) |= (uint32_t)TIMER_CHCTL2_CH1EN;
     }else{
@@ -1785,7 +1783,7 @@ void timer_external_trigger_as_external_clock_config(uint32_t timer_periph, uint
         /* reset the CH0CAPFLT bit */
         TIMER_CHCTL0(timer_periph) &= (~(uint32_t)TIMER_CHCTL0_CH0CAPFLT);
         /* reset the CH0CAPFLT bit */
-        TIMER_CHCTL0(timer_periph) |= (uint32_t)extfilter;
+        TIMER_CHCTL0(timer_periph) |= (uint32_t)(extfilter << 4U);
         /* set the CH0EN bit */
         TIMER_CHCTL2(timer_periph) |= (uint32_t)TIMER_CHCTL2_CH0EN;
     }
@@ -1814,7 +1812,7 @@ void timer_external_trigger_as_external_clock_config(uint32_t timer_periph, uint
     \param[out] none
     \retval     none
 */
-void timer_external_clock_mode0_config(uint32_t timer_periph, uint32_t extprescaler, uint32_t extpolarity, uint32_t extfilter)
+void timer_external_clock_mode0_config(uint32_t timer_periph, uint32_t extprescaler, uint32_t extpolarity, uint8_t extfilter)
 {
     /* configure TIMER external trigger input */
     timer_external_trigger_config(timer_periph, extprescaler, extpolarity, extfilter);
@@ -1841,7 +1839,7 @@ void timer_external_clock_mode0_config(uint32_t timer_periph, uint32_t extpresca
     \param[out] none
     \retval     none
 */
-void timer_external_clock_mode1_config(uint32_t timer_periph, uint32_t extprescaler, uint32_t extpolarity, uint32_t extfilter)
+void timer_external_clock_mode1_config(uint32_t timer_periph, uint32_t extprescaler, uint32_t extpolarity, uint8_t extfilter)
 {
     /* configure TIMER external trigger input */
     timer_external_trigger_config(timer_periph, extprescaler, extpolarity, extfilter);
@@ -1946,7 +1944,7 @@ FlagStatus timer_interrupt_flag_get(uint32_t timer_periph, uint32_t interrupt)
 */
 void timer_interrupt_flag_clear(uint32_t timer_periph, uint32_t interrupt)
 {
-    TIMER_INTF(timer_periph) &= (~(uint32_t)interrupt);
+    TIMER_INTF(timer_periph) = (~(uint32_t)interrupt);
 }
 
 /*!
@@ -2000,5 +1998,5 @@ FlagStatus timer_flag_get(uint32_t timer_periph, uint32_t flag)
 */
 void timer_flag_clear(uint32_t timer_periph, uint32_t flag)
 {
-    TIMER_INTF(timer_periph) &= (~(uint32_t)flag);
+    TIMER_INTF(timer_periph) = (~(uint32_t)flag);
 }

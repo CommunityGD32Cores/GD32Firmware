@@ -1,16 +1,16 @@
 /*!
-    \file  gd32f10x_dbg.h
-    \brief definitions for the DBG
+    \file    gd32f10x_dbg.h
+    \brief   definitions for the DBG
 
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
+    \version 2019-07-01, V2.1.1, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -67,13 +67,13 @@ OF SUCH DAMAGE.
 #define DBG_CTL_CAN0_HOLD       BIT(14)                     /*!< debug CAN0 kept when core is halted */
 #define DBG_CTL_I2C0_HOLD       BIT(15)                     /*!< hold I2C0 smbus when core is halted */
 #define DBG_CTL_I2C1_HOLD       BIT(16)                     /*!< hold I2C1 smbus when core is halted */
-#define DBG_CTL_TIMER4_HOLD     BIT(17)                     /*!< hold TIMER4 counter when core is halted */
-#define DBG_CTL_TIMER5_HOLD     BIT(18)                     /*!< hold TIMER5 counter when core is halted */
-#define DBG_CTL_TIMER6_HOLD     BIT(19)                     /*!< hold TIMER6 counter when core is halted */
-#define DBG_CTL_TIMER7_HOLD     BIT(20)                     /*!< hold TIMER7 counter when core is halted */
-#ifdef GD32F10x_CL
+#define DBG_CTL_TIMER7_HOLD     BIT(17)                     /*!< hold TIMER7 counter when core is halted */
+#define DBG_CTL_TIMER4_HOLD     BIT(18)                     /*!< hold TIMER4 counter when core is halted */
+#define DBG_CTL_TIMER5_HOLD     BIT(19)                     /*!< hold TIMER5 counter when core is halted */
+#define DBG_CTL_TIMER6_HOLD     BIT(20)                     /*!< hold TIMER6 counter when core is halted */
+#ifdef GD32F10X_CL
 #define DBG_CTL_CAN1_HOLD       BIT(21)                     /*!< debug CAN1 kept when core is halted */
-#endif /* GD32F10x_CL */
+#endif /* GD32F10X_CL */
 #ifdef GD32F10X_XD
 #define DBG_CTL_TIMER11_HOLD    BIT(25)                     /*!< hold TIMER11 counter when core is halted */
 #define DBG_CTL_TIMER12_HOLD    BIT(26)                     /*!< hold TIMER12 counter when core is halted */
@@ -81,7 +81,7 @@ OF SUCH DAMAGE.
 #define DBG_CTL_TIMER8_HOLD     BIT(28)                     /*!< hold TIMER8 counter when core is halted */
 #define DBG_CTL_TIMER9_HOLD     BIT(29)                     /*!< hold TIMER9 counter when core is halted */
 #define DBG_CTL_TIMER10_HOLD    BIT(30)                     /*!< hold TIMER10 counter when core is halted */
-#endif /* GD32F10x_XD */
+#endif /* GD32F10X_XD */
 
 /* constants definitions */
 /* debug hold when core is halted */
@@ -96,21 +96,21 @@ typedef enum
     DBG_CAN0_HOLD              = BIT(14),                   /*!< debug CAN0 kept when core is halted */
     DBG_I2C0_HOLD              = BIT(15),                   /*!< hold I2C0 smbus when core is halted */
     DBG_I2C1_HOLD              = BIT(16),                   /*!< hold I2C1 smbus when core is halted */
-    DBG_TIMER4_HOLD            = BIT(17),                   /*!< hold TIMER4 counter when core is halted */
-    DBG_TIMER5_HOLD            = BIT(18),                   /*!< hold TIMER5 counter when core is halted */
-    DBG_TIMER6_HOLD            = BIT(19),                   /*!< hold TIMER6 counter when core is halted */
-    DBG_TIMER7_HOLD            = BIT(20),                   /*!< hold TIMER7 counter when core is halted */
-#ifdef GD32F10x_CL
+    DBG_TIMER7_HOLD            = BIT(17),                   /*!< hold TIMER7 counter when core is halted */
+    DBG_TIMER4_HOLD            = BIT(18),                   /*!< hold TIMER4 counter when core is halted */
+    DBG_TIMER5_HOLD            = BIT(19),                   /*!< hold TIMER5 counter when core is halted */
+    DBG_TIMER6_HOLD            = BIT(20),                   /*!< hold TIMER6 counter when core is halted */
+#ifdef GD32F10X_CL
     DBG_CAN1_HOLD              = BIT(21),                   /*!< debug CAN1 kept when core is halted */
-#endif /* GD32F10x_CL */
-#if (defined(GD32F10x_XD) || defined(GD32F10x_CL))
+#endif /* GD32F10X_CL */
+#if (defined(GD32F10X_XD) || defined(GD32F10X_CL))
     DBG_TIMER11_HOLD           = BIT(25),                   /*!< hold TIMER11 counter when core is halted */
     DBG_TIMER12_HOLD           = BIT(26),                   /*!< hold TIMER12 counter when core is halted */
     DBG_TIMER13_HOLD           = BIT(27),                   /*!< hold TIMER13 counter when core is halted */
     DBG_TIMER8_HOLD            = BIT(28),                   /*!< hold TIMER8 counter when core is halted */
     DBG_TIMER9_HOLD            = BIT(29),                   /*!< hold TIMER9 counter when core is halted */
     DBG_TIMER10_HOLD           = BIT(30),                   /*!< hold TIMER10 counter when core is halted */
-#endif /* GD32F10x_XD || GD32F10x_CL*/
+#endif /* GD32F10X_XD || GD32F10X_CL*/
 }dbg_periph_enum;
 
 /* DBG low power mode configurations */
@@ -149,4 +149,4 @@ void dbg_trace_pin_disable(void);
 /* set trace pin mode */
 void dbg_trace_pin_mode_set(uint32_t trace_mode);
 
-#endif /* GD32F10x_DBG_H */
+#endif /* GD32F10X_DBG_H */

@@ -5,12 +5,11 @@
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.1, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -289,7 +288,7 @@ void usart_transmit_config(uint32_t usart_periph, uint32_t txconfig);
 /* configure USART receiver */
 void usart_receive_config(uint32_t usart_periph, uint32_t rxconfig);
 /* USART transmit data function */
-void usart_data_transmit(uint32_t usart_periph, uint32_t data);
+void usart_data_transmit(uint32_t usart_periph, uint16_t data);
 /* USART receive data function */
 uint16_t usart_data_receive(uint32_t usart_periph);
 

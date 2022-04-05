@@ -1,16 +1,16 @@
 /*!
-    \file  gd32f10x_dma.h
-    \brief definitions for the DMA
+    \file    gd32f10x_dma.h
+    \brief   definitions for the DMA
 
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
+    \version 2019-10-30, V2.1.1, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -184,19 +184,19 @@ typedef struct
 #define DMA_INT_ERR                         DMA_CHXCTL_ERRIE                                /*!< enable bit for channel error interrupt */
 
 /* transfer direction */
-#define DMA_PERIPHERAL_TO_MEMORY            ((uint32_t)0x00000000U)                         /*!< read from peripheral and write to memory */
-#define DMA_MEMORY_TO_PERIPHERAL            ((uint32_t)0x00000001U)                         /*!< read from memory and write to peripheral */
+#define DMA_PERIPHERAL_TO_MEMORY            ((uint8_t)0x00U)                                /*!< read from peripheral and write to memory */
+#define DMA_MEMORY_TO_PERIPHERAL            ((uint8_t)0x01U)                                /*!< read from memory and write to peripheral */
 /* circular mode */
 #define DMA_CIRCULAR_MODE_DISABLE           ((uint32_t)0x00000000U)                         /*!< circular mode disable */
 #define DMA_CIRCULAR_MODE_ENABLE            ((uint32_t)0x00000001U)                         /*!< circular mode enable */
 
 /* peripheral increasing mode */
-#define DMA_PERIPH_INCREASE_DISABLE         ((uint32_t)0x00000000U)                         /*!< next address of peripheral is fixed address mode */
-#define DMA_PERIPH_INCREASE_ENABLE          ((uint32_t)0x00000001U)                         /*!< next address of peripheral is increasing address mode */
+#define DMA_PERIPH_INCREASE_DISABLE         ((uint8_t)0x00U)                                /*!< next address of peripheral is fixed address mode */
+#define DMA_PERIPH_INCREASE_ENABLE          ((uint8_t)0x01U)                                /*!< next address of peripheral is increasing address mode */
 
 /* memory increasing mode */
-#define DMA_MEMORY_INCREASE_DISABLE         ((uint32_t)0x00000000U)                         /*!< next address of memory is fixed address mode */
-#define DMA_MEMORY_INCREASE_ENABLE          ((uint32_t)0x00000001U)                         /*!< next address of memory is increasing address mode */
+#define DMA_MEMORY_INCREASE_DISABLE         ((uint8_t)0x00U)                                /*!< next address of memory is fixed address mode */
+#define DMA_MEMORY_INCREASE_ENABLE          ((uint8_t)0x01U)                                /*!< next address of memory is increasing address mode */
 
 /* transfer data size of peripheral */
 #define CHCTL_PWIDTH(regval)                (BITS(8,9) & ((regval) << 8))                   /*!< transfer data size of peripheral */
@@ -270,7 +270,7 @@ void dma_periph_increase_enable(uint32_t dma_periph, dma_channel_enum channelx);
 /* disable next address increasement algorithm of peripheral */
 void dma_periph_increase_disable(uint32_t dma_periph, dma_channel_enum channelx);
 /* configure the direction of data transfer on the channel */
-void dma_transfer_direction_config(uint32_t dma_periph, dma_channel_enum channelx, uint32_t direction);
+void dma_transfer_direction_config(uint32_t dma_periph, dma_channel_enum channelx, uint8_t direction);
 
 /* flag and interrupt functions */
 /* check DMA flag is set or not */

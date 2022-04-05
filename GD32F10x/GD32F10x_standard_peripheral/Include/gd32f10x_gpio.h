@@ -1,16 +1,15 @@
 /*!
-    \file  gd32f10x_gpio.h
-    \brief definitions for the GPIO
+    \file    gd32f10x_gpio.h
+    \brief   definitions for the GPIO
     
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -411,6 +410,9 @@ typedef FlagStatus bit_status;
 #define GPIO_CAN_PARTIAL_REMAP           ((uint32_t)0x001D4000U)   /*!< CAN partial remapping(only for GD32F10X_MD devices, GD32F10X_HD devices and GD32F10X_XD devices) */
 #define GPIO_CAN_FULL_REMAP              ((uint32_t)0x001D6000U)   /*!< CAN full remapping(only for GD32F10X_MD devices, GD32F10X_HD devices and GD32F10X_XD devices) */
 #endif /* GD32F10X_MD||GD32F10X_HD||GD32F10X_XD */
+#if (defined(GD32F10X_CL) || defined(GD32F10X_HD) || defined(GD32F10X_XD))
+#define GPIO_SPI2_REMAP                  ((uint32_t)0x00201100U)   /*!< SPI2 remapping(only for GD32F10X_CL devices) */
+#endif /* GD32F10X_CL||GD32F10X_HD */
 #if (defined(GD32F10X_CL) || defined(GD32F10X_HD))
 #define GPIO_TIMER4CH3_IREMAP            ((uint32_t)0x00200001U)   /*!< TIMER4 channel3 internal remapping(only for GD32F10X_CL devices and GD32F10X_HD devices) */
 #endif /* GD32F10X_CL||GD32F10X_HD */
@@ -428,7 +430,6 @@ typedef FlagStatus bit_status;
 #define GPIO_CAN0_FULL_REMAP             ((uint32_t)0x001D6000U)   /*!< CAN0 full remapping(only for GD32F10X_CL devices) */
 #define GPIO_ENET_REMAP                  ((uint32_t)0x00200020U)   /*!< ENET remapping(only for GD32F10X_CL devices) */
 #define GPIO_CAN1_REMAP                  ((uint32_t)0x00200040U)   /*!< CAN1 remapping(only for GD32F10X_CL devices) */
-#define GPIO_SPI2_REMAP                  ((uint32_t)0x00201100U)   /*!< SPI2 remapping(only for GD32F10X_CL devices) */
 #define GPIO_TIMER1ITI1_REMAP            ((uint32_t)0x00202000U)   /*!< TIMER1 internal trigger 1 remapping(only for GD32F10X_CL devices) */
 #define GPIO_PTP_PPS_REMAP               ((uint32_t)0x00204000U)   /*!< ethernet PTP PPS remapping(only for GD32F10X_CL devices) */
 #endif /* GD32F10X_CL */

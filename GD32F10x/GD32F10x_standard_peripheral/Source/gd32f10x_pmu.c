@@ -5,12 +5,12 @@
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
+    \version 2019-11-26, V2.1.1, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -127,6 +127,7 @@ void pmu_to_sleepmode(uint8_t sleepmodecmd)
 */
 void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
 {
+    static uint32_t reg_snap[ 4 ];   
     /* clear stbmod and ldolp bits */
     PMU_CTL &= ~((uint32_t)(PMU_CTL_STBMOD | PMU_CTL_LDOLP));
     
@@ -135,6 +136,16 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
     
     /* set sleepdeep bit of Cortex-M3 system control register */
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+
+    reg_snap[0] = REG32(0xE000E010U);
+    reg_snap[1] = REG32(0xE000E100U);
+    reg_snap[2] = REG32(0xE000E104U);
+    reg_snap[3] = REG32(0xE000E108U);
+    
+    REG32( 0xE000E010U ) &= 0x00010004U;
+    REG32( 0xE000E180U )  = 0XFF7FF83DU;
+    REG32( 0xE000E184U )  = 0XBFFFF8FFU;
+    REG32( 0xE000E188U )  = 0xFFFFFFFFU;
     
     /* select WFI or WFE command to enter deepsleep mode */
     if(WFI_CMD == deepsleepmodecmd){
@@ -144,6 +155,12 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
         __WFE();
         __WFE();
     }
+
+    REG32(0xE000E010U) = reg_snap[0] ; 
+    REG32(0xE000E100U) = reg_snap[1] ;
+    REG32(0xE000E104U) = reg_snap[2] ;
+    REG32(0xE000E108U) = reg_snap[3] ;  
+
     /* reset sleepdeep bit of Cortex-M3 system control register */
     SCB->SCR &= ~((uint32_t)SCB_SCR_SLEEPDEEP_Msk);
 }

@@ -1,16 +1,16 @@
 /*!
-    \file  gd32f10x_i2c.h
-    \brief definitions for the I2C
+    \file    gd32f10x_i2c.h
+    \brief   definitions for the I2C
     
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
+    \version 2019-04-16, V2.1.1, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -64,7 +64,7 @@ OF SUCH DAMAGE.
 #define I2C_CTL0_ARPEN                BIT(4)        /*!< ARP enable */
 #define I2C_CTL0_PECEN                BIT(5)        /*!< PEC enable */
 #define I2C_CTL0_GCEN                 BIT(6)        /*!< general call enable */
-#define I2C_CTL0_DISSTRC              BIT(7)        /*!< clock stretching disable (slave mode) */
+#define I2C_CTL0_SS                   BIT(7)        /*!< clock stretching disable (slave mode) */
 #define I2C_CTL0_START                BIT(8)        /*!< start generation */
 #define I2C_CTL0_STOP                 BIT(9)        /*!< stop generation */
 #define I2C_CTL0_ACKEN                BIT(10)       /*!< acknowledge enable */
@@ -113,12 +113,12 @@ OF SUCH DAMAGE.
 /* I2Cx_STAT1 */
 #define I2C_STAT1_MASTER              BIT(0)        /*!< master/slave */
 #define I2C_STAT1_I2CBSY              BIT(1)        /*!< bus busy */
-#define I2C_STAT1_TRS                 BIT(2)        /*!< transmitter/receiver */
+#define I2C_STAT1_TR                  BIT(2)        /*!< transmitter/receiver */
 #define I2C_STAT1_RXGC                BIT(4)        /*!< general call address (slave mode) */
 #define I2C_STAT1_DEFSMB              BIT(5)        /*!< SMBus device default address (slave mode) */
 #define I2C_STAT1_HSTSMB              BIT(6)        /*!< SMBus host header (slave mode) */
 #define I2C_STAT1_DUMODF              BIT(7)        /*!< dual flag (slave mode) */
-#define I2C_STAT1_ECV                 BITS(8,15)    /*!< packet error checking register */
+#define I2C_STAT1_PECV                BITS(8,15)    /*!< packet error checking value */
 
 /* I2Cx_CKCFG */
 #define I2C_CKCFG_CLKC                BITS(0,11)    /*!< clock control register in fast/standard mode (master mode) */
@@ -142,7 +142,6 @@ OF SUCH DAMAGE.
 #define I2C_CTL1_REG_OFFSET           0x04U         /*!< CTL1 register offset */
 #define I2C_STAT0_REG_OFFSET          0x14U         /*!< STAT0 register offset */
 #define I2C_STAT1_REG_OFFSET          0x18U         /*!< STAT1 register offset */
-#define I2C_SAMCS_REG_OFFSET          0x80U         /*!< SAMCS register offset */
 
 /* I2C flags */
 typedef enum
@@ -227,7 +226,7 @@ typedef enum
 
 /* whether or not to stretch SCL low */
 #define I2C_SCLSTRETCH_ENABLE         ((uint32_t)0x00000000U)                  /*!< SCL stretching is enabled */
-#define I2C_SCLSTRETCH_DISABLE        I2C_CTL0_DISSTRC                         /*!< SCL stretching is disabled */
+#define I2C_SCLSTRETCH_DISABLE        I2C_CTL0_SS                              /*!< SCL stretching is disabled */
 
 /* whether or not to response to a general call */
 #define I2C_GCEN_ENABLE               I2C_CTL0_GCEN                            /*!< slave will response to a general call */
@@ -249,7 +248,7 @@ typedef enum
 /* I2C PEC configure */
 /* PEC enable */
 #define I2C_PEC_ENABLE                I2C_CTL0_PECEN                           /*!< PEC calculation on */
-#define I2C_PEC_DISABLE               ((uint32_t)0x00000000U)                   /*!< PEC calculation off */
+#define I2C_PEC_DISABLE               ((uint32_t)0x00000000U)                  /*!< PEC calculation off */
 
 /* PEC transfer */
 #define I2C_PECTRANS_ENABLE           I2C_CTL0_PECTRANS                        /*!< transfer PEC */
@@ -261,8 +260,8 @@ typedef enum
 #define I2C_SALTSEND_DISABLE          ((uint32_t)0x00000000U)                  /*!< not issue alert through SMBA */
 
 /* ARP protocol in SMBus switch */
-#define I2C_ARP_ENABLE                I2C_CTL0_ARPEN                           /*!< ARP enable */
-#define I2C_ARP_DISABLE               ((uint32_t)0x00000000U)                  /*!< ARP disable */
+#define I2C_ARP_ENABLE                I2C_CTL0_ARPEN                           /*!< ARP is enabled */
+#define I2C_ARP_DISABLE               ((uint32_t)0x00000000U)                  /*!< ARP is disabled */
 
 /* transmit I2C data */
 #define DATA_TRANS(regval)            (BITS(0,7) & ((uint32_t)(regval) << 0))
@@ -293,8 +292,10 @@ void i2c_ack_config(uint32_t i2c_periph, uint32_t ack);
 void i2c_ackpos_config(uint32_t i2c_periph, uint32_t pos);
 /* master sends slave address */
 void i2c_master_addressing(uint32_t i2c_periph, uint32_t addr, uint32_t trandirection);
-/* dual-address mode switch */
-void i2c_dualaddr_enable(uint32_t i2c_periph, uint32_t dualaddr);
+/* enable dual-address mode */
+void i2c_dualaddr_enable(uint32_t i2c_periph, uint32_t addr);
+/* disable dual-address mode */
+void i2c_dualaddr_disable(uint32_t i2c_periph);
 /* enable I2C */
 void i2c_enable(uint32_t i2c_periph);
 /* disable I2C */

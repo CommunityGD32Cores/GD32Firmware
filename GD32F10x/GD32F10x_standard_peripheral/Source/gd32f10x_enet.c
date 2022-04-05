@@ -5,12 +5,11 @@
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -59,6 +58,12 @@ enet_descriptors_struct  txdesc_tab[ENET_TXBUF_NUM];        /*!< ENET TxDMA desc
 uint8_t rx_buff[ENET_RXBUF_NUM][ENET_RXBUF_SIZE];           /*!< ENET receive buffer */
 #pragma data_alignment=4
 uint8_t tx_buff[ENET_TXBUF_NUM][ENET_TXBUF_SIZE];           /*!< ENET transmit buffer */
+
+#elif defined (__GNUC__)        /* GNU Compiler */
+enet_descriptors_struct  rxdesc_tab[ENET_RXBUF_NUM] __attribute__ ((aligned (4)));        /*!< ENET RxDMA descriptor */ 
+enet_descriptors_struct  txdesc_tab[ENET_TXBUF_NUM] __attribute__ ((aligned (4)));        /*!< ENET TxDMA descriptor */
+uint8_t rx_buff[ENET_RXBUF_NUM][ENET_RXBUF_SIZE] __attribute__ ((aligned (4)));           /*!< ENET receive buffer */
+uint8_t tx_buff[ENET_TXBUF_NUM][ENET_TXBUF_SIZE] __attribute__ ((aligned (4)));           /*!< ENET transmit buffer */
 
 #endif /* __CC_ARM */
 
@@ -168,7 +173,15 @@ void enet_deinit(void)
                          ENET_PAUSETIME_MINUS144/ENET_PAUSETIME_MINUS256 ;
                       -  ENET_MAC0_AND_UNIQUE_ADDRESS_PAUSEDETECT/ ENET_UNIQUE_PAUSEDETECT ;
                       -  ENET_RX_FLOWCONTROL_ENABLE/ ENET_RX_FLOWCONTROL_DISABLE ;
-                      -  ENET_TX_FLOWCONTROL_ENABLE/ ENET_TX_FLOWCONTROL_DISABLE .
+                      -  ENET_TX_FLOWCONTROL_ENABLE/ ENET_TX_FLOWCONTROL_DISABLE ;
+                      -  ENET_ACTIVE_THRESHOLD_256BYTES/ ENET_ACTIVE_THRESHOLD_512BYTES ;
+                      -  ENET_ACTIVE_THRESHOLD_768BYTES/ ENET_ACTIVE_THRESHOLD_1024BYTES ;
+                      -  ENET_ACTIVE_THRESHOLD_1280BYTES/ ENET_ACTIVE_THRESHOLD_1536BYTES ;
+                      -  ENET_ACTIVE_THRESHOLD_1792BYTES ;
+                      -  ENET_DEACTIVE_THRESHOLD_256BYTES/ ENET_DEACTIVE_THRESHOLD_512BYTES ;
+                      -  ENET_DEACTIVE_THRESHOLD_768BYTES/ ENET_DEACTIVE_THRESHOLD_1024BYTES ;
+                      -  ENET_DEACTIVE_THRESHOLD_1280BYTES/ ENET_DEACTIVE_THRESHOLD_1536BYTES ;
+                      -  ENET_DEACTIVE_THRESHOLD_1792BYTES .
                       HASHH_OPTION related parameters:
                       -  0x0~0xFFFF FFFFU
                       HASHL_OPTION related parameters:
@@ -425,7 +438,7 @@ ErrStatus enet_init(enet_mediamode_enum mediamode, enet_chksumconf_enum checksum
         temp = reg_temp;
         /* configure ENET_DMA_CTL register */
         reg_value &= (~(ENET_DMA_CTL_FERF |ENET_DMA_CTL_FUF));
-        temp &= ((ENET_DMA_CTL_FERF | ENET_DMA_CTL_FUF)<<2);
+        temp &= ((ENET_DMA_CTL_FERF | ENET_DMA_CTL_FUF) << 2);
         reg_value |= (temp >> 2);
         ENET_DMA_CTL = reg_value;
     }
@@ -1592,9 +1605,9 @@ void enet_forward_feature_enable(uint32_t feature)
     \brief      disable ENET forward feature
     \param[in]  feature: the feature of ENET forward mode,
                 one or more parameters can be selected which are shown as below
-      \arg        ENET_AUTO_PADCRC_DROP: the automatic zero-quanta generation function
-      \arg        ENET_FORWARD_ERRFRAMES: decoding function for the received pause frame and process it
-      \arg        ENET_FORWARD_UNDERSZ_GOODFRAMES: back pressure operation in the MAC(only use in half-dulex mode)
+      \arg        ENET_AUTO_PADCRC_DROP: the function of the MAC strips the Pad/FCS field on received frames
+      \arg        ENET_FORWARD_ERRFRAMES: the function that all frame received with error except runt error are forwarded to memory
+      \arg        ENET_FORWARD_UNDERSZ_GOODFRAMES: the function that forwarding undersized good frames
     \param[out] none
     \retval     none
 */
@@ -1610,8 +1623,8 @@ void enet_forward_feature_disable(uint32_t feature)
 }
                             
 /*!                    
-    \brief      enable ENET fliter feature
-    \param[in]  feature: the feature of ENET fliter mode,
+    \brief      enable ENET filter feature
+    \param[in]  feature: the feature of ENET filter mode,
                 one or more parameters can be selected which are shown as below
       \arg        ENET_SRC_FILTER: filter source address function
       \arg        ENET_SRC_FILTER_INVERSE: inverse source address filtering result function
@@ -1623,14 +1636,14 @@ void enet_forward_feature_disable(uint32_t feature)
     \param[out] none
     \retval     none
 */
-void enet_fliter_feature_enable(uint32_t feature)
+void enet_filter_feature_enable(uint32_t feature)
 {
     ENET_MAC_FRMF |= feature;
 }
 
 /*!
-    \brief      disable ENET fliter feature
-    \param[in]  feature: the feature of ENET fliter mode,
+    \brief      disable ENET filter feature
+    \param[in]  feature: the feature of ENET filter mode,
                 one or more parameters can be selected which are shown as below
       \arg        ENET_SRC_FILTER: filter source address function
       \arg        ENET_SRC_FILTER_INVERSE: inverse source address filtering result function
@@ -1642,7 +1655,7 @@ void enet_fliter_feature_enable(uint32_t feature)
     \param[out] none
     \retval     none
 */
-void enet_fliter_feature_disable(uint32_t feature)
+void enet_filter_feature_disable(uint32_t feature)
 {
     ENET_MAC_FRMF &= ~feature;
 }
@@ -3028,13 +3041,11 @@ static void enet_default_init(void)
     reg_value |= MAC_FCTL_PTM(0) |ENET_ZERO_QUANTA_PAUSE_DISABLE \
                 |ENET_PAUSETIME_MINUS4 |ENET_UNIQUE_PAUSEDETECT \
                 |ENET_RX_FLOWCONTROL_DISABLE |ENET_TX_FLOWCONTROL_DISABLE;
-    ENET_MAC_FCTL = reg_value;                                         
-                                        
-    ENET_MAC_FCTH = ENET_DEACTIVE_THRESHOLD_512BYTES |ENET_ACTIVE_THRESHOLD_1536BYTES;
-   
+    ENET_MAC_FCTL = reg_value;
+
     /* configure ENET_MAC_VLT register */
     ENET_MAC_VLT = ENET_VLANTAGCOMPARISON_16BIT |MAC_VLT_VLTI(0);
-                                                          
+
     /* DMA */
     /* configure ENET_DMA_CTL register */
     reg_value = ENET_DMA_CTL;
@@ -3042,9 +3053,8 @@ static void enet_default_init(void)
     reg_value |= ENET_TCPIP_CKSUMERROR_DROP |ENET_RX_MODE_STOREFORWARD \
                 |ENET_FLUSH_RXFRAME_ENABLE |ENET_TX_MODE_STOREFORWARD \
                 |ENET_TX_THRESHOLD_64BYTES |ENET_RX_THRESHOLD_64BYTES \
-                |ENET_FORWARD_ERRFRAMES_DISABLE |ENET_FORWARD_UNDERSZ_GOODFRAMES_DISABLE \
                 |ENET_SECONDFRAME_OPT_DISABLE; 
-    ENET_DMA_CTL = reg_value;    
+    ENET_DMA_CTL = reg_value;
 
     /* configure ENET_DMA_BCTL register */
     reg_value = ENET_DMA_BCTL;
@@ -3052,7 +3062,7 @@ static void enet_default_init(void)
     reg_value = ENET_ADDRESS_ALIGN_ENABLE |ENET_ARBITRATION_RXTX_2_1 \
                |ENET_RXDP_32BEAT |ENET_PGBL_32BEAT |ENET_RXTX_DIFFERENT_PGBL \
                |ENET_FIXED_BURST_ENABLE;
-    ENET_DMA_BCTL = reg_value; 
+    ENET_DMA_BCTL = reg_value;
 }
 
 #ifndef USE_DELAY
@@ -3064,7 +3074,7 @@ static void enet_default_init(void)
 */
 static void enet_delay(uint32_t ncount)
 {
-    uint32_t delay_time = 0U; 
+    __IO uint32_t delay_time = 0U; 
     
     for(delay_time = ncount; delay_time != 0U; delay_time--){
     }

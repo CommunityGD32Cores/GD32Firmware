@@ -1,16 +1,16 @@
 /*!
-    \file  gd32f10x_i2c.c
-    \brief I2C driver
+    \file    gd32f10x_i2c.c
+    \brief   I2C driver
     
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
+    \version 2019-04-16, V2.1.1, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -39,10 +39,11 @@ OF SUCH DAMAGE.
 #include "gd32f10x_i2c.h"
 
 /* I2C register bit mask */
-#define I2CCLK_MAX                    ((uint32_t)0x0000003FU)             /*!< i2cclk maximum value */
+#define I2CCLK_MAX                    ((uint32_t)0x00000036U)             /*!< i2cclk maximum value */
 #define I2CCLK_MIN                    ((uint32_t)0x00000002U)             /*!< i2cclk minimum value */
 #define I2C_FLAG_MASK                 ((uint32_t)0x0000FFFFU)             /*!< i2c flag mask */
 #define I2C_ADDRESS_MASK              ((uint32_t)0x000003FFU)             /*!< i2c address mask */
+#define I2C_ADDRESS2_MASK             ((uint32_t)0x000000FEU)             /*!< the second i2c address mask */
 
 /* I2C register bit offset */
 #define STAT1_PECV_OFFSET             ((uint32_t)8U)     /* bit offset of PECV in I2C_STAT1 */
@@ -249,22 +250,28 @@ void i2c_master_addressing(uint32_t i2c_periph, uint32_t addr, uint32_t trandire
 }
 
 /*!
-    \brief      dual-address mode switch
+    \brief      enable dual-address mode
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  dualaddr:
-                only one parameter can be selected which is shown as below:
-      \arg        I2C_DUADEN_DISABLE: disable dual-address mode  
-      \arg        I2C_DUADEN_ENABLE: enable dual-address mode
+    \param[in]  addr: the second address in dual-address mode
     \param[out] none
     \retval     none
 */
-void i2c_dualaddr_enable(uint32_t i2c_periph, uint32_t dualaddr)
+void i2c_dualaddr_enable(uint32_t i2c_periph, uint32_t addr)
 {
-    if(I2C_DUADEN_ENABLE == dualaddr){
-        I2C_SADDR1(i2c_periph) |= I2C_SADDR1_DUADEN;
-    }else{
-        I2C_SADDR1(i2c_periph) &= ~(I2C_SADDR1_DUADEN);
-    }
+    /* configure address */
+    addr = addr & I2C_ADDRESS2_MASK;
+    I2C_SADDR1(i2c_periph) = (I2C_SADDR1_DUADEN | addr);
+}
+
+/*!
+    \brief      disable dual-address mode
+    \param[in]  i2c_periph: I2Cx(x=0,1) 
+    \param[out] none
+    \retval     none
+*/
+void i2c_dualaddr_disable(uint32_t i2c_periph)
+{
+    I2C_SADDR1(i2c_periph) &= ~(I2C_SADDR1_DUADEN);
 }
 
 /*!
@@ -392,7 +399,7 @@ void i2c_stretch_scl_low_config(uint32_t i2c_periph, uint32_t stretchpara)
     uint32_t ctl = 0U;
     
     ctl = I2C_CTL0(i2c_periph);
-    ctl &= ~(I2C_CTL0_DISSTRC); 
+    ctl &= ~(I2C_CTL0_SS); 
     ctl |= stretchpara;
     I2C_CTL0(i2c_periph) = ctl;
 }
@@ -442,7 +449,7 @@ void i2c_software_reset_config(uint32_t i2c_periph, uint32_t sreset)
 /*!
     \brief      I2C PEC calculation on or off
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  pecpara:
+    \param[in]  pecstate:
                 only one parameter can be selected which is shown as below:
       \arg        I2C_PEC_ENABLE: PEC calculation on 
       \arg        I2C_PEC_DISABLE: PEC calculation off 
@@ -489,7 +496,7 @@ void i2c_pec_transfer_enable(uint32_t i2c_periph, uint32_t pecpara)
 */
 uint8_t i2c_pec_value_get(uint32_t i2c_periph)
 {
-    return  (uint8_t)((I2C_STAT1(i2c_periph) &I2C_STAT1_ECV)>>STAT1_PECV_OFFSET);
+    return (uint8_t)((I2C_STAT1(i2c_periph) & I2C_STAT1_PECV)>>STAT1_PECV_OFFSET);
 }
 
 /*!
@@ -651,7 +658,7 @@ void i2c_interrupt_disable(uint32_t i2c_periph, i2c_interrupt_enum interrupt)
       \arg        I2C_INT_FLAG_SMBTO: timeout signal in SMBus mode interrupt flag
       \arg        I2C_INT_FLAG_SMBALT: SMBus Alert status interrupt flag
     \param[out] none
-    \retval     none
+    \retval     FlagStatus: SET or RESET
 */
 FlagStatus i2c_interrupt_flag_get(uint32_t i2c_periph, i2c_interrupt_flag_enum int_flag)
 {
@@ -682,7 +689,7 @@ FlagStatus i2c_interrupt_flag_get(uint32_t i2c_periph, i2c_interrupt_flag_enum i
 /*!
     \brief      clear I2C interrupt flag
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  intflag: I2C interrupt flags, refer to i2c_interrupt_flag_enum
+    \param[in]  int_flag: I2C interrupt flags, refer to i2c_interrupt_flag_enum
                 only one parameter can be selected which is shown as below:
       \arg        I2C_INT_FLAG_ADDSEND: address is sent in master mode or received and matches in slave mode interrupt flag
       \arg        I2C_INT_FLAG_BERR: a bus error occurs indication a unexpected start or stop condition on I2C bus interrupt flag
