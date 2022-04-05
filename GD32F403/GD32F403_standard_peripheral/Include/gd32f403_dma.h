@@ -1,12 +1,38 @@
 /*!
     \file  gd32f403_dma.h
     \brief definitions for the DMA
+
+    \version 2017-02-10, V1.0.0, firmware for gd32f403
+    \version 2018-12-25, V2.0.0, firmware for gd32f403
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2017-02-10, V1.0.1, firmware for GD32F403
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F403_DMA_H
@@ -97,13 +123,13 @@
 /* DMA channel select */
 typedef enum 
 {
-    DMA_CH0 = 0,                /*!< DMA Channel0 */
-    DMA_CH1,                    /*!< DMA Channel1 */ 
-    DMA_CH2,                    /*!< DMA Channel2 */ 
-    DMA_CH3,                    /*!< DMA Channel3 */ 
-    DMA_CH4,                    /*!< DMA Channel4 */ 
-    DMA_CH5,                    /*!< DMA Channel5 */ 
-    DMA_CH6                     /*!< DMA Channel6 */
+    DMA_CH0 = 0,                /*!< DMA channel 0 */
+    DMA_CH1,                    /*!< DMA channel 1 */ 
+    DMA_CH2,                    /*!< DMA channel 2 */ 
+    DMA_CH3,                    /*!< DMA channel 3 */ 
+    DMA_CH4,                    /*!< DMA channel 4 */ 
+    DMA_CH5,                    /*!< DMA channel 5 */ 
+    DMA_CH6                     /*!< DMA channel 6 */
 } dma_channel_enum;
 
 /* DMA initialize struct */
@@ -118,8 +144,7 @@ typedef struct
     uint8_t periph_inc;         /*!< peripheral increasing mode */
     uint8_t memory_inc;         /*!< memory increasing mode */
     uint8_t direction;          /*!< channel data transfer direction */
-
-} dma_parameter_struct;
+}dma_parameter_struct;
 
 #define DMA_FLAG_ADD(flag, shift)           ((flag) << ((shift) * 4U))                      /*!< DMA channel flag shift */
 
@@ -157,34 +182,31 @@ typedef struct
 #define DMA_INT_ERR                         DMA_CHXCTL_ERRIE                                /*!< enable bit for channel error interrupt */
 
 /* transfer direction */
-#define DMA_PERIPHERAL_TO_MEMORY            ((uint32_t)0x00000000U)                         /*!< read from peripheral and write to memory */
-#define DMA_MEMORY_TO_PERIPHERAL            ((uint32_t)0x00000001U)                         /*!< read from memory and write to peripheral */
-/* circular mode */
-#define DMA_CIRCULAR_MODE_DISABLE           ((uint32_t)0x00000000U)                         /*!< circular mode disable */
-#define DMA_CIRCULAR_MODE_ENABLE            ((uint32_t)0x00000001U)                         /*!< circular mode enable */
+#define DMA_PERIPHERAL_TO_MEMORY            ((uint8_t)0x0000U)                              /*!< read from peripheral and write to memory */
+#define DMA_MEMORY_TO_PERIPHERAL            ((uint8_t)0x0001U)                              /*!< read from memory and write to peripheral */
 
 /* peripheral increasing mode */
-#define DMA_PERIPH_INCREASE_DISABLE         ((uint32_t)0x00000000U)                         /*!< next address of peripheral is fixed address mode */
-#define DMA_PERIPH_INCREASE_ENABLE          ((uint32_t)0x00000001U)                         /*!< next address of peripheral is increasing address mode */
+#define DMA_PERIPH_INCREASE_DISABLE         ((uint8_t)0x0000U)                              /*!< next address of peripheral is fixed address mode */
+#define DMA_PERIPH_INCREASE_ENABLE          ((uint8_t)0x0001U)                              /*!< next address of peripheral is increasing address mode */
 
 /* memory increasing mode */
-#define DMA_MEMORY_INCREASE_DISABLE         ((uint32_t)0x00000000U)                         /*!< next address of memory is fixed address mode */
-#define DMA_MEMORY_INCREASE_ENABLE          ((uint32_t)0x00000001U)                         /*!< next address of memory is increasing address mode */
+#define DMA_MEMORY_INCREASE_DISABLE         ((uint8_t)0x0000U)                              /*!< next address of memory is fixed address mode */
+#define DMA_MEMORY_INCREASE_ENABLE          ((uint8_t)0x0001U)                              /*!< next address of memory is increasing address mode */
 
 /* transfer data size of peripheral */
-#define CHCTL_PWIDTH(regval)                (BITS(8,9) & ((regval) << 8))                   /*!< transfer data size of peripheral */
+#define CHCTL_PWIDTH(regval)                (BITS(8,9) & ((uint32_t)(regval) << 8))         /*!< transfer data size of peripheral */
 #define DMA_PERIPHERAL_WIDTH_8BIT           CHCTL_PWIDTH(0)                                 /*!< transfer data size of peripheral is 8-bit */
 #define DMA_PERIPHERAL_WIDTH_16BIT          CHCTL_PWIDTH(1)                                 /*!< transfer data size of peripheral is 16-bit */
 #define DMA_PERIPHERAL_WIDTH_32BIT          CHCTL_PWIDTH(2)                                 /*!< transfer data size of peripheral is 32-bit */
 
 /* transfer data size of memory */
-#define CHCTL_MWIDTH(regval)                (BITS(10,11) & ((regval) << 10))                /*!< transfer data size of memory */
+#define CHCTL_MWIDTH(regval)                (BITS(10,11) & ((uint32_t)(regval) << 10))      /*!< transfer data size of memory */
 #define DMA_MEMORY_WIDTH_8BIT               CHCTL_MWIDTH(0)                                 /*!< transfer data size of memory is 8-bit */
 #define DMA_MEMORY_WIDTH_16BIT              CHCTL_MWIDTH(1)                                 /*!< transfer data size of memory is 16-bit */
 #define DMA_MEMORY_WIDTH_32BIT              CHCTL_MWIDTH(2)                                 /*!< transfer data size of memory is 32-bit */
 
 /* channel priority level */
-#define CHCTL_PRIO(regval)                  (BITS(12,13) & ((regval) << 12))                /*!< DMA channel priority level */
+#define CHCTL_PRIO(regval)                  (BITS(12,13) & ((uint32_t)(regval) << 12))      /*!< DMA channel priority level */
 #define DMA_PRIORITY_LOW                    CHCTL_PRIO(0)                                   /*!< low priority */
 #define DMA_PRIORITY_MEDIUM                 CHCTL_PRIO(1)                                   /*!< medium priority */
 #define DMA_PRIORITY_HIGH                   CHCTL_PRIO(2)                                   /*!< high priority */
@@ -201,10 +223,13 @@ typedef struct
 
   
 /* function declarations */
+/* DMA deinitialization and initialization functions */
 /* deinitialize DMA a channel registers */
 void dma_deinit(uint32_t dma_periph, dma_channel_enum channelx);
+/* initialize the parameters of DMA struct with the default values */
+void dma_struct_para_init(dma_parameter_struct* init_struct);
 /* initialize DMA channel */
-void dma_init(uint32_t dma_periph, dma_channel_enum channelx, dma_parameter_struct init_struct);
+void dma_init(uint32_t dma_periph, dma_channel_enum channelx, dma_parameter_struct* init_struct);
 /* enable DMA circulation mode */
 void dma_circulation_enable(uint32_t dma_periph, dma_channel_enum channelx);
 /* disable DMA circulation mode */
@@ -218,6 +243,7 @@ void dma_channel_enable(uint32_t dma_periph, dma_channel_enum channelx);
 /* disable DMA channel */
 void dma_channel_disable(uint32_t dma_periph, dma_channel_enum channelx);
 
+/* DMA configuration functions */
 /* set DMA peripheral base address */
 void dma_periph_address_config(uint32_t dma_periph, dma_channel_enum channelx, uint32_t address);
 /* set DMA memory base address */
@@ -243,6 +269,7 @@ void dma_periph_increase_disable(uint32_t dma_periph, dma_channel_enum channelx)
 /* configure the direction of data transfer on the channel */
 void dma_transfer_direction_config(uint32_t dma_periph, dma_channel_enum channelx, uint32_t direction);
 
+/* flag and interrupt functions */
 /* check DMA flag is set or not */
 FlagStatus dma_flag_get(uint32_t dma_periph, dma_channel_enum channelx, uint32_t flag);
 /* clear DMA a channel flag */

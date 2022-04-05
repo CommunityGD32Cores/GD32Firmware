@@ -1,12 +1,38 @@
 /*!
     \file  gd32f403_usart.h
     \brief general definitions for GD32F403
+    
+    \version 2017-02-10, V1.0.0, firmware for GD32F403
+    \version 2018-12-25, V2.0.0, firmware for GD32F403
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2017-02-10, V1.0.1, firmware for GD32F403
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F403_USART_H
@@ -304,8 +330,6 @@ void usart_parity_config(uint32_t usart_periph, uint32_t paritycfg);
 void usart_word_length_set(uint32_t usart_periph, uint32_t wlen);
 /* configure USART stop bit length */
 void usart_stop_bit_set(uint32_t usart_periph, uint32_t stblen);
-
-/* USART normal mode communication */
 /* enable USART */
 void usart_enable(uint32_t usart_periph);
 /* disable USART */
@@ -314,6 +338,8 @@ void usart_disable(uint32_t usart_periph);
 void usart_transmit_config(uint32_t usart_periph, uint32_t txconfig);
 /* configure USART receiver */
 void usart_receive_config(uint32_t usart_periph, uint32_t rxconfig);
+
+/* USART normal mode communication */
 /* data is transmitted/received with the LSB/MSB first */
 void usart_data_first_config(uint32_t usart_periph, uint32_t msbf);
 /* configure USART inverted */
@@ -340,43 +366,43 @@ void usart_mute_mode_disable(uint32_t usart_periph);
 void usart_mute_mode_wakeup_config(uint32_t usart_periph, uint32_t wmethod);
 
 /* LIN mode communication */
-/* LIN mode enable */
+/* enable LIN mode */
 void usart_lin_mode_enable(uint32_t usart_periph);
-/* LIN mode disable */
+/* disable LIN mode */
 void usart_lin_mode_disable(uint32_t usart_periph);
 /* LIN break detection length */
-void usart_lin_break_dection_length_config(uint32_t usart_periph, uint32_t lblen);
+void usart_lin_break_detection_length_config(uint32_t usart_periph, uint32_t lblen);
 /* send break frame */
 void usart_send_break(uint32_t usart_periph);
 
 /* half-duplex communication */
-/* half-duplex enable */
+/* enable half-duplex mode */
 void usart_halfduplex_enable(uint32_t usart_periph);
-/* half-duplex disable */
+/* disable half-duplex mode */
 void usart_halfduplex_disable(uint32_t usart_periph);
 
 /* synchronous communication */
-/* clock enable */
+/* enable CK pin in synchronous mode */
 void usart_synchronous_clock_enable(uint32_t usart_periph);
-/* clock disable */
+/* disable CK pin in synchronous mode */
 void usart_synchronous_clock_disable(uint32_t usart_periph);
 /* configure usart synchronous mode parameters */
 void usart_synchronous_clock_config(uint32_t usart_periph, uint32_t clen, uint32_t cph, uint32_t cpl);
 
 /* smartcard communication */
-/* guard time value configure in smartcard mode */
+/* configure guard time value in smartcard mode */
 void usart_guard_time_config(uint32_t usart_periph,uint32_t guat);
-/* smartcard mode enable */
+/* enable smartcard mode */
 void usart_smartcard_mode_enable(uint32_t usart_periph);
-/* smartcard mode disable */
+/* disable smartcard mode */
 void usart_smartcard_mode_disable(uint32_t usart_periph);
-/* NACK enable in smartcard mode */
+/* enable NACK in smartcard mode */
 void usart_smartcard_mode_nack_enable(uint32_t usart_periph);
-/* NACK disable in smartcard mode */
+/* disable NACK in smartcard mode */
 void usart_smartcard_mode_nack_disable(uint32_t usart_periph);
-/* smartcard auto-retry number configure */
+/* configure smartcard auto-retry number */
 void usart_smartcard_autoretry_config(uint32_t usart_periph, uint32_t scrtnum);
-/* block length configure */
+/* configure block length */
 void usart_block_length_config(uint32_t usart_periph, uint32_t bl);
 
 /* IrDA communication */
@@ -395,24 +421,24 @@ void usart_hardware_flow_rts_config(uint32_t usart_periph, uint32_t rtsconfig);
 /* configure hardware flow control CTS */
 void usart_hardware_flow_cts_config(uint32_t usart_periph, uint32_t ctsconfig);
 
+/* DMA communication */
 /* configure USART DMA for reception */
 void usart_dma_receive_config(uint32_t usart_periph, uint32_t dmacmd);
 /* configure USART DMA for transmission */
 void usart_dma_transmit_config(uint32_t usart_periph, uint32_t dmacmd);
 
-/* flag functions */
+/* flag & interrupt functions */
 /* get flag in STAT0/STAT1 register */
 FlagStatus usart_flag_get(uint32_t usart_periph, usart_flag_enum flag);
 /* clear flag in STAT0/STAT1 register */
 void usart_flag_clear(uint32_t usart_periph, usart_flag_enum flag);
-
-/* interrupt functions */
 /* enable USART interrupt */
-void usart_interrupt_enable(uint32_t usart_periph, uint32_t int_flag);
+void usart_interrupt_enable(uint32_t usart_periph, usart_interrupt_enum interrupt);
 /* disable USART interrupt */
-void usart_interrupt_disable(uint32_t usart_periph, uint32_t int_flag);
+void usart_interrupt_disable(uint32_t usart_periph, usart_interrupt_enum interrupt);
 /* get USART interrupt and flag status */
-FlagStatus usart_interrupt_flag_get(uint32_t usart_periph, uint32_t int_flag);
+FlagStatus usart_interrupt_flag_get(uint32_t usart_periph, usart_interrupt_flag_enum int_flag);
 /* clear interrupt flag in STAT0/STAT1 register */
-void usart_interrupt_flag_clear(uint32_t usart_periph, uint32_t flag);
+void usart_interrupt_flag_clear(uint32_t usart_periph, usart_interrupt_flag_enum int_flag);
+
 #endif /* GD32F403_USART_H */ 

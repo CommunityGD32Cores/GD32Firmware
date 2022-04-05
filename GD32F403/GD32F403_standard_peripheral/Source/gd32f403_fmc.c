@@ -1,19 +1,46 @@
 /*!
     \file  gd32f403_fmc.c
     \brief FMC driver
+
+    \version 2017-02-10, V1.0.0, firmware for GD32F403
+    \version 2018-12-25, V2.0.0, firmware for GD32F403
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2017-02-10, V1.0.1, firmware for GD32F403
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
+
 
 #include "gd32f403_fmc.h"
 
 /*!
     \brief      set the wait state counter value
-    \param[in]  wscnt£ºwait state counter value
+    \param[in]  wscnt:wait state counter value
       \arg        WS_WSCNT_0: FMC 0 wait
       \arg        WS_WSCNT_1: FMC 1 wait
       \arg        WS_WSCNT_2: FMC 2 wait
@@ -349,7 +376,7 @@ fmc_state_enum fmc_word_program(uint32_t address, uint32_t data)
 fmc_state_enum fmc_halfword_program(uint32_t address, uint16_t data)
 {
     fmc_state_enum fmc_state = FMC_READY;
-    if(FMC_BANK0_SIZE > FMC_SIZE){
+    if(FMC_BANK0_SIZE < FMC_SIZE){
         if(FMC_BANK0_END_ADDRESS > address){
             fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT); 
   
@@ -382,6 +409,59 @@ fmc_state_enum fmc_halfword_program(uint32_t address, uint16_t data)
             /* set the PG bit to start program */
             FMC_CTL0 |= FMC_CTL0_PG;
             REG16(address) = data;
+            /* wait for the FMC ready */
+            fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT);
+            /* reset the PG bit */
+            FMC_CTL0 &= ~FMC_CTL0_PG;
+        } 
+    }
+    /* return the FMC state */
+    return fmc_state;
+}
+
+/*!
+    \brief      program a word at the corresponding address without erasing
+    \param[in]  address: address to program
+    \param[in]  data: word to program
+    \param[out] none
+    \retval     fmc_state
+*/
+fmc_state_enum fmc_word_reprogram(uint32_t address, uint32_t data)
+{
+    fmc_state_enum fmc_state = FMC_READY;
+    if(FMC_BANK0_SIZE < FMC_SIZE){
+        if(FMC_BANK0_END_ADDRESS > address){
+            fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT); 
+            FMC_WSEN |= FMC_WSEN_BPEN;
+            if(FMC_READY == fmc_state){
+                /* set the PG bit to start program */
+                FMC_CTL0 |= FMC_CTL0_PG;
+                REG32(address) = data;
+                /* wait for the FMC ready */
+                fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT);
+                /* reset the PG bit */
+                FMC_CTL0 &= ~FMC_CTL0_PG;
+            }
+        }else{
+            fmc_state = fmc_bank1_ready_wait(FMC_TIMEOUT_COUNT); 
+            FMC_WSEN |= FMC_WSEN_BPEN;
+            if(FMC_READY == fmc_state){
+                /* set the PG bit to start program */
+                FMC_CTL1 |= FMC_CTL1_PG;
+                REG32(address) = data;
+                /* wait for the FMC ready */
+                fmc_state = fmc_bank1_ready_wait(FMC_TIMEOUT_COUNT);
+                /* reset the PG bit */
+                FMC_CTL1 &= ~FMC_CTL1_PG;
+            }
+        }
+    }else{
+        fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT);
+        FMC_WSEN |= FMC_WSEN_BPEN;
+        if(FMC_READY == fmc_state){
+            /* set the PG bit to start program */
+            FMC_CTL0 |= FMC_CTL0_PG;
+            REG32(address) = data;
             /* wait for the FMC ready */
             fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT);
             /* reset the PG bit */
@@ -702,10 +782,10 @@ FlagStatus ob_spc_get(void)
 /*!
     \brief      enable FMC interrupt
     \param[in]  interrupt: the FMC interrupt source
-      \arg        FMC_INT_BANK0_END: enable FMC end of program interrupt
-      \arg        FMC_INT_BANK0_ERR: enable FMC error interrupt
-      \arg        FMC_INT_BANK1_END: enable FMC bank1 end of program interrupt
-      \arg        FMC_INT_BANK1_ERR: enable FMC bank1 error interrupt
+      \arg        FMC_INT_BANK0_END: FMC bank0 end of program interrupt
+      \arg        FMC_INT_BANK0_ERR: FMC bank0 error interrupt
+      \arg        FMC_INT_BANK1_END: FMC bank1 end of program interrupt
+      \arg        FMC_INT_BANK1_ERR: FMC bank1 error interrupt
     \param[out] none
     \retval     none
 */
@@ -717,10 +797,10 @@ void fmc_interrupt_enable(uint32_t interrupt)
 /*!
     \brief      disable FMC interrupt
     \param[in]  interrupt: the FMC interrupt source
-      \arg        FMC_INT_BANK0_END: enable FMC end of program interrupt
-      \arg        FMC_INT_BANK0_ERR: enable FMC error interrupt
-      \arg        FMC_INT_BANK1_END: enable FMC bank1 end of program interrupt
-      \arg        FMC_INT_BANK1_ERR: enable FMC bank1 error interrupt
+      \arg        FMC_INT_BANK0_END: FMC bank0 end of program interrupt
+      \arg        FMC_INT_BANK0_ERR: FMC bank0 error interrupt
+      \arg        FMC_INT_BANK1_END: FMC bank1 end of program interrupt
+      \arg        FMC_INT_BANK1_ERR: FMC bank1 error interrupt
     \param[out] none
     \retval     none
 */

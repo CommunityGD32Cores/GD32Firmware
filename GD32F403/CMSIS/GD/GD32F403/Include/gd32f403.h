@@ -1,18 +1,44 @@
 /*!
     \file  gd32f403.h
     \brief general definitions for GD32F403
+
+    \version 2017-02-10, V1.0.0, firmware for GD32F403
+    \version 2018-12-25, V2.0.0, firmware for GD32F403
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2017-02-10, V1.0.1, firmware for GD32F403
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F403_H
 #define GD32F403_H
 
-#ifdef cplusplus
+#ifdef __cplusplus
  extern "C" {
 #endif 
 
@@ -21,7 +47,7 @@
 
 /* define startup timeout value of high speed crystal oscillator (HXTAL) */
 #if !defined  (HXTAL_STARTUP_TIMEOUT)
-#define HXTAL_STARTUP_TIMEOUT   ((uint16_t)0x0800)
+#define HXTAL_STARTUP_TIMEOUT   ((uint16_t)0xFFFF)
 #endif /* high speed crystal oscillator startup timeout */
 
 /* define value of internal 48MHz RC oscillator (IRC48M) in Hz */
@@ -88,11 +114,11 @@ typedef enum IRQn
     RTC_IRQn                     = 3,      /*!< RTC through EXTI line interrupt                          */
     FMC_IRQn                     = 4,      /*!< FMC interrupt                                            */
     RCU_CTC_IRQn                 = 5,      /*!< RCU and CTC interrupt                                    */
-    EXTI0_IRQn                   = 6,      /*!< EXTI line 0 interrupts                                   */
-    EXTI1_IRQn                   = 7,      /*!< EXTI line 1 interrupts                                   */
-    EXTI2_IRQn                   = 8,      /*!< EXTI line 2 interrupts                                   */
-    EXTI3_IRQn                   = 9,      /*!< EXTI line 3 interrupts                                   */
-    EXTI4_IRQn                   = 10,     /*!< EXTI line 4 interrupts                                   */
+    EXTI0_IRQn                   = 6,      /*!< EXTI line 0 interrupt                                    */
+    EXTI1_IRQn                   = 7,      /*!< EXTI line 1 interrupt                                    */
+    EXTI2_IRQn                   = 8,      /*!< EXTI line 2 interrupt                                    */
+    EXTI3_IRQn                   = 9,      /*!< EXTI line 3 interrupt                                    */
+    EXTI4_IRQn                   = 10,     /*!< EXTI line 4 interrupt                                    */
     DMA0_Channel0_IRQn           = 11,     /*!< DMA0 channel0 interrupt                                  */
     DMA0_Channel1_IRQn           = 12,     /*!< DMA0 channel1 interrupt                                  */
     DMA0_Channel2_IRQn           = 13,     /*!< DMA0 channel2 interrupt                                  */
@@ -101,17 +127,17 @@ typedef enum IRQn
     DMA0_Channel5_IRQn           = 16,     /*!< DMA0 channel5 interrupt                                  */
     DMA0_Channel6_IRQn           = 17,     /*!< DMA0 channel6 interrupt                                  */
     ADC0_1_IRQn                  = 18,     /*!< ADC0 and ADC1 interrupt                                  */
-    CAN0_TX_IRQn                 = 19,     /*!< CAN0 TX interrupts                                       */
-    CAN0_RX0_IRQn                = 20,     /*!< CAN0 RX0 interrupts                                      */
-    CAN0_RX1_IRQn                = 21,     /*!< CAN0 RX1 interrupts                                      */
-    CAN0_EWMC_IRQn               = 22,     /*!< CAN0 EWMC interrupts                                     */
+    CAN0_TX_IRQn                 = 19,     /*!< CAN0 TX interrupt                                        */
+    CAN0_RX0_IRQn                = 20,     /*!< CAN0 RX0 interrupt                                       */
+    CAN0_RX1_IRQn                = 21,     /*!< CAN0 RX1 interrupt                                       */
+    CAN0_EWMC_IRQn               = 22,     /*!< CAN0 EWMC interrupt                                      */
     EXTI5_9_IRQn                 = 23,     /*!< EXTI[9:5] interrupts                                     */
-    TIMER0_BRK_TIMER8_IRQn       = 24,     /*!< TIMER0 break and TIMER8 interrupts                       */
-    TIMER0_UP_TIMER9_IRQn        = 25,     /*!< TIMER0 update and TIMER9 interrupts                      */
-    TIMER0_TRG_CMT_TIMER10_IRQn  = 26,     /*!< TIMER0 trigger and commutation  and TIMER10 interrupts   */
-    TIMER0_Channel_IRQn          = 27,     /*!< TIMER0 channel capture compare interrupts                                */
+    TIMER0_BRK_TIMER8_IRQn       = 24,     /*!< TIMER0 break and TIMER8 interrupt                        */
+    TIMER0_UP_TIMER9_IRQn        = 25,     /*!< TIMER0 update and TIMER9 interrupt                       */
+    TIMER0_TRG_CMT_TIMER10_IRQn  = 26,     /*!< TIMER0 trigger and commutation  and TIMER10 interrupt    */
+    TIMER0_Channel_IRQn          = 27,     /*!< TIMER0 channel capture compare interrupt                 */
     TIMER2_IRQn                  = 29,     /*!< TIMER2 interrupt                                         */
-    TIMER3_IRQn                  = 30,     /*!< TIMER3 interrupts                                        */
+    TIMER3_IRQn                  = 30,     /*!< TIMER3 interrupt                                         */
     I2C0_EV_IRQn                 = 31,     /*!< I2C0 event interrupt                                     */
     I2C0_ER_IRQn                 = 32,     /*!< I2C0 error interrupt                                     */
     I2C1_EV_IRQn                 = 33,     /*!< I2C1 event interrupt                                     */
@@ -124,13 +150,13 @@ typedef enum IRQn
     EXTI10_15_IRQn               = 40,     /*!< EXTI[15:10] interrupts                                   */
     RTC_ALARM_IRQn               = 41,     /*!< RTC alarm interrupt                                      */
     USBFS_WKUP_IRQn              = 42,     /*!< USBFS wakeup interrupt                                   */
-    TIMER7_BRK_TIMER11_IRQn      = 43,     /*!< TIMER7 break and TIMER11 interrupts                      */
-    TIMER7_UP_TIMER12_IRQn       = 44,     /*!< TIMER7 update and TIMER12 interrupts                     */
-    TIMER7_TRG_CMT_TIMER13_IRQn  = 45,     /*!< TIMER7 trigger and commutation and TIMER13 interrupts    */
-    TIMER7_Channel_IRQn          = 46,     /*!< TIMER7 channel capture compare interrupts                                */
-    ADC2_IRQn                    = 47,     /*!< ADC 2 interrupts                                         */
+    TIMER7_BRK_TIMER11_IRQn      = 43,     /*!< TIMER7 break and TIMER11 interrupt                       */
+    TIMER7_UP_TIMER12_IRQn       = 44,     /*!< TIMER7 update and TIMER12 interrupt                      */
+    TIMER7_TRG_CMT_TIMER13_IRQn  = 45,     /*!< TIMER7 trigger and commutation and TIMER13 interrupt     */
+    TIMER7_Channel_IRQn          = 46,     /*!< TIMER7 channel capture compare interrupt                 */
+    ADC2_IRQn                    = 47,     /*!< ADC 2 interrupt                                          */
     EXMC_IRQn                    = 48,     /*!< EXMC global interrupt                                    */
-    SDIO_IRQn                    = 49,     /*!< SDIO interrupts                                          */
+    SDIO_IRQn                    = 49,     /*!< SDIO interrupt                                           */
     SPI2_IRQn                    = 51,     /*!< SPI2 global interrupt                                    */
     UART3_IRQn                   = 52,     /*!< UART3 global interrupt                                   */
     UART4_IRQn                   = 53,     /*!< UART4 global interrupt                                   */
@@ -155,7 +181,6 @@ typedef enum IRQn
 
 /* enum definitions */
 typedef enum {DISABLE = 0, ENABLE = !DISABLE} EventStatus, ControlStatus;
-typedef enum {FALSE = 0, TRUE = !FALSE} bool;
 typedef enum {RESET = 0, SET = !RESET} FlagStatus;
 typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrStatus;
 
@@ -216,7 +241,7 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrStatus;
 #include "gd32f403_libopt.h"
 #endif /* USE_STDPERIPH_DRIVER */
 
-#ifdef cplusplus
+#ifdef __cplusplus
 }
 #endif
 #endif 

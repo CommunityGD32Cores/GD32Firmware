@@ -1,13 +1,40 @@
 /*!
     \file  gd32f403_fmc.h
     \brief definitions for the FMC
+
+    \version 2017-02-10, V1.0.0, firmware for GD32F403
+    \version 2018-12-25, V2.0.0, firmware for GD32F403
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2017-02-10, V1.0.1, firmware for GD32F403
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
+
 
 #ifndef GD32F403_FMC_H
 #define GD32F403_FMC_H
@@ -104,6 +131,7 @@
 
 /* FMC_WSEN */
 #define FMC_WSEN_WSEN              BIT(0)                         /*!< FMC wait state enable bit */
+#define FMC_WSEN_BPEN              BIT(1)                         /*!< FMC bit program enable bit */
 
 /* FMC_PID */
 #define FMC_PID_PID                BITS(0,31)                     /*!< product ID bits */
@@ -293,6 +321,8 @@ fmc_state_enum fmc_bank1_erase(void);
 fmc_state_enum fmc_word_program(uint32_t address, uint32_t data);
 /* FMC program a half word at the corresponding address */
 fmc_state_enum fmc_halfword_program(uint32_t address, uint16_t data);
+/* FMC reprogram a word at the corresponding address without erasing */
+fmc_state_enum fmc_word_reprogram(uint32_t address, uint32_t data);
 
 /* FMC option bytes programming functions */
 /* unlock the option byte operation */

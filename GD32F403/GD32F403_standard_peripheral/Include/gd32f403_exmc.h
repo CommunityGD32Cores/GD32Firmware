@@ -1,12 +1,38 @@
 /*!
     \file  gd32f403_exmc.h
     \brief definitions for the EXMC
+
+    \version 2017-02-10, V1.0.0, firmware for GD32F403
+    \version 2018-12-25, V2.0.0, firmware for GD32F403
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2017-02-10, V1.0.2, firmware for GD32F403
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F403_EXMC_H
@@ -19,45 +45,45 @@
 
 /* registers definitions */
 /* NOR/PSRAM */
-#define EXMC_SNCTL0                       REG32(EXMC + 0x00U)           /*!< EXMC SRAM/NOR flash control register 0 */
-#define EXMC_SNTCFG0                      REG32(EXMC + 0x04U)           /*!< EXMC SRAM/NOR flash timing configuration register 0 */
-#define EXMC_SNWTCFG0                     REG32(EXMC + 0x104U)          /*!< EXMC SRAM/NOR flash write timing configuration register 0 */
+#define EXMC_SNCTL0                       REG32(EXMC + 0x00U)           /*!< EXMC SRAM/NOR flash control register0 */
+#define EXMC_SNTCFG0                      REG32(EXMC + 0x04U)           /*!< EXMC SRAM/NOR flash timing configuration register0 */
+#define EXMC_SNWTCFG0                     REG32(EXMC + 0x104U)          /*!< EXMC SRAM/NOR flash write timing configuration register0 */
 
-#define EXMC_SNCTL1                       REG32(EXMC + 0x08U)           /*!< EXMC SRAM/NOR flash control register 1 */
-#define EXMC_SNTCFG1                      REG32(EXMC + 0x0CU)           /*!< EXMC SRAM/NOR flash timing configuration register 1 */
-#define EXMC_SNWTCFG1                     REG32(EXMC + 0x10CU)          /*!< EXMC SRAM/NOR flash write timing configuration register 1 */
+#define EXMC_SNCTL1                       REG32(EXMC + 0x08U)           /*!< EXMC SRAM/NOR flash control register1 */
+#define EXMC_SNTCFG1                      REG32(EXMC + 0x0CU)           /*!< EXMC SRAM/NOR flash timing configuration register1 */
+#define EXMC_SNWTCFG1                     REG32(EXMC + 0x10CU)          /*!< EXMC SRAM/NOR flash write timing configuration register1 */
 
-#define EXMC_SNCTL2                       REG32(EXMC + 0x10U)           /*!< EXMC SRAM/NOR flash control register 2 */
-#define EXMC_SNTCFG2                      REG32(EXMC + 0x14U)           /*!< EXMC SRAM/NOR flash timing configuration register 2 */
-#define EXMC_SNWTCFG2                     REG32(EXMC + 0x114U)          /*!< EXMC SRAM/NOR flash write timing configuration register 2 */
+#define EXMC_SNCTL2                       REG32(EXMC + 0x10U)           /*!< EXMC SRAM/NOR flash control register2 */
+#define EXMC_SNTCFG2                      REG32(EXMC + 0x14U)           /*!< EXMC SRAM/NOR flash timing configuration register2 */
+#define EXMC_SNWTCFG2                     REG32(EXMC + 0x114U)          /*!< EXMC SRAM/NOR flash write timing configuration register2 */
 
-#define EXMC_SNCTL3                       REG32(EXMC + 0x18U)           /*!< EXMC SRAM/NOR flash control register 3 */
-#define EXMC_SNTCFG3                      REG32(EXMC + 0x1CU)           /*!< EXMC SRAM/NOR flash timing configuration register 3 */
-#define EXMC_SNWTCFG3                     REG32(EXMC + 0x11CU)          /*!< EXMC SRAM/NOR flash write timing configuration register 3 */
+#define EXMC_SNCTL3                       REG32(EXMC + 0x18U)           /*!< EXMC SRAM/NOR flash control register3 */
+#define EXMC_SNTCFG3                      REG32(EXMC + 0x1CU)           /*!< EXMC SRAM/NOR flash timing configuration register3 */
+#define EXMC_SNWTCFG3                     REG32(EXMC + 0x11CU)          /*!< EXMC SRAM/NOR flash write timing configuration register3 */
 
 /* NAND/PC card */
-#define EXMC_NPCTL1                       REG32(EXMC + 0x60U)           /*!< EXMC NAND/PC card control register 1 */
-#define EXMC_NPINTEN1                     REG32(EXMC + 0x64U)           /*!< EXMC NAND/PC card interrupt enable register 1 */
-#define EXMC_NPCTCFG1                     REG32(EXMC + 0x68U)           /*!< EXMC NAND/PC card common space timing configuration register 1 */
-#define EXMC_NPATCFG1                     REG32(EXMC + 0x6CU)           /*!< EXMC NAND/PC card attribute space timing configuration register 1 */
-#define EXMC_NECC1                        REG32(EXMC + 0x74U)           /*!< EXMC NAND ECC register 1 */
+#define EXMC_NPCTL1                       REG32(EXMC + 0x60U)           /*!< EXMC NAND/PC card control register1 */
+#define EXMC_NPINTEN1                     REG32(EXMC + 0x64U)           /*!< EXMC NAND/PC card interrupt enable register1 */
+#define EXMC_NPCTCFG1                     REG32(EXMC + 0x68U)           /*!< EXMC NAND/PC card common space timing configuration register1 */
+#define EXMC_NPATCFG1                     REG32(EXMC + 0x6CU)           /*!< EXMC NAND/PC card attribute space timing configuration register1 */
+#define EXMC_NECC1                        REG32(EXMC + 0x74U)           /*!< EXMC NAND ECC register1 */
 
-#define EXMC_NPCTL2                       REG32(EXMC + 0x80U)           /*!< EXMC NAND/PC card control register 2 */
-#define EXMC_NPINTEN2                     REG32(EXMC + 0x84U)           /*!< EXMC NAND/PC card interrupt enable register 2 */
-#define EXMC_NPCTCFG2                     REG32(EXMC + 0x88U)           /*!< EXMC NAND/PC card common space timing configuration register 2 */
-#define EXMC_NPATCFG2                     REG32(EXMC + 0x8CU)           /*!< EXMC NAND/PC card attribute space timing configuration register 2 */
-#define EXMC_NECC2                        REG32(EXMC + 0x94U)           /*!< EXMC NAND ECC register 2 */
+#define EXMC_NPCTL2                       REG32(EXMC + 0x80U)           /*!< EXMC NAND/PC card control register2 */
+#define EXMC_NPINTEN2                     REG32(EXMC + 0x84U)           /*!< EXMC NAND/PC card interrupt enable register2 */
+#define EXMC_NPCTCFG2                     REG32(EXMC + 0x88U)           /*!< EXMC NAND/PC card common space timing configuration register2 */
+#define EXMC_NPATCFG2                     REG32(EXMC + 0x8CU)           /*!< EXMC NAND/PC card attribute space timing configuration register2 */
+#define EXMC_NECC2                        REG32(EXMC + 0x94U)           /*!< EXMC NAND ECC register2 */
 
-#define EXMC_NPCTL3                       REG32(EXMC + 0xA0U)           /*!< EXMC NAND/PC card control register 3 */
-#define EXMC_NPINTEN3                     REG32(EXMC + 0xA4U)           /*!< EXMC NAND/PC card interrupt enable register 3 */
-#define EXMC_NPCTCFG3                     REG32(EXMC + 0xA8U)           /*!< EXMC NAND/PC card common space timing configuration register 3 */
-#define EXMC_NPATCFG3                     REG32(EXMC + 0xACU)           /*!< EXMC NAND/PC card attribute space timing configuration register 3 */
+#define EXMC_NPCTL3                       REG32(EXMC + 0xA0U)           /*!< EXMC NAND/PC card control register3 */
+#define EXMC_NPINTEN3                     REG32(EXMC + 0xA4U)           /*!< EXMC NAND/PC card interrupt enable register3 */
+#define EXMC_NPCTCFG3                     REG32(EXMC + 0xA8U)           /*!< EXMC NAND/PC card common space timing configuration register3 */
+#define EXMC_NPATCFG3                     REG32(EXMC + 0xACU)           /*!< EXMC NAND/PC card attribute space timing configuration register3 */
 #define EXMC_PIOTCFG3                     REG32(EXMC + 0xB0U)           /*!< EXMC PC card I/O space timing configuration register */
 
 /* bits definitions */
 /* EXMC_SNCTLx,x=0..3 */
 #define EXMC_SNCTL_NRBKEN                 BIT(0)                        /*!< NOR bank enable */
-#define EXMC_SNCTL_NRMUX                  BIT(1)                        /*!< NOR bank memory address/data multiplexing */
+#define EXMC_SNCTL_NRMUX                  BIT(1)                        /*!< NOR bank memory address/data multiplexing enable */
 #define EXMC_SNCTL_NRTP                   BITS(2,3)                     /*!< NOR bank memory type */
 #define EXMC_SNCTL_NRW                    BITS(4,5)                     /*!< NOR bank memory data bus width */
 #define EXMC_SNCTL_NREN                   BIT(6)                        /*!< NOR flash access enable */
@@ -68,23 +94,23 @@
 #define EXMC_SNCTL_WREN                   BIT(12)                       /*!< write enable */
 #define EXMC_SNCTL_NRWTEN                 BIT(13)                       /*!< NWAIT signal enable */
 #define EXMC_SNCTL_EXMODEN                BIT(14)                       /*!< extended mode enable */
-#define EXMC_SNCTL_ASYNCWAIT              BIT(15)                       /*!< asynchronous wait */
+#define EXMC_SNCTL_ASYNCWAIT              BIT(15)                       /*!< asynchronous wait enable */
 #define EXMC_SNCTL_CPS                    BITS(16,18)                   /*!< CRAM page size */
-#define EXMC_SNCTL_SYNCWR                 BIT(19)                       /*!< synchronous write */
+#define EXMC_SNCTL_SYNCWR                 BIT(19)                       /*!< synchronous write config */
 
 /* EXMC_SNTCFGx,x=0..3 */
-#define EXMC_SNTCFG_ASET                  BITS(0,3)                     /*!< address setup time */
-#define EXMC_SNTCFG_AHLD                  BITS(4,7)                     /*!< address hold time */
-#define EXMC_SNTCFG_DSET                  BITS(8,15)                    /*!< data setup time */
+#define EXMC_SNTCFG_ASET                  BITS(0,3)                     /*!< asynchronous address setup time */
+#define EXMC_SNTCFG_AHLD                  BITS(4,7)                     /*!< asynchronous address hold time */
+#define EXMC_SNTCFG_DSET                  BITS(8,15)                    /*!< asynchronous data setup time */
 #define EXMC_SNTCFG_BUSLAT                BITS(16,19)                   /*!< bus latency */
 #define EXMC_SNTCFG_CKDIV                 BITS(20,23)                   /*!< synchronous clock divide ratio */
-#define EXMC_SNTCFG_DLAT                  BITS(24,27)                   /*!< data latency for NOR flash */
+#define EXMC_SNTCFG_DLAT                  BITS(24,27)                   /*!< synchronous data latency for NOR flash */
 #define EXMC_SNTCFG_ASYNCMOD              BITS(28,29)                   /*!< asynchronous access mode */
 
 /* EXMC_SNWTCFGx,x=0..3 */
-#define EXMC_SNWTCFG_WASET                BITS(0,3)                     /*!< address setup time */
-#define EXMC_SNWTCFG_WAHLD                BITS(4,7)                     /*!< address hold time */
-#define EXMC_SNWTCFG_WDSET                BITS(8,15)                    /*!< data setup time */
+#define EXMC_SNWTCFG_WASET                BITS(0,3)                     /*!< asynchronous address setup time */
+#define EXMC_SNWTCFG_WAHLD                BITS(4,7)                     /*!< asynchronous address hold time */
+#define EXMC_SNWTCFG_WDSET                BITS(8,15)                    /*!< asynchronous data setup time */
 #define EXMC_SNWTCFG_WBUSLAT              BITS(16,19)                   /*!< bus latency */
 #define EXMC_SNWTCFG_WASYNCMOD            BITS(28,29)                   /*!< asynchronous access mode */
 
@@ -180,7 +206,7 @@ typedef struct
     uint32_t ctr_latency;                                               /*!< configure the latency of CLE low to RB low */
     uint32_t ecc_logic;                                                 /*!< enable or disable the ECC calculation logic */
     uint32_t databus_width;                                             /*!< the NAND flash databus width */
-    uint32_t wait_feature;                                              /*!< enables or disables the wait feature */
+    uint32_t wait_feature;                                              /*!< enable or disable the wait feature */
     exmc_nand_pccard_timing_parameter_struct* common_space_timing;      /*!< the timing parameters for NAND flash common space */
     exmc_nand_pccard_timing_parameter_struct* attribute_space_timing;   /*!< the timing parameters for NAND flash attribute space */
 }exmc_nand_parameter_struct;
@@ -190,23 +216,22 @@ typedef struct
 {
     uint32_t atr_latency;                                               /*!< configure the latency of ALE low to RB low */
     uint32_t ctr_latency;                                               /*!< configure the latency of CLE low to RB low */
-    uint32_t wait_feature;                                              /*!< enables or disables the Wait feature */
-    exmc_nand_pccard_timing_parameter_struct*  common_space_timing;     /*!< the timing parameters for NAND flash common space */
-    exmc_nand_pccard_timing_parameter_struct*  attribute_space_timing;  /*!< the timing parameters for NAND flash attribute space */  
-    exmc_nand_pccard_timing_parameter_struct*  io_space_timing;         /*!< the timing parameters for NAND flash IO space */
-}exmc_pccard_parameter_struct;;
-
+    uint32_t wait_feature;                                              /*!< enable or disable the wait feature */
+    exmc_nand_pccard_timing_parameter_struct*  common_space_timing;     /*!< the timing parameters for PC card common space */
+    exmc_nand_pccard_timing_parameter_struct*  attribute_space_timing;  /*!< the timing parameters for PC card attribute space */  
+    exmc_nand_pccard_timing_parameter_struct*  io_space_timing;         /*!< the timing parameters for PC card IO space */
+}exmc_pccard_parameter_struct;
 
 /* EXMC_register address */
-#define EXMC_SNCTL(region)                REG32(EXMC + 0x08U * (region))                  /*!< EXMC SRAM/NOR flash control register */
-#define EXMC_SNTCFG(region)               REG32(EXMC + 0x04U + 0x08U * (region))          /*!< EXMC SRAM/NOR flash timing configuration register */
-#define EXMC_SNWTCFG(region)              REG32(EXMC + 0x104U + 0x08U * (region))         /*!< EXMC SRAM/NOR flash write timing configuration register */
+#define EXMC_SNCTL(region)                REG32(EXMC + 0x08U * (region))                  /*!< EXMC SRAM/NOR flash control registers, region = 0,1,2,3 */
+#define EXMC_SNTCFG(region)               REG32(EXMC + 0x04U + 0x08U * (region))          /*!< EXMC SRAM/NOR flash timing configuration registers, region = 0,1,2,3 */
+#define EXMC_SNWTCFG(region)              REG32(EXMC + 0x104U + 0x08U * (region))         /*!< EXMC SRAM/NOR flash write timing configuration registers, region = 0,1,2,3 */
 
-#define EXMC_NPCTL(bank)                  REG32(EXMC + 0x40U + 0x20U * (bank))            /*!< EXMC NAND/PC card control register */
-#define EXMC_NPINTEN(bank)                REG32(EXMC + 0x44U + 0x20U * (bank))            /*!< EXMC NAND/PC card interrupt enable register */
-#define EXMC_NPCTCFG(bank)                REG32(EXMC + 0x48U + 0x20U * (bank))            /*!< EXMC NAND/PC card common space timing configuration register */
-#define EXMC_NPATCFG(bank)                REG32(EXMC + 0x4CU + 0x20U * (bank))            /*!< EXMC NAND/PC card attribute space timing configuration register */
-#define EXMC_NECC(bank)                   REG32(EXMC + 0x54U + 0x20U * (bank))            /*!< EXMC NAND ECC register */
+#define EXMC_NPCTL(bank)                  REG32(EXMC + 0x40U + 0x20U * (bank))            /*!< EXMC NAND/PC card control registers, bank = 1,2,3 */
+#define EXMC_NPINTEN(bank)                REG32(EXMC + 0x44U + 0x20U * (bank))            /*!< EXMC NAND/PC card interrupt enable registers, bank = 1,2,3 */
+#define EXMC_NPCTCFG(bank)                REG32(EXMC + 0x48U + 0x20U * (bank))            /*!< EXMC NAND/PC card common space timing configuration registers, bank = 1,2,3 */
+#define EXMC_NPATCFG(bank)                REG32(EXMC + 0x4CU + 0x20U * (bank))            /*!< EXMC NAND/PC card attribute space timing configuration registers, bank = 1,2,3 */
+#define EXMC_NECC(bank)                   REG32(EXMC + 0x54U + 0x20U * (bank))            /*!< EXMC NAND ECC registers, bank = 1,2 */
 
 /* CRAM page size */
 #define SNCTL_CPS(regval)                 (BITS(16,18) & ((uint32_t)(regval) << 16))
@@ -218,8 +243,8 @@ typedef struct
 
 /* NOR bank memory data bus width */
 #define SNCTL_NRW(regval)                 (BITS(4,5) & ((uint32_t)(regval) << 4))
-#define EXMC_NOR_DATABUS_WIDTH_8B         SNCTL_NRW(0)                  /*!< NOR data width 8 bits */
-#define EXMC_NOR_DATABUS_WIDTH_16B        SNCTL_NRW(1)                  /*!< NOR data width 16 bits */
+#define EXMC_NOR_DATABUS_WIDTH_8B         SNCTL_NRW(0)                  /*!< NOR data width is 8 bits */
+#define EXMC_NOR_DATABUS_WIDTH_16B        SNCTL_NRW(1)                  /*!< NOR data width is 16 bits */
 
 /* NOR bank memory type */
 #define SNCTL_NRTP(regval)                (BITS(2,3) & ((uint32_t)(regval) << 2))
@@ -236,22 +261,22 @@ typedef struct
 
 /* data latency for NOR flash */
 #define SNTCFG_DLAT(regval)               (BITS(24,27) & ((uint32_t)(regval) << 24))
-#define EXMC_DATALAT_2_CLK                SNTCFG_DLAT(0)                /*!< data latency 2 EXMC_CLK */
-#define EXMC_DATALAT_3_CLK                SNTCFG_DLAT(1)                /*!< data latency 3 EXMC_CLK */
-#define EXMC_DATALAT_4_CLK                SNTCFG_DLAT(2)                /*!< data latency 4 EXMC_CLK */
-#define EXMC_DATALAT_5_CLK                SNTCFG_DLAT(3)                /*!< data latency 5 EXMC_CLK */
-#define EXMC_DATALAT_6_CLK                SNTCFG_DLAT(4)                /*!< data latency 6 EXMC_CLK */
-#define EXMC_DATALAT_7_CLK                SNTCFG_DLAT(5)                /*!< data latency 7 EXMC_CLK */
-#define EXMC_DATALAT_8_CLK                SNTCFG_DLAT(6)                /*!< data latency 8 EXMC_CLK */
-#define EXMC_DATALAT_9_CLK                SNTCFG_DLAT(7)                /*!< data latency 9 EXMC_CLK */
-#define EXMC_DATALAT_10_CLK               SNTCFG_DLAT(8)                /*!< data latency 10 EXMC_CLK */
-#define EXMC_DATALAT_11_CLK               SNTCFG_DLAT(9)                /*!< data latency 11 EXMC_CLK */
-#define EXMC_DATALAT_12_CLK               SNTCFG_DLAT(10)               /*!< data latency 12 EXMC_CLK */
-#define EXMC_DATALAT_13_CLK               SNTCFG_DLAT(11)               /*!< data latency 13 EXMC_CLK */
-#define EXMC_DATALAT_14_CLK               SNTCFG_DLAT(12)               /*!< data latency 14 EXMC_CLK */
-#define EXMC_DATALAT_15_CLK               SNTCFG_DLAT(13)               /*!< data latency 15 EXMC_CLK */
-#define EXMC_DATALAT_16_CLK               SNTCFG_DLAT(14)               /*!< data latency 16 EXMC_CLK */
-#define EXMC_DATALAT_17_CLK               SNTCFG_DLAT(15)               /*!< data latency 17 EXMC_CLK */
+#define EXMC_DATALAT_2_CLK                SNTCFG_DLAT(0)                /*!< data latency of first burst access is 2 EXMC_CLK */
+#define EXMC_DATALAT_3_CLK                SNTCFG_DLAT(1)                /*!< data latency of first burst access is 3 EXMC_CLK */
+#define EXMC_DATALAT_4_CLK                SNTCFG_DLAT(2)                /*!< data latency of first burst access is 4 EXMC_CLK */
+#define EXMC_DATALAT_5_CLK                SNTCFG_DLAT(3)                /*!< data latency of first burst access is 5 EXMC_CLK */
+#define EXMC_DATALAT_6_CLK                SNTCFG_DLAT(4)                /*!< data latency of first burst access is 6 EXMC_CLK */
+#define EXMC_DATALAT_7_CLK                SNTCFG_DLAT(5)                /*!< data latency of first burst access is 7 EXMC_CLK */
+#define EXMC_DATALAT_8_CLK                SNTCFG_DLAT(6)                /*!< data latency of first burst access is 8 EXMC_CLK */
+#define EXMC_DATALAT_9_CLK                SNTCFG_DLAT(7)                /*!< data latency of first burst access is 9 EXMC_CLK */
+#define EXMC_DATALAT_10_CLK               SNTCFG_DLAT(8)                /*!< data latency of first burst access is 10 EXMC_CLK */
+#define EXMC_DATALAT_11_CLK               SNTCFG_DLAT(9)                /*!< data latency of first burst access is 11 EXMC_CLK */
+#define EXMC_DATALAT_12_CLK               SNTCFG_DLAT(10)               /*!< data latency of first burst access is 12 EXMC_CLK */
+#define EXMC_DATALAT_13_CLK               SNTCFG_DLAT(11)               /*!< data latency of first burst access is 13 EXMC_CLK */
+#define EXMC_DATALAT_14_CLK               SNTCFG_DLAT(12)               /*!< data latency of first burst access is 14 EXMC_CLK */
+#define EXMC_DATALAT_15_CLK               SNTCFG_DLAT(13)               /*!< data latency of first burst access is 15 EXMC_CLK */
+#define EXMC_DATALAT_16_CLK               SNTCFG_DLAT(14)               /*!< data latency of first burst access is 16 EXMC_CLK */
+#define EXMC_DATALAT_17_CLK               SNTCFG_DLAT(15)               /*!< data latency of first burst access is 17 EXMC_CLK */
 
 /* synchronous clock divide ratio */
 #define SNTCFG_CKDIV(regval)              (BITS(20,23) & ((uint32_t)(regval) << 20))
@@ -274,12 +299,12 @@ typedef struct
 
 /* ECC size */
 #define NPCTL_ECCSZ(regval)               (BITS(17,19) & ((uint32_t)(regval) << 17))
-#define EXMC_ECC_SIZE_256BYTES            NPCTL_ECCSZ(0)                /* 256 bytes */
-#define EXMC_ECC_SIZE_512BYTES            NPCTL_ECCSZ(1)                /* 512 bytes */
-#define EXMC_ECC_SIZE_1024BYTES           NPCTL_ECCSZ(2)                /* 1024 bytes */
-#define EXMC_ECC_SIZE_2048BYTES           NPCTL_ECCSZ(3)                /* 2048 bytes */
-#define EXMC_ECC_SIZE_4096BYTES           NPCTL_ECCSZ(4)                /* 4096 bytes */
-#define EXMC_ECC_SIZE_8192BYTES           NPCTL_ECCSZ(5)                /* 8192 bytes */
+#define EXMC_ECC_SIZE_256BYTES            NPCTL_ECCSZ(0)                /* ECC size is 256 bytes */
+#define EXMC_ECC_SIZE_512BYTES            NPCTL_ECCSZ(1)                /* ECC size is 512 bytes */
+#define EXMC_ECC_SIZE_1024BYTES           NPCTL_ECCSZ(2)                /* ECC size is 1024 bytes */
+#define EXMC_ECC_SIZE_2048BYTES           NPCTL_ECCSZ(3)                /* ECC size is 2048 bytes */
+#define EXMC_ECC_SIZE_4096BYTES           NPCTL_ECCSZ(4)                /* ECC size is 4096 bytes */
+#define EXMC_ECC_SIZE_8192BYTES           NPCTL_ECCSZ(5)                /* ECC size is 8192 bytes */
 
 /* ALE to RE delay */
 #define NPCTL_ATR(regval)                 (BITS(13,16) & ((uint32_t)(regval) << 13))
@@ -321,8 +346,8 @@ typedef struct
 
 /* NAND bank memory data bus width */
 #define NPCTL_NDW(regval)                 (BITS(4,5) & ((uint32_t)(regval) << 4))
-#define EXMC_NAND_DATABUS_WIDTH_8B        NPCTL_NDW(0)                  /*!< NAND data width 8 bits */
-#define EXMC_NAND_DATABUS_WIDTH_16B       NPCTL_NDW(1)                  /*!< NAND data width 16 bits */
+#define EXMC_NAND_DATABUS_WIDTH_8B        NPCTL_NDW(0)                  /*!< NAND data width is 8 bits */
+#define EXMC_NAND_DATABUS_WIDTH_16B       NPCTL_NDW(1)                  /*!< NAND data width is 16 bits */
 
 /* EXMC NOR/SRAM bank region definition */
 #define EXMC_BANK0_NORSRAM_REGION0        ((uint32_t)0x00000000U)       /*!< bank0 NOR/SRAM region0 */
@@ -332,15 +357,15 @@ typedef struct
 
 /* EXMC NOR/SRAM write mode */
 #define EXMC_ASYN_WRITE                   ((uint32_t)0x00000000U)       /*!< asynchronous write mode */
-#define EXMC_SYN_WRITE                    ((uint32_t)0x00080000U)       /*!< synchronous write mode */
+#define EXMC_SYN_WRITE                    EXMC_SNCTL_SYNCWR             /*!< synchronous write mode */
 
 /* EXMC NWAIT signal configuration */
 #define EXMC_NWAIT_CONFIG_BEFORE          ((uint32_t)0x00000000U)       /*!< NWAIT signal is active one data cycle before wait state */
-#define EXMC_NWAIT_CONFIG_DURING          ((uint32_t)0x00000800U)       /*!< NWAIT signal is active during wait state */
+#define EXMC_NWAIT_CONFIG_DURING          EXMC_SNCTL_NRWTCFG            /*!< NWAIT signal is active during wait state */
 
 /* EXMC NWAIT signal polarity configuration */
 #define EXMC_NWAIT_POLARITY_LOW           ((uint32_t)0x00000000U)       /*!< low level is active of NWAIT */
-#define EXMC_NWAIT_POLARITY_HIGH          ((uint32_t)0x00000200U)       /*!< high level is active of NWAIT */
+#define EXMC_NWAIT_POLARITY_HIGH          EXMC_SNCTL_NRWTPOL            /*!< high level is active of NWAIT */
 
 /* EXMC NAND/PC card bank definition */
 #define EXMC_BANK1_NAND                   ((uint32_t)0x00000001U)       /*!< bank1 NAND flash */
@@ -353,68 +378,69 @@ typedef struct
 #define EXMC_NAND_PCCARD_FLAG_FALL        EXMC_NPINTEN_INTFS            /*!< interrupt falling edge status */
 #define EXMC_NAND_PCCARD_FLAG_FIFOE       EXMC_NPINTEN_FFEPT            /*!< FIFO empty flag */
 
-/* EXMC interrupt enable bits */
-#define EXMC_NAND_PCCARD_INT_RISE         EXMC_NPINTEN_INTREN           /*!< interrupt rising edge detection enable */
-#define EXMC_NAND_PCCARD_INT_LEVEL        EXMC_NPINTEN_INTHEN           /*!< interrupt high-level detection enable */
-#define EXMC_NAND_PCCARD_INT_FALL         EXMC_NPINTEN_INTFEN           /*!< interrupt falling edge detection enable */
-
 /* EXMC interrupt flag bits */
 #define EXMC_NAND_PCCARD_INT_FLAG_RISE    EXMC_NPINTEN_INTREN           /*!< interrupt rising edge detection enable */
 #define EXMC_NAND_PCCARD_INT_FLAG_LEVEL   EXMC_NPINTEN_INTHEN           /*!< interrupt high-level detection enable */
 #define EXMC_NAND_PCCARD_INT_FLAG_FALL    EXMC_NPINTEN_INTFEN           /*!< interrupt falling edge detection enable */
 
 /* function declarations */
+/* initialization functions */
+/* NOR/SRAM */
 /* deinitialize EXMC NOR/SRAM region */
 void exmc_norsram_deinit(uint32_t exmc_norsram_region);
+/* initialize exmc_norsram_parameter_struct with the default values */
+void exmc_norsram_struct_para_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct);
 /* initialize EXMC NOR/SRAM region */
 void exmc_norsram_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct);
-/* exmc_norsram_parameter_struct parameter initialize */
-void exmc_norsram_parameter_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct);
-/* CRAM page size configure */
-void exmc_norsram_page_size_config(uint32_t exmc_norsram_region, uint32_t page_size);
-/* EXMC NOR/SRAM bank enable */
+/* enable EXMC NOR/SRAM region */
 void exmc_norsram_enable(uint32_t exmc_norsram_region);
-/* EXMC NOR/SRAM bank disable */
+/* disable EXMC NOR/SRAM region */
 void exmc_norsram_disable(uint32_t exmc_norsram_region);
-
-
+/* NAND */
 /* deinitialize EXMC NAND bank */
 void exmc_nand_deinit(uint32_t exmc_nand_bank);
+/* initialize exmc_norsram_parameter_struct with the default values */
+void exmc_nand_struct_para_init(exmc_nand_parameter_struct* exmc_nand_init_struct);
 /* initialize EXMC NAND bank */
 void exmc_nand_init(exmc_nand_parameter_struct* exmc_nand_init_struct);
-/* exmc_norsram_parameter_struct parameter initialize */
-void exmc_nand_parameter_init(exmc_nand_parameter_struct* exmc_nand_init_struct);
-/* EXMC NAND bank enable */
+/* enable EXMC NAND bank */
 void exmc_nand_enable(uint32_t exmc_nand_bank);
-/* EXMC NAND bank disable */
+/* disable EXMC NAND bank */
 void exmc_nand_disable(uint32_t exmc_nand_bank);
+/* PC card */
+/* deinitialize EXMC PC card bank */
+void exmc_pccard_deinit(void);
+/* initialize exmc_pccard_parameter_struct parameter with the default values */
+void exmc_pccard_struct_para_init(exmc_pccard_parameter_struct* exmc_pccard_init_struct);
+/* initialize EXMC PC card bank */
+void exmc_pccard_init(exmc_pccard_parameter_struct* exmc_pccard_init_struct);
+/* enable EXMC PC card bank */
+void exmc_pccard_enable(void);
+/* disable EXMC PC card bank */
+void exmc_pccard_disable(void);
+
+/* function configuration */
+/* NOR/SRAM */
+/* configure CRAM page size */
+void exmc_norsram_page_size_config(uint32_t exmc_norsram_region, uint32_t page_size);
+/* NAND */
 /* enable or disable the EXMC NAND ECC function */
 void exmc_nand_ecc_config(uint32_t exmc_nand_bank, ControlStatus newvalue);
 /* get the EXMC ECC value */
 uint32_t exmc_ecc_get(uint32_t exmc_nand_bank);
 
-/* deinitialize EXMC PC card bank */
-void exmc_pccard_deinit(void);
-/* initialize EXMC PC card bank */
-void exmc_pccard_init(exmc_pccard_parameter_struct* exmc_pccard_init_struct);
-/* exmc_pccard_parameter_struct parameter initialize */
-void exmc_pccard_parameter_init(exmc_pccard_parameter_struct* exmc_pccard_init_struct);
-/* EXMC PC card bank enable */
-void exmc_pccard_enable(void);
-/* EXMC PC card bank disable */
-void exmc_pccard_disable(void);
-
-/* check EXMC flag is set or not */
-FlagStatus exmc_flag_get(uint32_t exmc_bank,uint32_t flag);
-/* clear EXMC flag */
-void exmc_flag_clear(uint32_t exmc_bank,uint32_t flag);
-/* check EXMC flag is set or not */
-FlagStatus exmc_interrupt_flag_get(uint32_t exmc_bank,uint32_t interrupt_source);
-/* clear EXMC flag */
-void exmc_interrupt_flag_clear(uint32_t exmc_bank,uint32_t interrupt_source);
+/* interrupt & flag functions */
 /* enable EXMC interrupt */
-void exmc_interrupt_enable(uint32_t exmc_bank,uint32_t interrupt_source);
+void exmc_interrupt_enable(uint32_t exmc_bank,uint32_t interrupt);
 /* disable EXMC interrupt */
-void exmc_interrupt_disable(uint32_t exmc_bank,uint32_t interrupt_source);
+void exmc_interrupt_disable(uint32_t exmc_bank,uint32_t interrupt);
+/* get EXMC flag status */
+FlagStatus exmc_flag_get(uint32_t exmc_bank,uint32_t flag);
+/* clear EXMC flag status */
+void exmc_flag_clear(uint32_t exmc_bank,uint32_t flag);
+/* get EXMC interrupt flag */
+FlagStatus exmc_interrupt_flag_get(uint32_t exmc_bank,uint32_t interrupt);
+/* clear EXMC interrupt flag */
+void exmc_interrupt_flag_clear(uint32_t exmc_bank,uint32_t interrupt);
 
 #endif /* GD32F403_EXMC_H */

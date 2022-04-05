@@ -64,6 +64,9 @@
 #define SEL_IRC8M       0x00U
 #define SEL_HXTAL       0x01U
 #define SEL_PLL         0x02U
+#define RCU_MODIFY      {volatile uint32_t i; \
+                         RCU_CFG0 |= RCU_AHB_CKSYS_DIV2; \
+                         for(i=0;i<20000;i++);}
 
 /* set the system clock frequency and declare the system clock configuration function */
 #ifdef __SYSTEM_CLOCK_IRC8M
@@ -128,6 +131,8 @@ void SystemInit (void)
     /* set IRC8MEN bit */
     RCU_CTL |= RCU_CTL_IRC8MEN;
 
+    RCU_MODIFY
+    
     /* reset CFG0 and CFG1 registers */
     RCU_CFG0 = 0x00000000U;
     RCU_CFG1 = 0x00000000U;
