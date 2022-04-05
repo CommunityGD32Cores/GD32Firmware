@@ -1,16 +1,16 @@
 /*!
-    \file  gd32f30x_enet.h
-    \brief definitions for the ENET
+    \file    gd32f30x_enet.h
+    \brief   definitions for the ENET
 
     \version 2017-02-10, V1.0.0, firmware for GD32F30x
     \version 2018-10-10, V1.1.0, firmware for GD32F30x
     \version 2018-12-25, V2.0.0, firmware for GD32F30x
+    \version 2020-04-02, V2.0.1, firmware for GD32F30x
+    \version 2020-09-30, V2.1.0, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -40,7 +40,6 @@ OF SUCH DAMAGE.
 #define GD32F30X_ENET_H
 
 #include "gd32f30x.h"
-#include <stdlib.h>
 
 #define IF_USE_EXTERNPHY_LIB             0
 #if (1 == IF_USE_EXTERNPHY_LIB)
@@ -1359,11 +1358,11 @@ typedef struct
 #define ENET_TX_MODE_STOREFORWARD                 ENET_DMA_CTL_TSFD                             /*!< TxFIFO operates in store-and-forward mode */
 #define ENET_TX_MODE_CUTTHROUGH                   ((uint32_t)0x00000000)                        /*!< TxFIFO operates in cut-through mode */
 
-#define ENET_FORWARD_ERRFRAMES_ENABLE             (ENET_DMA_CTL_FERF<<2)                        /*!< all frame received with error except runt error are forwarded to memory */
+#define ENET_FORWARD_ERRFRAMES_ENABLE             ENET_DMA_CTL_FERF                             /*!< all frame received with error except runt error are forwarded to memory */
 #define ENET_FORWARD_ERRFRAMES_DISABLE            ((uint32_t)0x00000000)                        /*!< RxFIFO drop error frame */
 #define ENET_FORWARD_ERRFRAMES                    (ENET_DMA_CTL_FERF<<2)                             /*!< the function that all frame received with error except runt error are forwarded to memory */
 
-#define ENET_FORWARD_UNDERSZ_GOODFRAMES_ENABLE    (ENET_DMA_CTL_FUF<<2)                         /*!< forward undersized good frames */
+#define ENET_FORWARD_UNDERSZ_GOODFRAMES_ENABLE    ENET_DMA_CTL_FUF                              /*!< forward undersized good frames */
 #define ENET_FORWARD_UNDERSZ_GOODFRAMES_DISABLE   ((uint32_t)0x00000000)                        /*!< RxFIFO drops all frames whose length is less than 64 bytes */  
 #define ENET_FORWARD_UNDERSZ_GOODFRAMES           (ENET_DMA_CTL_FUF<<2)                            /*!< the function that forwarding undersized good frames */
 
@@ -1487,7 +1486,7 @@ ErrStatus enet_frame_transmit(uint8_t *buffer, uint32_t length);
 /* handle current transmit frame but without data copy from application buffer */
 #define ENET_NOCOPY_FRAME_TRANSMIT(len)     enet_frame_transmit(NULL, (len))
 /* configure the transmit IP frame checksum offload calculation and insertion */
-void enet_transmit_checksum_config(enet_descriptors_struct *desc, uint32_t checksum);
+ErrStatus enet_transmit_checksum_config(enet_descriptors_struct *desc, uint32_t checksum);
 /* ENET Tx and Rx function enable (include MAC and DMA module) */
 void enet_enable(void);   
 /* ENET Tx and Rx function disable (include MAC and DMA module) */
@@ -1495,7 +1494,7 @@ void enet_disable(void);
 /* configure MAC address */
 void enet_mac_address_set(enet_macaddress_enum mac_addr, uint8_t paddr[]);
 /* get MAC address */   
-void enet_mac_address_get(enet_macaddress_enum mac_addr, uint8_t paddr[]);
+ErrStatus enet_mac_address_get(enet_macaddress_enum mac_addr, uint8_t paddr[], uint8_t bufsize);
 
 /* get the ENET MAC/MSC/PTP/DMA status flag */
 FlagStatus enet_flag_get(enet_flag_enum enet_flag);
@@ -1692,14 +1691,10 @@ FlagStatus enet_ptp_flag_get(uint32_t flag);
 /* internal function */
 /* reset the ENET initpara struct, call it before using enet_initpara_config() */
 void enet_initpara_reset(void);
-/* initialize ENET peripheral with generally concerned parameters, call it by enet_init() */
-static void enet_default_init(void);
 #ifdef USE_DELAY
 /* user can provide more timing precise _ENET_DELAY_ function */
 #define _ENET_DELAY_                              delay_ms 
 #else
-/* insert a delay time */
-static void enet_delay(uint32_t ncount);
 /* default _ENET_DELAY_ function with less precise timing */
 #define _ENET_DELAY_                              enet_delay
 #endif

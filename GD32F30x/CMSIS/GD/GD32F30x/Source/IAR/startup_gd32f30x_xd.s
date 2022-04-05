@@ -3,13 +3,12 @@
 ;    \brief   start up file
 ;
 ;    \version 2018-10-10, V1.1.0, firmware for GD32F30x
+;    \version 2020-09-30, V2.1.0, firmware for GD32F30x
 ;*/
 ;
 ;/*
-;    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-;
-;    All rights reserved.
-;
+;    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+
 ;    Redistribution and use in source and binary forms, with or without modification, 
 ;are permitted provided that the following conditions are met:
 ;

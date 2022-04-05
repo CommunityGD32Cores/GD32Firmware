@@ -1,16 +1,15 @@
 /*!
-    \file  gd32f30x_timer.c
-    \brief TIMER driver
+    \file    gd32f30x_timer.c
+    \brief   TIMER driver
 
     \version 2017-02-10, V1.0.0, firmware for GD32F30x
     \version 2018-10-10, V1.1.0, firmware for GD32F30x
     \version 2018-12-25, V2.0.0, firmware for GD32F30x
+    \version 2020-09-30, V2.1.0, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -2005,8 +2004,8 @@ void timer_external_clock_mode1_disable(uint32_t timer_periph)
     \param[in]  timer_periph: TIMERx(x=0..4,7..13)
     \param[in]  ccsel:
                 only one parameter can be selected which is shown as below:
-      \arg        TIMER_CCSEL_DISABLE: no effect
-      \arg        TIMER_CCSEL_ENABLE: when write the CHxVAL register, if the write value is same as the CHxVAL value, the write access is ignored
+      \arg        TIMER_CHVSEL_DISABLE: no effect
+      \arg        TIMER_CHVSEL_ENABLE: when write the CHxVAL register, if the write value is same as the CHxVAL value, the write access is ignored
     \param[out] none
     \retval     none
 */

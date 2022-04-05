@@ -1,16 +1,16 @@
 /*!
-    \file  gd32f30x_enet.c
-    \brief ENET driver
+    \file    gd32f30x_enet.c
+    \brief   ENET driver
 
     \version 2017-02-10, V1.0.0, firmware for GD32F30x
     \version 2018-10-10, V1.1.0, firmware for GD32F30x
     \version 2018-12-25, V2.0.0, firmware for GD32F30x
+    \version 2020-04-02, V2.0.1, firmware for GD32F30x
+    \version 2020-09-30, V2.1.0, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -37,6 +37,7 @@ OF SUCH DAMAGE.
 */
 
 #include "gd32f30x_enet.h"
+#include <stdlib.h>
 
 #ifdef GD32F30X_CL
 
@@ -92,6 +93,13 @@ static const uint16_t enet_reg_tab[] = {
 0x1000, 0x1004, 0x1008, 0x100C, 0x1010, 0x1014, 0x1018, 0x101C, 0x1020, 0x1024, 0x1048,
 0x104C, 0x1050, 0x1054};
 
+/* initialize ENET peripheral with generally concerned parameters, call it by enet_init() */
+static void enet_default_init(void);
+
+#ifndef USE_DELAY
+/* insert a delay time */
+static void enet_delay(uint32_t ncount);
+#endif /* USE_DELAY */
 
 /*!
     \brief      deinitialize the ENET, and reset structure parameters for ENET initialization
@@ -1005,12 +1013,17 @@ ErrStatus enet_frame_transmit(uint8_t *buffer, uint32_t length)
       \arg        ENET_CHECKSUM_TCPUDPICMP_SEGMENT: TCP/UDP/ICMP checksum insertion calculated but pseudo-header
       \arg        ENET_CHECKSUM_TCPUDPICMP_FULL: TCP/UDP/ICMP checksum insertion fully calculated
     \param[out] none
-    \retval     none
+    \retval     ErrStatus: ERROR, SUCCESS
 */
-void enet_transmit_checksum_config(enet_descriptors_struct *desc, uint32_t checksum)
+ErrStatus enet_transmit_checksum_config(enet_descriptors_struct *desc, uint32_t checksum)
 {
-    desc->status &= ~ENET_TDES0_CM;
-    desc->status |= checksum;
+    if(NULL != desc){
+        desc->status &= ~ENET_TDES0_CM;
+        desc->status |= checksum;
+        return SUCCESS;
+    }else{
+        return ERROR;
+    }   
 }
 
 /*!
@@ -1066,16 +1079,22 @@ void enet_mac_address_set(enet_macaddress_enum mac_addr, uint8_t paddr[])
       \arg        ENET_MAC_ADDRESS3: get MAC address 3 filter
     \param[out] paddr: the buffer pointer which is stored the MAC address
                   (little-ending store, such as mac address is aa:bb:cc:dd:ee:22, the buffer is {22, ee, dd, cc, bb, aa}) 
-    \retval     none
+    \param[in]  bufsize: refer to the size of the buffer which stores the MAC address
+      \arg        6 - 255
+    \retval     ErrStatus: ERROR, SUCCESS
 */                                   
-void enet_mac_address_get(enet_macaddress_enum mac_addr, uint8_t paddr[])
+ErrStatus enet_mac_address_get(enet_macaddress_enum mac_addr, uint8_t paddr[], uint8_t bufsize)
 {
+    if(bufsize < 6U){
+        return ERROR;
+    }
     paddr[0] = ENET_GET_MACADDR(mac_addr, 0U);
     paddr[1] = ENET_GET_MACADDR(mac_addr, 1U);
     paddr[2] = ENET_GET_MACADDR(mac_addr, 2U);
     paddr[3] = ENET_GET_MACADDR(mac_addr, 3U);
     paddr[4] = ENET_GET_MACADDR(mac_addr, 4U);
     paddr[5] = ENET_GET_MACADDR(mac_addr, 5U);
+    return SUCCESS;
 }
 
 /*!
@@ -1683,10 +1702,10 @@ void enet_forward_feature_enable(uint32_t feature)
     \brief      disable ENET forward feature
     \param[in]  feature: the feature of ENET forward mode,
                 one or more parameters can be selected which are shown as below
-      \arg        ENET_AUTO_PADCRC_DROP: the automatic zero-quanta generation function
-      \arg        ENET_TYPEFRAME_CRC_DROP: the flow control operation in the MAC
-      \arg        ENET_FORWARD_ERRFRAMES: decoding function for the received pause frame and process it
-      \arg        ENET_FORWARD_UNDERSZ_GOODFRAMES: back pressure operation in the MAC(only use in half-dulex mode)
+      \arg        ENET_AUTO_PADCRC_DROP: the function of the MAC strips the Pad/FCS field on received frames
+      \arg        ENET_TYPEFRAME_CRC_DROP: the function that FCS field(last 4 bytes) of frame will be dropped before forwarding
+      \arg        ENET_FORWARD_ERRFRAMES: the function that all frame received with error except runt error are forwarded to memory
+      \arg        ENET_FORWARD_UNDERSZ_GOODFRAMES: the function that forwarding undersized good frames
     \param[out] none
     \retval     none
 */
@@ -1702,7 +1721,7 @@ void enet_forward_feature_disable(uint32_t feature)
 }
                             
 /*!                    
-    \brief      enable ENET fliter feature
+    \brief        enable ENET fliter feature
     \param[in]  feature: the feature of ENET fliter mode,
                 one or more parameters can be selected which are shown as below
       \arg        ENET_SRC_FILTER: filter source address function

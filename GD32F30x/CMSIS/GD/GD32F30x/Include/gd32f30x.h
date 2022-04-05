@@ -1,16 +1,15 @@
 /*!
-    \file  gd32f30x.h
-    \brief general definitions for GD32F30x
+    \file    gd32f30x.h
+    \brief   general definitions for GD32F30x
 
     \version 2017-02-10, V1.0.0, firmware for GD32F30x
     \version 2018-10-10, V1.1.0, firmware for GD32F30x
     \version 2018-12-25, V2.0.0, firmware for GD32F30x
+    \version 2020-09-30, V2.1.0, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
@@ -59,7 +58,7 @@ OF SUCH DAMAGE.
 #ifdef GD32F30X_CL
 #define HXTAL_VALUE    ((uint32_t)25000000) /*!< value of the external oscillator in Hz */
 #else
-#define HXTAL_VALUE    ((uint32_t)8000000) /* !< from 4M to 16M *!< value of the external oscillator in Hz*/
+#define HXTAL_VALUE    ((uint32_t)8000000) /* !< from 4M to 32M *!< value of the external oscillator in Hz*/
 #endif /* HXTAL_VALUE */
 #endif /* high speed crystal oscillator value */
 
@@ -321,6 +320,7 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrStatus;
 #define USART_BASE            (APB1_BUS_BASE + 0x00004400U)  /*!< USART base address               */
 #define I2C_BASE              (APB1_BUS_BASE + 0x00005400U)  /*!< I2C base address                 */
 #define USBD_BASE             (APB1_BUS_BASE + 0x00005C00U)  /*!< USBD base address                */
+#define USBD_RAM_BASE         (APB1_BUS_BASE + 0x00006000U)  /*!< USBD RAM base address            */
 #define CAN_BASE              (APB1_BUS_BASE + 0x00006400U)  /*!< CAN base address                 */
 #define BKP_BASE              (APB1_BUS_BASE + 0x00006C00U)  /*!< BKP base address                 */
 #define PMU_BASE              (APB1_BUS_BASE + 0x00007000U)  /*!< PMU base address                 */

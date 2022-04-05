@@ -1,16 +1,15 @@
 /*!
-    \file  gd32f30x_adc.c
-    \brief ADC driver
+    \file    gd32f30x_adc.c
+    \brief   ADC driver
 
     \version 2017-02-10, V1.0.0, firmware for GD32F30x
     \version 2018-10-10, V1.1.0, firmware for GD32F30x
     \version 2018-12-25, V2.0.0, firmware for GD32F30x
+    \version 2020-09-30, V2.1.0, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -412,12 +411,12 @@ void adc_inserted_channel_config(uint32_t adc_periph , uint8_t rank , uint8_t ad
 {
     uint8_t inserted_length;
     uint32_t isq,sampt;
-
+    
     inserted_length = (uint8_t)GET_BITS(ADC_ISQ(adc_periph) , 20U , 21U);
-  
+    
     isq = ADC_ISQ(adc_periph);
-    isq &= ~((uint32_t)(ADC_ISQ_ISQN << (15U-(inserted_length-rank)*5U)));
-    isq |= ((uint32_t)adc_channel << (15U-(inserted_length-rank)*5U));
+    isq &= ~((uint32_t)(ADC_ISQ_ISQN << (5U * ((3 + rank) - inserted_length))));
+    isq |= ((uint32_t)adc_channel << (5U * ((3 + rank) - inserted_length)));
     ADC_ISQ(adc_periph) = isq;
 
     /* ADC sampling time config */  

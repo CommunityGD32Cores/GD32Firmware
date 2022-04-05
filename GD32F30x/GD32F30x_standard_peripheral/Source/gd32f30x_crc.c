@@ -1,16 +1,15 @@
 /*!
-    \file  gd32f30x_crc.c
-    \brief CRC driver
+    \file    gd32f30x_crc.c
+    \brief   CRC driver
 
     \version 2017-02-10, V1.0.0, firmware for GD32F30x
     \version 2018-10-10, V1.1.0, firmware for GD32F30x
     \version 2018-12-25, V2.0.0, firmware for GD32F30x
+    \version 2020-09-30, V2.1.0, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -121,11 +120,11 @@ uint32_t crc_single_data_calculate(uint32_t sdata)
     \param[out] none
     \retval     32-bit value calculated by CRC
 */
-uint32_t crc_block_data_calculate(uint32_t array[], uint32_t size)
+uint32_t crc_block_data_calculate(const uint32_t *array, uint32_t size)
 {
     uint32_t index;
     for(index = 0U; index < size; index++){
-        CRC_DATA = array[index];
+        CRC_DATA = *(array+index);
     }
     return (CRC_DATA);
 }

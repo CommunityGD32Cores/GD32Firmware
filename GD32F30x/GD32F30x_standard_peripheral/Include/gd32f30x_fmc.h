@@ -1,16 +1,15 @@
 /*!
-    \file  gd32f30x_fmc.h
-    \brief definitions for the FMC
+    \file    gd32f30x_fmc.h
+    \brief   definitions for the FMC
 
     \version 2017-02-10, V1.0.0, firmware for GD32F30x
     \version 2018-10-10, V1.1.0, firmware for GD32F30x
     \version 2018-12-25, V2.0.0, firmware for GD32F30x
+    \version 2020-09-30, V2.1.0, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -289,7 +288,7 @@ typedef enum
 #define OB_WP_ALL                  ((uint32_t)0xFFFFFFFFU)        /*!< erase/program protection of all sectors */
 
 /* FMC timeout */
-#define FMC_TIMEOUT_COUNT          ((uint32_t)0x000F0000U)        /*!< FMC timeout count value */
+#define FMC_TIMEOUT_COUNT          ((uint32_t)0x0FFF0000U)        /*!< FMC timeout count value */
 
 /* FMC BANK address */
 #define FMC_BANK0_END_ADDRESS      ((uint32_t)0x0807FFFFU)        /*!< FMC bank0 end address */

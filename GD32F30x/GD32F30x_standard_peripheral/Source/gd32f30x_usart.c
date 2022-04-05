@@ -1,16 +1,15 @@
 /*!
-    \file  gd32f30x_usart.c
-    \brief USART driver
+    \file    gd32f30x_usart.c
+    \brief   USART driver
 
     \version 2017-02-10, V1.0.0, firmware for GD32F30x
     \version 2018-10-10, V1.1.0, firmware for GD32F30x
     \version 2018-12-25, V2.0.0, firmware for GD32F30x
+    \version 2020-09-30, V2.1.0, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -125,7 +124,7 @@ void usart_baudrate_set(uint32_t usart_periph, uint32_t baudval)
 }
 
 /*!
-    \brief     configure USART parity
+    \brief       configure USART parity
     \param[in] usart_periph: USARTx(x=0,1,2)/UARTx(x=3,4)
     \param[in] paritycfg: configure USART parity
                only one parameter can be selected which is shown as below:
@@ -144,7 +143,7 @@ void usart_parity_config(uint32_t usart_periph, uint32_t paritycfg)
 }
 
 /*!
-    \brief     configure USART word length
+    \brief       configure USART word length
     \param[in] usart_periph: USARTx(x=0,1,2)/UARTx(x=3,4)
     \param[in] wlen: USART word length configure
                only one parameter can be selected which is shown as below:
@@ -162,7 +161,7 @@ void usart_word_length_set(uint32_t usart_periph, uint32_t wlen)
 }
 
 /*!
-    \brief     configure USART stop bit length
+    \brief       configure USART stop bit length
     \param[in] usart_periph: USARTx(x=0,1,2)/UARTx(x=3,4)
     \param[in] stblen: USART stop bit configure
                only one parameter can be selected which is shown as below:
@@ -193,7 +192,7 @@ void usart_enable(uint32_t usart_periph)
 }
 
 /*!
-    \brief     disable USART
+    \brief       disable USART
     \param[in] usart_periph: USARTx(x=0,1,2)/UARTx(x=3,4)
     \param[out] none
     \retval     none
