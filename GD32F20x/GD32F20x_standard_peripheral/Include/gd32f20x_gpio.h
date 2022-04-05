@@ -6,32 +6,33 @@
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
     \version 2020-09-30, V2.2.0, firmware for GD32F20x
+    \version 2021-07-30, V2.3.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -41,45 +42,45 @@ OF SUCH DAMAGE.
 #include "gd32f20x.h"
 
 /* GPIOx(x=A,B,C,D,E,F,G,H,I) definitions */
-#define GPIOA                      (GPIO_BASE + 0x00000000U)
-#define GPIOB                      (GPIO_BASE + 0x00000400U)
-#define GPIOC                      (GPIO_BASE + 0x00000800U)
-#define GPIOD                      (GPIO_BASE + 0x00000C00U)
-#define GPIOE                      (GPIO_BASE + 0x00001000U)
-#define GPIOF                      (GPIO_BASE + 0x00001400U)
-#define GPIOG                      (GPIO_BASE + 0x00001800U)
-#define GPIOH                      (GPIO_BASE + 0x00006C00U)
-#define GPIOI                      (GPIO_BASE + 0x00007000U)
+#define GPIOA                      (GPIO_BASE + 0x00000000U)       /*!< GPIOA bsae address */
+#define GPIOB                      (GPIO_BASE + 0x00000400U)       /*!< GPIOB bsae address */
+#define GPIOC                      (GPIO_BASE + 0x00000800U)       /*!< GPIOC bsae address */
+#define GPIOD                      (GPIO_BASE + 0x00000C00U)       /*!< GPIOD bsae address */
+#define GPIOE                      (GPIO_BASE + 0x00001000U)       /*!< GPIOE bsae address */
+#define GPIOF                      (GPIO_BASE + 0x00001400U)       /*!< GPIOF bsae address */
+#define GPIOG                      (GPIO_BASE + 0x00001800U)       /*!< GPIOG bsae address */
+#define GPIOH                      (GPIO_BASE + 0x00006C00U)       /*!< GPIOH bsae address */
+#define GPIOI                      (GPIO_BASE + 0x00007000U)       /*!< GPIOI bsae address */
 
 /* AFIO definitions */
-#define AFIO                       AFIO_BASE
+#define AFIO                       AFIO_BASE                       /*!< AFIO bsae address */
 
 /* registers definitions */
 /* GPIO registers definitions */
-#define GPIO_CTL0(gpiox)           REG32((gpiox) + 0x00U)    /*!< GPIO port control register 0 */
-#define GPIO_CTL1(gpiox)           REG32((gpiox) + 0x04U)    /*!< GPIO port control register 1 */
-#define GPIO_ISTAT(gpiox)          REG32((gpiox) + 0x08U)    /*!< GPIO port input status register */
-#define GPIO_OCTL(gpiox)           REG32((gpiox) + 0x0CU)    /*!< GPIO port output control register */
-#define GPIO_BOP(gpiox)            REG32((gpiox) + 0x10U)    /*!< GPIO port bit operation register */
-#define GPIO_BC(gpiox)             REG32((gpiox) + 0x14U)    /*!< GPIO bit clear register */
-#define GPIO_LOCK(gpiox)           REG32((gpiox) + 0x18U)    /*!< GPIO port configuration lock register */
+#define GPIO_CTL0(gpiox)           REG32((gpiox) + 0x00000000U)    /*!< GPIO port control register 0 */
+#define GPIO_CTL1(gpiox)           REG32((gpiox) + 0x00000004U)    /*!< GPIO port control register 1 */
+#define GPIO_ISTAT(gpiox)          REG32((gpiox) + 0x00000008U)    /*!< GPIO port input status register */
+#define GPIO_OCTL(gpiox)           REG32((gpiox) + 0x0000000CU)    /*!< GPIO port output control register */
+#define GPIO_BOP(gpiox)            REG32((gpiox) + 0x00000010U)    /*!< GPIO port bit operation register */
+#define GPIO_BC(gpiox)             REG32((gpiox) + 0x00000014U)    /*!< GPIO bit clear register */
+#define GPIO_LOCK(gpiox)           REG32((gpiox) + 0x00000018U)    /*!< GPIO port configuration lock register */
 
 /* AFIO registers definitions */
-#define AFIO_EC                    REG32(AFIO + 0x00U)       /*!< AFIO event control register */
-#define AFIO_PCF0                  REG32(AFIO + 0x04U)       /*!< AFIO port configuration register 0 */
-#define AFIO_EXTISS0               REG32(AFIO + 0x08U)       /*!< AFIO port EXTI sources selection register 0 */
-#define AFIO_EXTISS1               REG32(AFIO + 0x0CU)       /*!< AFIO port EXTI sources selection register 1 */
-#define AFIO_EXTISS2               REG32(AFIO + 0x10U)       /*!< AFIO port EXTI sources selection register 2 */
-#define AFIO_EXTISS3               REG32(AFIO + 0x14U)       /*!< AFIO port EXTI sources selection register 3 */
-#define AFIO_PCF1                  REG32(AFIO + 0x1CU)       /*!< AFIO port configuration register 1 */
-#define AFIO_PCF2                  REG32(AFIO + 0x3CU)       /*!< AFIO port configuration register 2 */
-#define AFIO_PCF3                  REG32(AFIO + 0x40U)       /*!< AFIO port configuration register 3 */
-#define AFIO_PCF4                  REG32(AFIO + 0x44U)       /*!< AFIO port configuration register 4 */
-#define AFIO_PCF5                  REG32(AFIO + 0x48U)       /*!< AFIO port configuration register 5 */
+#define AFIO_EC                    REG32(AFIO + 0x00000000U)       /*!< AFIO event control register */
+#define AFIO_PCF0                  REG32(AFIO + 0x00000004U)       /*!< AFIO port configuration register 0 */
+#define AFIO_EXTISS0               REG32(AFIO + 0x00000008U)       /*!< AFIO port EXTI sources selection register 0 */
+#define AFIO_EXTISS1               REG32(AFIO + 0x0000000CU)       /*!< AFIO port EXTI sources selection register 1 */
+#define AFIO_EXTISS2               REG32(AFIO + 0x00000010U)       /*!< AFIO port EXTI sources selection register 2 */
+#define AFIO_EXTISS3               REG32(AFIO + 0x00000014U)       /*!< AFIO port EXTI sources selection register 3 */
+#define AFIO_PCF1                  REG32(AFIO + 0x0000001CU)       /*!< AFIO port configuration register 1 */
+#define AFIO_PCF2                  REG32(AFIO + 0x0000003CU)       /*!< AFIO port configuration register 2 */
+#define AFIO_PCF3                  REG32(AFIO + 0x00000040U)       /*!< AFIO port configuration register 3 */
+#define AFIO_PCF4                  REG32(AFIO + 0x00000044U)       /*!< AFIO port configuration register 4 */
+#define AFIO_PCF5                  REG32(AFIO + 0x00000048U)       /*!< AFIO port configuration register 5 */
 
 /* bits definitions */
 /* GPIO_CTL0 */
-#define GPIO_CTL0_MD0              BITS(0,1)                 /*!< port 0 mode bits */ 
+#define GPIO_CTL0_MD0              BITS(0,1)                 /*!< port 0 mode bits */
 #define GPIO_CTL0_CTL0             BITS(2,3)                 /*!< pin 0 configuration bits */
 #define GPIO_CTL0_MD1              BITS(4,5)                 /*!< port 1 mode bits */
 #define GPIO_CTL0_CTL1             BITS(6,7)                 /*!< pin 1 configuration bits */
@@ -97,7 +98,7 @@ OF SUCH DAMAGE.
 #define GPIO_CTL0_CTL7             BITS(30,31)               /*!< pin 7 configuration bits */
 
 /* GPIO_CTL1 */
-#define GPIO_CTL1_MD8              BITS(0,1)                 /*!< port 8 mode bits */ 
+#define GPIO_CTL1_MD8              BITS(0,1)                 /*!< port 8 mode bits */
 #define GPIO_CTL1_CTL8             BITS(2,3)                 /*!< pin 8 configuration bits */
 #define GPIO_CTL1_MD9              BITS(4,5)                 /*!< port 9 mode bits */
 #define GPIO_CTL1_CTL9             BITS(6,7)                 /*!< pin 9 configuration bits */
@@ -677,9 +678,9 @@ void gpio_afio_deinit(void);
 void gpio_init(uint32_t gpio_periph, uint32_t mode, uint32_t speed, uint32_t pin);
 
 /* function configuration */
-/* set GPIO pin bit */
+/* set GPIO pin */
 void gpio_bit_set(uint32_t gpio_periph, uint32_t pin);
-/* reset GPIO pin bit */
+/* reset GPIO pin */
 void gpio_bit_reset(uint32_t gpio_periph, uint32_t pin);
 /* write data to the specified GPIO pin */
 void gpio_bit_write(uint32_t gpio_periph, uint32_t pin, bit_status bit_value);
@@ -696,9 +697,12 @@ FlagStatus gpio_output_bit_get(uint32_t gpio_periph, uint32_t pin);
 uint16_t gpio_output_port_get(uint32_t gpio_periph);
 
 /* configure GPIO pin remap */
-void gpio_pin_remap_config(uint32_t gpio_remap, ControlStatus newvalue);
+void gpio_pin_remap_config(uint32_t remap, ControlStatus newvalue);
 /* configure GPIO pin remap1 */
 void gpio_pin_remap1_config(uint8_t remap_reg, uint32_t remap, ControlStatus newvalue);
+
+/* select ethernet MII or RMII PHY */
+void gpio_ethernet_phy_select(uint32_t enet_sel);
 
 /* select GPIO pin exti sources */
 void gpio_exti_source_select(uint8_t output_port, uint8_t output_pin);
@@ -711,8 +715,5 @@ void gpio_event_output_disable(void);
 
 /* lock GPIO pin bit */
 void gpio_pin_lock(uint32_t gpio_periph, uint32_t pin);
-
-/* select ethernet MII or RMII PHY */
-void gpio_ethernet_phy_select(uint32_t enet_sel);
 
 #endif /* GD32F20X_GPIO_H */

@@ -3,34 +3,35 @@
     \brief   header file for usbh_msc_bbb.c
 
     \version 2020-07-28, V3.0.0, firmware for GD32F20x
+    \version 2021-07-30, V3.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
-*/ 
+*/
 
 #ifndef __USBH_MSC_BBB_H
 #define __USBH_MSC_BBB_H
@@ -42,13 +43,13 @@ typedef union {
     msc_bbb_cbw field;
 
     uint8_t CBWArray[31];
-}usbh_cbw_pkt;
+} usbh_cbw_pkt;
 
 typedef union {
     msc_bbb_csw field;
 
     uint8_t CSWArray[13];
-}usbh_csw_pkt;
+} usbh_csw_pkt;
 
 enum usbh_msc_state {
     USBH_MSC_BOT_INIT_STATE = 0U,
@@ -64,31 +65,27 @@ enum usbh_msc_state {
     USBH_MSC_UNRECOVERED_STATE
 };
 
-typedef enum
-{
+typedef enum {
     BOT_OK = 0U,
     BOT_FAIL,
     BOT_PHASE_ERROR,
     BOT_BUSY
 } bot_status;
 
-typedef enum
-{
+typedef enum {
     BOT_CMD_IDLE = 0U,
     BOT_CMD_SEND,
-    BOT_CMD_WAIT,
+    BOT_CMD_WAIT
 } bot_cmd_state;
 
 /* csw status definitions */
-typedef enum
-{
+typedef enum {
     BOT_CSW_CMD_PASSED = 0U,
     BOT_CSW_CMD_FAILED,
-    BOT_CSW_PHASE_ERROR,
+    BOT_CSW_PHASE_ERROR
 } bot_csw_status;
 
-typedef enum
-{
+typedef enum {
     BOT_SEND_CBW = 1U,
     BOT_SEND_CBW_WAIT,
     BOT_DATA_IN,
@@ -102,8 +99,7 @@ typedef enum
     BOT_UNRECOVERED_ERROR
 } bot_state;
 
-typedef struct
-{
+typedef struct {
     uint8_t                *pbuf;
     uint32_t                data[16];
     bot_state               state;
@@ -137,14 +133,14 @@ typedef struct
 
 /* function declarations */
 /* initialize the mass storage parameters */
-void usbh_msc_bot_init (usbh_host *uhost);
+void usbh_msc_bot_init(usbh_host *uhost);
 /* manage the different states of BOT transfer and updates the status to upper layer */
-usbh_status usbh_msc_bot_process (usbh_host *uhost, uint8_t lun);
+usbh_status usbh_msc_bot_process(usbh_host *uhost, uint8_t lun);
 /* manages the different error handling for stall */
-usbh_status usbh_msc_bot_abort (usbh_host *uhost, uint8_t direction);
+usbh_status usbh_msc_bot_abort(usbh_host *uhost, uint8_t direction);
 /* reset msc bot request structure */
-usbh_status usbh_msc_bot_reset (usbh_host *uhost);
+usbh_status usbh_msc_bot_reset(usbh_host *uhost);
 /* decode the CSW received by the device and updates the same to upper layer */
-bot_csw_status usbh_msc_csw_decode (usbh_host *uhost);
+bot_csw_status usbh_msc_csw_decode(usbh_host *uhost);
 
 #endif /* __USBH_MSC_BBB_H */

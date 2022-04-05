@@ -6,10 +6,11 @@
 ;    \version 2017-06-05, V2.0.0, firmware for GD32F20x
 ;    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 ;    \version 2020-09-30, V2.2.0, firmware for GD32F20x
+;    \version 2021-07-30, V2.3.0, firmware for GD32F20x
 ;*/
 
 ;/*
-;    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+;    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
 ;    Redistribution and use in source and binary forms, with or without modification, 
 ;are permitted provided that the following conditions are met:
@@ -183,7 +184,7 @@ __Vectors_Size      EQU  __Vectors_End - __Vectors
 
 ;/* reset Handler */
 Reset_Handler       PROC
-                    EXPORT  Reset_Handler                     [WEAK]
+                    EXPORT  Reset_Handler                       [WEAK]
                     IMPORT  __main
                     IMPORT  SystemInit  
                     LDR     R0, =SystemInit
@@ -410,27 +411,27 @@ TLI_ER_IRQHandler
 
 ; user Initial Stack & Heap
 
-                 IF      :DEF:__MICROLIB
+                IF      :DEF:__MICROLIB
                 
-                 EXPORT  __initial_sp
-                 EXPORT  __heap_base
-                 EXPORT  __heap_limit
+                EXPORT  __initial_sp
+                EXPORT  __heap_base
+                EXPORT  __heap_limit
                 
-                 ELSE
+                ELSE
                 
-                 IMPORT  __use_two_region_memory
-                 EXPORT  __user_initial_stackheap
+                IMPORT  __use_two_region_memory
+                EXPORT  __user_initial_stackheap
                  
 __user_initial_stackheap PROC
-                 LDR     R0, =  Heap_Mem
-                 LDR     R1, =(Stack_Mem + Stack_Size)
-                 LDR     R2, = (Heap_Mem +  Heap_Size)
-                 LDR     R3, = Stack_Mem
-                 BX      LR
-                 ENDP
+                LDR     R0, =  Heap_Mem
+                LDR     R1, =(Stack_Mem + Stack_Size)
+                LDR     R2, = (Heap_Mem +  Heap_Size)
+                LDR     R3, = Stack_Mem
+                BX      LR
+                ENDP
                      
-                 ALIGN
+                ALIGN
 
-                 ENDIF
+                ENDIF
 
-                 END
+                END

@@ -6,32 +6,33 @@
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
     \version 2020-09-30, V2.2.0, firmware for GD32F20x
+    \version 2021-07-30, V2.3.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -46,76 +47,76 @@ OF SUCH DAMAGE.
 #define DAC1                    1U
 
 /* registers definitions */
-#define DAC_CTL                 REG32(DAC + 0x00U)   /*!< DAC control register */
-#define DAC_SWT                 REG32(DAC + 0x04U)   /*!< DAC software trigger register */
-#define DAC0_R12DH              REG32(DAC + 0x08U)   /*!< DAC0 12-bit right-aligned data holding register */
-#define DAC0_L12DH              REG32(DAC + 0x0CU)   /*!< DAC0 12-bit left-aligned data holding register */
-#define DAC0_R8DH               REG32(DAC + 0x10U)   /*!< DAC0 8-bit right-aligned data holding register */
-#define DAC1_R12DH              REG32(DAC + 0x14U)   /*!< DAC1 12-bit right-aligned data holding register */
-#define DAC1_L12DH              REG32(DAC + 0x18U)   /*!< DAC1 12-bit left-aligned data holding register */
-#define DAC1_R8DH               REG32(DAC + 0x1CU)   /*!< DAC1 8-bit right-aligned data holding register */
-#define DACC_R12DH              REG32(DAC + 0x20U)   /*!< DAC concurrent mode 12-bit right-aligned data holding register */
-#define DACC_L12DH              REG32(DAC + 0x24U)   /*!< DAC concurrent mode 12-bit left-aligned data holding register */
-#define DACC_R8DH               REG32(DAC + 0x28U)   /*!< DAC concurrent mode 8-bit right-aligned data holding register */
-#define DAC0_DO                 REG32(DAC + 0x2CU)   /*!< DAC0 data output register */
-#define DAC1_DO                 REG32(DAC + 0x30U)   /*!< DAC1 data output register */
+#define DAC_CTL                 REG32(DAC + 0x00000000U)   /*!< DAC control register */
+#define DAC_SWT                 REG32(DAC + 0x00000004U)   /*!< DAC software trigger register */
+#define DAC0_R12DH              REG32(DAC + 0x00000008U)   /*!< DAC0 12-bit right-aligned data holding register */
+#define DAC0_L12DH              REG32(DAC + 0x0000000CU)   /*!< DAC0 12-bit left-aligned data holding register */
+#define DAC0_R8DH               REG32(DAC + 0x00000010U)   /*!< DAC0 8-bit right-aligned data holding register */
+#define DAC1_R12DH              REG32(DAC + 0x00000014U)   /*!< DAC1 12-bit right-aligned data holding register */
+#define DAC1_L12DH              REG32(DAC + 0x00000018U)   /*!< DAC1 12-bit left-aligned data holding register */
+#define DAC1_R8DH               REG32(DAC + 0x0000001CU)   /*!< DAC1 8-bit right-aligned data holding register */
+#define DACC_R12DH              REG32(DAC + 0x00000020U)   /*!< DAC concurrent mode 12-bit right-aligned data holding register */
+#define DACC_L12DH              REG32(DAC + 0x00000024U)   /*!< DAC concurrent mode 12-bit left-aligned data holding register */
+#define DACC_R8DH               REG32(DAC + 0x00000028U)   /*!< DAC concurrent mode 8-bit right-aligned data holding register */
+#define DAC0_DO                 REG32(DAC + 0x0000002CU)   /*!< DAC0 data output register */
+#define DAC1_DO                 REG32(DAC + 0x00000030U)   /*!< DAC1 data output register */
 
 /* bits definitions */
 /* DAC_CTL */
-#define DAC_CTL_DEN0            BIT(0)               /*!< DAC0 enable/disable bit */
-#define DAC_CTL_DBOFF0          BIT(1)               /*!< DAC0 output buffer turn on/off bit */
-#define DAC_CTL_DTEN0           BIT(2)               /*!< DAC0 trigger enable/disable bit */
-#define DAC_CTL_DTSEL0          BITS(3,5)            /*!< DAC0 trigger source selection enable/disable bits */
-#define DAC_CTL_DWM0            BITS(6,7)            /*!< DAC0 noise wave mode */
-#define DAC_CTL_DWBW0           BITS(8,11)           /*!< DAC0 noise wave bit width */
-#define DAC_CTL_DDMAEN0         BIT(12)              /*!< DAC0 DMA enable/disable bit */
-#define DAC_CTL_DEN1            BIT(16)              /*!< DAC1 enable/disable bit */ 
-#define DAC_CTL_DBOFF1          BIT(17)              /*!< DAC1 output buffer turn on/turn off bit */
-#define DAC_CTL_DTEN1           BIT(18)              /*!< DAC1 trigger enable/disable bit */
-#define DAC_CTL_DTSEL1          BITS(19,21)          /*!< DAC1 trigger source selection enable/disable bits */
-#define DAC_CTL_DWM1            BITS(22,23)          /*!< DAC1 noise wave mode */
-#define DAC_CTL_DWBW1           BITS(24,27)          /*!< DAC1 noise wave bit width */
-#define DAC_CTL_DDMAEN1         BIT(28)              /*!< DAC1 DMA enable/disable bit */
+#define DAC_CTL_DEN0            BIT(0)                     /*!< DAC0 enable/disable bit */
+#define DAC_CTL_DBOFF0          BIT(1)                     /*!< DAC0 output buffer turn on/off bit */
+#define DAC_CTL_DTEN0           BIT(2)                     /*!< DAC0 trigger enable/disable bit */
+#define DAC_CTL_DTSEL0          BITS(3,5)                  /*!< DAC0 trigger source selection enable/disable bits */
+#define DAC_CTL_DWM0            BITS(6,7)                  /*!< DAC0 noise wave mode */
+#define DAC_CTL_DWBW0           BITS(8,11)                 /*!< DAC0 noise wave bit width */
+#define DAC_CTL_DDMAEN0         BIT(12)                    /*!< DAC0 DMA enable/disable bit */
+#define DAC_CTL_DEN1            BIT(16)                    /*!< DAC1 enable/disable bit */
+#define DAC_CTL_DBOFF1          BIT(17)                    /*!< DAC1 output buffer turn on/turn off bit */
+#define DAC_CTL_DTEN1           BIT(18)                    /*!< DAC1 trigger enable/disable bit */
+#define DAC_CTL_DTSEL1          BITS(19,21)                /*!< DAC1 trigger source selection enable/disable bits */
+#define DAC_CTL_DWM1            BITS(22,23)                /*!< DAC1 noise wave mode */
+#define DAC_CTL_DWBW1           BITS(24,27)                /*!< DAC1 noise wave bit width */
+#define DAC_CTL_DDMAEN1         BIT(28)                    /*!< DAC1 DMA enable/disable bit */
 
 /* DAC_SWT */
-#define DAC_SWT_SWTR0           BIT(0)               /*!< DAC0 software trigger bit, cleared by hardware */
-#define DAC_SWT_SWTR1           BIT(1)               /*!< DAC1 software trigger bit, cleared by hardware */
+#define DAC_SWT_SWTR0           BIT(0)                     /*!< DAC0 software trigger bit, cleared by hardware */
+#define DAC_SWT_SWTR1           BIT(1)                     /*!< DAC1 software trigger bit, cleared by hardware */
 
 /* DAC0_R12DH */
-#define DAC0_R12DH_DAC0_DH      BITS(0,11)           /*!< DAC0 12-bit right-aligned data bits */
+#define DAC0_R12DH_DAC0_DH      BITS(0,11)                 /*!< DAC0 12-bit right-aligned data bits */
 
 /* DAC0_L12DH */
-#define DAC0_L12DH_DAC0_DH      BITS(4,15)           /*!< DAC0 12-bit left-aligned data bits */
+#define DAC0_L12DH_DAC0_DH      BITS(4,15)                 /*!< DAC0 12-bit left-aligned data bits */
 
 /* DAC0_R8DH */
-#define DAC0_R8DH_DAC0_DH       BITS(0,7)            /*!< DAC0 8-bit right-aligned data bits */
+#define DAC0_R8DH_DAC0_DH       BITS(0,7)                  /*!< DAC0 8-bit right-aligned data bits */
 
 /* DAC1_R12DH */
-#define DAC1_R12DH_DAC1_DH      BITS(0,11)           /*!< DAC1 12-bit right-aligned data bits */
+#define DAC1_R12DH_DAC1_DH      BITS(0,11)                 /*!< DAC1 12-bit right-aligned data bits */
 
 /* DAC1_L12DH */
-#define DAC1_L12DH_DAC1_DH      BITS(4,15)           /*!< DAC1 12-bit left-aligned data bits */
+#define DAC1_L12DH_DAC1_DH      BITS(4,15)                 /*!< DAC1 12-bit left-aligned data bits */
 
 /* DAC1_R8DH */
-#define DAC1_R8DH_DAC1_DH       BITS(0,7)            /*!< DAC1 8-bit right-aligned data bits */
+#define DAC1_R8DH_DAC1_DH       BITS(0,7)                  /*!< DAC1 8-bit right-aligned data bits */
 
 /* DACC_R12DH */
-#define DACC_R12DH_DAC0_DH      BITS(0,11)           /*!< DAC concurrent mode DAC0 12-bit right-aligned data bits */
-#define DACC_R12DH_DAC1_DH      BITS(16,27)          /*!< DAC concurrent mode DAC1 12-bit right-aligned data bits */
+#define DACC_R12DH_DAC0_DH      BITS(0,11)                 /*!< DAC concurrent mode DAC0 12-bit right-aligned data bits */
+#define DACC_R12DH_DAC1_DH      BITS(16,27)                /*!< DAC concurrent mode DAC1 12-bit right-aligned data bits */
 
 /* DACC_L12DH */
-#define DACC_L12DH_DAC0_DH      BITS(4,15)           /*!< DAC concurrent mode DAC0 12-bit left-aligned data bits */
-#define DACC_L12DH_DAC1_DH      BITS(20,31)          /*!< DAC concurrent mode DAC1 12-bit left-aligned data bits */
+#define DACC_L12DH_DAC0_DH      BITS(4,15)                 /*!< DAC concurrent mode DAC0 12-bit left-aligned data bits */
+#define DACC_L12DH_DAC1_DH      BITS(20,31)                /*!< DAC concurrent mode DAC1 12-bit left-aligned data bits */
 
 /* DACC_R8DH */
-#define DACC_R8DH_DAC0_DH       BITS(0,7)            /*!< DAC concurrent mode DAC0 8-bit right-aligned data bits */
-#define DACC_R8DH_DAC1_DH       BITS(8,15)           /*!< DAC concurrent mode DAC1 8-bit right-aligned data bits */
+#define DACC_R8DH_DAC0_DH       BITS(0,7)                  /*!< DAC concurrent mode DAC0 8-bit right-aligned data bits */
+#define DACC_R8DH_DAC1_DH       BITS(8,15)                 /*!< DAC concurrent mode DAC1 8-bit right-aligned data bits */
 
 /* DAC0_DO */
-#define DAC0_DO_DAC0_DO         BITS(0,11)           /*!< DAC0 12-bit output data bits */
+#define DAC0_DO_DAC0_DO         BITS(0,11)                 /*!< DAC0 12-bit output data bits */
 
 /* DAC1_DO */
-#define DAC1_DO_DAC1_DO         BITS(0,11)           /*!< DAC1 12-bit output data bits */
+#define DAC1_DO_DAC1_DO         BITS(0,11)                 /*!< DAC1 12-bit output data bits */
 
 /* constants definitions */
 /* DAC trigger source */
@@ -195,12 +196,12 @@ void dac_disable(uint32_t dac_periph);
 /* enable DAC DMA */
 void dac_dma_enable(uint32_t dac_periph);
 /* disable DAC DMA */
-void dac_dma_disable(uint32_t dac_periph); 
+void dac_dma_disable(uint32_t dac_periph);
 /* enable DAC output buffer */
 void dac_output_buffer_enable(uint32_t dac_periph);
 /* disable DAC output buffer */
 void dac_output_buffer_disable(uint32_t dac_periph);
-/* get the last data output value */
+/* get DAC output value */
 uint16_t dac_output_value_get(uint32_t dac_periph);
 /* set DAC data holding register value */
 void dac_data_set(uint32_t dac_periph, uint32_t dac_align, uint16_t data);
@@ -242,6 +243,6 @@ void dac_concurrent_output_buffer_enable(void);
 /* disable DAC concurrent buffer function */
 void dac_concurrent_output_buffer_disable(void);
 /* set DAC concurrent mode data holding register value */
-void dac_concurrent_data_set(uint32_t dac_align, uint16_t data0, uint16_t data1); 
+void dac_concurrent_data_set(uint32_t dac_align, uint16_t data0, uint16_t data1);
 
 #endif /* GD32F20X_DAC_H */

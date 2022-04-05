@@ -3,32 +3,33 @@
     \brief   USB SCSI layer functions
 
     \version 2020-07-28, V3.0.0, firmware for GD32F20x
+    \version 2021-07-30, V3.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -38,27 +39,27 @@ OF SUCH DAMAGE.
 #include "usbd_msc_data.h"
 
 /* local function prototypes ('static') */
-static int8_t scsi_test_unit_ready      (usb_core_driver *udev, uint8_t lun, uint8_t *params);
-static int8_t scsi_mode_select6         (usb_core_driver *udev, uint8_t lun, uint8_t *params);
-static int8_t scsi_mode_select10        (usb_core_driver *udev, uint8_t lun, uint8_t *params);
-static int8_t scsi_inquiry              (usb_core_driver *udev, uint8_t lun, uint8_t *params);
-static int8_t scsi_read_format_capacity (usb_core_driver *udev, uint8_t lun, uint8_t *params);
-static int8_t scsi_read_capacity10      (usb_core_driver *udev, uint8_t lun, uint8_t *params);
-static int8_t scsi_request_sense        (usb_core_driver *udev, uint8_t lun, uint8_t *params);
-static int8_t scsi_mode_sense6          (usb_core_driver *udev, uint8_t lun, uint8_t *params);
-static int8_t scsi_toc_cmd_read         (usb_core_driver *udev, uint8_t lun, uint8_t *params);
-static int8_t scsi_mode_sense10         (usb_core_driver *udev, uint8_t lun, uint8_t *params);
-static int8_t scsi_write10              (usb_core_driver *udev, uint8_t lun, uint8_t *params);
-static int8_t scsi_read10               (usb_core_driver *udev, uint8_t lun, uint8_t *params);
-static int8_t scsi_verify10             (usb_core_driver *udev, uint8_t lun, uint8_t *params);
+static int8_t scsi_test_unit_ready(usb_core_driver *udev, uint8_t lun, uint8_t *params);
+static int8_t scsi_mode_select6(usb_core_driver *udev, uint8_t lun, uint8_t *params);
+static int8_t scsi_mode_select10(usb_core_driver *udev, uint8_t lun, uint8_t *params);
+static int8_t scsi_inquiry(usb_core_driver *udev, uint8_t lun, uint8_t *params);
+static int8_t scsi_read_format_capacity(usb_core_driver *udev, uint8_t lun, uint8_t *params);
+static int8_t scsi_read_capacity10(usb_core_driver *udev, uint8_t lun, uint8_t *params);
+static int8_t scsi_request_sense(usb_core_driver *udev, uint8_t lun, uint8_t *params);
+static int8_t scsi_mode_sense6(usb_core_driver *udev, uint8_t lun, uint8_t *params);
+static int8_t scsi_toc_cmd_read(usb_core_driver *udev, uint8_t lun, uint8_t *params);
+static int8_t scsi_mode_sense10(usb_core_driver *udev, uint8_t lun, uint8_t *params);
+static int8_t scsi_write10(usb_core_driver *udev, uint8_t lun, uint8_t *params);
+static int8_t scsi_read10(usb_core_driver *udev, uint8_t lun, uint8_t *params);
+static int8_t scsi_verify10(usb_core_driver *udev, uint8_t lun, uint8_t *params);
 
-static int8_t scsi_process_read         (usb_core_driver *udev, uint8_t lun);
-static int8_t scsi_process_write        (usb_core_driver *udev, uint8_t lun);
+static int8_t scsi_process_read(usb_core_driver *udev, uint8_t lun);
+static int8_t scsi_process_write(usb_core_driver *udev, uint8_t lun);
 
-static inline int8_t scsi_check_address_range  (usb_core_driver *udev, uint8_t lun, uint32_t blk_offset, uint16_t blk_nbr);
-static inline int8_t scsi_format_cmd           (usb_core_driver *udev, uint8_t lun);
-static inline int8_t scsi_start_stop_unit      (usb_core_driver *udev, uint8_t lun, uint8_t *params);
-static inline int8_t scsi_allow_medium_removal (usb_core_driver *udev, uint8_t lun, uint8_t *params);
+static inline int8_t scsi_check_address_range(usb_core_driver *udev, uint8_t lun, uint32_t blk_offset, uint16_t blk_nbr);
+static inline int8_t scsi_format_cmd(usb_core_driver *udev, uint8_t lun);
+static inline int8_t scsi_start_stop_unit(usb_core_driver *udev, uint8_t lun, uint8_t *params);
+static inline int8_t scsi_allow_medium_removal(usb_core_driver *udev, uint8_t lun, uint8_t *params);
 
 /*!
     \brief      process SCSI commands
@@ -70,57 +71,57 @@ static inline int8_t scsi_allow_medium_removal (usb_core_driver *udev, uint8_t l
 */
 int8_t scsi_process_cmd(usb_core_driver *udev, uint8_t lun, uint8_t *params)
 {
-    switch (params[0]) {
+    switch(params[0]) {
     case SCSI_TEST_UNIT_READY:
-        return scsi_test_unit_ready (udev, lun, params);
+        return scsi_test_unit_ready(udev, lun, params);
 
     case SCSI_REQUEST_SENSE:
-        return scsi_request_sense (udev, lun, params);
+        return scsi_request_sense(udev, lun, params);
 
     case SCSI_INQUIRY:
-        return scsi_inquiry (udev, lun, params);
+        return scsi_inquiry(udev, lun, params);
 
     case SCSI_START_STOP_UNIT:
-        return scsi_start_stop_unit (udev, lun, params);
+        return scsi_start_stop_unit(udev, lun, params);
 
     case SCSI_ALLOW_MEDIUM_REMOVAL:
-        return scsi_allow_medium_removal (udev, lun, params);
+        return scsi_allow_medium_removal(udev, lun, params);
 
     case SCSI_MODE_SENSE6:
-        return scsi_mode_sense6 (udev, lun, params);
+        return scsi_mode_sense6(udev, lun, params);
 
     case SCSI_MODE_SENSE10:
-        return scsi_mode_sense10 (udev, lun, params);
+        return scsi_mode_sense10(udev, lun, params);
 
     case SCSI_READ_FORMAT_CAPACITIES:
-        return scsi_read_format_capacity (udev, lun, params);
+        return scsi_read_format_capacity(udev, lun, params);
 
     case SCSI_READ_CAPACITY10:
-        return scsi_read_capacity10 (udev, lun, params);
+        return scsi_read_capacity10(udev, lun, params);
 
     case SCSI_READ10:
-        return scsi_read10 (udev, lun, params); 
+        return scsi_read10(udev, lun, params);
 
     case SCSI_WRITE10:
-        return scsi_write10 (udev, lun, params);
+        return scsi_write10(udev, lun, params);
 
     case SCSI_VERIFY10:
-        return scsi_verify10 (udev, lun, params);
+        return scsi_verify10(udev, lun, params);
 
     case SCSI_FORMAT_UNIT:
-        return scsi_format_cmd (udev, lun);
+        return scsi_format_cmd(udev, lun);
 
     case SCSI_READ_TOC_DATA:
-        return scsi_toc_cmd_read (udev, lun, params);
-    
+        return scsi_toc_cmd_read(udev, lun, params);
+
     case SCSI_MODE_SELECT6:
-        return scsi_mode_select6 (udev, lun, params);
-    
+        return scsi_mode_select6(udev, lun, params);
+
     case SCSI_MODE_SELECT10:
-        return scsi_mode_select10 (udev, lun, params);
+        return scsi_mode_select10(udev, lun, params);
 
     default:
-        scsi_sense_code (udev, lun, ILLEGAL_REQUEST, INVALID_CDB);
+        scsi_sense_code(udev, lun, ILLEGAL_REQUEST, INVALID_CDB);
         return -1;
     }
 }
@@ -134,7 +135,7 @@ int8_t scsi_process_cmd(usb_core_driver *udev, uint8_t lun, uint8_t *params)
     \param[out] none
     \retval     none
 */
-void scsi_sense_code (usb_core_driver *udev, uint8_t lun, uint8_t skey, uint8_t asc)
+void scsi_sense_code(usb_core_driver *udev, uint8_t lun, uint8_t skey, uint8_t asc)
 {
     usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
 
@@ -142,7 +143,7 @@ void scsi_sense_code (usb_core_driver *udev, uint8_t lun, uint8_t skey, uint8_t 
     msc->scsi_sense[msc->scsi_sense_tail].ASC = asc << 8U;
     msc->scsi_sense_tail++;
 
-    if (SENSE_LIST_DEEPTH == msc->scsi_sense_tail) {
+    if(SENSE_LIST_DEEPTH == msc->scsi_sense_tail) {
         msc->scsi_sense_tail = 0U;
     }
 }
@@ -155,23 +156,23 @@ void scsi_sense_code (usb_core_driver *udev, uint8_t lun, uint8_t skey, uint8_t 
     \param[out] none
     \retval     status
 */
-static int8_t scsi_test_unit_ready (usb_core_driver *udev, uint8_t lun, uint8_t *params)
+static int8_t scsi_test_unit_ready(usb_core_driver *udev, uint8_t lun, uint8_t *params)
 {
     usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
 
     /* case 9 : Hi > D0 */
-    if (0U != msc->bbb_cbw.dCBWDataTransferLength) {
-        scsi_sense_code (udev, msc->bbb_cbw.bCBWLUN, ILLEGAL_REQUEST, INVALID_CDB);
+    if(0U != msc->bbb_cbw.dCBWDataTransferLength) {
+        scsi_sense_code(udev, msc->bbb_cbw.bCBWLUN, ILLEGAL_REQUEST, INVALID_CDB);
 
         return -1;
     }
 
-    if (0 != usbd_mem_fops->mem_ready(lun)) {
+    if(0 != usbd_mem_fops->mem_ready(lun)) {
         scsi_sense_code(udev, lun, NOT_READY, MEDIUM_NOT_PRESENT);
 
         return -1;
     }
-    
+
     msc->bbb_datalen = 0U;
 
     return 0;
@@ -185,7 +186,7 @@ static int8_t scsi_test_unit_ready (usb_core_driver *udev, uint8_t lun, uint8_t 
     \param[out] none
     \retval     status
 */
-static int8_t scsi_mode_select6 (usb_core_driver *udev, uint8_t lun, uint8_t *params)
+static int8_t scsi_mode_select6(usb_core_driver *udev, uint8_t lun, uint8_t *params)
 {
     usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
 
@@ -202,7 +203,7 @@ static int8_t scsi_mode_select6 (usb_core_driver *udev, uint8_t lun, uint8_t *pa
     \param[out] none
     \retval     status
 */
-static int8_t scsi_mode_select10 (usb_core_driver *udev, uint8_t lun, uint8_t *params)
+static int8_t scsi_mode_select10(usb_core_driver *udev, uint8_t lun, uint8_t *params)
 {
     usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
 
@@ -219,14 +220,14 @@ static int8_t scsi_mode_select10 (usb_core_driver *udev, uint8_t lun, uint8_t *p
     \param[out] none
     \retval     status
 */
-static int8_t scsi_inquiry (usb_core_driver *udev, uint8_t lun, uint8_t *params)
+static int8_t scsi_inquiry(usb_core_driver *udev, uint8_t lun, uint8_t *params)
 {
     uint8_t *page = NULL;
     uint16_t len = 0U;
 
     usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
 
-    if (params[1] & 0x01U) {
+    if(params[1] & 0x01U) {
         /* Evpd is set */
         page = (uint8_t *)msc_page00_inquiry_data;
 
@@ -236,14 +237,14 @@ static int8_t scsi_inquiry (usb_core_driver *udev, uint8_t lun, uint8_t *params)
 
         len = (uint16_t)(page[4] + 5U);
 
-        if (params[4] <= len) {
+        if(params[4] <= len) {
             len = params[4];
         }
     }
 
     msc->bbb_datalen = len;
 
-    while (len) {
+    while(len) {
         len--;
         msc->bbb_data[len] = page[len];
     }
@@ -259,7 +260,7 @@ static int8_t scsi_inquiry (usb_core_driver *udev, uint8_t lun, uint8_t *params)
     \param[out] none
     \retval     status
 */
-static int8_t scsi_read_capacity10 (usb_core_driver *udev, uint8_t lun, uint8_t *params)
+static int8_t scsi_read_capacity10(usb_core_driver *udev, uint8_t lun, uint8_t *params)
 {
     uint32_t blk_num = usbd_mem_fops->mem_block_len[lun] - 1U;
     usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
@@ -290,7 +291,7 @@ static int8_t scsi_read_capacity10 (usb_core_driver *udev, uint8_t lun, uint8_t 
     \param[out] none
     \retval     status
 */
-static int8_t scsi_read_format_capacity (usb_core_driver *udev, uint8_t lun, uint8_t *params)
+static int8_t scsi_read_format_capacity(usb_core_driver *udev, uint8_t lun, uint8_t *params)
 {
     uint16_t i = 0U;
     uint32_t blk_size = usbd_mem_fops->mem_block_size[lun];
@@ -299,7 +300,7 @@ static int8_t scsi_read_format_capacity (usb_core_driver *udev, uint8_t lun, uin
 
     usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
 
-    for (i = 0U; i < 12U; i++) {
+    for(i = 0U; i < 12U; i++) {
         msc->bbb_data[i] = 0U;
     }
 
@@ -327,14 +328,14 @@ static int8_t scsi_read_format_capacity (usb_core_driver *udev, uint8_t lun, uin
     \param[out] none
     \retval     status
 */
-static int8_t scsi_mode_sense6 (usb_core_driver *udev, uint8_t lun, uint8_t *params)
+static int8_t scsi_mode_sense6(usb_core_driver *udev, uint8_t lun, uint8_t *params)
 {
     uint16_t len = 8U;
     usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
 
     msc->bbb_datalen = len;
 
-    while (len) {
+    while(len) {
         len--;
         msc->bbb_data[len] = msc_mode_sense6_data[len];
     }
@@ -350,14 +351,14 @@ static int8_t scsi_mode_sense6 (usb_core_driver *udev, uint8_t lun, uint8_t *par
     \param[out] none
     \retval     status
 */
-static int8_t scsi_mode_sense10 (usb_core_driver *udev, uint8_t lun, uint8_t *params)
+static int8_t scsi_mode_sense10(usb_core_driver *udev, uint8_t lun, uint8_t *params)
 {
     uint16_t len = 8U;
     usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
 
     msc->bbb_datalen = len;
 
-    while (len) {
+    while(len) {
         len--;
         msc->bbb_data[len] = msc_mode_sense10_data[len];
     }
@@ -373,25 +374,25 @@ static int8_t scsi_mode_sense10 (usb_core_driver *udev, uint8_t lun, uint8_t *pa
     \param[out] none
     \retval     status
 */
-static int8_t scsi_request_sense (usb_core_driver *udev, uint8_t lun, uint8_t *params)
+static int8_t scsi_request_sense(usb_core_driver *udev, uint8_t lun, uint8_t *params)
 {
     uint8_t i = 0U;
     usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
 
-    for (i = 0U; i < REQUEST_SENSE_DATA_LEN; i++) {
+    for(i = 0U; i < REQUEST_SENSE_DATA_LEN; i++) {
         msc->bbb_data[i] = 0U;
     }
 
     msc->bbb_data[0] = 0x70U;
     msc->bbb_data[7] = REQUEST_SENSE_DATA_LEN - 6U;
 
-    if ((msc->scsi_sense_head != msc->scsi_sense_tail)) {
+    if((msc->scsi_sense_head != msc->scsi_sense_tail)) {
         msc->bbb_data[2] = msc->scsi_sense[msc->scsi_sense_head].SenseKey;
         msc->bbb_data[12] = msc->scsi_sense[msc->scsi_sense_head].ASCQ;
         msc->bbb_data[13] = msc->scsi_sense[msc->scsi_sense_head].ASC;
         msc->scsi_sense_head++;
 
-        if (msc->scsi_sense_head == SENSE_LIST_DEEPTH) {
+        if(msc->scsi_sense_head == SENSE_LIST_DEEPTH) {
             msc->scsi_sense_head = 0U;
         }
     }
@@ -409,7 +410,7 @@ static int8_t scsi_request_sense (usb_core_driver *udev, uint8_t lun, uint8_t *p
     \param[out] none
     \retval     status
 */
-static inline int8_t scsi_start_stop_unit (usb_core_driver *udev, uint8_t lun, uint8_t *params)
+static inline int8_t scsi_start_stop_unit(usb_core_driver *udev, uint8_t lun, uint8_t *params)
 {
     usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
 
@@ -427,7 +428,7 @@ static inline int8_t scsi_start_stop_unit (usb_core_driver *udev, uint8_t lun, u
     \param[out] none
     \retval     status
 */
-static inline int8_t scsi_allow_medium_removal (usb_core_driver *udev, uint8_t lun, uint8_t *params)
+static inline int8_t scsi_allow_medium_removal(usb_core_driver *udev, uint8_t lun, uint8_t *params)
 {
     usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
 
@@ -444,20 +445,20 @@ static inline int8_t scsi_allow_medium_removal (usb_core_driver *udev, uint8_t l
     \param[out] none
     \retval     status
 */
-static int8_t scsi_read10 (usb_core_driver *udev, uint8_t lun, uint8_t *params)
+static int8_t scsi_read10(usb_core_driver *udev, uint8_t lun, uint8_t *params)
 {
     usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
 
-    if (msc->bbb_state == BBB_IDLE) {
+    if(msc->bbb_state == BBB_IDLE) {
         /* direction is from device to host */
-        if (0x80U != (msc->bbb_cbw.bmCBWFlags & 0x80U)) {
-            scsi_sense_code (udev, msc->bbb_cbw.bCBWLUN, ILLEGAL_REQUEST, INVALID_CDB);
+        if(0x80U != (msc->bbb_cbw.bmCBWFlags & 0x80U)) {
+            scsi_sense_code(udev, msc->bbb_cbw.bCBWLUN, ILLEGAL_REQUEST, INVALID_CDB);
 
             return -1;
         }
 
-        if (0 != usbd_mem_fops->mem_ready(lun)) {
-            scsi_sense_code (udev, lun, NOT_READY, MEDIUM_NOT_PRESENT);
+        if(0 != usbd_mem_fops->mem_ready(lun)) {
+            scsi_sense_code(udev, lun, NOT_READY, MEDIUM_NOT_PRESENT);
 
             return -1;
         }
@@ -467,7 +468,7 @@ static int8_t scsi_read10 (usb_core_driver *udev, uint8_t lun, uint8_t *params)
 
         msc->scsi_blk_len = (params[7] << 8U) | params[8];
 
-        if (scsi_check_address_range (udev, lun, msc->scsi_blk_addr, (uint16_t)msc->scsi_blk_len) < 0) {
+        if(scsi_check_address_range(udev, lun, msc->scsi_blk_addr, (uint16_t)msc->scsi_blk_len) < 0) {
             return -1; /* error */
         }
 
@@ -477,8 +478,8 @@ static int8_t scsi_read10 (usb_core_driver *udev, uint8_t lun, uint8_t *params)
         msc->scsi_blk_len  *= msc->scsi_blk_size[lun];
 
         /* cases 4,5 : Hi <> Dn */
-        if (msc->bbb_cbw.dCBWDataTransferLength != msc->scsi_blk_len) {
-            scsi_sense_code (udev, msc->bbb_cbw.bCBWLUN, ILLEGAL_REQUEST, INVALID_CDB);
+        if(msc->bbb_cbw.dCBWDataTransferLength != msc->scsi_blk_len) {
+            scsi_sense_code(udev, msc->bbb_cbw.bCBWLUN, ILLEGAL_REQUEST, INVALID_CDB);
 
             return -1;
         }
@@ -486,7 +487,7 @@ static int8_t scsi_read10 (usb_core_driver *udev, uint8_t lun, uint8_t *params)
 
     msc->bbb_datalen = MSC_MEDIA_PACKET_SIZE;
 
-    return scsi_process_read (udev, lun);
+    return scsi_process_read(udev, lun);
 }
 
 /*!
@@ -497,28 +498,28 @@ static int8_t scsi_read10 (usb_core_driver *udev, uint8_t lun, uint8_t *params)
     \param[out] none
     \retval     status
 */
-static int8_t scsi_write10 (usb_core_driver *udev, uint8_t lun, uint8_t *params)
+static int8_t scsi_write10(usb_core_driver *udev, uint8_t lun, uint8_t *params)
 {
     usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
 
-    if (BBB_IDLE == msc->bbb_state) {
+    if(BBB_IDLE == msc->bbb_state) {
         /* case 8 : Hi <> Do */
-        if (0x80U == (msc->bbb_cbw.bmCBWFlags & 0x80U)) {
-            scsi_sense_code (udev, msc->bbb_cbw.bCBWLUN, ILLEGAL_REQUEST, INVALID_CDB);
+        if(0x80U == (msc->bbb_cbw.bmCBWFlags & 0x80U)) {
+            scsi_sense_code(udev, msc->bbb_cbw.bCBWLUN, ILLEGAL_REQUEST, INVALID_CDB);
 
             return -1;
         }
 
         /* check whether media is ready */
-        if (0 != usbd_mem_fops->mem_ready(lun)) {
-            scsi_sense_code (udev, lun, NOT_READY, MEDIUM_NOT_PRESENT);
+        if(0 != usbd_mem_fops->mem_ready(lun)) {
+            scsi_sense_code(udev, lun, NOT_READY, MEDIUM_NOT_PRESENT);
 
             return -1;
         }
 
         /* check if media is write-protected */
-        if (0 != usbd_mem_fops->mem_protected(lun)) {
-            scsi_sense_code (udev, lun, NOT_READY, WRITE_PROTECTED);
+        if(0 != usbd_mem_fops->mem_protected(lun)) {
+            scsi_sense_code(udev, lun, NOT_READY, WRITE_PROTECTED);
 
             return -1;
         }
@@ -529,7 +530,7 @@ static int8_t scsi_write10 (usb_core_driver *udev, uint8_t lun, uint8_t *params)
         msc->scsi_blk_len = (params[7] << 8U) | params[8];
 
         /* check if LBA address is in the right range */
-        if (scsi_check_address_range (udev, lun, msc->scsi_blk_addr, (uint16_t)msc->scsi_blk_len) < 0) {
+        if(scsi_check_address_range(udev, lun, msc->scsi_blk_addr, (uint16_t)msc->scsi_blk_len) < 0) {
             return -1; /* error */
         }
 
@@ -537,8 +538,8 @@ static int8_t scsi_write10 (usb_core_driver *udev, uint8_t lun, uint8_t *params)
         msc->scsi_blk_len  *= msc->scsi_blk_size[lun];
 
         /* cases 3,11,13 : Hn,Ho <> D0 */
-        if (msc->bbb_cbw.dCBWDataTransferLength != msc->scsi_blk_len) {
-            scsi_sense_code (udev, msc->bbb_cbw.bCBWLUN, ILLEGAL_REQUEST, INVALID_CDB);
+        if(msc->bbb_cbw.dCBWDataTransferLength != msc->scsi_blk_len) {
+            scsi_sense_code(udev, msc->bbb_cbw.bCBWLUN, ILLEGAL_REQUEST, INVALID_CDB);
 
             return -1;
         }
@@ -546,12 +547,12 @@ static int8_t scsi_write10 (usb_core_driver *udev, uint8_t lun, uint8_t *params)
         /* prepare endpoint to receive first data packet */
         msc->bbb_state = BBB_DATA_OUT;
 
-        usbd_ep_recev (udev, 
-                       MSC_OUT_EP, 
-                       msc->bbb_data, 
-                       USB_MIN (msc->scsi_blk_len, MSC_MEDIA_PACKET_SIZE));
+        usbd_ep_recev(udev,
+                      MSC_OUT_EP,
+                      msc->bbb_data,
+                      USB_MIN(msc->scsi_blk_len, MSC_MEDIA_PACKET_SIZE));
     } else { /* write process ongoing */
-        return scsi_process_write (udev, lun);
+        return scsi_process_write(udev, lun);
     }
 
     return 0;
@@ -565,17 +566,17 @@ static int8_t scsi_write10 (usb_core_driver *udev, uint8_t lun, uint8_t *params)
     \param[out] none
     \retval     status
 */
-static int8_t scsi_verify10 (usb_core_driver *udev, uint8_t lun, uint8_t *params)
+static int8_t scsi_verify10(usb_core_driver *udev, uint8_t lun, uint8_t *params)
 {
     usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
 
-    if (0x02U == (params[1] & 0x02U)) {
-        scsi_sense_code (udev, lun, ILLEGAL_REQUEST, INVALID_FIELED_IN_COMMAND);
+    if(0x02U == (params[1] & 0x02U)) {
+        scsi_sense_code(udev, lun, ILLEGAL_REQUEST, INVALID_FIELED_IN_COMMAND);
 
         return -1; /* error, verify mode not supported*/
     }
 
-    if (scsi_check_address_range (udev, lun, msc->scsi_blk_addr, (uint16_t)msc->scsi_blk_len) < 0) {
+    if(scsi_check_address_range(udev, lun, msc->scsi_blk_addr, (uint16_t)msc->scsi_blk_len) < 0) {
         return -1; /* error */
     }
 
@@ -593,12 +594,12 @@ static int8_t scsi_verify10 (usb_core_driver *udev, uint8_t lun, uint8_t *params
     \param[out] none
     \retval     status
 */
-static inline int8_t scsi_check_address_range (usb_core_driver *udev, uint8_t lun, uint32_t blk_offset, uint16_t blk_nbr)
+static inline int8_t scsi_check_address_range(usb_core_driver *udev, uint8_t lun, uint32_t blk_offset, uint16_t blk_nbr)
 {
     usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
 
-    if ((blk_offset + blk_nbr) > msc->scsi_blk_nbr[lun]) {
-        scsi_sense_code (udev, lun, ILLEGAL_REQUEST, ADDRESS_OUT_OF_RANGE);
+    if((blk_offset + blk_nbr) > msc->scsi_blk_nbr[lun]) {
+        scsi_sense_code(udev, lun, ILLEGAL_REQUEST, ADDRESS_OUT_OF_RANGE);
 
         return -1;
     }
@@ -613,22 +614,22 @@ static inline int8_t scsi_check_address_range (usb_core_driver *udev, uint8_t lu
     \param[out] none
     \retval     status
 */
-static int8_t scsi_process_read (usb_core_driver *udev, uint8_t lun)
+static int8_t scsi_process_read(usb_core_driver *udev, uint8_t lun)
 {
     usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
 
     uint32_t len = USB_MIN(msc->scsi_blk_len, MSC_MEDIA_PACKET_SIZE);
 
-    if (usbd_mem_fops->mem_read(lun,
-                                msc->bbb_data, 
-                                msc->scsi_blk_addr, 
-                                (uint16_t)(len / msc->scsi_blk_size[lun])) < 0) {
+    if(usbd_mem_fops->mem_read(lun,
+                               msc->bbb_data,
+                               msc->scsi_blk_addr,
+                               (uint16_t)(len / msc->scsi_blk_size[lun])) < 0) {
         scsi_sense_code(udev, lun, HARDWARE_ERROR, UNRECOVERED_READ_ERROR);
 
-        return -1; 
+        return -1;
     }
 
-    usbd_ep_send (udev, MSC_IN_EP, msc->bbb_data, len);
+    usbd_ep_send(udev, MSC_IN_EP, msc->bbb_data, len);
 
     msc->scsi_blk_addr += len;
     msc->scsi_blk_len  -= len;
@@ -636,7 +637,7 @@ static int8_t scsi_process_read (usb_core_driver *udev, uint8_t lun)
     /* case 6 : Hi = Di */
     msc->bbb_csw.dCSWDataResidue -= len;
 
-    if (0U == msc->scsi_blk_len) {
+    if(0U == msc->scsi_blk_len) {
         msc->bbb_state = BBB_LAST_DATA_IN;
     }
 
@@ -650,16 +651,16 @@ static int8_t scsi_process_read (usb_core_driver *udev, uint8_t lun)
     \param[out] none
     \retval     status
 */
-static int8_t scsi_process_write (usb_core_driver *udev, uint8_t lun)
+static int8_t scsi_process_write(usb_core_driver *udev, uint8_t lun)
 {
     usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
 
     uint32_t len = USB_MIN(msc->scsi_blk_len, MSC_MEDIA_PACKET_SIZE);
 
-    if (usbd_mem_fops->mem_write (lun,
-                                  msc->bbb_data, 
-                                  msc->scsi_blk_addr, 
-                                  (uint16_t)(len / msc->scsi_blk_size[lun])) < 0) {
+    if(usbd_mem_fops->mem_write(lun,
+                                msc->bbb_data,
+                                msc->scsi_blk_addr,
+                                (uint16_t)(len / msc->scsi_blk_size[lun])) < 0) {
         scsi_sense_code(udev, lun, HARDWARE_ERROR, WRITE_FAULT);
 
         return -1;
@@ -671,14 +672,14 @@ static int8_t scsi_process_write (usb_core_driver *udev, uint8_t lun)
     /* case 12 : Ho = Do */
     msc->bbb_csw.dCSWDataResidue -= len;
 
-    if (0U == msc->scsi_blk_len) {
-        msc_bbb_csw_send (udev, CSW_CMD_PASSED);
+    if(0U == msc->scsi_blk_len) {
+        msc_bbb_csw_send(udev, CSW_CMD_PASSED);
     } else {
         /* prepare endpoint to receive next packet */
-        usbd_ep_recev (udev, 
-                       MSC_OUT_EP, 
-                       msc->bbb_data, 
-                       USB_MIN (msc->scsi_blk_len, MSC_MEDIA_PACKET_SIZE));
+        usbd_ep_recev(udev,
+                      MSC_OUT_EP,
+                      msc->bbb_data,
+                      USB_MIN(msc->scsi_blk_len, MSC_MEDIA_PACKET_SIZE));
     }
 
     return 0;
@@ -691,7 +692,7 @@ static int8_t scsi_process_write (usb_core_driver *udev, uint8_t lun)
     \param[out] none
     \retval     status
 */
-static inline int8_t scsi_format_cmd (usb_core_driver *udev, uint8_t lun)
+static inline int8_t scsi_format_cmd(usb_core_driver *udev, uint8_t lun)
 {
     return 0;
 }
@@ -704,9 +705,9 @@ static inline int8_t scsi_format_cmd (usb_core_driver *udev, uint8_t lun)
     \param[out] none
     \retval     status
 */
-static int8_t scsi_toc_cmd_read (usb_core_driver *udev, uint8_t lun, uint8_t *params)
+static int8_t scsi_toc_cmd_read(usb_core_driver *udev, uint8_t lun, uint8_t *params)
 {
-    uint8_t* pPage;
+    uint8_t *pPage;
     uint16_t len;
 
     usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
@@ -716,7 +717,7 @@ static int8_t scsi_toc_cmd_read (usb_core_driver *udev, uint8_t lun, uint8_t *pa
 
     msc->bbb_datalen = len;
 
-    while (len) {
+    while(len) {
         len--;
         msc->bbb_data[len] = pPage[len];
     }

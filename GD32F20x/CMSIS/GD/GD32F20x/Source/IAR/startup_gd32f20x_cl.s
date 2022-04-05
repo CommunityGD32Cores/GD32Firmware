@@ -6,10 +6,11 @@
 ;    \version 2017-06-05, V2.0.0, firmware for GD32F20x
 ;    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 ;    \version 2020-09-30, V2.2.0, firmware for GD32F20x
+;    \version 2021-07-30, V2.3.0, firmware for GD32F20x
 ;*/
 
 ;/*
-;    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+;    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
 ;    Redistribution and use in source and binary forms, with or without modification, 
 ;are permitted provided that the following conditions are met:
@@ -368,10 +369,10 @@ TIMER1_IRQHandler
 TIMER2_IRQHandler
         B TIMER2_IRQHandler
         
-       PUBWEAK TIMER3_IRQHandler
-       SECTION .text:CODE:NOROOT:REORDER(1)
+        PUBWEAK TIMER3_IRQHandler
+        SECTION .text:CODE:NOROOT:REORDER(1)
 TIMER3_IRQHandler
-       B TIMER3_IRQHandler
+        B TIMER3_IRQHandler
                         
         PUBWEAK I2C0_EV_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
@@ -403,7 +404,7 @@ SPI0_IRQHandler
 SPI1_IRQHandler
         B SPI1_IRQHandler
         
-          PUBWEAK USART0_IRQHandler
+        PUBWEAK USART0_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 USART0_IRQHandler
         B USART0_IRQHandler
@@ -428,7 +429,7 @@ EXTI10_15_IRQHandler
 RTC_Alarm_IRQHandler
         B RTC_Alarm_IRQHandler
         
-         PUBWEAK USBFS_WKUP_IRQHandler
+        PUBWEAK USBFS_WKUP_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 USBFS_WKUP_IRQHandler
         B USBFS_WKUP_IRQHandler

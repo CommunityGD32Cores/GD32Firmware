@@ -6,32 +6,33 @@
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
     \version 2020-09-30, V2.2.0, firmware for GD32F20x
+    \version 2021-07-30, V2.3.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -63,7 +64,7 @@ void dci_deinit(void)
     \param[out] none
     \retval     none
 */
-void dci_init(dci_parameter_struct* dci_struct)
+void dci_init(dci_parameter_struct *dci_struct)
 {
     uint32_t reg = 0U;
     /* disable capture function and DCI */
@@ -80,18 +81,18 @@ void dci_init(dci_parameter_struct* dci_struct)
 }
 
 /*!
-    \brief      enable DCI function 
+    \brief      enable DCI function
     \param[in]  none
     \param[out] none
     \retval     none
 */
 void dci_enable(void)
 {
-    DCI_CTL |= DCI_CTL_DCIEN;    
+    DCI_CTL |= DCI_CTL_DCIEN;
 }
 
 /*!
-    \brief      disable DCI function 
+    \brief      disable DCI function
     \param[in]  none
     \param[out] none
     \retval     none
@@ -102,7 +103,7 @@ void dci_disable(void)
 }
 
 /*!
-    \brief      enable DCI capture 
+    \brief      enable DCI capture
     \param[in]  none
     \param[out] none
     \retval     none
@@ -113,7 +114,7 @@ void dci_capture_enable(void)
 }
 
 /*!
-    \brief      disable DCI capture 
+    \brief      disable DCI capture
     \param[in]  none
     \param[out] none
     \retval     none
@@ -124,7 +125,7 @@ void dci_capture_disable(void)
 }
 
 /*!
-    \brief      enable DCI jpeg mode 
+    \brief      enable DCI jpeg mode
     \param[in]  none
     \param[out] none
     \retval     none
@@ -135,7 +136,7 @@ void dci_jpeg_enable(void)
 }
 
 /*!
-    \brief      disable DCI jpeg mode 
+    \brief      disable DCI jpeg mode
     \param[in]  none
     \param[out] none
     \retval     none
@@ -168,7 +169,7 @@ void dci_crop_window_disable(void)
 }
 
 /*!
-    \brief      configure DCI cropping window 
+    \brief      configure DCI cropping window
     \param[in]  start_x: window horizontal start position
     \param[in]  start_y: window vertical start position
     \param[in]  size_width: window horizontal size
@@ -178,8 +179,8 @@ void dci_crop_window_disable(void)
 */
 void dci_crop_window_config(uint16_t start_x, uint16_t start_y, uint16_t size_width, uint16_t size_height)
 {
-    DCI_CWSPOS = ((uint32_t)start_x | ((uint32_t)start_y<<16));
-    DCI_CWSZ = ((uint32_t)size_width | ((uint32_t)size_height<<16));
+    DCI_CWSPOS = ((uint32_t)start_x | ((uint32_t)start_y << 16));
+    DCI_CWSZ = ((uint32_t)size_width | ((uint32_t)size_height << 16));
 }
 
 /*!
@@ -214,7 +215,7 @@ void dci_embedded_sync_disable(void)
 */
 void dci_sync_codes_config(uint8_t frame_start, uint8_t line_start, uint8_t line_end, uint8_t frame_end)
 {
-    DCI_SC = ((uint32_t)frame_start | ((uint32_t)line_start<<8) | ((uint32_t)line_end<<16) | ((uint32_t)frame_end<<24));
+    DCI_SC = ((uint32_t)frame_start | ((uint32_t)line_start << 8) | ((uint32_t)line_end << 16) | ((uint32_t)frame_end << 24));
 }
 
 /*!
@@ -228,14 +229,14 @@ void dci_sync_codes_config(uint8_t frame_start, uint8_t line_start, uint8_t line
 */
 void dci_sync_codes_unmask_config(uint8_t frame_start, uint8_t line_start, uint8_t line_end, uint8_t frame_end)
 {
-    DCI_SCUMSK = ((uint32_t)frame_start | ((uint32_t)line_start<<8) | ((uint32_t)line_end<<16) | ((uint32_t)frame_end<<24));	
+    DCI_SCUMSK = ((uint32_t)frame_start | ((uint32_t)line_start << 8) | ((uint32_t)line_end << 16) | ((uint32_t)frame_end << 24));
 }
 
 /*!
     \brief      read DCI data register
     \param[in]  none
     \param[out] none
-    \retval     data
+    \retval     data of DCI data register
 */
 uint32_t dci_data_read(void)
 {
@@ -259,18 +260,18 @@ uint32_t dci_data_read(void)
 FlagStatus dci_flag_get(uint32_t flag)
 {
     uint32_t stat = 0U;
-    
-    if(flag >> 31){
+
+    if(flag >> 31) {
         /* get flag status from DCI_STAT1 register */
         stat = DCI_STAT1;
-    }else{
+    } else {
         /* get flag status from DCI_STAT0 register */
         stat = DCI_STAT0;
     }
-    
-    if(flag & stat){
+
+    if(flag & stat) {
         return SET;
-    }else{
+    } else {
         return RESET;
     }
 }
@@ -280,7 +281,7 @@ FlagStatus dci_flag_get(uint32_t flag)
     \param[in]  interrupt:
       \arg         DCI_INT_EF: end of frame interrupt
       \arg         DCI_INT_OVR: FIFO overrun interrupt
-      \arg         DCI_INT_ESE: embedded synchronous error interrupt 
+      \arg         DCI_INT_ESE: embedded synchronous error interrupt
       \arg         DCI_INT_VSYNC: vsync interrupt
       \arg         DCI_INT_EL: end of line interrupt
     \param[out] none
@@ -296,7 +297,7 @@ void dci_interrupt_enable(uint32_t interrupt)
     \param[in]  interrupt:
       \arg         DCI_INT_EF: end of frame interrupt
       \arg         DCI_INT_OVR: FIFO overrun interrupt
-      \arg         DCI_INT_ESE: embedded synchronous error interrupt 
+      \arg         DCI_INT_ESE: embedded synchronous error interrupt
       \arg         DCI_INT_VSYNC: vsync interrupt
       \arg         DCI_INT_EL: end of line interrupt
     \param[out] none
@@ -312,7 +313,7 @@ void dci_interrupt_disable(uint32_t interrupt)
     \param[in]  int_flag:
       \arg         DCI_INT_FLAG_EF: end of frame interrupt flag
       \arg         DCI_INT_FLAG_OVR: FIFO overrun interrupt flag
-      \arg         DCI_INT_FLAG_ESE: embedded synchronous error interrupt flag 
+      \arg         DCI_INT_FLAG_ESE: embedded synchronous error interrupt flag
       \arg         DCI_INT_FLAG_VSYNC: vsync interrupt flag
       \arg         DCI_INT_FLAG_EL: end of line interrupt flag
     \param[out] none
@@ -320,9 +321,9 @@ void dci_interrupt_disable(uint32_t interrupt)
 */
 FlagStatus dci_interrupt_flag_get(uint32_t int_flag)
 {
-    if(RESET == (DCI_INTF & int_flag)){
+    if(RESET == (DCI_INTF & int_flag)) {
         return RESET;
-    }else{
+    } else {
         return SET;
     }
 }
@@ -332,7 +333,7 @@ FlagStatus dci_interrupt_flag_get(uint32_t int_flag)
     \param[in]  int_flag:
       \arg         DCI_INT_EF: end of frame interrupt
       \arg         DCI_INT_OVR: FIFO overrun interrupt
-      \arg         DCI_INT_ESE: embedded synchronous error interrupt 
+      \arg         DCI_INT_ESE: embedded synchronous error interrupt
       \arg         DCI_INT_VSYNC: vsync interrupt
       \arg         DCI_INT_EL: end of line interrupt
     \param[out] none

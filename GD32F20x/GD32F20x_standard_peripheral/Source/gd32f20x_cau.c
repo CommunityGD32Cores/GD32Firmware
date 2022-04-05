@@ -6,32 +6,33 @@
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
     \version 2020-09-30, V2.2.0, firmware for GD32F20x
+    \version 2021-07-30, V2.3.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -42,7 +43,7 @@ OF SUCH DAMAGE.
 
 /*!
     \brief      reset the CAU peripheral
-    \param[in]  none     
+    \param[in]  none
     \param[out] none
     \retval     none
 */
@@ -63,8 +64,8 @@ void cau_deinit(void)
 void cau_enable(void)
 {
     /* enable the CAU processor */
-    CAU_CTL |= CAU_CTL_CAUEN;   
-}  
+    CAU_CTL |= CAU_CTL_CAUEN;
+}
 
 /*!
     \brief      disable the CAU peripheral
@@ -82,7 +83,7 @@ void cau_disable(void)
     \brief      enable the CAU DMA interface
     \param[in]  dma_req: specify the CAU DMA transfer request to be enabled
                 one or more parameters can be selected which are shown as below
-      \arg        CAU_DMA_INFIFO: DMA for incoming(Rx) data transfer 
+      \arg        CAU_DMA_INFIFO: DMA for incoming(Rx) data transfer
       \arg        CAU_DMA_OUTFIFO: DMA for outgoing(Tx) data transfer
     \param[out] none
     \retval     none
@@ -97,7 +98,7 @@ void cau_dma_enable(uint32_t dma_req)
     \brief      disable the CAU DMA interface
     \param[in]  dma_req: specify the CAU DMA transfer request to be disabled
                 one or more parameters can be selected which are shown as below
-      \arg        CAU_DMA_INFIFO: DMA for incoming(Rx) data transfer 
+      \arg        CAU_DMA_INFIFO: DMA for incoming(Rx) data transfer
       \arg        CAU_DMA_OUTFIFO: DMA for outgoing(Tx) data transfer
     \param[out] none
     \retval     none
@@ -123,27 +124,27 @@ void cau_dma_disable(uint32_t dma_req)
       \arg        CAU_MODE_AES_ECB: AES-ECB (AES Electronic codebook)
       \arg        CAU_MODE_AES_CBC: AES-CBC (AES Cipher block chaining)
       \arg        CAU_MODE_AES_CTR: AES-CTR (AES counter mode)
-      \arg        CAU_MODE_AES_KEY: AES decryption key preparation mode      
+      \arg        CAU_MODE_AES_KEY: AES decryption key preparation mode
     \param[in]  swapping: data swapping selection
                 only one parameter can be selected which is shown as below
       \arg        CAU_SWAPPING_32BIT: no swapping
       \arg        CAU_SWAPPING_16BIT: half-word swapping
       \arg        CAU_SWAPPING_8BIT: bytes swapping
-      \arg        CAU_SWAPPING_1BIT: bit swapping      
+      \arg        CAU_SWAPPING_1BIT: bit swapping
     \param[out] none
     \retval     none
 */
 void cau_init(uint32_t algo_dir, uint32_t algo_mode, uint32_t swapping)
-{  
-    /* select algorithm mode */  
+{
+    /* select algorithm mode */
     CAU_CTL &= ~CAU_CTL_ALGM;
     CAU_CTL |= algo_mode;
-    
-    /* select data swapping */ 
+
+    /* select data swapping */
     CAU_CTL &= ~CAU_CTL_DATAM;
     CAU_CTL |= swapping;
 
-    /* select algorithm direction */ 
+    /* select algorithm direction */
     CAU_CTL &= ~CAU_CTL_CAUDIR;
     CAU_CTL |= algo_dir;
 }
@@ -153,16 +154,16 @@ void cau_init(uint32_t algo_dir, uint32_t algo_mode, uint32_t swapping)
     \param[in]  key_size: key length selection when aes mode
                 only one parameter can be selected which is shown as below
       \arg        CAU_KEYSIZE_128BIT: 128 bit key length
-      \arg        CAU_KEYSIZE_192BIT: 192 bit key length 
-      \arg        CAU_KEYSIZE_256BIT: 256 bit key length     
+      \arg        CAU_KEYSIZE_192BIT: 192 bit key length
+      \arg        CAU_KEYSIZE_256BIT: 256 bit key length
     \param[out] none
     \retval     none
 */
 void cau_aes_keysize_config(uint32_t key_size)
 {
     CAU_CTL &= ~CAU_CTL_KEYM;
-    CAU_CTL |= key_size; 
-}  
+    CAU_CTL |= key_size;
+}
 
 /*!
     \brief      initialize the key parameters
@@ -178,7 +179,7 @@ void cau_aes_keysize_config(uint32_t key_size)
     \param[out] none
     \retval     none
 */
-void cau_key_init(cau_key_parameter_struct* key_initpara)
+void cau_key_init(cau_key_parameter_struct *key_initpara)
 {
     CAU_KEY0H = key_initpara->key_0_high;
     CAU_KEY0L = key_initpara->key_0_low;
@@ -204,7 +205,7 @@ void cau_key_init(cau_key_parameter_struct* key_initpara)
     \param[out] none
     \retval     none
 */
-void cau_key_parameter_init(cau_key_parameter_struct* key_initpara)
+void cau_key_parameter_init(cau_key_parameter_struct *key_initpara)
 {
     key_initpara->key_0_high = 0U;
     key_initpara->key_0_low  = 0U;
@@ -226,7 +227,7 @@ void cau_key_parameter_init(cau_key_parameter_struct* key_initpara)
     \param[out] none
     \retval     none
 */
-void cau_iv_init(cau_iv_parameter_struct* iv_initpara)
+void cau_iv_init(cau_iv_parameter_struct *iv_initpara)
 {
     CAU_IV0H = iv_initpara->iv_0_high;
     CAU_IV0L = iv_initpara->iv_0_low;
@@ -244,7 +245,7 @@ void cau_iv_init(cau_iv_parameter_struct* iv_initpara)
     \param[out] none
     \retval     none
 */
-void cau_iv_parameter_init(cau_iv_parameter_struct* iv_initpara)
+void cau_iv_parameter_init(cau_iv_parameter_struct *iv_initpara)
 {
     iv_initpara->iv_0_high = 0U;
     iv_initpara->iv_0_low  = 0U;
@@ -273,7 +274,7 @@ void cau_fifo_flush(void)
 ControlStatus cau_enable_state_get(void)
 {
     ControlStatus ret = DISABLE;
-    if(RESET != (CAU_CTL & CAU_CTL_CAUEN)){
+    if(RESET != (CAU_CTL & CAU_CTL_CAUEN)) {
         ret = ENABLE;
     }
     return ret;
@@ -305,13 +306,13 @@ uint32_t cau_data_read(void)
     \brief      get the CAU flag status
     \param[in]  flag: CAU flag status
                 only one parameter can be selected which is shown as below
-      \arg        CAU_FLAG_INFIFO_EMPTY: input FIFO empty 
+      \arg        CAU_FLAG_INFIFO_EMPTY: input FIFO empty
       \arg        CAU_FLAG_INFIFO_NO_FULL: input FIFO is not full
-      \arg        CAU_FLAG_OUTFIFO_NO_EMPTY: output FIFO not empty 
+      \arg        CAU_FLAG_OUTFIFO_NO_EMPTY: output FIFO not empty
       \arg        CAU_FLAG_OUTFIFO_FULL: output FIFO is full
-      \arg        CAU_FLAG_BUSY: the CAU core is busy 
+      \arg        CAU_FLAG_BUSY: the CAU core is busy
       \arg        CAU_FLAG_INFIFO: input FIFO flag status
-      \arg        CAU_FLAG_OUTFIFO: output FIFO flag status      
+      \arg        CAU_FLAG_OUTFIFO: output FIFO flag status
     \param[out] none
     \retval     FlagStatus: SET or RESET
 */
@@ -321,18 +322,18 @@ FlagStatus cau_flag_get(uint32_t flag)
     FlagStatus ret_flag = RESET;
 
     /* check if the flag is in CAU_STAT1 register */
-    if(RESET != (flag & FLAG_MASK)){ 
+    if(RESET != (flag & FLAG_MASK)) {
         reg = CAU_STAT1;
-    }else{
+    } else {
         /* the flag is in CAU_STAT0 register */
         reg = CAU_STAT0;
     }
 
     /* check the status of the specified CAU flag */
-    if(RESET != (reg & flag)){
+    if(RESET != (reg & flag)) {
         ret_flag = SET;
     }
-     
+
     return ret_flag;
 }
 
@@ -340,7 +341,7 @@ FlagStatus cau_flag_get(uint32_t flag)
     \brief      enable the CAU interrupts
     \param[in]  interrupt: specify the CAU interrupt source to be enabled
                 one or more parameters can be selected which are shown as below
-      \arg        CAU_INT_INFIFO: input FIFO interrupt 
+      \arg        CAU_INT_INFIFO: input FIFO interrupt
       \arg        CAU_INT_OUTFIFO: output FIFO interrupt
     \param[out] none
     \retval     none
@@ -355,7 +356,7 @@ void cau_interrupt_enable(uint32_t interrupt)
     \brief      disable the CAU interrupts
     \param[in]  interrupt: specify the CAU interrupt source to be disabled
                 one or more parameters can be selected which are shown as below
-      \arg        CAU_INT_INFIFO: input FIFO interrupt 
+      \arg        CAU_INT_INFIFO: input FIFO interrupt
       \arg        CAU_INT_OUTFIFO: output FIFO interrupt
     \param[out] none
     \retval     none
@@ -370,7 +371,7 @@ void cau_interrupt_disable(uint32_t interrupt)
     \brief      get the interrupt flag
     \param[in]  int_flag: CAU interrupt flag
                 only one parameter can be selected which is shown as below
-      \arg        CAU_INT_FLAG_INFIFO: input FIFO interrupt 
+      \arg        CAU_INT_FLAG_INFIFO: input FIFO interrupt
       \arg        CAU_INT_FLAG_OUTFIFO: output FIFO interrupt
     \param[out] none
     \retval     FlagStatus: SET or RESET
@@ -378,11 +379,11 @@ void cau_interrupt_disable(uint32_t interrupt)
 FlagStatus cau_interrupt_flag_get(uint32_t int_flag)
 {
     FlagStatus flag = RESET;
-  
+
     /* check the status of the specified CAU interrupt */
-    if(RESET != (CAU_INTF & int_flag)){
+    if(RESET != (CAU_INTF & int_flag)) {
         flag = SET;
     }
-    
+
     return flag;
 }

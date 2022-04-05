@@ -6,32 +6,33 @@
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
     \version 2020-09-30, V2.2.0, firmware for GD32F20x
+    \version 2021-07-30, V2.3.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -111,13 +112,13 @@ OF SUCH DAMAGE.
 #define BKP_TPCS_TER0                   BIT(0)                   /*!< tamper0 event reset */
 #define BKP_TPCS_TIR0                   BIT(1)                   /*!< tamper0 interrupt reset */
 #define BKP_TPCS_TPIE0                  BIT(2)                   /*!< tamper0 interrupt enable */
-#define BKP_TPCS_TER1                   BIT(5)                   /*!< tamper1 event reset */
-#define BKP_TPCS_TIR1                   BIT(6)                   /*!< tamper1 interrupt reset */
-#define BKP_TPCS_TPIE1                  BIT(7)                   /*!< tamper1 interrupt enable */
+#define BKP_TPCS_TER1                   BIT(5)                   /*!< tamper1/waveform detect event reset */
+#define BKP_TPCS_TIR1                   BIT(6)                   /*!< tamper1/waveform detect interrupt reset */
+#define BKP_TPCS_TPIE1                  BIT(7)                   /*!< tamper1/waveform detect interrupt enable */
 #define BKP_TPCS_TEF0                   BIT(8)                   /*!< tamper0 event flag */
 #define BKP_TPCS_TIF0                   BIT(9)                   /*!< tamper0 interrupt flag */
-#define BKP_TPCS_TEF1                   BIT(14)                  /*!< tamper1 event flag */
-#define BKP_TPCS_TIF1                   BIT(15)                  /*!< tamper1 interrupt flag */
+#define BKP_TPCS_TEF1                   BIT(14)                  /*!< tamper1/waveform detect event flag */
+#define BKP_TPCS_TIF1                   BIT(15)                  /*!< tamper1/waveform detect interrupt flag */
 
 /* BKP_TPCTL1 */
 #define BKP_TPCTL1_TPEN1                BIT(8)                   /*!< tamper1 detection enable */
@@ -126,16 +127,8 @@ OF SUCH DAMAGE.
 #define BKP_TPCTL1_TPM1                 BIT(15)                  /*!< the first waveform detection enable */
 
 /* constants definitions */
-/* tamperx definitions */
-typedef enum 
-{
-    TAMPER_0 = 0,                                                /*!< BKP tamper0 */
-    TAMPER_1,                                                    /*!< BKP tamper1 */
-}bkp_tamper_enum;
-
 /* BKP data register number */
-typedef enum 
-{
+typedef enum {
     BKP_DATA_0 = 1,                                              /*!< BKP data register 0 */
     BKP_DATA_1,                                                  /*!< BKP data register 1 */
     BKP_DATA_2,                                                  /*!< BKP data register 2 */
@@ -177,8 +170,14 @@ typedef enum
     BKP_DATA_38,                                                 /*!< BKP data register 38 */
     BKP_DATA_39,                                                 /*!< BKP data register 39 */
     BKP_DATA_40,                                                 /*!< BKP data register 40 */
-    BKP_DATA_41,                                                 /*!< BKP data register 41 */
-}bkp_data_register_enum;
+    BKP_DATA_41                                                  /*!< BKP data register 41 */
+} bkp_data_register_enum;
+
+/* tamperx definitions */
+typedef enum {
+    TAMPER_0 = 0,                                                /*!< BKP tamper0 */
+    TAMPER_1                                                     /*!< BKP tamper1 */
+} bkp_tamper_enum;
 
 /* BKP register */
 #define BKP_DATA0_9(number)             REG16((BKP) + 0x04U + (number) * 0x04U)
@@ -199,7 +198,7 @@ typedef enum
 #define RTC_CLOCK_DIV1                  ((uint16_t)0x4000U)      /*!< RTC clock div 1 */
 
 /* RTC clock calibration direction */
-#define RTC_CLOCK_SLOWED_DOWN           ((uint16_t)0x0000U)      /*!< RTC clock slow down */
+#define RTC_CLOCK_SLOW_DOWN             ((uint16_t)0x0000U)      /*!< RTC clock slow down */
 #define RTC_CLOCK_SPEED_UP              ((uint16_t)0x8000U)      /*!< RTC clock speed up */
 
 /* tamper pin active level */
@@ -209,6 +208,10 @@ typedef enum
 /* tamper flag */
 #define BKP_FLAG_TAMPER0                BKP_TPCS_TEF0            /*!< tamper0 event flag */
 #define BKP_FLAG_TAMPER1_WAVEDETECT     BKP_TPCS_TEF1            /*!< tamper1/waveform detect event flag */
+
+/* tamper interrupt */
+#define BKP_INT_TAMPER0                 BKP_TPCS_TPIE0           /*!< tamper0 interrupt */
+#define BKP_INT_TAMPER1_WAVEDETECT      BKP_TPCS_TPIE1           /*!< tamper1/waveform detect interrupt */
 
 /* tamper interrupt flag */
 #define BKP_INT_FLAG_TAMPER0            BKP_TPCS_TIF0            /*!< tamper0 interrupt flag */
@@ -253,21 +256,21 @@ void bkp_tamper_detection_enable(bkp_tamper_enum tamperx);
 void bkp_tamper_detection_disable(bkp_tamper_enum tamperx);
 /* set tamper pin active level */
 void bkp_tamper_active_level_set(bkp_tamper_enum tamperx, uint16_t level);
+/* waveform detect configure */
+void bkp_waveform_detect_config(uint16_t waveform_detect_mode, ControlStatus newvalue);
 
 /* interrupt & flag functions */
-/* enable tamper pin interrupt */
-void bkp_tamper_interrupt_enable(bkp_tamper_enum tamperx);
-/* disable tamper pin interrupt */
-void bkp_tamper_interrupt_disable(bkp_tamper_enum tamperx);
-/* waveform detect configure */
-void bkp_waveform_detect_enable(uint16_t waveform_detect_mode, ControlStatus newvalue);
-/* get BKP flag state */
+/* get BKP flag */
 FlagStatus bkp_flag_get(uint16_t flag);
-/* clear BKP flag state */
+/* clear BKP flag */
 void bkp_flag_clear(uint16_t flag);
-/* get BKP interrupt flag state */
+/* enable tamper interrupt */
+void bkp_tamper_interrupt_enable(uint16_t bkp_interrupt);
+/* disable tamper interrupt */
+void bkp_tamper_interrupt_disable(uint16_t bkp_interrupt);
+/* get BKP interrupt flag */
 FlagStatus bkp_interrupt_flag_get(uint16_t flag);
-/* clear BKP interrupt flag state */
+/* clear BKP interrupt flag */
 void bkp_interrupt_flag_clear(uint16_t flag);
 
 #endif /* GD32F20X_BKP_H */

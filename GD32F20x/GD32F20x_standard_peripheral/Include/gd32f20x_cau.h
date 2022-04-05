@@ -6,32 +6,33 @@
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
     \version 2020-09-30, V2.2.0, firmware for GD32F20x
+    \version 2021-07-30, V2.3.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -41,29 +42,29 @@ OF SUCH DAMAGE.
 #include "gd32f20x.h"
 
 /* CAU definitions */
-#define CAU                        CAU_BASE
+#define CAU                        CAU_BASE                        /*!< CAU base address */
 
 /* registers definitions */
-#define CAU_CTL                    REG32(CAU + 0x00U)        /*!< control register  */
-#define CAU_STAT0                  REG32(CAU + 0x04U)        /*!< status register 0 */
-#define CAU_DI                     REG32(CAU + 0x08U)        /*!< data input register */ 
-#define CAU_DO                     REG32(CAU + 0x0CU)        /*!< data output register */
-#define CAU_DMAEN                  REG32(CAU + 0x10U)        /*!< DMA enable register */
-#define CAU_INTEN                  REG32(CAU + 0x14U)        /*!< interrupt enable register */
-#define CAU_STAT1                  REG32(CAU + 0x18U)        /*!< status register 1 */
-#define CAU_INTF                   REG32(CAU + 0x1CU)        /*!< interrupt flag register */
-#define CAU_KEY0H                  REG32(CAU + 0x20U)        /*!< key 0 high register */
-#define CAU_KEY0L                  REG32(CAU + 0x24U)        /*!< key 0 low register */
-#define CAU_KEY1H                  REG32(CAU + 0x28U)        /*!< key 1 high register */
-#define CAU_KEY1L                  REG32(CAU + 0x2CU)        /*!< key 1 low register */
-#define CAU_KEY2H                  REG32(CAU + 0x30U)        /*!< key 2 high register */
-#define CAU_KEY2L                  REG32(CAU + 0x34U)        /*!< key 2 low register */
-#define CAU_KEY3H                  REG32(CAU + 0x38U)        /*!< key 3 high register */
-#define CAU_KEY3L                  REG32(CAU + 0x3CU)        /*!< key 3 low register */
-#define CAU_IV0H                   REG32(CAU + 0x40U)        /*!< initial vector 0 high register */
-#define CAU_IV0L                   REG32(CAU + 0x44U)        /*!< initial vector 0 low register */
-#define CAU_IV1H                   REG32(CAU + 0x48U)        /*!< initial vector 1 high register */
-#define CAU_IV1L                   REG32(CAU + 0x4CU)        /*!< initial vector 1 low register */
+#define CAU_CTL                    REG32(CAU + 0x00000000U)        /*!< control register  */
+#define CAU_STAT0                  REG32(CAU + 0x00000004U)        /*!< status register 0 */
+#define CAU_DI                     REG32(CAU + 0x00000008U)        /*!< data input register */
+#define CAU_DO                     REG32(CAU + 0x0000000CU)        /*!< data output register */
+#define CAU_DMAEN                  REG32(CAU + 0x00000010U)        /*!< DMA enable register */
+#define CAU_INTEN                  REG32(CAU + 0x00000014U)        /*!< interrupt enable register */
+#define CAU_STAT1                  REG32(CAU + 0x00000018U)        /*!< status register 1 */
+#define CAU_INTF                   REG32(CAU + 0x0000001CU)        /*!< interrupt flag register */
+#define CAU_KEY0H                  REG32(CAU + 0x00000020U)        /*!< key 0 high register */
+#define CAU_KEY0L                  REG32(CAU + 0x00000024U)        /*!< key 0 low register */
+#define CAU_KEY1H                  REG32(CAU + 0x00000028U)        /*!< key 1 high register */
+#define CAU_KEY1L                  REG32(CAU + 0x0000002CU)        /*!< key 1 low register */
+#define CAU_KEY2H                  REG32(CAU + 0x00000030U)        /*!< key 2 high register */
+#define CAU_KEY2L                  REG32(CAU + 0x00000034U)        /*!< key 2 low register */
+#define CAU_KEY3H                  REG32(CAU + 0x00000038U)        /*!< key 3 high register */
+#define CAU_KEY3L                  REG32(CAU + 0x0000003CU)        /*!< key 3 low register */
+#define CAU_IV0H                   REG32(CAU + 0x00000040U)        /*!< initial vector 0 high register */
+#define CAU_IV0L                   REG32(CAU + 0x00000044U)        /*!< initial vector 0 low register */
+#define CAU_IV1H                   REG32(CAU + 0x00000048U)        /*!< initial vector 1 high register */
+#define CAU_IV1L                   REG32(CAU + 0x0000004CU)        /*!< initial vector 1 low register */
 
 /* bits definitions */
 /* CAU_CTL */
@@ -117,8 +118,7 @@ OF SUCH DAMAGE.
 
 /* constants definitions */
 /* structure for keys initialization of the cau */
-typedef struct
-{
+typedef struct {
     uint32_t key_0_high;  /*!< key 0 high */
     uint32_t key_0_low;   /*!< key 0 low  */
     uint32_t key_1_high;  /*!< key 1 high */
@@ -127,28 +127,26 @@ typedef struct
     uint32_t key_2_low;   /*!< key 2 low  */
     uint32_t key_3_high;  /*!< key 3 high */
     uint32_t key_3_low;   /*!< key 3 low  */
-}cau_key_parameter_struct;
+} cau_key_parameter_struct;
 
 /* structure for vectors initialization of the cau */
-typedef struct
-{
+typedef struct {
     uint32_t iv_0_high;   /*!< init vector 0 high */
     uint32_t iv_0_low;    /*!< init vector 0 low  */
     uint32_t iv_1_high;   /*!< init vector 1 high */
     uint32_t iv_1_low;    /*!< init vector 1 low  */
-}cau_iv_parameter_struct;
+} cau_iv_parameter_struct;
 
 /* structure for vectors initialization of the cau */
-typedef struct
-{
+typedef struct {
     uint8_t *input;      /*!< pointer to the input buffer */
-    uint32_t in_length;  /*!< length of the input buffer, 
+    uint32_t in_length;  /*!< length of the input buffer,
                               must be a multiple of 8(DES and TDES) or 16(AES) */
     uint8_t *output;     /*!< pointer to the returned buffer */
-}cau_text_struct;
+} cau_text_struct;
 
 /* cau_ctl register value */
-#define CAU_ENCRYPT                 ((uint32_t)0x00000000)                     /*!< encrypt */
+#define CAU_ENCRYPT                 ((uint32_t)0x00000000U)                    /*!< encrypt */
 #define CAU_DECRYPT                 CAU_CTL_CAUDIR                             /*!< decrypt */
 
 #define CTL_ALGM(regval)            (BITS(3,5) & ((uint32_t)(regval) << 3))    /*!< write value to CAU_CTL_ALGM bit field */
@@ -172,7 +170,7 @@ typedef struct
 #define CAU_KEYSIZE_192BIT          CTL_KEYM(1)                                /*!< 192 bit key length */
 #define CAU_KEYSIZE_256BIT          CTL_KEYM(2)                                /*!< 256 bit key length */
 
-/* cau_stat0 register value */                                                        
+/* cau_stat0 register value */
 #define CAU_FLAG_INFIFO_EMPTY       CAU_STAT0_IEM                              /*!< IN FIFO empty */
 #define CAU_FLAG_INFIFO_NO_FULL     CAU_STAT0_INF                              /*!< IN FIFO is not full */
 #define CAU_FLAG_OUTFIFO_NO_EMPTY   CAU_STAT0_ONE                              /*!< OUT FIFO not empty */
@@ -212,13 +210,13 @@ void cau_init(uint32_t algo_dir, uint32_t algo_mode, uint32_t swapping);
 /* configure key size if used AES algorithm */
 void cau_aes_keysize_config(uint32_t key_size);
 /* initialize the key parameters */
-void cau_key_init(cau_key_parameter_struct* key_initpara);
+void cau_key_init(cau_key_parameter_struct *key_initpara);
 /* initialize the structure cau_key_initpara */
-void cau_key_parameter_init(cau_key_parameter_struct* key_initpara);
+void cau_key_parameter_init(cau_key_parameter_struct *key_initpara);
 /* initialize the vectors parameters */
-void cau_iv_init(cau_iv_parameter_struct* iv_initpara);
+void cau_iv_init(cau_iv_parameter_struct *iv_initpara);
 /* initialize the vectors parameters */
-void cau_iv_parameter_init(cau_iv_parameter_struct* iv_initpara);
+void cau_iv_parameter_init(cau_iv_parameter_struct *iv_initpara);
 /* flush the IN and OUT FIFOs */
 void cau_fifo_flush(void);
 /* return whether CAU peripheral is enabled or disabled */

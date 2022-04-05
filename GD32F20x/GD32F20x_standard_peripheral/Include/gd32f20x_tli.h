@@ -6,32 +6,33 @@
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
     \version 2020-09-30, V2.2.0, firmware for GD32F20x
+    \version 2021-07-30, V2.3.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -193,8 +194,7 @@ OF SUCH DAMAGE.
 
 /* constants definitions */
 /* TLI parameter structure definitions */
-typedef struct
-{   
+typedef struct {
     uint32_t synpsz_vpsz;                     /*!< size of the vertical synchronous pulse */
     uint32_t synpsz_hpsz;                     /*!< size of the horizontal synchronous pulse */
     uint32_t backpsz_vbpsz;                   /*!< size of the vertical back porch plus synchronous pulse */
@@ -210,11 +210,10 @@ typedef struct
     uint32_t signalpolarity_vs;               /*!< vertical pulse polarity selection */
     uint32_t signalpolarity_de;               /*!< data enable polarity selection */
     uint32_t signalpolarity_pixelck;          /*!< pixel clock polarity selection */
-}tli_parameter_struct; 
+} tli_parameter_struct;
 
 /* TLI layer parameter structure definitions */
-typedef struct
-{   
+typedef struct {
     uint32_t layer_window_rightpos;           /*!< window right position */
     uint32_t layer_window_leftpos;            /*!< window left position */
     uint32_t layer_window_bottompos;          /*!< window bottom position */
@@ -231,28 +230,26 @@ typedef struct
     uint32_t layer_frame_buf_stride_offset;   /*!< frame buffer stride offset */
     uint32_t layer_frame_line_length;         /*!< frame line length */
     uint32_t layer_frame_total_line_number;   /*!< frame total line number */
-}tli_layer_parameter_struct; 
+} tli_layer_parameter_struct;
 
 /* TLI layer LUT parameter structure definitions */
-typedef struct
-{
+typedef struct {
     uint32_t layer_table_addr;                /*!< look up table write address */
     uint32_t layer_lut_channel_red;           /*!< red channel of a LUT entry */
     uint32_t layer_lut_channel_green;         /*!< green channel of a LUT entry */
-    uint32_t layer_lut_channel_blue;          /*!< blue channel of a LUT entry */                                                       
-}tli_layer_lut_parameter_struct; 
+    uint32_t layer_lut_channel_blue;          /*!< blue channel of a LUT entry */
+} tli_layer_lut_parameter_struct;
 
 /* packeted pixel format */
-typedef enum 
-{
-     LAYER_PPF_ARGB8888,                      /*!< layerx packeted pixel format ARGB8888 */
-     LAYER_PPF_RGB888,                        /*!< layerx packeted pixel format RGB888 */
-     LAYER_PPF_RGB565,                        /*!< layerx packeted pixel format RGB565 */
-     LAYER_PPF_ARGB1555,                      /*!< layerx packeted pixel format ARGB1555 */
-     LAYER_PPF_ARGB4444,                      /*!< layerx packeted pixel format ARGB4444 */
-     LAYER_PPF_L8,                            /*!< layerx packeted pixel format L8 */
-     LAYER_PPF_AL44,                          /*!< layerx packeted pixel format AL44 */
-     LAYER_PPF_AL88                           /*!< layerx packeted pixel format AL88 */
+typedef enum {
+    LAYER_PPF_ARGB8888 = 0U,                 /*!< layerx packeted pixel format ARGB8888 */
+    LAYER_PPF_RGB888,                        /*!< layerx packeted pixel format RGB888 */
+    LAYER_PPF_RGB565,                        /*!< layerx packeted pixel format RGB565 */
+    LAYER_PPF_ARGB1555,                      /*!< layerx packeted pixel format ARGB1555 */
+    LAYER_PPF_ARGB4444,                      /*!< layerx packeted pixel format ARGB4444 */
+    LAYER_PPF_L8,                            /*!< layerx packeted pixel format L8 */
+    LAYER_PPF_AL44,                          /*!< layerx packeted pixel format AL44 */
+    LAYER_PPF_AL88                           /*!< layerx packeted pixel format AL88 */
 } tli_layer_ppf_enum;
 
 /* TLI flags and states */
@@ -288,10 +285,12 @@ typedef enum
 /* horizontal pulse polarity selection */
 #define TLI_HSYN_ACTLIVE_LOW          ((uint32_t)0x00000000U)      /*!< horizontal synchronous pulse active low */
 #define TLI_HSYN_ACTLIVE_HIGHT        TLI_CTL_HPPS                 /*!< horizontal synchronous pulse active high */
+#define TLI_HSYN_ACTLIVE_HIGH         TLI_HSYN_ACTLIVE_HIGHT       /*!< horizontal synchronous pulse active high */
 
 /* vertical pulse polarity selection */
 #define TLI_VSYN_ACTLIVE_LOW          ((uint32_t)0x00000000U)      /*!< vertical synchronous pulse active low */
 #define TLI_VSYN_ACTLIVE_HIGHT        TLI_CTL_VPPS                 /*!< vertical synchronous pulse active high */
+#define TLI_VSYN_ACTLIVE_HIGH         TLI_VSYN_ACTLIVE_HIGHT       /*!< vertical synchronous pulse active high */
 
 /* pixel clock polarity selection */
 #define TLI_PIXEL_CLOCK_TLI           ((uint32_t)0x00000000U)      /*!< pixel clock is TLI clock */
@@ -300,6 +299,7 @@ typedef enum
 /* data enable polarity selection */
 #define TLI_DE_ACTLIVE_LOW            ((uint32_t)0x00000000U)      /*!< data enable active low */
 #define TLI_DE_ACTLIVE_HIGHT          TLI_CTL_DEPS                 /*!< data enable active high */
+#define TLI_DE_ACTLIVE_HIGH           TLI_DE_ACTLIVE_HIGHT         /*!< data enable active high */
 
 /* alpha calculation factor 1 of blending method */
 #define LxBLEND_ACF1(regval)          (BITS(8,10) & ((regval)<<8))
@@ -313,9 +313,9 @@ typedef enum
 
 /* function declarations */
 /* initialization functions */
-/* deinitialize TLI */
+/* deinitialize TLI registers */
 void tli_deinit(void);
-/* initialize TLI */
+/* initialize TLI display timing parameters */
 void tli_init(tli_parameter_struct *tli_struct);
 /* configure TLI dither function */
 void tli_dither_config(uint8_t ditherstat);
@@ -345,13 +345,13 @@ void tli_lut_enable(uint32_t layerx);
 /* TLI layer LUT disable */
 void tli_lut_disable(uint32_t layerx);
 /* TLI layer initialize */
-void tli_layer_init(uint32_t layerx,tli_layer_parameter_struct *layer_struct);
-/* TLI layer initialize */
-void tli_layer_window_offset_modify(uint32_t layerx,uint32_t offset_x,uint32_t offset_y);
+void tli_layer_init(uint32_t layerx, tli_layer_parameter_struct *layer_struct);
+/* reconfigure window position */
+void tli_layer_window_offset_modify(uint32_t layerx, uint32_t offset_x, uint32_t offset_y);
 /* TLI layer LUT initialize */
-void tli_lut_init(uint32_t layerx,tli_layer_lut_parameter_struct *lut_struct);
+void tli_lut_init(uint32_t layerx, tli_layer_lut_parameter_struct *lut_struct);
 /* TLI layer key initialize */
-void tli_ckey_init(uint32_t layerx,uint32_t redkey,uint32_t greenkey,uint32_t bluekey);
+void tli_ckey_init(uint32_t layerx, uint32_t redkey, uint32_t greenkey, uint32_t bluekey);
 
 /* interrupt & flag functions */
 /* get TLI flag or state */

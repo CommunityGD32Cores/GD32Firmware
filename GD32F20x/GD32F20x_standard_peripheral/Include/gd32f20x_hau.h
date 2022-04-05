@@ -6,32 +6,33 @@
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
     \version 2020-09-30, V2.2.0, firmware for GD32F20x
+    \version 2021-07-30, V2.3.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -41,22 +42,22 @@ OF SUCH DAMAGE.
 #include "gd32f20x.h"
 
 /* HAU definitions */
-#define HAU                        HAU_BASE
+#define HAU                        HAU_BASE                        /*!< HAU base address */
 
 /* registers definitions */
-#define HAU_CTL                    REG32(HAU + 0x00U)        /*!< control register  */
-#define HAU_DI                     REG32(HAU + 0x04U)        /*!< data input register */ 
-#define HAU_CFG                    REG32(HAU + 0x08U)        /*!< configuration register */
-#define HAU_DO0                    REG32(HAU + 0x0CU)        /*!< data output register 0 */
-#define HAU_DO1                    REG32(HAU + 0x10U)        /*!< data output register 1 */
-#define HAU_DO2                    REG32(HAU + 0x14U)        /*!< data output register 2 */
-#define HAU_DO3                    REG32(HAU + 0x18U)        /*!< data output register 3 */
-#define HAU_DO4                    REG32(HAU + 0x1CU)        /*!< data output register 4 */
-#define HAU_DO5                    REG32(HAU + 0x324U)       /*!< data output register 5 */
-#define HAU_DO6                    REG32(HAU + 0x328U)       /*!< data output register 6 */
-#define HAU_DO7                    REG32(HAU + 0x32CU)       /*!< data output register 7 */
-#define HAU_INTEN                  REG32(HAU + 0x20U)        /*!< interrupt enable register */
-#define HAU_STAT                   REG32(HAU + 0x24U)        /*!< status and interrupt flag register */
+#define HAU_CTL                    REG32(HAU + 0x00000000U)        /*!< control register  */
+#define HAU_DI                     REG32(HAU + 0x00000004U)        /*!< data input register */
+#define HAU_CFG                    REG32(HAU + 0x00000008U)        /*!< configuration register */
+#define HAU_DO0                    REG32(HAU + 0x0000000CU)        /*!< data output register 0 */
+#define HAU_DO1                    REG32(HAU + 0x00000010U)        /*!< data output register 1 */
+#define HAU_DO2                    REG32(HAU + 0x00000014U)        /*!< data output register 2 */
+#define HAU_DO3                    REG32(HAU + 0x00000018U)        /*!< data output register 3 */
+#define HAU_DO4                    REG32(HAU + 0x0000001CU)        /*!< data output register 4 */
+#define HAU_DO5                    REG32(HAU + 0x00000324U)        /*!< data output register 5 */
+#define HAU_DO6                    REG32(HAU + 0x00000328U)        /*!< data output register 6 */
+#define HAU_DO7                    REG32(HAU + 0x0000032CU)        /*!< data output register 7 */
+#define HAU_INTEN                  REG32(HAU + 0x00000020U)        /*!< interrupt enable register */
+#define HAU_STAT                   REG32(HAU + 0x00000024U)        /*!< status and interrupt flag register */
 
 /* bits definitions */
 /* HAU_CTL */
@@ -92,28 +93,26 @@ OF SUCH DAMAGE.
 #define HAU_STAT_BUSY              BIT(3)                    /*!< busy bit */
 
 /* constants definitions */
-/* structure for initialization of the hau */ 
-typedef struct
-{
+/* structure for initialization of the hau */
+typedef struct {
     uint32_t algo;      /*!< algorithm selection */
     uint32_t mode;      /*!< HAU mode selection */
     uint32_t datatype;  /*!< data type mode */
     uint32_t keytype;   /*!< key length mode */
-}hau_init_parameter_struct;
+} hau_init_parameter_struct;
 
 /* structure for message digest result of the hau */
-typedef struct
-{
+typedef struct {
     uint32_t out[8];     /* message digest result 0-7 */
-}hau_digest_parameter_struct; 
+} hau_digest_parameter_struct;
 
-/* hau_ctl register value */ 
+/* hau_ctl register value */
 #define HAU_ALGO_SHA1                     ((uint32_t)0x00000000U)                        /*!< HAU function is SHA1 */
 #define HAU_ALGO_SHA224                   HAU_CTL_ALGM_1                                 /*!< HAU function is SHA224 */
 #define HAU_ALGO_SHA256                   (HAU_CTL_ALGM_1 | HAU_CTL_ALGM_0)              /*!< HAU function is SHA256 */
 #define HAU_ALGO_MD5                      HAU_CTL_ALGM_0                                 /*!< HAU function is MD5 */
 
-#define HAU_MODE_HASH                     ((uint32_t)0x00000000U)                        /*!< HAU mode is HASH */ 
+#define HAU_MODE_HASH                     ((uint32_t)0x00000000U)                        /*!< HAU mode is HASH */
 #define HAU_MODE_HMAC                     HAU_CTL_HMS                                    /*!< HAU mode is HMAC */
 
 #define CTL_DATAM_1(regval)               (BITS(4,5) & ((uint32_t)(regval) << 4))        /*!< write value to HAU_CTL_DATAM bit field */
@@ -141,7 +140,7 @@ typedef struct
 #define HAU_FLAG_CALCULATION_COMPLETE     HAU_STAT_CINT                                  /*!< digest calculation is completed */
 #define HAU_FLAG_DMA                      HAU_STAT_DMAS                                  /*!< DMA is enabled (DMAE =1) or a transfer is processing */
 #define HAU_FLAG_BUSY                     HAU_STAT_BUSY                                  /*!< data block is in process */
-#define HAU_FLAG_INFIFO_NO_EMPTY          HAU_CTL_DINE                                   /*!< the input FIFO is not empty */                         
+#define HAU_FLAG_INFIFO_NO_EMPTY          HAU_CTL_DINE                                   /*!< the input FIFO is not empty */
 
 #define HAU_INT_FLAG_DATA_INPUT           HAU_STAT_DINT                                  /*!< there is enough space (16 bytes) in the input FIFO */
 #define HAU_INT_FLAG_CALCULATION_COMPLETE HAU_STAT_CINT                                  /*!< digest calculation is completed */
@@ -151,9 +150,9 @@ typedef struct
 /* reset the HAU peripheral */
 void hau_deinit(void);
 /* initialize the HAU peripheral parameters */
-void hau_init(hau_init_parameter_struct* initpara);
+void hau_init(hau_init_parameter_struct *initpara);
 /* initialize the structure hau_initpara */
-void hau_init_parameter_init(hau_init_parameter_struct* initpara);
+void hau_init_struct_para_init(hau_init_parameter_struct *initpara);
 /* reset the HAU processor core */
 void hau_reset(void);
 /* configure the number of valid bits in last word of the message */
@@ -163,7 +162,7 @@ void hau_data_write(uint32_t data);
 /* return the number of words already written into the IN FIFO */
 uint32_t hau_infifo_words_num_get(void);
 /* read the message digest result */
-void hau_digest_read(hau_digest_parameter_struct* digestpara);
+void hau_digest_read(hau_digest_parameter_struct *digestpara);
 /* enable digest calculation */
 void hau_digest_calculation_enable(void);
 /* configure single or multiple DMA is used, and digest calculation at the end of a DMA transfer or not */

@@ -6,10 +6,11 @@
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
     \version 2020-09-30, V2.2.0, firmware for GD32F20x
+    \version 2021-07-30, V2.3.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -51,33 +52,33 @@ OF SUCH DAMAGE.
 #if !defined  HXTAL_VALUE    
 #ifdef GD32F20X_CL   
 #define HXTAL_VALUE    ((uint32_t)25000000) /*!< value of the external oscillator in Hz */
+#endif /* GD32F20X_CL */
 #endif /* HXTAL_VALUE */
-#endif /* high speed crystal oscillator value */
  
 /* define startup timeout value of high speed crystal oscillator (HXTAL) */
 #if !defined  (HXTAL_STARTUP_TIMEOUT)
 #define HXTAL_STARTUP_TIMEOUT   ((uint16_t)0xFFFF)
-#endif /* high speed crystal oscillator startup timeout */
+#endif /*HXTAL_STARTUP_TIMEOUT */
 
 /* define value of internal 8MHz RC oscillator (IRC8M) in Hz */
 #if !defined  (IRC8M_VALUE) 
 #define IRC8M_VALUE  ((uint32_t)8000000)
-#endif /* internal 8MHz RC oscillator value */
+#endif /* IRC8M_VALUE */
 
 /* define startup timeout value of internal 8MHz RC oscillator (IRC8M) */
 #if !defined  (IRC8M_STARTUP_TIMEOUT)
 #define IRC8M_STARTUP_TIMEOUT   ((uint16_t)0x0500)
-#endif /* internal 8MHz RC oscillator startup timeout */
+#endif /* IRC8M_STARTUP_TIMEOUT */
 
 /* define value of internal 40KHz RC oscillator(IRC40K) in Hz */
 #if !defined  (IRC40K_VALUE) 
 #define IRC40K_VALUE  ((uint32_t)40000)
-#endif /* internal 40KHz RC oscillator value */
+#endif /* IRC40K_VALUE */
 
 /* define value of low speed crystal oscillator (LXTAL)in Hz */
 #if !defined  (LXTAL_VALUE) 
 #define LXTAL_VALUE  ((uint32_t)32768)
-#endif /* low speed crystal oscillator value */
+#endif /* LXTAL_VALUE */
 
 /* GD32F20x firmware library version number V2.0 */
 #define __GD32F20x_STDPERIPH_VERSION_MAIN   (0x01) /*!< [31:24] main version     */
@@ -92,13 +93,13 @@ OF SUCH DAMAGE.
 /* configuration of the Cortex-M3 processor and core peripherals */
 #define __MPU_PRESENT             0        /*!< GD32 devices does not provide an MPU */
 #define __NVIC_PRIO_BITS          4        /*!< GD32F20X uses 4 bits for the Priority levels        */
-#define __VENDOR_SYSTICKCONFIG    0        /*!< set to 1 if different systick config is used        */
+#define __Vendor_SysTickConfig    0        /*!< set to 1 if different systick config is used        */
 
 /* define interrupt number */
 typedef enum IRQn
 {
     /* Cortex-M3 processor exceptions numbers */
-    NonMaskableInt_IRQn         = -14,    /*!< 2 non maskable interrupt                                              */
+    NonMaskableInt_IRQn         = -14,    /*!< 2 non mask-able interrupt                                             */
     MemoryManagement_IRQn       = -12,    /*!< 4 Cortex-M3 memory management interrupt                               */
     BusFault_IRQn               = -11,    /*!< 5 Cortex-M3 bus fault interrupt                                       */
     UsageFault_IRQn             = -10,    /*!< 6 Cortex-M3 usage fault interrupt                                     */
@@ -106,7 +107,7 @@ typedef enum IRQn
     DebugMonitor_IRQn           = -4,     /*!< 12 Cortex-M3 debug monitor interrupt                                  */
     PendSV_IRQn                 = -2,     /*!< 14 Cortex-M3 pend SV interrupt                                        */
     SysTick_IRQn                = -1,     /*!< 15 Cortex-M3 system tick interrupt                                    */
-    /* interruput numbers */
+    /* interrupt numbers */
     WWDGT_IRQn                  = 0,      /*!< WWDGT interrupt                                                       */
     LVD_IRQn                    = 1,      /*!< LVD from EXTI line interrupt                                          */
     TAMPER_IRQn                 = 2,      /*!< tamper interrupt                                                      */
@@ -134,7 +135,7 @@ typedef enum IRQn
     TIMER0_BRK_TIMER8_IRQn      = 24,     /*!< TIMER0 break interrupt and TIMER8 global interrupt                    */
     TIMER0_UP_TIMER9_IRQn       = 25,     /*!< TIMER0 update Interrupt and TIMER9 global interrupt                   */
     TIMER0_TRG_CMT_TIMER10_IRQn = 26,     /*!< TIMER0 trigger and commutation interrupt and TIMER10 global interrupt */
-    TIMER0_Channel_IRQn         = 27,     /*!< TIMER0 channel capture compare interrupt                                      */
+    TIMER0_Channel_IRQn         = 27,     /*!< TIMER0 channel capture compare interrupt                              */
     TIMER1_IRQn                 = 28,     /*!< TIMER1 global interrupt                                               */
     TIMER2_IRQn                 = 29,     /*!< TIMER2 global interrupt                                               */
     TIMER3_IRQn                 = 30,     /*!< TIMER3 global interrupt                                               */
@@ -153,7 +154,7 @@ typedef enum IRQn
     TIMER7_BRK_TIMER11_IRQn     = 43,     /*!< TIMER7 break interrupt and TIMER11 global interrupt                   */
     TIMER7_UP_TIMER12_IRQn      = 44,     /*!< TIMER7 update interrupt and TIMER12 global interrupt                  */
     TIMER7_TRG_CMT_TIMER13_IRQn = 45,     /*!< TIMER7 trigger and commutation interrupt and TIMER13 global interrupt */
-    TIMER7_Channel_IRQn         = 46,     /*!< TIMER7 Channel Capture Compare Interrupt                                      */
+    TIMER7_Channel_IRQn         = 46,     /*!< TIMER7 Channel Capture Compare Interrupt                              */
     ADC2_IRQn                   = 47,     /*!< ADC2 global interrupt                                                 */
     EXMC_IRQn                   = 48,     /*!< EXMC global interrupt                                                 */
     SDIO_IRQn                   = 49,     /*!< SDIO global interrupt                                                 */
@@ -174,19 +175,19 @@ typedef enum IRQn
     CAN1_RX0_IRQn               = 64,     /*!< CAN1 RX0 interrupt                                                    */
     CAN1_RX1_IRQn               = 65,     /*!< CAN1 RX1 interrupt                                                    */
     CAN1_EWMC_IRQn              = 66,     /*!< CAN1 EWMC interrupt                                                   */
-    USBFS_IRQn                  = 67,      /*!< USBFS global interrupt                                               */
-    DMA1_Channel5_IRQn          = 69,      /*!< DMA1 Channel 5 global interrupt                                      */
-    DMA1_Channel6_IRQn          = 70,      /*!< DMA1 Channel 6 global interrupt                                      */
-    USART5_IRQn                 = 71,      /*!< USART5 global interrupt                                              */
-    I2C2_EV_IRQn                = 72,      /*!< I2C2 event interrupt                                                 */
-    I2C2_ER_IRQn                = 73,      /*!< I2C2 error interrupt                                                 */
-    DCI_IRQn                    = 78,      /*!< DCI global interrupt                                                 */
-    CAU_IRQn                    = 79,      /*!< CAU global interrupt                                                 */
-    HAU_TRNG_IRQn               = 80,      /*!< HAU or TRNG global interrupt                                         */
-    UART6_IRQn                  = 82,      /*!< UART6 global interrupt                                               */
-    UART7_IRQn                  = 83,      /*!< UART7 global interrupt                                               */
-    TLI_IRQn                    = 88,      /*!< TLI global interrupt                                                 */
-    TLI_ER_IRQn                 = 89       /*!< TLI global error interrupt                                           */
+    USBFS_IRQn                  = 67,     /*!< USBFS global interrupt                                                */
+    DMA1_Channel5_IRQn          = 69,     /*!< DMA1 Channel 5 global interrupt                                       */
+    DMA1_Channel6_IRQn          = 70,     /*!< DMA1 Channel 6 global interrupt                                       */
+    USART5_IRQn                 = 71,     /*!< USART5 global interrupt                                               */
+    I2C2_EV_IRQn                = 72,     /*!< I2C2 event interrupt                                                  */
+    I2C2_ER_IRQn                = 73,     /*!< I2C2 error interrupt                                                  */
+    DCI_IRQn                    = 78,     /*!< DCI global interrupt                                                  */
+    CAU_IRQn                    = 79,     /*!< CAU global interrupt                                                  */
+    HAU_TRNG_IRQn               = 80,     /*!< HAU or TRNG global interrupt                                          */
+    UART6_IRQn                  = 82,     /*!< UART6 global interrupt                                                */
+    UART7_IRQn                  = 83,     /*!< UART7 global interrupt                                                */
+    TLI_IRQn                    = 88,     /*!< TLI global interrupt                                                  */
+    TLI_ER_IRQn                 = 89      /*!< TLI global error interrupt                                            */
 } IRQn_Type;
 
 /* includes */
@@ -258,10 +259,10 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrStatus;
 #define HAU_BASE              (AHB2_BUS_BASE + 0x00060400U)  /*!< HAU base address                                */
 #define TRNG_BASE             (AHB2_BUS_BASE + 0x00060800U)  /*!< TRNG base address                               */
 
-/* define marco USE_STDPERIPH_DRIVER */
+/* define macro USE_STDPERIPH_DRIVER */
 #if !defined  USE_STDPERIPH_DRIVER
 #define USE_STDPERIPH_DRIVER
-#endif 
+#endif /* USE_STDPERIPH_DRIVER */
 #ifdef USE_STDPERIPH_DRIVER
 #include "gd32f20x_libopt.h"
 #endif /* USE_STDPERIPH_DRIVER */
@@ -269,4 +270,5 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrStatus;
 #ifdef cplusplus
 }
 #endif
-#endif 
+
+#endif /* GD32F20X_H */ 

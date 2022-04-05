@@ -6,39 +6,41 @@
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
     \version 2020-09-30, V2.2.0, firmware for GD32F20x
+    \version 2021-07-30, V2.3.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
 #include "gd32f20x_bkp.h"
 
-#define TAMPER0_FLAG_SHIFT          ((uint8_t)8U)
-#define TAMPER1_FLAG_SHIFT          ((uint8_t)9U)
+#define TAMPER0_FLAG_SHIFT          ((uint8_t)0x08U)
+#define TAMPER1_FLAG_SHIFT          ((uint8_t)0x09U)
+#define TAMPER1_PIN_SHIFT           ((uint8_t)0x08U)
 
 /*!
     \brief      reset BKP registers
@@ -64,11 +66,11 @@ void bkp_deinit(void)
 */
 void bkp_data_write(bkp_data_register_enum register_number, uint16_t data)
 {
-    if((register_number >= BKP_DATA_10) && (register_number <= BKP_DATA_41)){
+    if((register_number >= BKP_DATA_10) && (register_number <= BKP_DATA_41)) {
         BKP_DATA10_41(register_number - 1U) = data;
-    }else if((register_number >= BKP_DATA_0) && (register_number <= BKP_DATA_9)){
+    } else if((register_number >= BKP_DATA_0) && (register_number <= BKP_DATA_9)) {
         BKP_DATA0_9(register_number - 1U) = data;
-    }else{
+    } else {
         /* illegal parameters */
     }
 }
@@ -84,13 +86,13 @@ void bkp_data_write(bkp_data_register_enum register_number, uint16_t data)
 uint16_t bkp_data_read(bkp_data_register_enum register_number)
 {
     uint16_t data = 0U;
-    
+
     /* get the data from the BKP data register */
-    if((register_number >= BKP_DATA_10) && (register_number <= BKP_DATA_41)){
+    if((register_number >= BKP_DATA_10) && (register_number <= BKP_DATA_41)) {
         data = BKP_DATA10_41(register_number - 1U);
-    }else if((register_number >= BKP_DATA_0) && (register_number <= BKP_DATA_9)){
+    } else if((register_number >= BKP_DATA_0) && (register_number <= BKP_DATA_9)) {
         data = BKP_DATA0_9(register_number - 1U);
-    }else{
+    } else {
         /* illegal parameters */
     }
     return data;
@@ -152,7 +154,7 @@ void bkp_rtc_signal_output_disable(void)
 void bkp_rtc_output_select(uint16_t outputsel)
 {
     uint16_t ctl = 0U;
-    
+
     ctl = BKP_OCTL;
     ctl &= (uint16_t)~BKP_OCTL_ROSEL;
     ctl |= outputsel;
@@ -160,8 +162,9 @@ void bkp_rtc_output_select(uint16_t outputsel)
 }
 
 /*!
-    \brief      select RTC clock output
+    \brief      RTC clock output selection
     \param[in]  clocksel: RTC clock output selection
+                only one parameter can be selected which is shown as below:
       \arg        RTC_CLOCK_DIV64: RTC clock div 64
       \arg        RTC_CLOCK_DIV1: RTC clock
     \param[out] none
@@ -170,7 +173,7 @@ void bkp_rtc_output_select(uint16_t outputsel)
 void bkp_rtc_clock_output_select(uint16_t clocksel)
 {
     uint16_t ctl = 0U;
-    
+
     ctl = BKP_OCTL;
     ctl &= (uint16_t)~BKP_OCTL_CCOSEL;
     ctl |= clocksel;
@@ -180,7 +183,8 @@ void bkp_rtc_clock_output_select(uint16_t clocksel)
 /*!
     \brief      RTC clock calibration direction
     \param[in]  direction: RTC clock calibration direction
-      \arg        RTC_CLOCK_SLOWED_DOWN: RTC clock slow down
+                only one parameter can be selected which is shown as below:
+      \arg        RTC_CLOCK_SLOW_DOWN: RTC clock slow down
       \arg        RTC_CLOCK_SPEED_UP: RTC clock speed up
     \param[out] none
     \retval     none
@@ -188,7 +192,7 @@ void bkp_rtc_clock_output_select(uint16_t clocksel)
 void bkp_rtc_clock_calibration_direction(uint16_t direction)
 {
     uint16_t ctl = 0U;
-    
+
     ctl = BKP_OCTL;
     ctl &= (uint16_t)~BKP_OCTL_CALDIR;
     ctl |= direction;
@@ -196,7 +200,7 @@ void bkp_rtc_clock_calibration_direction(uint16_t direction)
 }
 
 /*!
-    \brief      set RTC clock calibration value 
+    \brief      set RTC clock calibration value
     \param[in]  value: RTC clock calibration value
       \arg        0x00 - 0x7F
     \param[out] none
@@ -205,7 +209,7 @@ void bkp_rtc_clock_calibration_direction(uint16_t direction)
 void bkp_rtc_calibration_value_set(uint8_t value)
 {
     uint16_t ctl;
-    
+
     /* configure BKP_OCTL_RCCV with value */
     ctl = BKP_OCTL;
     ctl &= (uint16_t)OCTL_RCCV(0);
@@ -214,8 +218,9 @@ void bkp_rtc_calibration_value_set(uint8_t value)
 }
 
 /*!
-    \brief      enable tamper detection
-    \param[in]  tamperx
+    \brief      enable tamper pin detection
+    \param[in]  tamperx: BKP tamperx
+                only one parameter can be selected which is shown as below:
       \arg        TAMPER_0: BKP tamper0
       \arg        TAMPER_1: BKP tamper1
     \param[out] none
@@ -223,16 +228,17 @@ void bkp_rtc_calibration_value_set(uint8_t value)
 */
 void bkp_tamper_detection_enable(bkp_tamper_enum tamperx)
 {
-    if(TAMPER_0 == tamperx){
+    if(TAMPER_0 == tamperx) {
         BKP_TPCTL0 |= (uint16_t)BKP_TPCTL0_TPEN0;
-    }else{
+    } else {
         BKP_TPCTL1 |= (uint16_t)BKP_TPCTL1_TPEN1;
     }
 }
 
 /*!
-    \brief      disable tamper detection
-    \param[in]  tamperx
+    \brief      disable tamper pin detection
+    \param[in]  tamperx: BKP tamperx
+                only one parameter can be selected which is shown as below:
       \arg        TAMPER_0: BKP tamper0
       \arg        TAMPER_1: BKP tamper1
     \param[out] none
@@ -240,19 +246,21 @@ void bkp_tamper_detection_enable(bkp_tamper_enum tamperx)
 */
 void bkp_tamper_detection_disable(bkp_tamper_enum tamperx)
 {
-    if(TAMPER_0 == tamperx){
+    if(TAMPER_0 == tamperx) {
         BKP_TPCTL0 &= (uint16_t)~BKP_TPCTL0_TPEN0;
-    }else{
+    } else {
         BKP_TPCTL1 &= (uint16_t)~BKP_TPCTL1_TPEN1;
     }
 }
 
 /*!
     \brief      set tamper pin active level
-    \param[in]  tamperx
+    \param[in]  tamperx: BKP tamperx
+                only one parameter can be selected which is shown as below:
       \arg        TAMPER_0: BKP tamper0
       \arg        TAMPER_1: BKP tamper1
-    \param[in]  level: tamper active level
+    \param[in]  level: tamper pin active level
+                only one parameter can be selected which is shown as below:
       \arg        TAMPER_PIN_ACTIVE_HIGH: the tamper pin is active high
       \arg        TAMPER_PIN_ACTIVE_LOW: the tamper pin is active low
     \param[out] none
@@ -262,69 +270,36 @@ void bkp_tamper_active_level_set(bkp_tamper_enum tamperx, uint16_t level)
 {
     uint16_t ctl = 0U;
 
-    if(TAMPER_0 == tamperx){
+    if(TAMPER_0 == tamperx) {
         ctl = BKP_TPCTL0;
         ctl &= (uint16_t)~BKP_TPCTL0_TPAL0;
         ctl |= level;
         BKP_TPCTL0 = ctl;
-    }else{
+    } else {
         ctl = BKP_TPCTL1;
         ctl &= (uint16_t)~BKP_TPCTL1_TPAL1;
-        ctl |= level;
+        ctl |= (uint16_t)(level << TAMPER1_PIN_SHIFT);
         BKP_TPCTL1 = ctl;
     }
 }
 
 /*!
-    \brief      enable tamper interrupt
-    \param[in]  tamperx
-      \arg        TAMPER_0: BKP tamper0
-      \arg        TAMPER_1: BKP tamper1
-    \param[out] none
-    \retval     none
-*/
-void bkp_tamper_interrupt_enable(bkp_tamper_enum tamperx)
-{
-    if(TAMPER_0 == tamperx){
-        BKP_TPCS |= (uint16_t)BKP_TPCS_TPIE0;
-    }else{
-        BKP_TPCS |= (uint16_t)BKP_TPCS_TPIE1;
-    }
-}
-
-/*!
-    \brief      disable tamper interrupt
-    \param[in]  tamperx
-      \arg        TAMPER_0: BKP tamper0
-      \arg        TAMPER_1: BKP tamper1
-    \param[out] none
-    \retval     none
-*/
-void bkp_tamper_interrupt_disable(bkp_tamper_enum tamperx)
-{
-    if(TAMPER_0 == tamperx){
-        BKP_TPCS &= (uint16_t)~BKP_TPCS_TPIE0;
-    }else{
-        BKP_TPCS &= (uint16_t)~BKP_TPCS_TPIE1;
-    }
-}
-
-/*!
     \brief      waveform detect configure
-    \param[in]  waveform_detect_mode
+    \param[in]  waveform_detect_mode:
+                only one parameter can be selected which is shown as below:
       \arg        BKP_WAVEFORM_DETECT_1: the first waveform detection
       \arg        BKP_WAVEFORM_DETECT_2: the second waveform detection
     \param[in]  newvalue: ENABLE or DISABLE
     \param[out] none
-    \retval     FlagStatus: SET or RESET
+    \retval     none
 */
-void bkp_waveform_detect_enable(uint16_t waveform_detect_mode, ControlStatus newvalue)
+void bkp_waveform_detect_config(uint16_t waveform_detect_mode, ControlStatus newvalue)
 {
     uint16_t tpctl0 = 0U, tpctl1 = 0U, octl = 0U;
-    
+
     tpctl0 = BKP_TPCTL0;
     tpctl1 = BKP_TPCTL1;
-  
+
     /* disable tamper0 and tamper1 */
     tpctl0 &= (uint16_t)~BKP_TPCTL0_TPEN0;
     tpctl1 &= (uint16_t)~BKP_TPCTL1_TPEN1;
@@ -339,54 +314,99 @@ void bkp_waveform_detect_enable(uint16_t waveform_detect_mode, ControlStatus new
     BKP_TPCTL1 = tpctl1;
     BKP_OCTL = octl;
 
-    if(DISABLE != newvalue){
+    if(DISABLE != newvalue) {
         /* enable the waveform detection function */
         BKP_TPCTL1 |= waveform_detect_mode;
-    }else{
+    } else {
         /* disable the waveform detection function */
         BKP_TPCTL1 &= (uint16_t)(~waveform_detect_mode);
     }
 }
 
 /*!
-    \brief      get bkp flag state
-    \param[in]  flag
+    \brief      get BKP flag
+    \param[in]  flag:
+                only one parameter can be selected which is shown as below:
       \arg        BKP_FLAG_TAMPER0: tamper0 event flag
-      \arg        BKP_FLAG_TAMPER1_WAVEDETECT: tamper1/wavedetect event flag
+      \arg        BKP_FLAG_TAMPER1_WAVEDETECT: tamper1/waveform detect event flag
     \param[out] none
     \retval     FlagStatus: SET or RESET
 */
 FlagStatus bkp_flag_get(uint16_t flag)
 {
-    if(RESET != (BKP_TPCS & flag)){
+    if(RESET != (BKP_TPCS & flag)) {
         return SET;
-    }else{
+    } else {
         return RESET;
     }
 }
 
 /*!
-    \brief      clear bkp flag state
-    \param[in]  flag
+    \brief      clear BKP flag
+    \param[in]  flag:
+                only one parameter can be selected which is shown as below:
       \arg        BKP_FLAG_TAMPER0: tamper0 event flag
-      \arg        BKP_FLAG_TAMPER1_WAVEDETECT: tamper1/wavedetect event flag
+      \arg        BKP_FLAG_TAMPER1_WAVEDETECT: tamper1/waveform detect event flag
     \param[out] none
     \retval     none
 */
 void bkp_flag_clear(uint16_t flag)
 {
-    if(BKP_FLAG_TAMPER0 == flag){
+    if(BKP_FLAG_TAMPER0 == flag) {
         BKP_TPCS |= (uint16_t)(flag >> TAMPER0_FLAG_SHIFT);
-    }else if(BKP_FLAG_TAMPER1_WAVEDETECT == flag){
+    } else if(BKP_FLAG_TAMPER1_WAVEDETECT == flag) {
         BKP_TPCS |= (uint16_t)(flag >> TAMPER1_FLAG_SHIFT);
-    }else{
+    } else {
         /* illegal parameters */
     }
 }
 
 /*!
-    \brief      get bkp interrupt flag state
-    \param[in]  flag
+    \brief      enable tamper interrupt
+    \param[in]  bkp_interrupt: the BKP interrupt
+                only one parameter can be selected which is shown as below:
+      \arg        BKP_INT_TAMPER0: BKP tamper0 interrupt
+      \arg        BKP_INT_TAMPER1_WAVEDETECT: BKP tamper1/waveform detect interrupt
+    \param[out] none
+    \retval     none
+*/
+void bkp_tamper_interrupt_enable(uint16_t bkp_interrupt)
+{
+    /* enable BKP tamper0 interrupt */
+    if(0U != (bkp_interrupt & BKP_TPCS_TPIE0)) {
+        BKP_TPCS |= (uint16_t) BKP_TPCS_TPIE0;
+    }
+    /* enable BKP tamper1/waveform detect interrupt */
+    if(0U != (bkp_interrupt & BKP_TPCS_TPIE1)) {
+        BKP_TPCS |= (uint16_t) BKP_TPCS_TPIE1;
+    }
+}
+
+/*!
+    \brief      disable tamper interrupt
+    \param[in]  bkp_interrupt: the BKP interrupt
+                only one parameter can be selected which is shown as below:
+      \arg        BKP_INT_TAMPER0: BKP tamper0 interrupt
+      \arg        BKP_INT_TAMPER1_WAVEDETECT: BKP tamper1/waveform detect interrupt
+    \param[out] none
+    \retval     none
+*/
+void bkp_tamper_interrupt_disable(uint16_t bkp_interrupt)
+{
+    /* disable BKP tamper0 interrupt */
+    if(0U != (bkp_interrupt & BKP_TPCS_TPIE0)) {
+        BKP_TPCS &= (uint16_t)~BKP_TPCS_TPIE0;
+    }
+    /* disable BKP tamper1/waveform detect interrupt */
+    if(0U != (bkp_interrupt & BKP_TPCS_TPIE1)) {
+        BKP_TPCS &= (uint16_t)~BKP_TPCS_TPIE1;
+    }
+}
+
+/*!
+    \brief      get BKP interrupt flag
+    \param[in]  flag:
+                only one parameter can be selected which is shown as below:
       \arg        BKP_INT_FLAG_TAMPER0: tamper0 interrupt flag
       \arg        BKP_INT_FLAG_TAMPER1_WAVEDETECT: tamper1/waveform detect interrupt flag
     \param[out] none
@@ -394,16 +414,17 @@ void bkp_flag_clear(uint16_t flag)
 */
 FlagStatus bkp_interrupt_flag_get(uint16_t flag)
 {
-    if(RESET != (BKP_TPCS & flag)){
+    if(RESET != (BKP_TPCS & flag)) {
         return SET;
-    }else{
+    } else {
         return RESET;
     }
 }
 
 /*!
-    \brief      clear bkp interrupt flag state
-    \param[in]  flag
+    \brief      clear BKP interrupt flag
+    \param[in]  flag:
+                only one parameter can be selected which is shown as below:
       \arg        BKP_INT_FLAG_TAMPER0: tamper0 interrupt flag
       \arg        BKP_INT_FLAG_TAMPER1_WAVEDETECT: tamper1/waveform detect interrupt flag
     \param[out] none
@@ -411,11 +432,11 @@ FlagStatus bkp_interrupt_flag_get(uint16_t flag)
 */
 void bkp_interrupt_flag_clear(uint16_t flag)
 {
-    if(BKP_INT_FLAG_TAMPER0 == flag){
+    if(BKP_INT_FLAG_TAMPER0 == flag) {
         BKP_TPCS |= (uint16_t)(flag >> TAMPER0_FLAG_SHIFT);
-    }else if(BKP_INT_FLAG_TAMPER1_WAVEDETECT == flag){
+    } else if(BKP_INT_FLAG_TAMPER1_WAVEDETECT == flag) {
         BKP_TPCS |= (uint16_t)(flag >> TAMPER1_FLAG_SHIFT);
-    }else{
+    } else {
         /* illegal parameters */
     }
 }

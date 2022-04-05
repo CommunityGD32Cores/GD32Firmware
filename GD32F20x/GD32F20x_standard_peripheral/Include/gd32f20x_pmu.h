@@ -6,32 +6,33 @@
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
     \version 2020-09-30, V2.2.0, firmware for GD32F20x
+    \version 2021-07-30, V2.3.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -61,7 +62,7 @@ OF SUCH DAMAGE.
 #define PMU_CS_WUF                    BIT(0)                   /*!< wakeup flag */
 #define PMU_CS_STBF                   BIT(1)                   /*!< standby flag */
 #define PMU_CS_LVDF                   BIT(2)                   /*!< low voltage detector status flag */
-#define PMU_CS_WUPEN                  BIT(8)                   /*!< wakeup pin enable */
+#define PMU_CS_WUPEN                  BIT(8)                   /*!< wkup pin enable */
 
 /* constants definitions */
 /* PMU low voltage detector threshold definitions */
@@ -103,11 +104,11 @@ void pmu_lvd_select(uint32_t lvdt_n);
 void pmu_lvd_disable(void);
 
 /* set PMU mode */
-/* PMU work at sleep mode */
+/* PMU work in sleep mode */
 void pmu_to_sleepmode(uint8_t sleepmodecmd);
-/* PMU work at deepsleep mode */
+/* PMU work in deepsleep mode */
 void pmu_to_deepsleepmode(uint32_t ldo, uint8_t deepsleepmodecmd);
-/* PMU work at standby mode */
+/* PMU work in standby mode */
 void pmu_to_standbymode(uint8_t standbymodecmd);
 /* enable PMU wakeup pin */
 void pmu_wakeup_pin_enable(void);
@@ -121,9 +122,9 @@ void pmu_backup_write_enable(void);
 void pmu_backup_write_disable(void);
 
 /* flag functions */
-/* get flag state */
+/* get PMU flag */
 FlagStatus pmu_flag_get(uint32_t flag);
-/* clear flag bit */
-void pmu_flag_clear(uint32_t flag_reset);
+/* clear PMU flag */
+void pmu_flag_clear(uint32_t flag);
 
 #endif /* GD32F20X_PMU_H */

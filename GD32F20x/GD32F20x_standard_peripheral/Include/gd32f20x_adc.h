@@ -6,32 +6,33 @@
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
     \version 2020-09-30, V2.2.0, firmware for GD32F20x
+    \version 2021-07-30, V2.3.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -42,31 +43,31 @@ OF SUCH DAMAGE.
 
 /* ADC definitions */
 #define ADC0                             ADC_BASE
-#define ADC1                             (ADC_BASE + 0x400U)
-#define ADC2                             (ADC_BASE + 0x1800U)
+#define ADC1                            (ADC_BASE + 0x00000400U)
+#define ADC2                            (ADC_BASE + 0x00001800U)
 
 /* registers definitions */
-#define ADC_STAT(adcx)                   REG32((adcx) + 0x00U)            /*!< ADC status register */
-#define ADC_CTL0(adcx)                   REG32((adcx) + 0x04U)            /*!< ADC control register 0 */
-#define ADC_CTL1(adcx)                   REG32((adcx) + 0x08U)            /*!< ADC control register 1 */
-#define ADC_SAMPT0(adcx)                 REG32((adcx) + 0x0CU)            /*!< ADC sampling time register 0 */
-#define ADC_SAMPT1(adcx)                 REG32((adcx) + 0x10U)            /*!< ADC sampling time register 1 */
-#define ADC_IOFF0(adcx)                  REG32((adcx) + 0x14U)            /*!< ADC inserted channel data offset register 0 */
-#define ADC_IOFF1(adcx)                  REG32((adcx) + 0x18U)            /*!< ADC inserted channel data offset register 1 */
-#define ADC_IOFF2(adcx)                  REG32((adcx) + 0x1CU)            /*!< ADC inserted channel data offset register 2 */
-#define ADC_IOFF3(adcx)                  REG32((adcx) + 0x20U)            /*!< ADC inserted channel data offset register 3 */
-#define ADC_WDHT(adcx)                   REG32((adcx) + 0x24U)            /*!< ADC watchdog high threshold register */
-#define ADC_WDLT(adcx)                   REG32((adcx) + 0x28U)            /*!< ADC watchdog low threshold register */
-#define ADC_RSQ0(adcx)                   REG32((adcx) + 0x2CU)            /*!< ADC regular sequence register 0 */
-#define ADC_RSQ1(adcx)                   REG32((adcx) + 0x30U)            /*!< ADC regular sequence register 1 */
-#define ADC_RSQ2(adcx)                   REG32((adcx) + 0x34U)            /*!< ADC regular sequence register 2 */
-#define ADC_ISQ(adcx)                    REG32((adcx) + 0x38U)            /*!< ADC inserted sequence register */
-#define ADC_IDATA0(adcx)                 REG32((adcx) + 0x3CU)            /*!< ADC inserted data register 0 */
-#define ADC_IDATA1(adcx)                 REG32((adcx) + 0x40U)            /*!< ADC inserted data register 1 */
-#define ADC_IDATA2(adcx)                 REG32((adcx) + 0x44U)            /*!< ADC inserted data register 2 */
-#define ADC_IDATA3(adcx)                 REG32((adcx) + 0x48U)            /*!< ADC inserted data register 3 */
-#define ADC_RDATA(adcx)                  REG32((adcx) + 0x4CU)            /*!< ADC regular data register */
-#define ADC_OVSAMPCTL(adcx)              REG32((adcx) + 0x80U)            /*!< ADC oversampling control register */
+#define ADC_STAT(adcx)                  REG32((adcx) + 0x00000000U)      /*!< ADC status register */
+#define ADC_CTL0(adcx)                  REG32((adcx) + 0x00000004U)      /*!< ADC control register 0 */
+#define ADC_CTL1(adcx)                  REG32((adcx) + 0x00000008U)      /*!< ADC control register 1 */
+#define ADC_SAMPT0(adcx)                REG32((adcx) + 0x0000000CU)      /*!< ADC sampling time register 0 */
+#define ADC_SAMPT1(adcx)                REG32((adcx) + 0x00000010U)      /*!< ADC sampling time register 1 */
+#define ADC_IOFF0(adcx)                 REG32((adcx) + 0x00000014U)      /*!< ADC inserted channel data offset register 0 */
+#define ADC_IOFF1(adcx)                 REG32((adcx) + 0x00000018U)      /*!< ADC inserted channel data offset register 1 */
+#define ADC_IOFF2(adcx)                 REG32((adcx) + 0x0000001CU)      /*!< ADC inserted channel data offset register 2 */
+#define ADC_IOFF3(adcx)                 REG32((adcx) + 0x00000020U)      /*!< ADC inserted channel data offset register 3 */
+#define ADC_WDHT(adcx)                  REG32((adcx) + 0x00000024U)      /*!< ADC watchdog high threshold register */
+#define ADC_WDLT(adcx)                  REG32((adcx) + 0x00000028U)      /*!< ADC watchdog low threshold register */
+#define ADC_RSQ0(adcx)                  REG32((adcx) + 0x0000002CU)      /*!< ADC regular sequence register 0 */
+#define ADC_RSQ1(adcx)                  REG32((adcx) + 0x00000030U)      /*!< ADC regular sequence register 1 */
+#define ADC_RSQ2(adcx)                  REG32((adcx) + 0x00000034U)      /*!< ADC regular sequence register 2 */
+#define ADC_ISQ(adcx)                   REG32((adcx) + 0x00000038U)      /*!< ADC inserted sequence register */
+#define ADC_IDATA0(adcx)                REG32((adcx) + 0x0000003CU)      /*!< ADC inserted data register 0 */
+#define ADC_IDATA1(adcx)                REG32((adcx) + 0x00000040U)      /*!< ADC inserted data register 1 */
+#define ADC_IDATA2(adcx)                REG32((adcx) + 0x00000044U)      /*!< ADC inserted data register 2 */
+#define ADC_IDATA3(adcx)                REG32((adcx) + 0x00000048U)      /*!< ADC inserted data register 3 */
+#define ADC_RDATA(adcx)                 REG32((adcx) + 0x0000004CU)      /*!< ADC regular data register */
+#define ADC_OVSAMPCTL(adcx)             REG32((adcx) + 0x00000080U)      /*!< ADC oversampling control register */
 
 /* bits definitions */
 /* ADC_STAT */
@@ -96,7 +97,7 @@ OF SUCH DAMAGE.
 #define ADC_CTL1_CTN                     BIT(1)                           /*!< continuous conversion */
 #define ADC_CTL1_CLB                     BIT(2)                           /*!< ADC calibration */
 #define ADC_CTL1_RSTCLB                  BIT(3)                           /*!< reset calibration */
-#define ADC_CTL1_DMA                     BIT(8)                           /*!< direct memory access mode */
+#define ADC_CTL1_DMA                     BIT(8)                           /*!< DMA request enable */
 #define ADC_CTL1_DAL                     BIT(11)                          /*!< data alignment */
 #define ADC_CTL1_ETSIC                   BITS(12,14)                      /*!< external trigger select for inserted channel */
 #define ADC_CTL1_ETEIC                   BIT(15)                          /*!< external trigger enable for inserted channel */
@@ -138,15 +139,15 @@ OF SUCH DAMAGE.
 #define ADC_OVSAMPCTL_OVSR               BITS(2,4)                        /*!< oversampling ratio */
 #define ADC_OVSAMPCTL_OVSS               BITS(5,8)                        /*!< oversampling shift */
 #define ADC_OVSAMPCTL_TOVS               BIT(9)                           /*!< triggered oversampling */
-#define ADC_OVSAMPCTL_DRES               BITS(12,13)                      /*!< oversampling shift */
+#define ADC_OVSAMPCTL_DRES               BITS(12, 13)                     /*!< ADC resolution */
 
 /* constants definitions */
-/* adc_stat register value */
-#define ADC_FLAG_WDE                     ADC_STAT_WDE                                /*!< analog watchdog event flag */
-#define ADC_FLAG_EOC                     ADC_STAT_EOC                                /*!< end of group conversion flag */
-#define ADC_FLAG_EOIC                    ADC_STAT_EOIC                               /*!< end of inserted channel group conversion flag */
-#define ADC_FLAG_STIC                    ADC_STAT_STIC                               /*!< inserted channel start flag */
-#define ADC_FLAG_STRC                    ADC_STAT_STRC                               /*!< regular channel start flag */
+/* ADC flag definitions */
+#define ADC_FLAG_WDE                     ADC_STAT_WDE                     /*!< analog watchdog event flag */
+#define ADC_FLAG_EOC                     ADC_STAT_EOC                     /*!< end of conversion */
+#define ADC_FLAG_EOIC                    ADC_STAT_EOIC                    /*!< end of inserted channel group conversion flag */
+#define ADC_FLAG_STIC                    ADC_STAT_STIC                    /*!< inserted channel start flag */
+#define ADC_FLAG_STRC                    ADC_STAT_STRC                    /*!< regular channel start flag */
 
 /* adc_ctl0 register value */
 #define CTL0_DISNUM(regval)             (BITS(13,15) & ((uint32_t)(regval) << 13))   /*!< write value to ADC_CTL0_DISNUM bit field */
@@ -198,7 +199,7 @@ OF SUCH DAMAGE.
 #define ADC2_EXTTRIG_REGULAR_T4_CH0      CTL1_ETSRC(5)                               /*!< TIMER4 CH0 event select */
 #define ADC2_EXTTRIG_REGULAR_T4_CH2      CTL1_ETSRC(6)                               /*!< TIMER4 CH2 event select */
 
-/* external trigger mode for inserted channel */
+/* ADC external trigger select for inserted channel */
 #define CTL1_ETSIC(regval)               (BITS(12,14) & ((uint32_t)(regval) << 12))  /*!< write value to ADC_CTL1_ETSIC bit field */
 /* for ADC0 and ADC1 inserted channel */
 #define ADC0_1_EXTTRIG_INSERTED_T0_TRGO  CTL1_ETSIC(0)                               /*!< TIMER0 TRGO event select */
@@ -246,12 +247,14 @@ OF SUCH DAMAGE.
 #define ISQ_IL(regval)                   (BITS(20,21) & ((uint32_t)(regval) << 20))  /*!< write value to ADC_ISQ_IL bit field */
 
 /* adc_ovsampctl register value */
+/* ADC resolution */
 #define OVSAMPCTL_DRES(regval)           (BITS(12,13) & ((uint32_t)(regval) << 12))  /*!< write value to ADC_OVSAMPCTL_DRES bit field */
 #define ADC_RESOLUTION_12B               OVSAMPCTL_DRES(0)                           /*!< 12-bit ADC resolution */
 #define ADC_RESOLUTION_10B               OVSAMPCTL_DRES(1)                           /*!< 10-bit ADC resolution */
 #define ADC_RESOLUTION_8B                OVSAMPCTL_DRES(2)                           /*!< 8-bit ADC resolution */
 #define ADC_RESOLUTION_6B                OVSAMPCTL_DRES(3)                           /*!< 6-bit ADC resolution */
 
+/* oversampling shift */
 #define OVSAMPCTL_OVSS(regval)           (BITS(5,8) & ((uint32_t)(regval) << 5))     /*!< write value to ADC_OVSAMPCTL_OVSS bit field */
 #define ADC_OVERSAMPLING_SHIFT_NONE      OVSAMPCTL_OVSS(0)                           /*!< no oversampling shift */
 #define ADC_OVERSAMPLING_SHIFT_1B        OVSAMPCTL_OVSS(1)                           /*!< 1-bit oversampling shift */
@@ -263,6 +266,7 @@ OF SUCH DAMAGE.
 #define ADC_OVERSAMPLING_SHIFT_7B        OVSAMPCTL_OVSS(7)                           /*!< 7-bit oversampling shift */
 #define ADC_OVERSAMPLING_SHIFT_8B        OVSAMPCTL_OVSS(8)                           /*!< 8-bit oversampling shift */
 
+/* oversampling ratio */
 #define OVSAMPCTL_OVSR(regval)           (BITS(2,4) & ((uint32_t)(regval) << 2))     /*!< write value to ADC_OVSAMPCTL_OVSR bit field */
 #define ADC_OVERSAMPLING_RATIO_MUL2      OVSAMPCTL_OVSR(0)                           /*!< oversampling ratio multiple 2 */
 #define ADC_OVERSAMPLING_RATIO_MUL4      OVSAMPCTL_OVSR(1)                           /*!< oversampling ratio multiple 4 */
@@ -273,6 +277,7 @@ OF SUCH DAMAGE.
 #define ADC_OVERSAMPLING_RATIO_MUL128    OVSAMPCTL_OVSR(6)                           /*!< oversampling ratio multiple 128 */
 #define ADC_OVERSAMPLING_RATIO_MUL256    OVSAMPCTL_OVSR(7)                           /*!< oversampling ratio multiple 256 */
 
+/* triggered oversampling */
 #define ADC_OVERSAMPLING_ALL_CONVERT     0U                                          /*!< all oversampled conversions for a channel are done consecutively after a trigger */
 #define ADC_OVERSAMPLING_ONE_CONVERT     1U                                          /*!< each oversampled conversion for a channel needs a trigger */
 
@@ -367,7 +372,7 @@ void adc_external_trigger_config(uint32_t adc_periph, uint8_t adc_channel_group,
 /* enable ADC software trigger */
 void adc_software_trigger_enable(uint32_t adc_periph, uint8_t adc_channel_group);
 
-/* get channel data */
+/* ADC data read functions */
 /* read ADC regular group data register */
 uint16_t adc_regular_data_read(uint32_t adc_periph);
 /* read ADC inserted group data register */
@@ -375,7 +380,7 @@ uint16_t adc_inserted_data_read(uint32_t adc_periph, uint8_t inserted_channel);
 /* read the last ADC0 and ADC1 conversion result data in sync mode */
 uint32_t adc_sync_mode_convert_value_read(void);
 
-/* watchdog configure */
+/* ADC analog watchdog functions */
 /* configure ADC analog watchdog single channel */
 void adc_watchdog_single_channel_enable(uint32_t adc_periph, uint8_t adc_channel);
 /* configure ADC analog watchdog group channel */
@@ -384,20 +389,6 @@ void adc_watchdog_group_channel_enable(uint32_t adc_periph, uint8_t adc_channel_
 void adc_watchdog_disable(uint32_t adc_periph);
 /* configure ADC analog watchdog threshold */
 void adc_watchdog_threshold_config(uint32_t adc_periph, uint16_t low_threshold, uint16_t high_threshold);
-
-/* interrupt & flag functions */
-/* get the ADC flag bits */
-FlagStatus adc_flag_get(uint32_t adc_periph, uint32_t adc_flag);
-/* clear the ADC flag bits */
-void adc_flag_clear(uint32_t adc_periph, uint32_t adc_flag);
-/* get the ADC interrupt flag */
-FlagStatus adc_interrupt_flag_get(uint32_t adc_periph, uint32_t adc_interrupt);
-/* clear the ADC interrupt flag */
-void adc_interrupt_flag_clear(uint32_t adc_periph, uint32_t adc_interrupt);
-/* enable ADC interrupt */
-void adc_interrupt_enable(uint32_t adc_periph, uint32_t adc_interrupt);
-/* disable ADC interrupt */
-void adc_interrupt_disable(uint32_t adc_periph, uint32_t adc_interrupt);
 
 /* configure ADC resolution */
 void adc_resolution_config(uint32_t adc_periph, uint32_t resolution);
@@ -408,4 +399,17 @@ void adc_oversample_mode_enable(uint32_t adc_periph);
 /* disable ADC oversample mode */
 void adc_oversample_mode_disable(uint32_t adc_periph);
 
+/* interrupt & flag functions */
+/* get the ADC flag */
+FlagStatus adc_flag_get(uint32_t adc_periph, uint32_t adc_flag);
+/* clear the ADC flag */
+void adc_flag_clear(uint32_t adc_periph, uint32_t adc_flag);
+/* enable ADC interrupt */
+void adc_interrupt_enable(uint32_t adc_periph, uint32_t adc_interrupt);
+/* disable ADC interrupt */
+void adc_interrupt_disable(uint32_t adc_periph, uint32_t adc_interrupt);
+/* get the ADC interrupt flag */
+FlagStatus adc_interrupt_flag_get(uint32_t adc_periph, uint32_t adc_interrupt);
+/* clear the ADC interrupt flag */
+void adc_interrupt_flag_clear(uint32_t adc_periph, uint32_t adc_interrupt);
 #endif /* GD32F20X_ADC_H */
