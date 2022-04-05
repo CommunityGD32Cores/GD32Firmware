@@ -1,12 +1,37 @@
 /*!
-    \file  gd32f4xx_exti.h
-    \brief definitions for the EXTI
+    \file    gd32f4xx_exti.h
+    \brief   definitions for the EXTI
+
+    \version 2016-08-15, V1.0.0, firmware for GD32F4xx
+    \version 2018-12-12, V2.0.1, firmware for GD32F4xx
+    \version 2020-09-30, V2.1.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (C) 2016 GigaDevice
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
-    2016-08-15, V1.0.1, firmware for GD32F4xx
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F4XX_EXTI_H
@@ -217,7 +242,8 @@ typedef enum
 { 
     EXTI_TRIG_RISING = 0,                                     /*!< EXTI rising edge trigger */
     EXTI_TRIG_FALLING,                                        /*!< EXTI falling edge trigger */
-    EXTI_TRIG_BOTH                                            /*!< EXTI rising and falling edge trigger */
+    EXTI_TRIG_BOTH,                                           /*!< EXTI rising and falling edge trigger */
+    EXTI_TRIG_NONE                                            /*!< none EXTI edge trigger */
 }exti_trig_type_enum;
 
 /* function declarations */
@@ -227,13 +253,18 @@ void exti_deinit(void);
 void exti_init(exti_line_enum linex, exti_mode_enum mode, exti_trig_type_enum trig_type);
 /* enable the interrupts from EXTI line x */
 void exti_interrupt_enable(exti_line_enum linex);
-/* enable the events from EXTI line x */
-void exti_event_enable(exti_line_enum linex);
 /* disable the interrupts from EXTI line x */
 void exti_interrupt_disable(exti_line_enum linex);
+/* enable the events from EXTI line x */
+void exti_event_enable(exti_line_enum linex);
 /* disable the events from EXTI line x */
 void exti_event_disable(exti_line_enum linex);
+/* EXTI software interrupt event enable */
+void exti_software_interrupt_enable(exti_line_enum linex);
+/* EXTI software interrupt event disable */
+void exti_software_interrupt_disable(exti_line_enum linex);
 
+/* interrupt & flag functions */
 /* get EXTI lines pending flag */
 FlagStatus exti_flag_get(exti_line_enum linex);
 /* clear EXTI lines pending flag */
@@ -242,9 +273,5 @@ void exti_flag_clear(exti_line_enum linex);
 FlagStatus exti_interrupt_flag_get(exti_line_enum linex);
 /* clear EXTI lines pending flag */
 void exti_interrupt_flag_clear(exti_line_enum linex);
-/* EXTI software interrupt event enable */
-void exti_software_interrupt_enable(exti_line_enum linex);
-/* EXTI software interrupt event disable */
-void exti_software_interrupt_disable(exti_line_enum linex);
 
 #endif /* GD32F4XX_EXTI_H */

@@ -1,12 +1,37 @@
 ;/*!
-;    \file  startup_gd32f450.s
-;    \brief start up file
+;    \file    startup_gd32f450.s
+;    \brief   start up file
+;
+;    \version 2016-08-15, V1.0.0, firmware for GD32F4xx
+;    \version 2018-12-12, V2.0.0, firmware for GD32F4xx
+;    \version 2020-09-30, V2.1.0, firmware for GD32F4xx
 ;*/
-
+;
 ;/*
-;    Copyright (C) 2016 GigaDevice
-
-;    2016-08-15, V1.0.1, firmware for GD32F4xx
+;    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+;
+;    Redistribution and use in source and binary forms, with or without modification, 
+;are permitted provided that the following conditions are met:
+;
+;    1. Redistributions of source code must retain the above copyright notice, this 
+;       list of conditions and the following disclaimer.
+;    2. Redistributions in binary form must reproduce the above copyright notice, 
+;       this list of conditions and the following disclaimer in the documentation 
+;       and/or other materials provided with the distribution.
+;    3. Neither the name of the copyright holder nor the names of its contributors 
+;       may be used to endorse or promote products derived from this software without 
+;       specific prior written permission.
+;
+;    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+;AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+;WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+;IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+;INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+;NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+;PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+;WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+;ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+;OF SUCH DAMAGE.
 ;*/
 
 ; <h> Stack Configuration
@@ -85,7 +110,7 @@ __Vectors       DCD     __initial_sp                      ; Top of Stack
                 DCD     TIMER0_BRK_TIMER8_IRQHandler      ; 40:TIMER0 Break and TIMER8
                 DCD     TIMER0_UP_TIMER9_IRQHandler       ; 41:TIMER0 Update and TIMER9
                 DCD     TIMER0_TRG_CMT_TIMER10_IRQHandler ; 42:TIMER0 Trigger and Commutation and TIMER10
-                DCD     TIMER0_CC_IRQHandler              ; 43:TIMER0 Capture Compare
+                DCD     TIMER0_Channel_IRQHandler         ; 43:TIMER0 Capture Compare
                 DCD     TIMER1_IRQHandler                 ; 44:TIMER1
                 DCD     TIMER2_IRQHandler                 ; 45:TIMER2
                 DCD     TIMER3_IRQHandler                 ; 46:TIMER3
@@ -104,7 +129,7 @@ __Vectors       DCD     __initial_sp                      ; Top of Stack
                 DCD     TIMER7_BRK_TIMER11_IRQHandler     ; 59:TIMER7 Break and TIMER11
                 DCD     TIMER7_UP_TIMER12_IRQHandler      ; 60:TIMER7 Update and TIMER12
                 DCD     TIMER7_TRG_CMT_TIMER13_IRQHandler ; 61:TIMER7 Trigger and Commutation and TIMER13
-                DCD     TIMER7_CC_IRQHandler              ; 62:TIMER7 Capture Compare
+                DCD     TIMER7_Channel_IRQHandler         ; 62:TIMER7 Channel Capture Compare
                 DCD     DMA0_Channel7_IRQHandler          ; 63:DMA0 Channel7
                 DCD     EXMC_IRQHandler                   ; 64:EXMC
                 DCD     SDIO_IRQHandler                   ; 65:SDIO
@@ -241,7 +266,7 @@ Default_Handler PROC
                 EXPORT  TIMER0_BRK_TIMER8_IRQHandler      [WEAK]  
                 EXPORT  TIMER0_UP_TIMER9_IRQHandler       [WEAK]  
                 EXPORT  TIMER0_TRG_CMT_TIMER10_IRQHandler [WEAK]
-                EXPORT  TIMER0_CC_IRQHandler              [WEAK]        
+                EXPORT  TIMER0_Channel_IRQHandler         [WEAK]        
                 EXPORT  TIMER1_IRQHandler                 [WEAK]       
                 EXPORT  TIMER2_IRQHandler                 [WEAK]           
                 EXPORT  TIMER3_IRQHandler                 [WEAK]           
@@ -260,7 +285,7 @@ Default_Handler PROC
                 EXPORT  TIMER7_BRK_TIMER11_IRQHandler     [WEAK] 
                 EXPORT  TIMER7_UP_TIMER12_IRQHandler      [WEAK] 
                 EXPORT  TIMER7_TRG_CMT_TIMER13_IRQHandler [WEAK]
-                EXPORT  TIMER7_CC_IRQHandler              [WEAK]        
+                EXPORT  TIMER7_Channel_IRQHandler         [WEAK]        
                 EXPORT  DMA0_Channel7_IRQHandler          [WEAK]       
                 EXPORT  EXMC_IRQHandler                   [WEAK]         
                 EXPORT  SDIO_IRQHandler                   [WEAK]           
@@ -332,7 +357,7 @@ EXTI5_9_IRQHandler
 TIMER0_BRK_TIMER8_IRQHandler    
 TIMER0_UP_TIMER9_IRQHandler   
 TIMER0_TRG_CMT_TIMER10_IRQHandler 
-TIMER0_CC_IRQHandler        
+TIMER0_Channel_IRQHandler        
 TIMER1_IRQHandler             
 TIMER2_IRQHandler                 
 TIMER3_IRQHandler                 
@@ -351,7 +376,7 @@ USBFS_WKUP_IRQHandler
 TIMER7_BRK_TIMER11_IRQHandler   
 TIMER7_UP_TIMER12_IRQHandler  
 TIMER7_TRG_CMT_TIMER13_IRQHandler 
-TIMER7_CC_IRQHandler         
+TIMER7_Channel_IRQHandler         
 DMA0_Channel7_IRQHandler         
 EXMC_IRQHandler                   
 SDIO_IRQHandler                   

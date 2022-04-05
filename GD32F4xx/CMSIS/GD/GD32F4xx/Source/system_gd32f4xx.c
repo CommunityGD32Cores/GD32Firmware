@@ -44,21 +44,23 @@
 //#define __SYSTEM_CLOCK_IRC16M                   (uint32_t)(__IRC16M)
 //#define __SYSTEM_CLOCK_HXTAL                    (uint32_t)(__HXTAL)
 //#define __SYSTEM_CLOCK_120M_PLL_IRC16M          (uint32_t)(120000000)
-#define __SYSTEM_CLOCK_120M_PLL_8M_HXTAL          (uint32_t)(120000000)
+//#define __SYSTEM_CLOCK_120M_PLL_8M_HXTAL          (uint32_t)(120000000)
 //#define __SYSTEM_CLOCK_120M_PLL_25M_HXTAL       (uint32_t)(120000000)
 //#define __SYSTEM_CLOCK_168M_PLL_IRC16M          (uint32_t)(168000000)
 //#define __SYSTEM_CLOCK_168M_PLL_8M_HXTAL        (uint32_t)(168000000)
 //#define __SYSTEM_CLOCK_168M_PLL_25M_HXTAL       (uint32_t)(168000000)
-//#define __SYSTEM_CLOCK_200M_PLL_IRC16M          (uint32_t)(200000000)
+// #define __SYSTEM_CLOCK_200M_PLL_IRC16M          (uint32_t)(200000000)
 //#define __SYSTEM_CLOCK_200M_PLL_8M_HXTAL        (uint32_t)(200000000)
-//#define __SYSTEM_CLOCK_200M_PLL_25M_HXTAL       (uint32_t)(200000000)
+#define __SYSTEM_CLOCK_200M_PLL_25M_HXTAL         (uint32_t)(200000000)
 
 #define SEL_IRC16M      0x00U
 #define SEL_HXTAL       0x01U
 #define SEL_PLLP        0x02U
-#define RCU_MODIFY      {uint32_t i; \
+#define RCU_MODIFY      {volatile uint32_t i; \
                          RCU_CFG0 |= RCU_AHB_CKSYS_DIV2; \
-                         for(i=0;i<20;i++);}
+                         for(i=0;i<50000;i++); \
+                         RCU_CFG0 |= RCU_AHB_CKSYS_DIV4; \
+                         for(i=0;i<50000;i++);}
                         
 /* set the system clock frequency and declare the system clock configuration function */
 #ifdef __SYSTEM_CLOCK_IRC16M
@@ -108,34 +110,38 @@ static void system_clock_config(void);
 */
 void SystemInit (void)
 {
-  /* FPU settings ------------------------------------------------------------*/
-  #if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
+    /* FPU settings */
+#if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
     SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));  /* set CP10 and CP11 Full Access */
-  #endif
-  /* Reset the RCU clock configuration to the default reset state ------------*/
-  /* Set IRC16MEN bit */
-  RCU_CTL |= RCU_CTL_IRC16MEN;
+#endif
+    /* Reset the RCU clock configuration to the default reset state */
+    /* Set IRC16MEN bit */
+    RCU_CTL |= RCU_CTL_IRC16MEN;
 
-  RCU_MODIFY
-    
-  /* Reset CFG0 register */
-  RCU_CFG0 = 0x00000000U;
+    RCU_MODIFY
 
-  /* Reset HXTALEN, CKMEN and PLLEN bits */
-  RCU_CTL &= ~(RCU_CTL_PLLEN | RCU_CTL_CKMEN | RCU_CTL_HXTALEN);
+    /* Reset CFG0 register */
+    RCU_CFG0 = 0x00000000U;
 
-  /* Reset PLLCFGR register */
-  RCU_PLL = 0x24003010U;
+    /* wait until IRC16M is selected as system clock */
+    while(0 != (RCU_CFG0 & RCU_SCSS_IRC16M)){
+    }
 
-  /* Reset HSEBYP bit */
-  RCU_CTL &= ~(RCU_CTL_HXTALBPS);
+    /* Reset HXTALEN, CKMEN and PLLEN bits */
+    RCU_CTL &= ~(RCU_CTL_PLLEN | RCU_CTL_CKMEN | RCU_CTL_HXTALEN);
 
-  /* Disable all interrupts */
-  RCU_INT = 0x00000000U;
+    /* Reset PLLCFGR register */
+    RCU_PLL = 0x24003010U;
+
+    /* Reset HSEBYP bit */
+    RCU_CTL &= ~(RCU_CTL_HXTALBPS);
+
+    /* Disable all interrupts */
+    RCU_INT = 0x00000000U;
          
-  /* Configure the System clock source, PLL Multiplier and Divider factors, 
-     AHB/APBx prescalers and Flash settings ----------------------------------*/
-  system_clock_config();
+    /* Configure the System clock source, PLL Multiplier and Divider factors, 
+        AHB/APBx prescalers and Flash settings */
+    system_clock_config();
 }
 /*!
     \brief      configure the system clock
@@ -294,7 +300,7 @@ static void system_clock_120m_irc16m(void)
     /* APB1 = AHB/4 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV4;
 
-    /* Configure the main PLL, PLL_M = 16, PLL_N = 240, PLL_P = 2, PLL_Q = 5 */ 
+    /* Configure the main PLL, PSC = 16, PLL_N = 240, PLL_P = 2, PLL_Q = 5 */ 
     RCU_PLL = (16U | (240U << 6U) | (((2U >> 1U) - 1U) << 16U) |
                    (RCU_PLLSRC_IRC16M) | (5U << 24U));
 
@@ -362,7 +368,7 @@ static void system_clock_120m_8m_hxtal(void)
     /* APB1 = AHB/4 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV4;
 
-    /* Configure the main PLL, PLL_M = 8, PLL_N = 240, PLL_P = 2, PLL_Q = 5 */ 
+    /* Configure the main PLL, PSC = 8, PLL_N = 240, PLL_P = 2, PLL_Q = 5 */ 
     RCU_PLL = (8U | (240U << 6U) | (((2U >> 1U) - 1U) << 16U) |
                    (RCU_PLLSRC_HXTAL) | (5U << 24U));
 
@@ -430,7 +436,7 @@ static void system_clock_120m_25m_hxtal(void)
     /* APB1 = AHB/4 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV4;
 
-    /* Configure the main PLL, PLL_M = 25, PLL_N = 240, PLL_P = 2, PLL_Q = 5 */ 
+    /* Configure the main PLL, PSC = 25, PLL_N = 240, PLL_P = 2, PLL_Q = 5 */ 
     RCU_PLL = (25U | (240U << 6U) | (((2U >> 1U) - 1U) << 16U) |
                    (RCU_PLLSRC_HXTAL) | (5U << 24U));
 
@@ -498,7 +504,7 @@ static void system_clock_168m_irc16m(void)
     /* APB1 = AHB/4 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV4;
 
-    /* Configure the main PLL, PLL_M = 16, PLL_N = 336, PLL_P = 2, PLL_Q = 7 */ 
+    /* Configure the main PLL, PSC = 16, PLL_N = 336, PLL_P = 2, PLL_Q = 7 */ 
     RCU_PLL = (16U | (336U << 6U) | (((2U >> 1U) - 1U) << 16U) |
                    (RCU_PLLSRC_IRC16M) | (7U << 24U));
 
@@ -562,7 +568,7 @@ static void system_clock_168m_8m_hxtal(void)
     /* APB1 = AHB/4 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV4;
 
-    /* Configure the main PLL, PLL_M = 8, PLL_N = 336, PLL_P = 2, PLL_Q = 7 */ 
+    /* Configure the main PLL, PSC = 8, PLL_N = 336, PLL_P = 2, PLL_Q = 7 */ 
     RCU_PLL = (8U | (336 << 6U) | (((2 >> 1U) -1U) << 16U) |
                    (RCU_PLLSRC_HXTAL) | (7 << 24U));
 
@@ -630,7 +636,7 @@ static void system_clock_168m_25m_hxtal(void)
     /* APB1 = AHB */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV4;
 
-    /* Configure the main PLL, PLL_M = 25, PLL_N = 336, PLL_P = 2, PLL_Q = 7 */ 
+    /* Configure the main PLL, PSC = 25, PLL_N = 336, PLL_P = 2, PLL_Q = 7 */ 
     RCU_PLL = (25U | (336U << 6U) | (((2U >> 1U) - 1U) << 16U) |
                    (RCU_PLLSRC_HXTAL) | (7U << 24U));
 
@@ -698,7 +704,7 @@ static void system_clock_200m_irc16m(void)
     /* APB1 = AHB/4 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV4;
 
-    /* Configure the main PLL, PLL_M = 16, PLL_N = 400, PLL_P = 2, PLL_Q = 9 */ 
+    /* Configure the main PLL, PSC = 16, PLL_N = 400, PLL_P = 2, PLL_Q = 9 */ 
     RCU_PLL = (16U | (400U << 6U) | (((2U >> 1U) - 1U) << 16U) |
                    (RCU_PLLSRC_IRC16M) | (9U << 24U));
 
@@ -766,7 +772,7 @@ static void system_clock_200m_8m_hxtal(void)
     /* APB1 = AHB/4 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV4;
 
-    /* Configure the main PLL, PLL_M = 8, PLL_N = 400, PLL_P = 2, PLL_Q = 9 */ 
+    /* Configure the main PLL, PSC = 8, PLL_N = 400, PLL_P = 2, PLL_Q = 9 */ 
     RCU_PLL = (8U | (400U << 6U) | (((2U >> 1U) - 1U) << 16U) |
                    (RCU_PLLSRC_HXTAL) | (9U << 24U));
 
@@ -834,7 +840,7 @@ static void system_clock_200m_25m_hxtal(void)
     /* APB1 = AHB/4 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV4;
 
-    /* Configure the main PLL, PLL_M = 25, PLL_N = 400, PLL_P = 2, PLL_Q = 9 */ 
+    /* Configure the main PLL, PSC = 25, PLL_N = 400, PLL_P = 2, PLL_Q = 9 */ 
     RCU_PLL = (25U | (400U << 6U) | (((2U >> 1U) - 1U) << 16U) |
                    (RCU_PLLSRC_HXTAL) | (9U << 24U));
 
@@ -871,7 +877,7 @@ static void system_clock_200m_25m_hxtal(void)
     \param[out] none
     \retval     none
 */
-void SystemCoreClockUpdate (void)
+void SystemCoreClockUpdate(void)
 {
     uint32_t sws;
     uint32_t pllpsc, plln, pllsel, pllp, ck_src, idx, clk_exp;
@@ -902,7 +908,7 @@ void SystemCoreClockUpdate (void)
         } else {
             ck_src = IRC16M_VALUE;
         }
-        SystemCoreClock = ((ck_src / pllpsc) * plln)/pllp;
+        SystemCoreClock = ((ck_src / pllpsc) * plln) / pllp;
         break;
     /* IRC16M is selected as CK_SYS */
     default:
