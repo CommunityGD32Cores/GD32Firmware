@@ -1,13 +1,14 @@
 /*!
-    \file  gd32f3x0_exti.c
-    \brief EXTI driver
+    \file    gd32f3x0_exti.c
+    \brief   EXTI driver
 
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
+    \version 2020-09-30, V2.1.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -65,6 +66,7 @@ void exti_deinit(void)
       \arg        EXTI_TRIG_RISING: rising edge trigger
       \arg        EXTI_TRIG_FALLING: falling trigger
       \arg        EXTI_TRIG_BOTH: rising and falling trigger
+      \arg        EXTI_TRIG_NONE: without rising edge or falling edge trigger
     \param[out] none
     \retval     none
 */
@@ -104,6 +106,7 @@ void exti_init(exti_line_enum linex, \
         EXTI_RTEN |= (uint32_t)linex;
         EXTI_FTEN |= (uint32_t)linex;
         break;
+    case EXTI_TRIG_NONE:
     default:
         break;
     }

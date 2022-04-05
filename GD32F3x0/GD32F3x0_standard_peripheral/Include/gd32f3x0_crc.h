@@ -1,13 +1,14 @@
 /*!
-    \file  gd32f3x0_crc.h
-    \brief definitions for the CRC
+    \file    gd32f3x0_crc.h
+    \brief   definitions for the CRC
 
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
+    \version 2020-09-30, V2.1.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -82,6 +83,11 @@ OF SUCH DAMAGE.
 #define CRC_INPUT_DATA_HALFWORD        CTL_REV_I(2)                    /*!< input data reversed by half-word type */
 #define CRC_INPUT_DATA_WORD            CTL_REV_I(3)                    /*!< input data reversed by word type */
 
+/* input data format */
+#define INPUT_FORMAT_WORD              0U                              /*!< input data in word format */
+#define INPUT_FORMAT_HALFWORD          1U                              /*!< input data in half-word format */
+#define INPUT_FORMAT_BYTE              2U                              /*!< input data in byte format */
+
 /* function declarations */
 /* deinit CRC calculation unit */
 void crc_deinit(void);
@@ -111,9 +117,9 @@ void crc_polynomial_size_set(uint32_t poly_size);
 /* configure the CRC polynomial value function */
 void crc_polynomial_set(uint32_t poly);
 
-/* CRC calculate a 32-bit data */
-uint32_t crc_single_data_calculate(uint32_t sdata);
-/* CRC calculate a 32-bit data array */
-uint32_t crc_block_data_calculate(uint32_t array[], uint32_t size);
+/* CRC calculate single data */
+uint32_t crc_single_data_calculate(uint32_t sdata, uint8_t data_format);
+/* CRC calculate a data array */
+uint32_t crc_block_data_calculate(void *array, uint32_t size, uint8_t data_format);
 
 #endif /* GD32F3X0_CRC_H */

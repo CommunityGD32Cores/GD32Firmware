@@ -1,13 +1,14 @@
 /*!
-    \file  gd32f3x0_tsi.h
-    \brief definitions for the TSI
+    \file    gd32f3x0_tsi.h
+    \brief   definitions for the TSI
     
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
+    \version 2020-09-30, V2.1.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -213,21 +214,13 @@ OF SUCH DAMAGE.
 #define TSI_INT_CCTCF           TSI_INTEN_CTCFIE        /*!< charge transfer complete flag interrupt enable */
 #define TSI_INT_MNERR           TSI_INTEN_MNERRIE       /*!< max cycle number error interrupt enable */
 
-/* I2C interrupt flags */
+/* TSI interrupt flags */
 #define TSI_INT_FLAG_CTCF       TSI_INTF_CTCF           /*!< charge transfer complete flag */
 #define TSI_INT_FLAG_MNERR      TSI_INTF_MNERR          /*!< max cycle number error */
 
-/* I2C interrupt clear flags */
-#define TSI_INT_FLAG_CTCF_CLR   TSI_INTC_CCTCF          /*!< clear charge transfer complete flag */
-#define TSI_INT_FLAG_MNERR_CLR  TSI_INTC_CMNERR         /*!< clear max cycle number error */
-
-/* I2C flags */
+/* TSI flags */
 #define TSI_FLAG_CTCF           TSI_INTF_CTCF           /*!< charge transfer complete flag */
 #define TSI_FLAG_MNERR          TSI_INTF_MNERR          /*!< max cycle number error */
-
-/* I2C clear flags */
-#define TSI_FLAG_CTCF_CLR       TSI_INTC_CCTCF          /*!< clear charge transfer complete flag */
-#define TSI_FLAG_MNERR_CLR      TSI_INTC_CMNERR         /*!< clear max cycle number error */
 
 /* CTCLK clock division factor */
 #define TSI_CTCDIV_DIV1         ((uint32_t)0x00000000U) /*!< fCTCLK = fHCLK */

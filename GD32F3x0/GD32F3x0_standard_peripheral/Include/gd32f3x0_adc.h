@@ -1,13 +1,14 @@
 /*!
-    \file  gd32f3x0_adc.h
-    \brief definitions for the ADC
+    \file    gd32f3x0_adc.h
+    \brief   definitions for the ADC
 
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
+    \version 2020-09-30, V2.1.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -123,7 +124,7 @@ OF SUCH DAMAGE.
 #define ADC_ISQ_ISQN                     BITS(0,4)                           /*!< n conversion in regular sequence */
 #define ADC_ISQ_IL                       BITS(20,21)                         /*!< inserted sequence length */
 
-/* ADC_IDATAx x=0..3*/
+/* ADC_IDATAx x=0..3 */
 #define ADC_IDATAX_IDATAN                BITS(0,15)                          /*!< inserted channel x conversion data  */
 
 /* ADC_RDATA */
@@ -155,7 +156,7 @@ OF SUCH DAMAGE.
 #define ADC_DATAALIGN_RIGHT              ((uint32_t)0x00000000U)                     /*!< right alignment */
 #define ADC_DATAALIGN_LEFT               ADC_CTL1_DAL                                /*!< left alignment */
 
-/* external trigger select for regular  channel */
+/* external trigger select for regular channel */
 #define CTL1_ETSRC(regval)               (BITS(17,19) & ((uint32_t)(regval) << 17))  
 #define ADC_EXTTRIG_REGULAR_T0_CH0       CTL1_ETSRC(0)                               /*!< TIMER0 CH0 event select */
 #define ADC_EXTTRIG_REGULAR_T0_CH1       CTL1_ETSRC(1)                               /*!< TIMER0 CH1 event select */
@@ -188,10 +189,10 @@ OF SUCH DAMAGE.
 #define ADC_SAMPLETIME_71POINT5          SAMPTX_SPT(6)                               /*!< 71.5 sampling cycles */
 #define ADC_SAMPLETIME_239POINT5         SAMPTX_SPT(7)                               /*!< 239.5 sampling cycles */
 
-/* ADC data offset for inserted channel x*/
+/* ADC data offset for inserted channel x */
 #define IOFFX_IOFF(regval)               (BITS(0,11) & ((uint32_t)(regval) << 0))
 
-/* ADC analog watchdog high threshold  */
+/* ADC analog watchdog high threshold */
 #define WDHT_WDHT(regval)                (BITS(0,11) & ((uint32_t)(regval) << 0))
 
 /* ADC analog watchdog low  threshold */
@@ -204,7 +205,7 @@ OF SUCH DAMAGE.
 #define ISQ_IL(regval)                   (BITS(20,21) & ((uint32_t)(regval) << 20))
 
 /* ADC resolution definitions */
-#define CTL0_DRES(regval)                (BITS(24,25) & ((regval) << 24))            /*!< ADC resolution */
+#define CTL0_DRES(regval)                (BITS(24,25) & ((uint32_t)(regval) << 24))  /*!< ADC resolution */
 #define ADC_RESOLUTION_12B               CTL0_DRES(0)                                /*!< 12-bit ADC resolution */
 #define ADC_RESOLUTION_10B               CTL0_DRES(1)                                /*!< 10-bit ADC resolution */
 #define ADC_RESOLUTION_8B                CTL0_DRES(2)                                /*!< 8-bit ADC resolution */
@@ -299,9 +300,9 @@ void adc_dma_mode_disable(void);
 void adc_tempsensor_vrefint_enable(void);
 /* disable the temperature sensor and Vrefint channel */
 void adc_tempsensor_vrefint_disable(void);
-/* enable the vbat channel */
+/* enable the Vbat channel */
 void adc_vbat_enable(void);
-/* disable the vbat channel */
+/* disable the Vbat channel */
 void adc_vbat_disable(void);
 
 /* configure ADC discontinuous mode */

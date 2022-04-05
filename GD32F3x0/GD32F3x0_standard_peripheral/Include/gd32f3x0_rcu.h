@@ -1,13 +1,14 @@
 /*!
-    \file  gd32f3x0_rcu.h
-    \brief definitions for the RCU
+    \file    gd32f3x0_rcu.h
+    \brief   definitions for the RCU
 
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
+    \version 2020-09-30, V2.1.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -409,7 +410,7 @@ typedef enum
     RCU_INT_FLAG_PLLSTB    = RCU_REGIDX_BIT(IDX_INT, 4U),         /*!< PLL stabilization interrupt flag */
     RCU_INT_FLAG_IRC28MSTB = RCU_REGIDX_BIT(IDX_INT, 5U),         /*!< IRC28M stabilization interrupt flag */
     RCU_INT_FLAG_CKM       = RCU_REGIDX_BIT(IDX_INT, 7U),         /*!< CKM interrupt flag */
-    RCU_INT_FLAG_IRC48MSTB = RCU_REGIDX_BIT(IDX_ADDCTL, 6U)       /*!< IRC48M stabilization interrupt flag */
+    RCU_INT_FLAG_IRC48MSTB = RCU_REGIDX_BIT(IDX_ADDINT, 6U)       /*!< IRC48M stabilization interrupt flag */
 }rcu_int_flag_enum;
 
 /* clock stabilization and stuck interrupt flags clear */
@@ -422,7 +423,7 @@ typedef enum
     RCU_INT_FLAG_PLLSTB_CLR    = RCU_REGIDX_BIT(IDX_INT, 20U),    /*!< PLL stabilization interrupt flags clear */
     RCU_INT_FLAG_IRC28MSTB_CLR = RCU_REGIDX_BIT(IDX_INT, 21U),    /*!< IRC28M stabilization interrupt flags clear */
     RCU_INT_FLAG_CKM_CLR       = RCU_REGIDX_BIT(IDX_INT, 23U),    /*!< CKM interrupt flags clear */
-    RCU_INT_FLAG_IRC48MSTB_CLR = RCU_REGIDX_BIT(IDX_ADDCTL, 22U)  /*!< IRC48M stabilization interrupt flag clear */
+    RCU_INT_FLAG_IRC48MSTB_CLR = RCU_REGIDX_BIT(IDX_ADDINT, 22U)  /*!< IRC48M stabilization interrupt flag clear */
 }rcu_int_flag_clear_enum;
 
 /* clock stabilization interrupt enable or disable */

@@ -1,14 +1,14 @@
 /*!
-    \file  gd32f3x0_timer.c
-    \brief TIMER driver
+    \file    gd32f3x0_timer.c
+    \brief   TIMER driver
 
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
+    \version 2020-09-30, V2.1.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
-
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -1908,7 +1908,7 @@ void timer_external_trigger_as_external_clock_config(uint32_t timer_periph, uint
         /* reset the CH1CAPFLT bit */
         TIMER_CHCTL0(timer_periph) &= (~(uint32_t)TIMER_CHCTL0_CH1CAPFLT);
         /* set the CH1CAPFLT bit */
-        TIMER_CHCTL0(timer_periph) |= (uint32_t)(extfilter << 8U);
+        TIMER_CHCTL0(timer_periph) |= (uint32_t)(extfilter << 12U);
         /* set the CH1EN bit */
         TIMER_CHCTL2(timer_periph) |= (uint32_t)TIMER_CHCTL2_CH1EN;
     }else{
@@ -1925,7 +1925,7 @@ void timer_external_trigger_as_external_clock_config(uint32_t timer_periph, uint
         /* reset the CH0CAPFLT bit */
         TIMER_CHCTL0(timer_periph) &= (~(uint32_t)TIMER_CHCTL0_CH0CAPFLT);
         /* reset the CH0CAPFLT bit */
-        TIMER_CHCTL0(timer_periph) |= (uint32_t)extfilter;
+        TIMER_CHCTL0(timer_periph) |= (uint32_t)(extfilter << 4U);
         /* set the CH0EN bit */
         TIMER_CHCTL2(timer_periph) |= (uint32_t)TIMER_CHCTL2_CH0EN;
     }

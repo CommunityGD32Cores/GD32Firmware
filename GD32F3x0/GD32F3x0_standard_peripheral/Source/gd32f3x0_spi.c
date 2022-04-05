@@ -1,13 +1,14 @@
 /*!
-    \file  gd32f3x0_spi.c
-    \brief SPI driver
+    \file    gd32f3x0_spi.c
+    \brief   SPI driver
 
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
+    \version 2020-09-30, V2.1.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -310,7 +311,7 @@ void spi_nss_output_disable(uint32_t spi_periph)
 }
 
 /*!
-    \brief      SPI NSS pin high level in software mode
+    \brief      pull NSS pin high in software mode
     \param[in]  spi_periph: SPIx(x=0,1)
     \param[out] none
     \retval     none
@@ -321,7 +322,7 @@ void spi_nss_internal_high(uint32_t spi_periph)
 }
 
 /*!
-    \brief      SPI NSS pin low level in software mode
+    \brief      pull NSS pin low in software mode
     \param[in]  spi_periph: SPIx(x=0,1)
     \param[out] none
     \retval     none

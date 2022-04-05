@@ -1,13 +1,14 @@
 /*!
-    \file  gd32f3x0_rcu.c
-    \brief RCU driver
+    \file    gd32f3x0_rcu.c
+    \brief   RCU driver
 
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
+    \version 2020-09-30, V2.1.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -480,7 +481,7 @@ void rcu_pll_preselection_config(uint32_t pll_presel)
 */
 void rcu_pll_config(uint32_t pll_src, uint32_t pll_mul)
 {
-    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF);
+    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF | RCU_CFG0_PLLMF4);
     RCU_CFG1 &= ~(RCU_CFG1_PLLMF5);
     RCU_CFG0 |= (pll_src | (pll_mul & (~RCU_CFG1_PLLMF5)));
     RCU_CFG1 |= (pll_mul & RCU_CFG1_PLLMF5);
@@ -1011,9 +1012,9 @@ void rcu_voltage_key_unlock(void)
     \param[in]  dsvol: deep sleep mode voltage
                 only one parameter can be selected which is shown as below:
       \arg        RCU_DEEPSLEEP_V_1_0: the core voltage is 1.0V
-      \arg        RCU_DEEPSLEEP_V_0_9: the core voltage is 0.9V
-      \arg        RCU_DEEPSLEEP_V_0_8: the core voltage is 0.8V
-      \arg        RCU_DEEPSLEEP_V_0_7: the core voltage is 0.7V
+      \arg        RCU_DEEPSLEEP_V_0_9: the core voltage is 0.9V(customers are not recommended to use it)
+      \arg        RCU_DEEPSLEEP_V_0_8: the core voltage is 0.8V(customers are not recommended to use it)
+      \arg        RCU_DEEPSLEEP_V_0_7: the core voltage is 0.7V(customers are not recommended to use it)
     \param[out] none
     \retval     none
 */
@@ -1066,17 +1067,18 @@ uint32_t rcu_clock_freq_get(rcu_clock_freq_enum clock)
         pllmf4 = GET_BITS(RCU_CFG0, 27, 27);
         pllmf5 = GET_BITS(RCU_CFG1, 31, 31);
         /* high 16 bits */
-        if(1U == pllmf4){
-            pllmf += 17U;
-        }else{
-            if(pllmf == 15U){
-                pllmf += 1U; 
-            }else{                
-                pllmf += 2U;
-            }
+        /* high 16 bits */
+        if((0U == pllmf4)&&(0U == pllmf5)){
+            pllmf += 2U;
         }
-        if(1U == pllmf5){
-            pllmf += 31U;
+        if((1U == pllmf4)&&(0U == pllmf5)){
+            pllmf += 17U;
+        }
+        if((0U == pllmf4)&&(1U == pllmf5)){
+            pllmf += 33U;
+        }
+        if((1U == pllmf4)&&(1U == pllmf5)){
+            pllmf += 49U;
         }
             
         /* PLL clock source selection, HXTAL or IRC48M or IRC8M/2 */

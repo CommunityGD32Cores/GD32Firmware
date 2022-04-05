@@ -1,13 +1,14 @@
 /*!
-    \file  gd32f3x0_tsi.c
-    \brief TSI driver
+    \file    gd32f3x0_tsi.c
+    \brief   TSI driver
     
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
+    \version 2020-09-30, V2.1.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -509,8 +510,8 @@ void tsi_interrupt_disable(uint32_t source)
     \brief      clear TSI interrupt flag
     \param[in]  flag: select flag which will be cleared
                 only one parameter can be selected which is shown as below:
-      \arg        TSI_INT_FLAG_CTCF_CLR: clear charge-transfer complete flag
-      \arg        TSI_INT_FLAG_MNERR_CLR: clear max cycle number error
+      \arg        TSI_INT_FLAG_CTCF: clear charge-transfer complete flag
+      \arg        TSI_INT_FLAG_MNERR: clear max cycle number error
     \param[out] none
     \retval     none
 */
@@ -544,8 +545,8 @@ FlagStatus tsi_interrupt_flag_get(uint32_t flag)
     \brief      clear flag
     \param[in]  flag: select flag which will be cleared
                 only one parameter can be selected which is shown as below:
-      \arg        TSI_FLAG_CTCF_CLR: clear charge-transfer complete flag
-      \arg        TSI_FLAG_MNERR_CLR: clear max cycle number error
+      \arg        TSI_FLAG_CTCF: clear charge-transfer complete flag
+      \arg        TSI_FLAG_MNERR: clear max cycle number error
     \param[out] none
     \retval     none
 */
@@ -603,7 +604,7 @@ void tsi_group_disable(uint32_t group)
 /*!
     \brief      get group complete status
     \param[in]  group: select group 
-                one or more parameters can be selected which are shown as below:
+                only one parameter can be selected which is shown as below:
       \arg        TSI_GCTL_GCx(x=0..5): get the complete status of group x
     \param[out] none
     \retval     FlagStatus: group complete status,SET or RESET

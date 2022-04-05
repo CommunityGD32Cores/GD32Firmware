@@ -1,13 +1,14 @@
 /*!
-    \file  gd32f3x0_rtc.h
-    \brief definitions for the RTC 
+    \file    gd32f3x0_rtc.h
+    \brief   definitions for the RTC 
 
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
+    \version 2020-09-30, V2.1.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -310,8 +311,8 @@ typedef struct
 
 #define RTC_CALIBRATION_512HZ              RTC_CTL_COEN                                /*!< calibration output of 512Hz is enable */
 #define RTC_CALIBRATION_1HZ                RTC_CTL_COEN | RTC_CTL_COS                  /*!< calibration output of 1Hz is enable */
-#define RTC_ALARM_HIGH                     RTC_CTL_OS_ENABLE                           /*!< enable alarm flag output with high level */
-#define RTC_ALARM_LOW                      RTC_CTL_OS_ENABLE | RTC_CTL_OPOL            /*!< enable alarm flag output with low level*/
+#define RTC_ALARM_HIGH                     RTC_OS_ENABLE                               /*!< enable alarm flag output with high level */
+#define RTC_ALARM_LOW                      RTC_OS_ENABLE | RTC_CTL_OPOL                /*!< enable alarm flag output with low level*/
 
 #define RTC_24HOUR                         ((uint32_t)0x00000000U)                     /*!< 24-hour format */
 #define RTC_12HOUR                         RTC_CTL_CS                                  /*!< 12-hour format */

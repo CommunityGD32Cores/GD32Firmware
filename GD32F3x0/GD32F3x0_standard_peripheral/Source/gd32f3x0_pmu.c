@@ -1,13 +1,14 @@
 /*!
-    \file  gd32f3x0_pmu.c
-    \brief PMU driver
+    \file    gd32f3x0_pmu.c
+    \brief   PMU driver
 
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
+    \version 2020-09-30, V2.1.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -248,15 +249,15 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
     /* set sleepdeep bit of Cortex-M4 system control register */
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 
-    reg_snap[ 0 ] = REG32( 0xE000E010U );
-    reg_snap[ 1 ] = REG32( 0xE000E100U );
-    reg_snap[ 2 ] = REG32( 0xE000E104U );
-    reg_snap[ 3 ] = REG32( 0xE000E108U );
+    reg_snap[0] = REG32(0xE000E010U);
+    reg_snap[1] = REG32(0xE000E100U);
+    reg_snap[2] = REG32(0xE000E104U);
+    reg_snap[3] = REG32(0xE000E108U);
     
-    REG32( 0xE000E010U ) &= 0x00010004U;
-    REG32( 0xE000E180U )  = 0XB7FFEF19U;
-    REG32( 0xE000E184U )  = 0XFFFFFBFFU;
-    REG32( 0xE000E188U )  = 0xFFFFFFFFU;
+    REG32(0xE000E010U) &= 0x00010004U;
+    REG32(0xE000E180U)  = 0XB7FFEF19U;
+    REG32(0xE000E184U)  = 0XFFFFFBFFU;
+    REG32(0xE000E188U)  = 0xFFFFFFFFU;
   
     /* select WFI or WFE command to enter deepsleep mode */
     if(WFI_CMD == deepsleepmodecmd){
@@ -267,10 +268,10 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
         __WFE();
     }
 
-    REG32( 0xE000E010U ) = reg_snap[ 0 ] ; 
-    REG32( 0xE000E100U ) = reg_snap[ 1 ] ;
-    REG32( 0xE000E104U ) = reg_snap[ 2 ] ;
-    REG32( 0xE000E108U ) = reg_snap[ 3 ] ;   
+    REG32(0xE000E010U) = reg_snap[0 ]; 
+    REG32(0xE000E100U) = reg_snap[1];
+    REG32(0xE000E104U) = reg_snap[2];
+    REG32(0xE000E108U) = reg_snap[3];   
     
     /* reset sleepdeep bit of Cortex-M4 system control register */
     SCB->SCR &= ~((uint32_t)SCB_SCR_SLEEPDEEP_Msk);
@@ -300,6 +301,7 @@ void pmu_to_standbymode(uint8_t standbymodecmd)
     if(WFI_CMD == standbymodecmd){
         __WFI();
     }else{
+        __WFE();
         __WFE();
     }
 }

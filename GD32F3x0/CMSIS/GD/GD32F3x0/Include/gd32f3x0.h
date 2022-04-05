@@ -1,13 +1,14 @@
 /*!
-    \file  gd32f3x0.h
-    \brief general definitions for gd32f3x0
+    \file    gd32f3x0.h
+    \brief   general definitions for gd32f3x0
     
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
+    \version 2020-09-30, V2.1.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -127,9 +128,9 @@ typedef enum IRQn
     /* interruput numbers */
     WWDGT_IRQn                   = 0,      /*!< window watchdog timer interrupt                          */
     LVD_IRQn                     = 1,      /*!< LVD through EXTI line detect interrupt                   */
-    RCU_CTC_IRQn                 = 2,      /*!< RTC and CTC interrupt                                    */
+    RTC_IRQn                     = 2,      /*!< RTC interrupt                                            */
     FMC_IRQn                     = 3,      /*!< FMC interrupt                                            */
-    RCU_IRQn                     = 4,      /*!< RCU interrupt                                            */
+    RCU_CTC_IRQn                 = 4,      /*!< RCU and CTC interrupt                                    */
     EXTI0_1_IRQn                 = 5,      /*!< EXTI line 0 and 1 interrupts                             */
     EXTI2_3_IRQn                 = 6,      /*!< EXTI line 2 and 3 interrupts                             */
     EXTI4_15_IRQn                = 7,      /*!< EXTI line 4 to 15 interrupts                             */

@@ -1,13 +1,14 @@
 /*!
-    \file  gd32f3x0_adc.c
-    \brief ADC driver
+    \file    gd32f3x0_adc.c
+    \brief   ADC driver
 
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
+    \version 2020-09-30, V2.1.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -139,7 +140,7 @@ void adc_tempsensor_vrefint_disable(void)
 }
 
 /*!
-    \brief      enable the vbat channel
+    \brief      enable the Vbat channel
     \param[in]  none
     \param[out] none
     \retval     none
@@ -151,7 +152,7 @@ void adc_vbat_enable(void)
 }
 
 /*!
-    \brief      disable the vbat channel
+    \brief      disable the Vbat channel
     \param[in]  none
     \param[out] none
     \retval     none
@@ -623,14 +624,14 @@ FlagStatus adc_interrupt_flag_get(uint32_t flag)
     case ADC_INT_FLAG_WDE:
         state = ADC_STAT & ADC_STAT_WDE;
         if((ADC_CTL0 & ADC_CTL0_WDEIE) && state){
-          interrupt_flag = SET;
+            interrupt_flag = SET;
         }
         break;
     case ADC_INT_FLAG_EOC:
         state = ADC_STAT & ADC_STAT_EOC;
         if((ADC_CTL0 & ADC_CTL0_EOCIE) && state){
             interrupt_flag = SET;
-          }
+        }
         break;
     case ADC_INT_FLAG_EOIC:
         state = ADC_STAT & ADC_STAT_EOIC;

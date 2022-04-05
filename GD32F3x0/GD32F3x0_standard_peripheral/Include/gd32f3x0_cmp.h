@@ -1,13 +1,14 @@
 /*!
-    \file  gd32f3x0_cmp.h
-    \brief definitions for the CMP
+    \file    gd32f3x0_cmp.h
+    \brief   definitions for the CMP
 
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
+    \version 2020-09-30, V2.1.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -66,7 +67,8 @@ OF SUCH DAMAGE.
 
 /* consts definitions */
 /* operating mode */
-typedef enum{
+typedef enum
+{
     CMP_HIGHSPEED = 0,                                                          /*!< high speed mode */
     CMP_MIDDLESPEED,                                                            /*!< medium speed mode */
     CMP_LOWSPEED,                                                               /*!< low speed mode */
@@ -74,7 +76,8 @@ typedef enum{
 }operating_mode_enum;
 
 /* inverting input */
-typedef enum{
+typedef enum
+{
     CMP_1_4VREFINT = 0,                                                         /*!< VREFINT /4 input */
     CMP_1_2VREFINT,                                                             /*!< VREFINT /2 input */
     CMP_3_4VREFINT,                                                             /*!< VREFINT *3/4 input */
@@ -85,7 +88,8 @@ typedef enum{
 }inverting_input_enum;
 
 /* hysteresis */
-typedef enum{
+typedef enum
+{
     CMP_HYSTERESIS_NO = 0,                                                      /*!< output no hysteresis */
     CMP_HYSTERESIS_LOW,                                                         /*!< output low hysteresis */
     CMP_HYSTERESIS_MIDDLE,                                                      /*!< output middle hysteresis */
@@ -93,7 +97,8 @@ typedef enum{
 }cmp_hysteresis_enum;
 
 /* output */  
-typedef enum{
+typedef enum
+{
     CMP_OUTPUT_NONE = 0,                                                        /*!< output no selection */
     CMP_OUTPUT_TIMER0BKIN,                                                      /*!< TIMER 0 break input */
     CMP_OUTPUT_TIMER0IC0,                                                       /*!< TIMER 0 channel0 input capture */
@@ -175,16 +180,16 @@ typedef enum{
 #define CS_CMP1HST_HYSTERESIS_HIGH               CS_CMP1HST(3)                  /*!< CMP1 output high hysteresis */
 
 /* comparator x definitions */
-#define CMP0                                     ((uint32_t)0x00000000)          /*!< comparator 0 */
-#define CMP1                                     ((uint32_t)0x00000010)          /*!< comparator 1 */
+#define CMP0                                     ((uint32_t)0x00000000U)          /*!< comparator 0 */
+#define CMP1                                     ((uint32_t)0x00000010U)          /*!< comparator 1 */
 
 /* comparator output level */
-#define CMP_OUTPUTLEVEL_HIGH                     ((uint32_t)0x00000001)          /*!< comparator output high */
-#define CMP_OUTPUTLEVEL_LOW                      ((uint32_t)0x00000000)          /*!< comparator output low */
+#define CMP_OUTPUTLEVEL_HIGH                     ((uint32_t)0x00000001U)          /*!< comparator output high */
+#define CMP_OUTPUTLEVEL_LOW                      ((uint32_t)0x00000000U)          /*!< comparator output low */
 
 /* output polarity of comparator */
-#define CMP_OUTPUT_POLARITY_INVERTED             ((uint32_t)0x00000001)          /*!< output is inverted */
-#define CMP_OUTPUT_POLARITY_NOINVERTED           ((uint32_t)0x00000000)          /*!< output is not inverted */
+#define CMP_OUTPUT_POLARITY_INVERTED             ((uint32_t)0x00000001U)          /*!< output is inverted */
+#define CMP_OUTPUT_POLARITY_NOINVERTED           ((uint32_t)0x00000000U)          /*!< output is not inverted */
 
 /* function declarations */
 

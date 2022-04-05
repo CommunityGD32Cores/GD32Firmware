@@ -1,13 +1,14 @@
 /*!
-    \file  gd32f3x0_exti.h
-    \brief definitions for the EXTI
+    \file    gd32f3x0_exti.h
+    \brief   definitions for the EXTI
 
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
+    \version 2020-09-30, V2.1.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -252,7 +253,8 @@ typedef enum
 { 
     EXTI_TRIG_RISING = 0,                                     /*!< EXTI rising edge trigger */
     EXTI_TRIG_FALLING,                                        /*!< EXTI falling edge trigger */
-    EXTI_TRIG_BOTH                                            /*!< EXTI rising and falling edge trigger */
+    EXTI_TRIG_BOTH,                                           /*!< EXTI rising and falling edge trigger */
+    EXTI_TRIG_NONE                                            /*!< without rising edge or falling edge trigger */
 }exti_trig_type_enum;
 
 /* function declarations */

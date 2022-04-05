@@ -1,13 +1,14 @@
 /*!
-    \file  gd32f3x0_cmp.c
-    \brief CMP driver
+    \file    gd32f3x0_cmp.c
+    \brief   CMP driver
 
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
+    \version 2020-09-30, V2.1.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -74,14 +75,19 @@ void cmp_deinit(void)
 */
 void cmp_mode_init(uint32_t cmp_periph, operating_mode_enum operating_mode, inverting_input_enum inverting_input, cmp_hysteresis_enum output_hysteresis)
 {
+    uint32_t CMPx_CS = 0;
     if(CMP0 == cmp_periph){
         /* initialize comparator 0 mode */
-        CMP_CS &= ~(uint32_t)(CMP_CS_CMP0M | CMP_CS_CMP0MSEL | CMP_CS_CMP0HST ); 
-        CMP_CS |= CS_CMP0M(operating_mode) | CS_CMP0MSEL(inverting_input) | CS_CMP0HST(output_hysteresis);
+        CMPx_CS = CMP_CS;
+        CMPx_CS &= ~(uint32_t)(CMP_CS_CMP0M | CMP_CS_CMP0MSEL | CMP_CS_CMP0HST ); 
+        CMPx_CS |= CS_CMP0M(operating_mode) | CS_CMP0MSEL(inverting_input) | CS_CMP0HST(output_hysteresis);
+        CMP_CS = CMPx_CS;
     }else{
         /* initialize comparator 1 mode */
-        CMP_CS &= ~(uint32_t)(CMP_CS_CMP1M | CMP_CS_CMP1MSEL | CMP_CS_CMP1HST );
-        CMP_CS |= CS_CMP1M(operating_mode) | CS_CMP1MSEL(inverting_input) | CS_CMP1HST(output_hysteresis);
+        CMPx_CS = CMP_CS;
+        CMPx_CS &= ~(uint32_t)(CMP_CS_CMP1M | CMP_CS_CMP1MSEL | CMP_CS_CMP1HST );
+        CMPx_CS |= CS_CMP1M(operating_mode) | CS_CMP1MSEL(inverting_input) | CS_CMP1HST(output_hysteresis);
+        CMP_CS = CMPx_CS;
     }
 }
 
@@ -107,26 +113,31 @@ void cmp_mode_init(uint32_t cmp_periph, operating_mode_enum operating_mode, inve
 */
 void cmp_output_init(uint32_t cmp_periph, cmp_output_enum output_slection, uint32_t output_polarity)
 {
+    uint32_t CMPx_CS = 0;
     /* initialize comparator 0 output */
     if(CMP0 == cmp_periph){
-        CMP_CS &= ~(uint32_t)CMP_CS_CMP0OSEL;
-        CMP_CS |= CS_CMP0OSEL(output_slection);
+        CMPx_CS = CMP_CS;
+        CMPx_CS &= ~(uint32_t)CMP_CS_CMP0OSEL;
+        CMPx_CS |= CS_CMP0OSEL(output_slection);
         /* output polarity */
         if(CMP_OUTPUT_POLARITY_INVERTED == output_polarity){
-            CMP_CS |= CMP_CS_CMP0PL;
+            CMPx_CS |= CMP_CS_CMP0PL;
         }else{ 
-            CMP_CS &= ~CMP_CS_CMP0PL;
+            CMPx_CS &= ~CMP_CS_CMP0PL;
         }
-    }else{
+        CMP_CS = CMPx_CS;
+    }else if(CMP1 == cmp_periph){
         /* initialize comparator 1 output */
-        CMP_CS &= ~(uint32_t)CMP_CS_CMP1OSEL;
-        CMP_CS |= CS_CMP1OSEL(output_slection);
+        CMPx_CS = CMP_CS;
+        CMPx_CS &= ~(uint32_t)CMP_CS_CMP1OSEL;
+        CMPx_CS |= CS_CMP1OSEL(output_slection);
         /* output polarity */
         if(CMP_OUTPUT_POLARITY_INVERTED == output_polarity){
-            CMP_CS |= CMP_CS_CMP1PL;
+            CMPx_CS |= CMP_CS_CMP1PL;
         }else{ 
-            CMP_CS &= ~CMP_CS_CMP1PL;
+            CMPx_CS &= ~CMP_CS_CMP1PL;
         }
+        CMP_CS = CMPx_CS;
     }
 }
 

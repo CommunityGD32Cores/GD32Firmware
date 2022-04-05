@@ -1,13 +1,14 @@
 /*!
-    \file  gd32f3x0_cec.h
-    \brief definitions for the CEC
+    \file    gd32f3x0_cec.h
+    \brief   definitions for the CEC
     
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
+    \version 2020-09-30, V2.1.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -65,7 +66,7 @@ OF SUCH DAMAGE.
 #define CEC_CFG_BPLEG                      BIT(6)                     /*!< generate Error-bit when detected BPLE in singlecast */
 #define CEC_CFG_BCNG                       BIT(7)                     /*!< do not generate Error-bit in broadcast message */
 #define CEC_CFG_SFTOPT                     BIT(8)                     /*!< the SFT start option bit */
-#define CEC_CFG_OWN_ADDRESS                BITS(16,30)                /*!< own address */
+#define CEC_CFG_OAD                        BITS(16,30)                /*!< own address */
 #define CEC_CFG_LMEN                       BIT(31)                    /*!< listen mode enable bit */
 
 /* CEC_TDATA */

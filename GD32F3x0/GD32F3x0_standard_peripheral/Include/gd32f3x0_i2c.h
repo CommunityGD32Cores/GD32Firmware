@@ -1,13 +1,14 @@
 /*!
-    \file  gd32f3x0_i2c.h
-    \brief definitions for the I2C
-    
+    \file    gd32f3x0_i2c.h
+    \brief   definitions for the I2C
+
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
+    \version 2020-09-30, V2.1.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -33,15 +34,14 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-
 #ifndef GD32F3X0_I2C_H
 #define GD32F3X0_I2C_H
 
 #include "gd32f3x0.h"
 
 /* I2Cx(x=0,1) definitions */
-#define I2C0                          I2C_BASE                       /*!< I2C0 base address */
-#define I2C1                          (I2C_BASE+0x00000400U)         /*!< I2C1 base address */
+#define I2C0                          I2C_BASE                         /*!< I2C0 base address */
+#define I2C1                          (I2C_BASE+0x00000400U)           /*!< I2C1 base address */
 
 /* registers definitions */
 #define I2C_CTL0(i2cx)                REG32((i2cx) + 0x00000000U)      /*!< I2C control register 0 */
@@ -144,6 +144,7 @@ OF SUCH DAMAGE.
 #define I2C_CTL1_REG_OFFSET           (0x00000004U)         /*!< CTL1 register offset */
 #define I2C_STAT0_REG_OFFSET          (0x00000014U)         /*!< STAT0 register offset */
 #define I2C_STAT1_REG_OFFSET          (0x00000018U)         /*!< STAT1 register offset */
+
 /* I2C flags */
 typedef enum
 {
@@ -344,4 +345,5 @@ void i2c_interrupt_disable(uint32_t i2c_periph, i2c_interrupt_enum interrupt);
 FlagStatus i2c_interrupt_flag_get(uint32_t i2c_periph, i2c_interrupt_flag_enum int_flag);
 /* clear I2C interrupt flag */
 void i2c_interrupt_flag_clear(uint32_t i2c_periph, i2c_interrupt_flag_enum int_flag);
+
 #endif /* GD32F3X0_I2C_H */

@@ -133,10 +133,35 @@ static void system_clock_config(void);
 void SystemInit (void)
 {
 #if (defined(GD32F350))
-    RCU_APB2EN = BIT(0);
+    RCU_APB2EN |= BIT(0);
     CMP_CS |= (CMP_CS_CMP1MSEL | CMP_CS_CMP0MSEL);
 #endif /* GD32F350 */
-
+    if(((FMC_OBSTAT & OB_OBSTAT_PLEVEL_HIGH) != OB_OBSTAT_PLEVEL_HIGH) &&
+        (((FMC_OBSTAT >> 13)& 0x1) == SET)){
+    FMC_KEY = UNLOCK_KEY0;
+    FMC_KEY = UNLOCK_KEY1 ;
+    FMC_OBKEY = UNLOCK_KEY0;
+    FMC_OBKEY = UNLOCK_KEY1 ;
+    FMC_CTL |= FMC_CTL_OBER;
+    FMC_CTL |= FMC_CTL_START;
+    while((uint32_t)0x00U != (FMC_STAT & FMC_STAT_BUSY));
+    FMC_CTL &= ~FMC_CTL_OBER;
+    FMC_CTL |= FMC_CTL_OBPG; 
+    if((FMC_OBSTAT & OB_OBSTAT_PLEVEL_HIGH) == OB_OBSTAT_PLEVEL_NO){
+         OB_SPC = FMC_NSPC;
+    }else if ((FMC_OBSTAT & OB_OBSTAT_PLEVEL_HIGH) == OB_OBSTAT_PLEVEL_LOW){
+         OB_SPC = FMC_LSPC;
+    }
+    OB_USER = OB_USER_DEFAULT & ((uint8_t)(FMC_OBSTAT >> 8));
+    OB_DATA0 = ((uint8_t)(FMC_OBSTAT >> 16));
+    OB_DATA1 = ((uint8_t)(FMC_OBSTAT >> 24));
+    OB_WP0 = ((uint8_t)(FMC_WP));
+    OB_WP1 = ((uint8_t)(FMC_WP >> 8));
+    while((uint32_t)0x00U != (FMC_STAT & FMC_STAT_BUSY));
+    FMC_CTL &= ~FMC_CTL_OBPG;
+    FMC_CTL &= ~FMC_CTL_OBWEN;
+    FMC_CTL |= FMC_CTL_LK;
+    }
     /* FPU settings */
 #if (__FPU_PRESENT == 1U) && (__FPU_USED == 1U)
     SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));  /* set CP10 and CP11 Full Access */
@@ -162,7 +187,7 @@ void SystemInit (void)
     RCU_ADDCTL &= ~RCU_ADDCTL_IRC48MEN;
     RCU_INT = 0x00000000U;
     RCU_ADDINT = 0x00000000U;
-
+    
     /* configure system clock */
     system_clock_config();
     
@@ -285,9 +310,11 @@ static void system_clock_72m_hxtal(void)
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV2;
 
     /* PLL = HXTAL * 9 = 72 MHz */
-    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF | RCU_CFG0_PLLDV);
-    RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | RCU_PLL_MUL9);
-
+    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF | RCU_CFG0_PLLMF4 | RCU_CFG0_PLLPREDV);
+    RCU_CFG1 &= ~(RCU_CFG1_PLLPRESEL | RCU_CFG1_PLLMF5 | RCU_CFG1_PREDV);
+    RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | (RCU_PLL_MUL9 & (~RCU_CFG1_PLLMF5)));
+    RCU_CFG1 |= (RCU_PLLPRESEL_HXTAL);
+    RCU_CFG1 |= (RCU_PLL_MUL9 & RCU_CFG1_PLLMF5);
     /* enable PLL */
     RCU_CTL0 |= RCU_CTL0_PLLEN;
 
@@ -321,9 +348,10 @@ static void system_clock_72m_irc8m(void)
     /* APB1 = AHB/2 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV2;
     /* PLL = (IRC8M/2) * 18 = 72 MHz */
-    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF);
-    RCU_CFG0 |= (RCU_PLLSRC_IRC8M_DIV2 | RCU_PLL_MUL18);
-    
+    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF | RCU_CFG0_PLLMF4 | RCU_CFG0_PLLPREDV);
+    RCU_CFG1 &= ~(RCU_CFG1_PLLPRESEL | RCU_CFG1_PLLMF5 | RCU_CFG1_PREDV);
+    RCU_CFG0 |= (RCU_PLLSRC_IRC8M_DIV2 | (RCU_PLL_MUL18 & (~RCU_CFG1_PLLMF5)));
+    RCU_CFG1 |= (RCU_PLL_MUL18 & RCU_CFG1_PLLMF5);
     /* enable PLL */
     RCU_CTL0 |= RCU_CTL0_PLLEN;
 
@@ -362,11 +390,11 @@ static void system_clock_72m_irc48m(void)
     /* APB1 = AHB/2 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV2;
     /* PLL = (IRC48M/2) * 3 = 96 MHz */
-    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF | RCU_CFG0_PLLMF4 | RCU_CFG0_PLLDV);
-    RCU_CFG1 &= ~(RCU_CFG1_PLLPRESEL | RCU_CFG1_PLLMF5);
-    RCU_CFG1 |= (RCU_PLL_PREDV2 |RCU_PLLPRESEL_IRC48M);
-    RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | RCU_PLL_MUL3);
-           
+    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF | RCU_CFG0_PLLMF4 | RCU_CFG0_PLLPREDV);
+    RCU_CFG1 &= ~(RCU_CFG1_PLLPRESEL | RCU_CFG1_PLLMF5 | RCU_CFG1_PREDV);
+    RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | (RCU_PLL_MUL3 & (~RCU_CFG1_PLLMF5)));
+    RCU_CFG1 |= (RCU_PLLPRESEL_IRC48M | RCU_PLL_PREDV2);
+    RCU_CFG1 |= (RCU_PLL_MUL3 & RCU_CFG1_PLLMF5);
     /* enable PLL */
     RCU_CTL0 |= RCU_CTL0_PLLEN;
 
@@ -416,11 +444,11 @@ static void system_clock_84m_hxtal(void)
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV2;
 
     /* PLL = HXTAL /2 * 21 = 84 MHz */
-    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF | RCU_CFG0_PLLMF4 | RCU_CFG0_PLLDV);
-    RCU_CFG1 &= ~(RCU_CFG1_PLLPRESEL | RCU_CFG1_PLLMF5);
-    RCU_CFG1 |= RCU_PLL_PREDV2;
-    RCU_CFG0 |= (RCU_CFG0_PLLSEL | RCU_PLL_MUL21);
-
+    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF | RCU_CFG0_PLLMF4 | RCU_CFG0_PLLPREDV);
+    RCU_CFG1 &= ~(RCU_CFG1_PLLPRESEL | RCU_CFG1_PLLMF5 | RCU_CFG1_PREDV);
+    RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | (RCU_PLL_MUL21 & (~RCU_CFG1_PLLMF5)));
+    RCU_CFG1 |= (RCU_PLLPRESEL_HXTAL | RCU_PLL_PREDV2);
+    RCU_CFG1 |= (RCU_PLL_MUL21 & RCU_CFG1_PLLMF5);
     /* enable PLL */
     RCU_CTL0 |= RCU_CTL0_PLLEN;
 
@@ -453,9 +481,10 @@ static void system_clock_84m_irc8m(void)
     /* APB1 = AHB/2 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV2;
     /* PLL = (IRC8M/2) * 21 = 84 MHz */
-    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF);
-    RCU_CFG0 |= (RCU_PLLSRC_IRC8M_DIV2 | RCU_PLL_MUL21);
-    
+    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF | RCU_CFG0_PLLMF4 | RCU_CFG0_PLLPREDV);
+    RCU_CFG1 &= ~(RCU_CFG1_PLLPRESEL | RCU_CFG1_PLLMF5 | RCU_CFG1_PREDV);
+    RCU_CFG0 |= (RCU_PLLSRC_IRC8M_DIV2 | (RCU_PLL_MUL21 & (~RCU_CFG1_PLLMF5)));
+    RCU_CFG1 |= (RCU_PLL_MUL21 & RCU_CFG1_PLLMF5);
     /* enable PLL */
     RCU_CTL0 |= RCU_CTL0_PLLEN;
 
@@ -504,12 +533,13 @@ static void system_clock_96m_hxtal(void)
     /* APB1 = AHB/2 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV2;
 
-    /* PLL = HXTAL /2 * 24 = 96 MHz */
-    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF | RCU_CFG0_PLLMF4 | RCU_CFG0_PLLDV);
-    RCU_CFG1 &= ~(RCU_CFG1_PLLPRESEL | RCU_CFG1_PLLMF5);
-    RCU_CFG1 |= RCU_PLL_PREDV2;
-    RCU_CFG0 |= (RCU_CFG0_PLLSEL | RCU_PLL_MUL24);
-
+    /* PLL = HXTAL /2 * 24 = 96 MHz */   
+    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF | RCU_CFG0_PLLMF4 | RCU_CFG0_PLLPREDV);
+    RCU_CFG1 &= ~(RCU_CFG1_PLLPRESEL | RCU_CFG1_PLLMF5 | RCU_CFG1_PREDV);
+    RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | (RCU_PLL_MUL24 & (~RCU_CFG1_PLLMF5)));
+    RCU_CFG1 |= (RCU_PLLPRESEL_HXTAL | RCU_PLL_PREDV2);
+    RCU_CFG1 |= (RCU_PLL_MUL24 & RCU_CFG1_PLLMF5);
+    
     /* enable PLL */
     RCU_CTL0 |= RCU_CTL0_PLLEN;
 
@@ -542,8 +572,10 @@ static void system_clock_96m_irc8m(void)
     /* APB1 = AHB/2 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV2;
     /* PLL = (IRC8M/2) * 24 = 96 MHz */
-    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF);
-    RCU_CFG0 |= (RCU_PLLSRC_IRC8M_DIV2 | RCU_PLL_MUL24);
+    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF | RCU_CFG0_PLLMF4 | RCU_CFG0_PLLPREDV);
+    RCU_CFG1 &= ~(RCU_CFG1_PLLPRESEL | RCU_CFG1_PLLMF5 | RCU_CFG1_PREDV);
+    RCU_CFG0 |= (RCU_PLLSRC_IRC8M_DIV2 | (RCU_PLL_MUL24 & (~RCU_CFG1_PLLMF5)));
+    RCU_CFG1 |= (RCU_PLL_MUL24 & RCU_CFG1_PLLMF5);
     
     /* enable PLL */
     RCU_CTL0 |= RCU_CTL0_PLLEN;
@@ -583,11 +615,12 @@ static void system_clock_96m_irc48m(void)
     /* APB1 = AHB/2 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV2;
     /* PLL = (IRC48M/2) * 4 = 96 MHz */
-    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF | RCU_CFG0_PLLMF4 | RCU_CFG0_PLLDV);
-    RCU_CFG1 &= ~(RCU_CFG1_PLLPRESEL | RCU_CFG1_PLLMF5);
-    RCU_CFG1 |= (RCU_PLL_PREDV2 |RCU_PLLPRESEL_IRC48M);
-    RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | RCU_PLL_MUL4);
-           
+    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF | RCU_CFG0_PLLMF4 | RCU_CFG0_PLLPREDV);
+    RCU_CFG1 &= ~(RCU_CFG1_PLLPRESEL | RCU_CFG1_PLLMF5 | RCU_CFG1_PREDV);
+    RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | (RCU_PLL_MUL4 & (~RCU_CFG1_PLLMF5)));
+    RCU_CFG1 |= (RCU_PLLPRESEL_IRC48M | RCU_PLL_PREDV2);
+    RCU_CFG1 |= (RCU_PLL_MUL4 & RCU_CFG1_PLLMF5);
+    
     /* enable PLL */
     RCU_CTL0 |= RCU_CTL0_PLLEN;
 
@@ -638,11 +671,12 @@ static void system_clock_108m_hxtal(void)
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV2;
 
     /* PLL = HXTAL /2 * 27 = 108 MHz */
-    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF | RCU_CFG0_PLLMF4 | RCU_CFG0_PLLDV);
-    RCU_CFG1 &= ~(RCU_CFG1_PLLPRESEL | RCU_CFG1_PLLMF5);
-    RCU_CFG1 |= RCU_PLL_PREDV2;
-    RCU_CFG0 |= (RCU_CFG0_PLLSEL | RCU_PLL_MUL27);
-
+    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF | RCU_CFG0_PLLMF4 | RCU_CFG0_PLLPREDV);
+    RCU_CFG1 &= ~(RCU_CFG1_PLLPRESEL | RCU_CFG1_PLLMF5 | RCU_CFG1_PREDV);
+    RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | (RCU_PLL_MUL27 & (~RCU_CFG1_PLLMF5)));
+    RCU_CFG1 |= (RCU_PLLPRESEL_HXTAL | RCU_PLL_PREDV2);
+    RCU_CFG1 |= (RCU_PLL_MUL27 & RCU_CFG1_PLLMF5);
+    
     /* enable PLL */
     RCU_CTL0 |= RCU_CTL0_PLLEN;
 
@@ -675,8 +709,10 @@ static void system_clock_108m_irc8m(void)
     /* APB1 = AHB/2 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV2;
     /* PLL = (IRC8M/2) * 27 = 108 MHz */
-    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF);
-    RCU_CFG0 |= (RCU_PLLSRC_IRC8M_DIV2 | RCU_PLL_MUL27);
+    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF | RCU_CFG0_PLLMF4 | RCU_CFG0_PLLPREDV);
+    RCU_CFG1 &= ~(RCU_CFG1_PLLPRESEL | RCU_CFG1_PLLMF5 | RCU_CFG1_PREDV);
+    RCU_CFG0 |= (RCU_PLLSRC_IRC8M_DIV2 | (RCU_PLL_MUL27 & (~RCU_CFG1_PLLMF5)));
+    RCU_CFG1 |= (RCU_PLL_MUL27 & RCU_CFG1_PLLMF5);
     
     /* enable PLL */
     RCU_CTL0 |= RCU_CTL0_PLLEN;
@@ -750,13 +786,17 @@ void SystemCoreClockUpdate (void)
         pllmf4 = GET_BITS(RCU_CFG0, 27, 27);
         pllmf5 = GET_BITS(RCU_CFG1, 31, 31);
         /* high 16 bits */
-        if(1U == pllmf4){
-            pllmf += 17U;
-        }else{
+        if((0U == pllmf4)&&(0U == pllmf5)){
             pllmf += 2U;
         }
-        if(1U == pllmf5){
-            pllmf += 31U;
+        if((1U == pllmf4)&&(0U == pllmf5)){
+            pllmf += 17U;
+        }
+        if((0U == pllmf4)&&(1U == pllmf5)){
+            pllmf += 33U;
+        }
+        if((1U == pllmf4)&&(1U == pllmf5)){
+            pllmf += 49U;
         }
         /* PLL clock source selection, HXTAL or IRC8M/2 */
         pllsel = GET_BITS(RCU_CFG0, 16, 16);

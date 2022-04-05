@@ -1,13 +1,14 @@
 /*!
-    \file  gd32f3x0_i2c.c
-    \brief I2C driver
+    \file    gd32f3x0_i2c.c
+    \brief   I2C driver
 
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
+    \version 2020-09-30, V2.1.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -172,11 +173,12 @@ void i2c_mode_addr_config(uint32_t i2c_periph, uint32_t mode, uint32_t addformat
 {
     /* SMBus/I2C mode selected */
     uint32_t ctl = 0U;
-    
+
     ctl = I2C_CTL0(i2c_periph);
     ctl &= ~(I2C_CTL0_SMBEN); 
     ctl |= mode;
     I2C_CTL0(i2c_periph) = ctl;
+
     /* configure address */
     addr = addr & I2C_ADDRESS_MASK;
     I2C_SADDR0(i2c_periph) = (addformat | addr);
@@ -726,4 +728,3 @@ void i2c_interrupt_flag_clear(uint32_t i2c_periph, i2c_interrupt_flag_enum int_f
         I2C_REG_VAL2(i2c_periph, int_flag) &= ~BIT(I2C_BIT_POS2(int_flag));
     }
 }
-
