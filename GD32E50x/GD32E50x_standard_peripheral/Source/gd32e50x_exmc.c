@@ -308,9 +308,9 @@ void exmc_nand_deinit(uint32_t exmc_nand_bank)
 }
 
 /*!
-    \brief      initialize exmc_norsram_parameter_struct with the default values
+    \brief      initialize exmc_nand_parameter_struct with the default values
     \param[in]  none
-    \param[out] the initialized struct exmc_norsram_parameter_struct pointer
+    \param[out] the initialized struct exmc_nand_parameter_struct pointer
     \retval     none
 */
 void exmc_nand_struct_para_init(exmc_nand_parameter_struct* exmc_nand_init_struct)

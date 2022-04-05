@@ -70,8 +70,9 @@ void rcu_deinit(void)
 {
     /* enable IRC8M */
     RCU_CTL |= RCU_CTL_IRC8MEN;
-    rcu_osci_stab_wait(RCU_IRC8M);
-
+    while(0U == (RCU_CTL & RCU_CTL_IRC8MSTB)){
+    }
+    RCU_CFG0 &= ~RCU_CFG0_SCS;
     /* reset CTL register */
     RCU_CTL &= ~(RCU_CTL_HXTALEN | RCU_CTL_CKMEN | RCU_CTL_PLLEN);
     RCU_CTL &= ~RCU_CTL_HXTALBPS;

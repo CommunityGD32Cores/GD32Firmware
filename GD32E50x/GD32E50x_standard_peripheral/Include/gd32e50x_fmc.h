@@ -53,7 +53,7 @@ OF SUCH DAMAGE.
 #define FMC_ADDR                   REG32(FMC + 0x00000014U)                         /*!< FMC address register */
 #define FMC_OBSTAT                 REG32(FMC + 0x0000001CU)                         /*!< FMC option bytes status register */
 #define FMC_WP                     REG32(FMC + 0x00000020U)                         /*!< FMC erase/program protection register */
-#define FMC_PID                    REG32(FMC + 0x00000104U)                         /*!< FMC product ID register */
+#define FMC_PID                    REG32(FMC + 0x00000100U)                         /*!< FMC product ID register */
 
 #define OP_BYTE(x)                 REG32(OB + ((uint32_t)((uint32_t)0x04U * (x))))  /*!< option bytes value */
 #define OB_SPC_USER                REG32(OB + 0x00000000U)                          /*!< option bytes security protection value and user value */

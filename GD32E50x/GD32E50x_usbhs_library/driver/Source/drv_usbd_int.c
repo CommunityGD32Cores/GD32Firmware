@@ -538,7 +538,7 @@ static uint32_t usbd_int_suspend (usb_core_driver *udev)
         *udev->regs.PWRCLKCTL |= PWRCLKCTL_SUCLK | PWRCLKCTL_SHCLK;
 
         /* enter DEEP_SLEEP mode with LDO in low power mode */
-        pmu_to_deepsleepmode(PMU_LDO_LOWPOWER, WFI_CMD);
+        pmu_to_deepsleepmode(PMU_LDO_LOWPOWER, PMU_LOWDRIVER_DISABLE, WFI_CMD);
     }
 
     /* clear interrupt */
@@ -633,7 +633,7 @@ static uint32_t usbd_int_lpm (usb_core_driver *udev, usb_lpm_type active_type)
 
         if(low_power){
             /* enter DEEP_SLEEP mode with LDO in low power mode */
-            pmu_to_deepsleepmode(PMU_LDO_LOWPOWER, WFI_CMD);
+            pmu_to_deepsleepmode(PMU_LDO_LOWPOWER, PMU_LOWDRIVER_DISABLE, WFI_CMD);
         }
         break;
     }

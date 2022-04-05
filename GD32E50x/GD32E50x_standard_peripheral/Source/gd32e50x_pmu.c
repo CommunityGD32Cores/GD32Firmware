@@ -211,6 +211,10 @@ void pmu_to_sleepmode(uint8_t sleepmodecmd)
                 only one parameter can be selected which is shown as below:
       \arg        PMU_LDO_NORMAL: LDO normal work when pmu enter deepsleep mode
       \arg        PMU_LDO_LOWPOWER: LDO work at low power mode when pmu enter deepsleep mode
+    \param[in]  lowdrive:
+                only one parameter can be selected which is shown as below:
+      \arg        PMU_LOWDRIVER_ENABLE: low-driver mode enable in deep-sleep mode
+      \arg        PMU_LOWDRIVER_DISABLE: low-driver mode disable in deep-sleep mode
     \param[in]  deepsleepmodecmd:
                 only one parameter can be selected which is shown as below:
       \arg        WFI_CMD: use WFI command
@@ -218,16 +222,25 @@ void pmu_to_sleepmode(uint8_t sleepmodecmd)
     \param[out] none
     \retval     none
 */
-void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
+void pmu_to_deepsleepmode(uint32_t ldo, uint32_t lowdrive, uint8_t deepsleepmodecmd)
 {
-    /* clear stbmod and ldolp bits */
-    PMU_CTL0 &= ~((uint32_t)(PMU_CTL0_STBMOD | PMU_CTL0_LDOLP));
+    /* clear stbmod and ldolp bits and low drive bits */
+    PMU_CTL0 &= ~((uint32_t)(PMU_CTL0_STBMOD | PMU_CTL0_LDOLP | PMU_CTL0_LDEN | PMU_CTL0_LDNP | PMU_CTL0_LDLP));
     /* clear deep-sleep 1/2 mode enable bits  */
     PMU_CTL1 &= ~(PMU_CTL1_DPMOD1 | PMU_CTL1_DPMOD2);
     
     /* set ldolp bit according to pmu_ldo */
     PMU_CTL0 |= ldo;
-    
+
+    /* low drive mode config in deep-sleep mode */
+    if(PMU_LOWDRIVER_ENABLE == lowdrive){
+        if(PMU_LDO_NORMAL == ldo){
+            PMU_CTL0 |= (uint32_t)(PMU_CTL0_LDEN | PMU_CTL0_LDNP);
+        }else{
+            PMU_CTL0 |= (uint32_t)(PMU_CTL0_LDEN | PMU_CTL0_LDLP);
+        }
+    }
+
     /* set sleepdeep bit of Cortex-M33 system control register */
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 
@@ -250,6 +263,10 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
                 only one parameter can be selected which is shown as below:
       \arg        PMU_LDO_NORMAL: LDO normal work when pmu enter deepsleep mode 1
       \arg        PMU_LDO_LOWPOWER: LDO work at low power mode when pmu enter deepsleep mode 1
+    \param[in]  lowdrive:
+                only one parameter can be selected which is shown as below:
+      \arg        PMU_LOWDRIVER_ENABLE: low-driver mode enable in deep-sleep 1 mode
+      \arg        PMU_LOWDRIVER_DISABLE: low-driver mode disable in deep-sleep 1 mode
     \param[in]  deepsleepmode1cmd: 
                 only one parameter can be selected which is shown as below:
       \arg        WFI_CMD: use WFI command
@@ -257,10 +274,10 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
     \param[out] none
     \retval     none
 */
-void pmu_to_deepsleepmode_1(uint32_t ldo,uint8_t deepsleepmode1cmd)
+void pmu_to_deepsleepmode_1(uint32_t ldo, uint32_t lowdrive, uint8_t deepsleepmode1cmd)
 { 
-    /* clear stbmod and ldolp bits */
-    PMU_CTL0 &= ~((uint32_t)(PMU_CTL0_STBMOD | PMU_CTL0_LDOLP));
+    /* clear stbmod and ldolp bits and low drive bits */
+    PMU_CTL0 &= ~((uint32_t)(PMU_CTL0_STBMOD | PMU_CTL0_LDOLP | PMU_CTL0_LDEN | PMU_CTL0_LDNP | PMU_CTL0_LDLP));
     /* clear deep-sleep 2 mode enable bit */
     PMU_CTL1 &= ~PMU_CTL1_DPMOD2;
     /* enable deep-sleep 1 mode */
@@ -268,7 +285,16 @@ void pmu_to_deepsleepmode_1(uint32_t ldo,uint8_t deepsleepmode1cmd)
     
     /* set ldolp bit according to pmu_ldo */
     PMU_CTL0 |= ldo;
-    
+
+    /* low drive mode config in deep-sleep 1 mode */
+    if(PMU_LOWDRIVER_ENABLE == lowdrive){
+        if(PMU_LDO_NORMAL == ldo){
+            PMU_CTL0 |= (uint32_t)(PMU_CTL0_LDEN | PMU_CTL0_LDNP);
+        }else{
+            PMU_CTL0 |= (uint32_t)(PMU_CTL0_LDEN | PMU_CTL0_LDLP);
+        }
+    }
+
     /* set sleepdeep bit of Cortex-M33 system control register */
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 
@@ -292,6 +318,10 @@ void pmu_to_deepsleepmode_1(uint32_t ldo,uint8_t deepsleepmode1cmd)
                 only one parameter can be selected which is shown as below:
       \arg        PMU_LDO_NORMAL: LDO normal work when pmu enter deepsleep mode 2
       \arg        PMU_LDO_LOWPOWER: LDO work at low power mode when pmu enter deepsleep mode 2
+    \param[in]  lowdrive:
+                only one parameter can be selected which is shown as below:
+      \arg        PMU_LOWDRIVER_ENABLE: low-driver mode enable in deep-sleep 2 mode
+      \arg        PMU_LOWDRIVER_DISABLE: low-driver mode disable in deep-sleep 2 mode
     \param[in]  deepsleepmode2cmd: 
                 only one parameter can be selected which is shown as below:
       \arg        WFI_CMD: use WFI command
@@ -299,10 +329,10 @@ void pmu_to_deepsleepmode_1(uint32_t ldo,uint8_t deepsleepmode1cmd)
     \param[out] none
     \retval     none
 */
-void pmu_to_deepsleepmode_2(uint32_t ldo,uint8_t deepsleepmode2cmd)
+void pmu_to_deepsleepmode_2(uint32_t ldo, uint32_t lowdrive, uint8_t deepsleepmode2cmd)
 {
-    /* clear stbmod and ldolp bits */
-    PMU_CTL0 &= ~((uint32_t)(PMU_CTL0_STBMOD | PMU_CTL0_LDOLP));
+    /* clear stbmod and ldolp bits and low drive bits */
+    PMU_CTL0 &= ~((uint32_t)(PMU_CTL0_STBMOD | PMU_CTL0_LDOLP | PMU_CTL0_LDEN | PMU_CTL0_LDNP | PMU_CTL0_LDLP));
     /* clear deep-sleep 1 mode enable bit */
     PMU_CTL1 &= ~PMU_CTL1_DPMOD1;
     /* enable deep-sleep 2 mode */
@@ -310,7 +340,16 @@ void pmu_to_deepsleepmode_2(uint32_t ldo,uint8_t deepsleepmode2cmd)
     
     /* set ldolp bit according to pmu_ldo */
     PMU_CTL0 |= ldo;
-    
+
+    /* low drive mode config in deep-sleep 2 mode */
+    if(PMU_LOWDRIVER_ENABLE == lowdrive){
+        if(PMU_LDO_NORMAL == ldo){
+            PMU_CTL0 |= (uint32_t)(PMU_CTL0_LDEN | PMU_CTL0_LDNP);
+        }else{
+            PMU_CTL0 |= (uint32_t)(PMU_CTL0_LDEN | PMU_CTL0_LDLP);
+        }
+    }
+
     /* set sleepdeep bit of Cortex-M33 system control register */
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
     
@@ -420,41 +459,6 @@ void pmu_backup_write_disable(void)
 }
 
 /*!
-    \brief      clear flag bit
-    \param[in]  flag_reset:
-                only one parameter can be selected which is shown as below:
-      \arg        PMU_FLAG_RESET_WAKEUP: reset wakeup flag
-      \arg        PMU_FLAG_RESET_STANDBY: reset standby flag
-      \arg        PMU_FLAG_RESET_DEEPSLEEP_1: reset deep-sleep 1 mode status flag
-      \arg        PMU_FLAG_RESET_DEEPSLEEP_2: reset deep-sleep 2 mode status flag 
-    \param[out] none
-    \retval     none
-*/
-void pmu_flag_clear(uint32_t flag_reset)
-{
-    switch(flag_reset){
-    case PMU_FLAG_RESET_WAKEUP:
-        /* reset wakeup flag */
-        PMU_CTL0 |= PMU_CTL0_WURST;
-        break;
-    case PMU_FLAG_RESET_STANDBY:
-        /* reset standby flag */
-        PMU_CTL0 |= PMU_CTL0_STBRST;
-        break;
-    case PMU_FLAG_RESET_DEEPSLEEP_1:
-        /* reset deep-sleep 1 mode status flag */
-        PMU_CS1 &= ~PMU_CS1_DPF1;
-        break;
-    case PMU_FLAG_RESET_DEEPSLEEP_2:
-        /* reset deep-sleep 2 mode status flag */
-        PMU_CS1 &= ~PMU_CS1_DPF2;
-        break;  
-    default :
-        break;
-    }
-}
-
-/*!
     \brief      get flag state
     \param[in]  flag:
                 only one parameter can be selected which is shown as below:
@@ -484,4 +488,39 @@ FlagStatus pmu_flag_get(uint32_t flag)
         }
     }
     return ret;
+}
+
+/*!
+    \brief      clear flag bit
+    \param[in]  flag:
+                only one parameter can be selected which is shown as below:
+      \arg        PMU_FLAG_RESET_WAKEUP: reset wakeup flag
+      \arg        PMU_FLAG_RESET_STANDBY: reset standby flag
+      \arg        PMU_FLAG_RESET_DEEPSLEEP_1: reset deep-sleep 1 mode status flag
+      \arg        PMU_FLAG_RESET_DEEPSLEEP_2: reset deep-sleep 2 mode status flag 
+    \param[out] none
+    \retval     none
+*/
+void pmu_flag_clear(uint32_t flag)
+{
+    switch(flag){
+    case PMU_FLAG_RESET_WAKEUP:
+        /* reset wakeup flag */
+        PMU_CTL0 |= PMU_CTL0_WURST;
+        break;
+    case PMU_FLAG_RESET_STANDBY:
+        /* reset standby flag */
+        PMU_CTL0 |= PMU_CTL0_STBRST;
+        break;
+    case PMU_FLAG_RESET_DEEPSLEEP_1:
+        /* reset deep-sleep 1 mode status flag */
+        PMU_CS1 &= ~PMU_CS1_DPF1;
+        break;
+    case PMU_FLAG_RESET_DEEPSLEEP_2:
+        /* reset deep-sleep 2 mode status flag */
+        PMU_CS1 &= ~PMU_CS1_DPF2;
+        break;  
+    default :
+        break;
+    }
 }

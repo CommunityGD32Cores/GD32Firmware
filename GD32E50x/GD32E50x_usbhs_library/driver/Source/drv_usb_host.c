@@ -218,9 +218,8 @@ usb_status usb_pipe_init (usb_core_driver *udev, uint8_t pipe_num)
                     | HCHINTEN_DTERIE | HCHINTEN_NAKIE;
 
         if (!pp->ep.dir) {
-            pp_inten |= HCHINTEN_NYETIE;
-
-            if (pp->ping) {
+            if (PORT_SPEED_HIGH == pp->dev_speed) {
+                pp_inten |= HCHINTEN_NYETIE;
                 pp_inten |= HCHINTEN_ACKIE;
             }
         }

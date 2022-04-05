@@ -5,6 +5,8 @@
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
     \version 2021-03-23, V1.2.0, firmware for GD32E50x
+    \version 2021-06-22, V1.2.1, firmware for GD32E50x
+    \version 2021-11-09, V1.2.2, firmware for GD32E50x
 */
 
 /*
@@ -387,6 +389,11 @@ static uint8_t custom_hid_req_handler (usb_dev *udev, usb_req *req)
                               0U);
 
             status = REQ_SUPP;
+        } else if (USB_DESCTYPE_HID == (req->wValue >> 8U)) {
+            usb_transc_config(&udev->transc_in[0U], 
+                              (uint8_t *)(&(custom_hid_config_desc.hid_vendor)), 
+                              USB_MIN(9U, req->wLength), 
+                              0U);
         }
         break;
 
@@ -501,6 +508,6 @@ static void custom_hid_data_out (usb_dev *udev, uint8_t ep_num)
             break;
         }
 
-        usbd_ep_recev(udev, CUSTOMHID_IN_EP, hid->data, 2U);
+        usbd_ep_recev(udev, CUSTOMHID_OUT_EP, hid->data, 2U);
     }
 }

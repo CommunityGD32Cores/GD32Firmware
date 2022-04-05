@@ -5,6 +5,7 @@
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
     \version 2021-03-23, V1.2.0, firmware for GD32E50x
+    \version 2021-09-15, V1.2.1, firmware for GD32E50x
 */
 
 /*
@@ -100,6 +101,11 @@ uint32_t usbh_isr (usb_core_driver *udev)
 
         if (intr & GINTF_HPIF) {
             retval |= usbh_int_port (udev);
+        }
+
+        if (intr & GINTF_WKUPIF) {
+            /* clear interrupt */
+            udev->regs.gr->GINTF = GINTF_WKUPIF;
         }
 
         if (intr & GINTF_DISCIF) {
@@ -382,9 +388,10 @@ static uint32_t usbh_int_pipe_out (usb_core_driver *udev, uint32_t pp_num)
     uint32_t intr_pp = pp_reg->HCHINTF & pp_reg->HCHINTEN;
 
     if (intr_pp & HCHINTF_ACK) {
-        if (URB_PING == pp->urb_state) {
+        if (1U == udev->host.pipe[pp_num].do_ping) {
+            udev->host.pipe[pp_num].do_ping = 0;
             pp->err_count = 0U;
-            usb_pp_halt (udev, (uint8_t)pp_num, HCHINTF_TF, PIPE_XF);
+            usb_pp_halt (udev, (uint8_t)pp_num, HCHINTF_ACK, pp->pp_status);
         }
 
         pp_reg->HCHINTF = HCHINTF_ACK;
@@ -399,12 +406,24 @@ static uint32_t usbh_int_pipe_out (usb_core_driver *udev, uint32_t pp_num)
         pp->err_count = 0U;
         usb_pp_halt (udev, (uint8_t)pp_num, HCHINTF_TF, PIPE_XF);
     } else if (intr_pp & HCHINTF_NAK) {
+        if (0U == udev->host.pipe[pp_num].do_ping) {
+            if (1U == udev->host.pipe[pp_num].supp_ping) {
+                udev->host.pipe[pp_num].do_ping = 1;
+            }
+        }
+
         pp->err_count = 0U;
         usb_pp_halt (udev, (uint8_t)pp_num, HCHINTF_NAK, PIPE_NAK);
     } else if (intr_pp & HCHINTF_USBER) {
         pp->err_count++;
         usb_pp_halt (udev, (uint8_t)pp_num, HCHINTF_USBER, PIPE_TRACERR);
     } else if (intr_pp & HCHINTF_NYET) {
+        if (0U == udev->host.pipe[pp_num].do_ping) {
+            if (1U == udev->host.pipe[pp_num].supp_ping) {
+                udev->host.pipe[pp_num].do_ping = 1;
+            }
+        }
+
         pp->err_count = 0U;
         usb_pp_halt (udev, (uint8_t)pp_num, HCHINTF_NYET, PIPE_NYET);
     } else if (intr_pp & HCHINTF_CH) {
@@ -420,14 +439,7 @@ static uint32_t usbh_int_pipe_out (usb_core_driver *udev, uint32_t pp_num)
             break;
 
         case PIPE_NAK:
-            pp->urb_state = URB_NOTREADY;
-            break;
-
         case PIPE_NYET:
-            if (1U == udev->host.pipe[pp_num].ping) {
-                (void)usb_pipe_ping (udev, (uint8_t)pp_num);
-            }
-
             pp->urb_state = URB_NOTREADY;
             break;
 

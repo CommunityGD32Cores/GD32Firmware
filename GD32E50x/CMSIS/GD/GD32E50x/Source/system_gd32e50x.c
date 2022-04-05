@@ -115,10 +115,7 @@ void SystemInit (void)
     /* Set IRC8MEN bit */
     RCU_CTL |= RCU_CTL_IRC8MEN;
 
-    /* Reset CFG0 and CFG1 registers */
-    RCU_CFG0 = 0x00000000U;
-    RCU_CFG1 = 0x00000000U;
-
+    RCU_CFG0 &= ~RCU_CFG0_SCS;
 #if (defined(GD32EPRT) || defined(GD32E50X_HD) || defined(GD32E50X_XD))
     /* reset HXTALEN, CKMEN and PLLEN bits */
     RCU_CTL &= ~(RCU_CTL_PLLEN | RCU_CTL_CKMEN | RCU_CTL_HXTALEN);
@@ -131,6 +128,9 @@ void SystemInit (void)
     RCU_INT = 0x00ff0000U;
 #endif /* GD32F50X_EPRT and GD32F50X_HD and GD32F50X_XD */
 
+    /* Reset CFG0 and CFG1 registers */
+    RCU_CFG0 = 0x00000000U;
+    RCU_CFG1 = 0x00000000U;
     /* reset HXTALBPS bit */
     RCU_CTL &= ~(RCU_CTL_HXTALBPS);
 
@@ -1012,7 +1012,7 @@ void SystemCoreClockUpdate (void)
             predv0sel = (RCU_CFG0 & RCU_CFG0_PREDV0);
             /* PREDV0 input source clock divided by 2 */
             if(RCU_CFG0_PREDV0 == predv0sel){
-                ck_src = HXTAL_VALUE/2U;
+                ck_src = ck_src/2U;
             }
 #elif (defined(GD32E50X_CL) || defined(GD32EPRT) || defined(GD32E508))
             predv0sel = (RCU_CFG1 & RCU_CFG1_PREDV0SEL);

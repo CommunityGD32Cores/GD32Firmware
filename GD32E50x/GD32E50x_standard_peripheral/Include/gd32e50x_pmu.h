@@ -88,6 +88,10 @@ OF SUCH DAMAGE.
 #define PMU_CS1_DPF2                  BIT(1)                         /*!< deep-sleep 2 mode status flag */
 
 /* constants definitions */
+/* PMU ldo definitions */
+#define PMU_LDO_NORMAL                ((uint32_t)0x00000000U)        /*!< LDO normal work when PMU enter deepsleep mode */
+#define PMU_LDO_LOWPOWER              PMU_CTL0_LDOLP                 /*!< LDO work at low power status when PMU enter deepsleep mode */
+
 /* PMU low voltage detector threshold definitions */
 #define CTL0_LVDT(regval)             (BITS(5,7)&((uint32_t)(regval)<<5))
 #define PMU_LVDT_0                    CTL0_LVDT(0)                   /*!< voltage threshold is 2.1V */
@@ -99,11 +103,6 @@ OF SUCH DAMAGE.
 #define PMU_LVDT_6                    CTL0_LVDT(6)                   /*!< voltage threshold is 3.0V */
 #define PMU_LVDT_7                    CTL0_LVDT(7)                   /*!< voltage threshold is 3.1V */
 
-/* PMU high-driver mode switch */
-#define CTL0_HDS(regval)              (BIT(17)&((uint32_t)(regval)<<17))
-#define PMU_HIGHDR_SWITCH_NONE        CTL0_HDS(0)                    /*!< no high-driver mode switch */
-#define PMU_HIGHDR_SWITCH_EN          CTL0_HDS(1)                    /*!< high-driver mode switch */
-
 /* PMU low-driver mode when use low power LDO */
 #define CTL0_LDLP(regval)             (BIT(10)&((uint32_t)(regval)<<10))
 #define PMU_NORMALDR_LOWPWR           CTL0_LDLP(0)                   /*!< normal driver when use low power LDO */
@@ -113,6 +112,25 @@ OF SUCH DAMAGE.
 #define CTL0_LDNP(regval)             (BIT(11)&((uint32_t)(regval)<<11))
 #define PMU_NORMALDR_NORMALPWR        CTL0_LDNP(0)                   /*!< normal driver when use normal power LDO */
 #define PMU_LOWDR_NORMALPWR           CTL0_LDNP(1)                   /*!< low-driver mode enabled when LDEN is 11 and use normal power LDO */
+
+/* PMU high-driver mode switch */
+#define CTL0_HDS(regval)              (BIT(17)&((uint32_t)(regval)<<17))
+#define PMU_HIGHDR_SWITCH_NONE        CTL0_HDS(0)                    /*!< no high-driver mode switch */
+#define PMU_HIGHDR_SWITCH_EN          CTL0_HDS(1)                    /*!< high-driver mode switch */
+
+/* low-driver mode in deep-sleep/deep-sleep 1/deep-sleep 2 mode */
+#define PMU_LOWDRIVER_DISABLE         ((uint32_t)0x00000000U)        /*!< low-driver mode disable in deep-sleep/deep-sleep 1/deep-sleep 2 mode */
+#define PMU_LOWDRIVER_ENABLE          PMU_CTL0_LDEN                  /*!< low-driver mode enable in deep-sleep/deep-sleep 1/deep-sleep 2 mode */
+
+/* PMU WKUP pin definitions */
+#define PMU_WAKEUP_PIN0               PMU_CS0_WUPEN0                 /*!< WKUP Pin 0 (PA0) enable */
+#define PMU_WAKEUP_PIN1               PMU_CS0_WUPEN1                 /*!< WKUP Pin 1 (PC13) enable */
+#define PMU_WAKEUP_PIN2               PMU_CS0_WUPEN2                 /*!< WKUP Pin 2 (PE6) enable */
+#define PMU_WAKEUP_PIN3               PMU_CS0_WUPEN3                 /*!< WKUP Pin 3 (PA2) enable */
+#define PMU_WAKEUP_PIN4               PMU_CS0_WUPEN4                 /*!< WKUP Pin 4 (PC5) enable */
+#define PMU_WAKEUP_PIN5               PMU_CS0_WUPEN5                 /*!< WKUP Pin 5 (PB5) enable */
+#define PMU_WAKEUP_PIN6               PMU_CS0_WUPEN6                 /*!< WKUP Pin 6 (PB15) enable */
+#define PMU_WAKEUP_PIN7               PMU_CS0_WUPEN7                 /*!< WKUP Pin 7 (PF8) enable */
 
 /* PMU low power mode ready flag definitions */
 #define CS0_LDRF(regval)              (BITS(18,19)&((uint32_t)(regval)<<18))
@@ -128,20 +146,6 @@ OF SUCH DAMAGE.
 #define PMU_FLAG_LDRF                 PMU_CS0_LDRF                   /*!< low-driver mode ready flag */
 #define PMU_FLAG_DEEPSLEEP_1          (BIT(31) | PMU_CS1_DPF1)       /*!< deep-sleep 1 mode status flag */
 #define PMU_FLAG_DEEPSLEEP_2          (BIT(31) | PMU_CS1_DPF2)       /*!< deep-sleep 2 mode status flag */
-
-/* PMU ldo definitions */
-#define PMU_LDO_NORMAL                ((uint32_t)0x00000000U)        /*!< LDO normal work when PMU enter deepsleep mode */
-#define PMU_LDO_LOWPOWER              PMU_CTL0_LDOLP                 /*!< LDO work at low power status when PMU enter deepsleep mode */
-
-/* PMU WKUP pin definitions */
-#define PMU_WAKEUP_PIN0               PMU_CS0_WUPEN0                 /*!< WKUP Pin 0 (PA0) enable */
-#define PMU_WAKEUP_PIN1               PMU_CS0_WUPEN1                 /*!< WKUP Pin 1 (PC13) enable */
-#define PMU_WAKEUP_PIN2               PMU_CS0_WUPEN2                 /*!< WKUP Pin 2 (PE6) enable */
-#define PMU_WAKEUP_PIN3               PMU_CS0_WUPEN3                 /*!< WKUP Pin 3 (PA2) enable */
-#define PMU_WAKEUP_PIN4               PMU_CS0_WUPEN4                 /*!< WKUP Pin 4 (PC5) enable */
-#define PMU_WAKEUP_PIN5               PMU_CS0_WUPEN5                 /*!< WKUP Pin 5 (PB5) enable */
-#define PMU_WAKEUP_PIN6               PMU_CS0_WUPEN6                 /*!< WKUP Pin 6 (PB15) enable */
-#define PMU_WAKEUP_PIN7               PMU_CS0_WUPEN7                 /*!< WKUP Pin 7 (PF8) enable */
 
 /* PMU flag reset definitions */
 #define PMU_FLAG_RESET_WAKEUP         ((uint8_t)0x00U)               /*!< wakeup flag reset */
@@ -180,15 +184,15 @@ void pmu_lowpower_driver_config(uint32_t mode);
 void pmu_normalpower_driver_config(uint32_t mode);
 
 /* set PMU mode */
-/* PMU work at sleep mode */
+/* PMU work in sleep mode */
 void pmu_to_sleepmode(uint8_t sleepmodecmd);
-/* PMU work at deepsleep mode */
-void pmu_to_deepsleepmode(uint32_t ldo, uint8_t deepsleepmodecmd);
-/* PMU work at deepsleep mode 1 */
-void pmu_to_deepsleepmode_1(uint32_t ldo,uint8_t deepsleepmode1cmd);
-/* PMU work at deepsleep mode 2 */
-void pmu_to_deepsleepmode_2(uint32_t ldo,uint8_t deepsleepmode2cmd);
-/* PMU work at standby mode */
+/* PMU work in deepsleep mode */
+void pmu_to_deepsleepmode(uint32_t ldo, uint32_t lowdrive, uint8_t deepsleepmodecmd);
+/* PMU work in deepsleep mode 1 */
+void pmu_to_deepsleepmode_1(uint32_t ldo, uint32_t lowdrive, uint8_t deepsleepmode1cmd);
+/* PMU work in deepsleep mode 2 */
+void pmu_to_deepsleepmode_2(uint32_t ldo, uint32_t lowdrive, uint8_t deepsleepmode2cmd);
+/* PMU work in standby mode */
 void pmu_to_standbymode(uint8_t standbymodecmd);
 /* enable PMU wakeup pin */
 void pmu_wakeup_pin_enable(uint32_t wakeup_pin);
@@ -202,9 +206,9 @@ void pmu_backup_write_enable(void);
 void pmu_backup_write_disable(void);
 
 /* flag functions */
-/* clear flag bit */
-void pmu_flag_clear(uint32_t flag_reset);
 /* get flag state */
 FlagStatus pmu_flag_get(uint32_t flag);
+/* clear flag bit */
+void pmu_flag_clear(uint32_t flag);
 
 #endif /* GD32E50X_PMU_H */

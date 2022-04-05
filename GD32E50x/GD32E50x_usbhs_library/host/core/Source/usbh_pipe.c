@@ -61,7 +61,10 @@ uint8_t usbh_pipe_create (usb_core_driver *udev,
     pp->dev_speed = dev->speed;
     pp->ep.type = ep_type;
     pp->ep.mps = ep_mpl;
-    pp->ping = (uint8_t)(dev->speed == PORT_SPEED_HIGH);
+
+    if ((USB_USE_DMA != udev->bp.transfer_mode) && ((USB_EPTYPE_BULK == pp->ep.type) || (USB_EPTYPE_CTRL == pp->ep.type))) {
+        pp->supp_ping = (uint8_t)(pp->dev_speed == PORT_SPEED_HIGH);
+    }
 
     usb_pipe_init (udev, pp_num);
 
@@ -92,6 +95,10 @@ uint8_t usbh_pipe_update (usb_core_driver *udev,
 
     if ((pp->dev_speed != dev_speed) && (dev_speed)) {
         pp->dev_speed = dev_speed;
+
+        if ((USB_USE_DMA != udev->bp.transfer_mode) && ((USB_EPTYPE_BULK == pp->ep.type) || (USB_EPTYPE_CTRL == pp->ep.type))) {
+            pp->supp_ping = (uint8_t)(pp->dev_speed == PORT_SPEED_HIGH);
+        }
     }
 
     if ((pp->ep.mps != ep_mpl) && (ep_mpl)) {

@@ -6,6 +6,7 @@
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
     \version 2020-12-07, V1.1.1, firmware for GD32E50x
     \version 2021-03-23, V1.2.0, firmware for GD32E50x
+    \version 2021-07-09, V1.2.1, firmware for GD32E50x
 */
 
 /*
@@ -327,7 +328,7 @@ __ALIGN_BEGIN const uint8_t hid_report_desc[USB_HID_REPORT_DESC_LEN] __ALIGN_END
 static uint8_t hid_init    (usb_dev *udev, uint8_t config_index);
 static uint8_t hid_deinit  (usb_dev *udev, uint8_t config_index);
 static uint8_t hid_req     (usb_dev *udev, usb_req *req);
-static uint8_t hid_ctlx_in (usb_dev *udev);
+static uint8_t hid_data_in (usb_dev *udev, uint8_t ep_num);
 
 usb_class_core usbd_hid_cb = {
     .command         = NO_CMD,
@@ -336,7 +337,7 @@ usb_class_core usbd_hid_cb = {
     .init            = hid_init,
     .deinit          = hid_deinit,
     .req_proc        = hid_req,
-    .ctlx_in         = hid_ctlx_in
+    .data_in         = hid_data_in
 };
 
 /*!
@@ -486,7 +487,7 @@ static uint8_t hid_req (usb_dev *udev, usb_req *req)
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t hid_ctlx_in (usb_dev *udev)
+static uint8_t hid_data_in (usb_dev *udev, uint8_t ep_num)
 {
     standard_hid_handler *hid = (standard_hid_handler *)udev->dev.class_data[USBD_HID_INTERFACE];
 

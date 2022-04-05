@@ -5,6 +5,7 @@
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
     \version 2021-03-23, V1.2.0, firmware for GD32E50x
+    \version 2021-09-15, V1.2.1, firmware for GD32E50x
 */
 
 /*
@@ -235,6 +236,12 @@ typedef struct _usbh_host
     uint8_t                              class_num;                         /*!< USB class number */
 
     void                                *data;                              /*!< used for... */
+
+#if USB_LOW_POWER
+    uint8_t                             suspend_flag;                       /*!< host suspend flag */
+    uint8_t                             dev_supp_remote_wkup;               /*!< record device remote wakeup function */
+    uint8_t                             wakeup_mode;                        /*!< record wakeup mode */
+#endif /* USB_LOW_POWER*/
 } usbh_host;
 
 /*!

@@ -84,10 +84,11 @@ typedef struct _usb_pipe
         uint16_t         mps;
     } ep;
 
-    uint8_t              ping;
-    uint32_t             DPID;
+    __IO uint8_t         supp_ping;
+    __IO uint8_t         do_ping;
+    __IO uint32_t        DPID;
 
-    uint8_t             *xfer_buf;
+    uint8_t              *xfer_buf;
     uint32_t             xfer_len;
     uint32_t             xfer_count;
 
