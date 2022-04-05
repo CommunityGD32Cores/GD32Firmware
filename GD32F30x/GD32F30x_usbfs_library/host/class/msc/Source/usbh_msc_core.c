@@ -298,7 +298,8 @@ static usbh_status usbh_msc_handle (usbh_host *puhost)
                 scsi_status = usbh_msc_request_sense (puhost, msc->cur_lun, &msc->unit[msc->cur_lun].sense);
                 if (USBH_OK == scsi_status) {
                     if ((msc->unit[msc->cur_lun].sense.SenseKey == UNIT_ATTENTION) || (msc->unit[msc->cur_lun].sense.SenseKey == NOT_READY)) {
-                        if ((puhost->control.timer - msc->timer) < 10000U) {
+                        if (((puhost->control.timer > msc->timer) && ((puhost->control.timer - msc->timer) < 10000U)) \
+                              || ((puhost->control.timer < msc->timer) && ((puhost->control.timer + 0x3FFFU - msc->timer) < 10000U))){
                             msc->unit[msc->cur_lun].state = MSC_TEST_UNIT_READY;
                             break;
                         }
@@ -498,7 +499,9 @@ usbh_status usbh_msc_read (usbh_host *puhost,
     timeout = puhost->control.timer;
 
     while (USBH_BUSY == usbh_msc_rdwr_process(puhost, lun)) {
-        if (((puhost->control.timer - timeout) > (1000U * length)) || (0U == pudev->host.connect_status)) {
+        if (((puhost->control.timer > timeout) && ((puhost->control.timer - timeout) > (1000U * length))) \
+              || ((puhost->control.timer < timeout) && ((puhost->control.timer + 0x3FFFU - timeout) > (1000U * length))) \
+              || (0U == pudev->host.connect_status)){
             msc->state = MSC_IDLE;
             return USBH_FAIL;
         }
@@ -544,7 +547,9 @@ usbh_status usbh_msc_write (usbh_host *puhost,
     timeout = puhost->control.timer;
 
     while (USBH_BUSY == usbh_msc_rdwr_process(puhost, lun)) {
-        if (((puhost->control.timer - timeout) > (1000U * length)) || (0U == pudev->host.connect_status)) {
+        if (((puhost->control.timer > timeout) && ((puhost->control.timer - timeout) > (1000U * length))) \
+              || ((puhost->control.timer < timeout) && ((puhost->control.timer + 0x3FFFU - timeout) > (1000U * length))) \
+              || (0U == pudev->host.connect_status)){
             msc->state = MSC_IDLE;
             return USBH_FAIL;
         }

@@ -508,9 +508,6 @@ void spi_bidirectional_transfer_config(uint32_t spi_periph, uint32_t transfer_di
 */
 void spi_crc_polynomial_set(uint32_t spi_periph,uint16_t crc_poly)
 {
-    /* enable SPI CRC */
-    SPI_CTL0(spi_periph) |= (uint32_t)SPI_CTL0_CRCEN;
-
     /* set SPI CRC polynomial */
     SPI_CRCPOLY(spi_periph) = (uint32_t)crc_poly;
 }

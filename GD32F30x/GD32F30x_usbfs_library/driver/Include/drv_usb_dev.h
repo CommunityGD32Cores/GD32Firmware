@@ -3,6 +3,7 @@
     \brief   USB device low level driver header file
 
     \version 2020-08-01, V3.0.0, firmware for GD32F30x
+    \version 2020-12-07, V3.0.1, firmware for GD32F30x
 */
 
 /*
@@ -113,6 +114,9 @@ typedef struct _usb_class_core
     uint8_t  (*req_proc)              (usb_dev *udev, usb_req *req);            /*!< device request handler */
 
     uint8_t  (*set_intf)              (usb_dev *udev, usb_req *req);            /*!< device set interface callback */
+
+    uint8_t  (*ctlx_in)               (usb_dev *udev);                          /*!< device contrl in callback */
+    uint8_t  (*ctlx_out)              (usb_dev *udev);                          /*!< device contrl out callback */
 
     uint8_t  (*data_in)               (usb_dev *udev, uint8_t ep_num);          /*!< device data in handler */
     uint8_t  (*data_out)              (usb_dev *udev, uint8_t ep_num);          /*!< device data out handler */

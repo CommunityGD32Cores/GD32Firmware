@@ -1182,7 +1182,7 @@ typedef struct
 #define ENET_ADDRESS_FILTER_DA                    ((uint32_t)0x00000000)                        /*!< use MAC address[47:0] is to compare with the DA fields of the received frame */
  
 /* mac_fcth register value */
-#define MAC_FCTH_RFA(regval)                      ((BITS(0,2) & ((uint32_t)(regval) << 0))<<8)  /*!< write value to ENET_MAC_FCTH_RFA bit field */
+#define MAC_FCTH_RFA(regval)                      ((BITS(0,2) & ((uint32_t)(regval) << 0)) << 8)  /*!< write value to ENET_MAC_FCTH_RFA bit field */
 #define ENET_ACTIVE_THRESHOLD_256BYTES            MAC_FCTH_RFA(0)                               /*!< threshold level is 256 bytes */
 #define ENET_ACTIVE_THRESHOLD_512BYTES            MAC_FCTH_RFA(1)                               /*!< threshold level is 512 bytes */
 #define ENET_ACTIVE_THRESHOLD_768BYTES            MAC_FCTH_RFA(2)                               /*!< threshold level is 768 bytes */
@@ -1191,7 +1191,7 @@ typedef struct
 #define ENET_ACTIVE_THRESHOLD_1536BYTES           MAC_FCTH_RFA(5)                               /*!< threshold level is 1536 bytes */
 #define ENET_ACTIVE_THRESHOLD_1792BYTES           MAC_FCTH_RFA(6)                               /*!< threshold level is 1792 bytes */
 
-#define MAC_FCTH_RFD(regval)                      ((BITS(4,6) & ((uint32_t)(regval) << 4))<<8)  /*!< write value to ENET_MAC_FCTH_RFD bit field */
+#define MAC_FCTH_RFD(regval)                      ((BITS(4,6) & ((uint32_t)(regval) << 4)) << 8)  /*!< write value to ENET_MAC_FCTH_RFD bit field */
 #define ENET_DEACTIVE_THRESHOLD_256BYTES          MAC_FCTH_RFD(0)                               /*!< threshold level is 256 bytes */
 #define ENET_DEACTIVE_THRESHOLD_512BYTES          MAC_FCTH_RFD(1)                               /*!< threshold level is 512 bytes */
 #define ENET_DEACTIVE_THRESHOLD_768BYTES          MAC_FCTH_RFD(2)                               /*!< threshold level is 768 bytes */
@@ -1358,13 +1358,13 @@ typedef struct
 #define ENET_TX_MODE_STOREFORWARD                 ENET_DMA_CTL_TSFD                             /*!< TxFIFO operates in store-and-forward mode */
 #define ENET_TX_MODE_CUTTHROUGH                   ((uint32_t)0x00000000)                        /*!< TxFIFO operates in cut-through mode */
 
-#define ENET_FORWARD_ERRFRAMES_ENABLE             (ENET_DMA_CTL_FERF<<2)                        /*!< all frame received with error except runt error are forwarded to memory */
+#define ENET_FORWARD_ERRFRAMES_ENABLE             (ENET_DMA_CTL_FERF << 2)                      /*!< all frame received with error except runt error are forwarded to memory */
 #define ENET_FORWARD_ERRFRAMES_DISABLE            ((uint32_t)0x00000000)                        /*!< RxFIFO drop error frame */
-#define ENET_FORWARD_ERRFRAMES                    (ENET_DMA_CTL_FERF<<2)                             /*!< the function that all frame received with error except runt error are forwarded to memory */
+#define ENET_FORWARD_ERRFRAMES                    (ENET_DMA_CTL_FERF << 2)                      /*!< the function that all frame received with error except runt error are forwarded to memory */
 
-#define ENET_FORWARD_UNDERSZ_GOODFRAMES_ENABLE    (ENET_DMA_CTL_FUF<<2)                         /*!< forward undersized good frames */
+#define ENET_FORWARD_UNDERSZ_GOODFRAMES_ENABLE    (ENET_DMA_CTL_FUF << 2)                       /*!< forward undersized good frames */
 #define ENET_FORWARD_UNDERSZ_GOODFRAMES_DISABLE   ((uint32_t)0x00000000)                        /*!< RxFIFO drops all frames whose length is less than 64 bytes */  
-#define ENET_FORWARD_UNDERSZ_GOODFRAMES           (ENET_DMA_CTL_FUF<<2)                            /*!< the function that forwarding undersized good frames */
+#define ENET_FORWARD_UNDERSZ_GOODFRAMES           (ENET_DMA_CTL_FUF << 2)                       /*!< the function that forwarding undersized good frames */
 
 #define ENET_SECONDFRAME_OPT_ENABLE               ENET_DMA_CTL_OSF                              /*!< TxDMA controller operate on second frame mode enable*/
 #define ENET_SECONDFRAME_OPT_DISABLE              ((uint32_t)0x00000000)                        /*!< TxDMA controller operate on second frame mode disable */
