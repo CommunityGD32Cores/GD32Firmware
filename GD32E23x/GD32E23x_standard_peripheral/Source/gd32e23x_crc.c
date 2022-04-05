@@ -1,14 +1,13 @@
 /*!
     \file    gd32e23x_crc.c
     \brief   CRC driver
-
+    
     \version 2019-02-19, V1.0.0, firmware for GD32E23x
+    \version 2020-12-12, V1.1.0, firmware for GD32E23x
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -180,29 +179,64 @@ void crc_polynomial_set(uint32_t poly)
 }
 
 /*!
-    \brief      CRC calculate a 32-bit data
-    \param[in]  sdata: specify 32-bit data
+    \brief      CRC calculate single data
+    \param[in]  sdata: specify input data
+    \param[in]  data_format: input data format
+                only one parameter can be selected which is shown as below:
+      \arg        INPUT_FORMAT_WORD: input data in word format
+      \arg        INPUT_FORMAT_HALFWORD: input data in half-word format
+      \arg        INPUT_FORMAT_BYTE: input data in byte format
     \param[out] none
-    \retval     32-bit CRC calculate value
+    \retval     CRC calculate value
 */
-uint32_t crc_single_data_calculate(uint32_t sdata)
+uint32_t crc_single_data_calculate(uint32_t sdata, uint8_t data_format)
 {
-    CRC_DATA = sdata;
+    if(INPUT_FORMAT_WORD == data_format){
+        REG32(CRC) = sdata;
+    }else if(INPUT_FORMAT_HALFWORD == data_format){
+        REG16(CRC) = (uint16_t)sdata;
+    }else{
+        REG8(CRC) = (uint8_t)sdata;
+    }
+
     return(CRC_DATA);
 }
 
 /*!
-    \brief      CRC calculate a 32-bit data array
-    \param[in]  array: pointer to an array of 32 bit data words
+    \brief      CRC calculate a data array
+    \param[in]  array: pointer to the input data array
     \param[in]  size: size of the array
+    \param[in]  data_format: input data format
+                only one parameter can be selected which is shown as below:
+      \arg        INPUT_FORMAT_WORD: input data in word format
+      \arg        INPUT_FORMAT_HALFWORD: input data in half-word format
+      \arg        INPUT_FORMAT_BYTE: input data in byte format
     \param[out] none
-    \retval     32-bit CRC calculate value
+    \retval     CRC calculate value
 */
-uint32_t crc_block_data_calculate(uint32_t array[], uint32_t size)
-{  
+uint32_t crc_block_data_calculate(void *array, uint32_t size, uint8_t data_format)
+{
+    uint8_t *data8;
+    uint16_t *data16;
+    uint32_t *data32;
     uint32_t index;
-    for(index = 0U; index < size; index++){
-        CRC_DATA = array[index];
+
+    if(INPUT_FORMAT_WORD == data_format){
+        data32 = (uint32_t *)array;
+        for(index = 0U; index < size; index++){
+            REG32(CRC) = data32[index];
+        }
+    }else if(INPUT_FORMAT_HALFWORD == data_format){
+        data16 = (uint16_t *)array;
+        for(index = 0U; index < size; index++){
+            REG16(CRC) = data16[index];
+        }
+    }else{
+        data8 = (uint8_t *)array;
+        for(index = 0U; index < size; index++){
+            REG8(CRC) =  data8[index];
+        }
     }
+
     return (CRC_DATA);
 }

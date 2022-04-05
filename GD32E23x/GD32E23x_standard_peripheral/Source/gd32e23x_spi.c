@@ -3,12 +3,11 @@
     \brief   SPI driver
     
     \version 2019-02-19, V1.0.0, firmware for GD32E23x
+    \version 2020-12-12, V1.1.0, firmware for GD32E23x
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -127,7 +126,7 @@ ErrStatus spi_init(uint32_t spi_periph, spi_parameter_struct* spi_struct)
     reg3 = SPI_CTL1(spi_periph);
     reg3 &= SPI_FIFO_INIT_MASK2;
 
-    if( SPI0 == spi_periph){
+    if(SPI0 == spi_periph){
         /* select SPI as master or slave */
         reg1 |= spi_struct->device_mode;
         /* select SPI transfer mode */

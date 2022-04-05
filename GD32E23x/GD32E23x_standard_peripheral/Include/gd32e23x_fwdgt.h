@@ -3,10 +3,11 @@
     \brief definitions for the FWDGT 
     
     \version 2019-02-19, V1.0.0, firmware for GD32E23x
+    \version 2020-12-12, V1.1.0, firmware for GD32E23x
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     All rights reserved.
 
@@ -95,7 +96,7 @@ OF SUCH DAMAGE.
 #define FWDGT_FLAG_WUD              FWDGT_STAT_WUD                             /*!< a write operation to FWDGT_WND register is on going */
 
 /* function declarations */
-/* enable write access to FWDGT_PSC and FWDGT_RLD */
+/* enable write access to FWDGT_PSC and FWDGT_RLD and FWDGT_WND */
 void fwdgt_write_enable(void);
 /* disable write access to FWDGT_PSC,FWDGT_RLD and FWDGT_WND */
 void fwdgt_write_disable(void);

@@ -3,10 +3,11 @@
     \brief   WWDGT driver
     
     \version 2019-02-19, V1.0.0, firmware for GD32E23x
+    \version 2020-12-12, V1.1.0, firmware for GD32E23x
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     All rights reserved.
 
@@ -35,7 +36,6 @@ OF SUCH DAMAGE.
 */
 
 #include "gd32e23x_wwdgt.h"
-#include "gd32e23x_rcu.h"
 
 /* WWDGT_CTL register value */
 #define CTL_CNT(regval)             (BITS(0,6) & ((uint32_t)(regval) << 0U))    /*!< write value to WWDGT_CTL_CNT bit field */

@@ -3,12 +3,14 @@
     \brief   PMU driver
     
     \version 2019-02-19, V1.0.0, firmware for GD32E23x
+    \version 2019-05-06, V1.0.1, firmware for GD32E23x
+    \version 2020-11-25, V1.0.2, firmware for GD32E23x
+    \version 2020-12-12, V1.1.0, firmware for GD32E23x
+    \version 2021-03-30, V1.1.1, firmware for GD32E23x
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -141,7 +143,6 @@ void pmu_to_sleepmode(uint8_t sleepmodecmd)
 */
 void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
 {
-    static uint32_t reg_snap[ 3 ];  
     /* clear stbmod and ldolp bits */
     PMU_CTL &= ~((uint32_t)(PMU_CTL_STBMOD | PMU_CTL_LDOLP));
     
@@ -150,14 +151,6 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
     
     /* set sleepdeep bit of Cortex-M23 system control register */
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-
-    reg_snap[ 0 ] = REG32( 0xE000E010U );
-    reg_snap[ 1 ] = REG32( 0xE000E100U );
-    reg_snap[ 2 ] = REG32( 0xE000E104U );
-    
-    REG32( 0xE000E010U ) &= 0x00010004U;
-    REG32( 0xE000E180U )  = 0XF7FFEF19U;
-    REG32( 0xE000E184U )  = 0XFFFFFFFFU;
   
     /* select WFI or WFE command to enter deepsleep mode */
     if(WFI_CMD == deepsleepmodecmd){
@@ -168,10 +161,6 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
         __WFE();
     }
 
-    REG32( 0xE000E010U ) = reg_snap[ 0 ] ; 
-    REG32( 0xE000E100U ) = reg_snap[ 1 ] ;
-    REG32( 0xE000E104U ) = reg_snap[ 2 ] ;
-    
     /* reset sleepdeep bit of Cortex-M23 system control register */
     SCB->SCR &= ~((uint32_t)SCB_SCR_SLEEPDEEP_Msk);
 }
@@ -204,6 +193,7 @@ void pmu_to_standbymode(uint8_t standbymodecmd)
     if(WFI_CMD == standbymodecmd){
         __WFI();
     }else{
+        __WFE();
         __WFE();
     }
 }

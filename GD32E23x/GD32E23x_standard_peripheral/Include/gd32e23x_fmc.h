@@ -1,14 +1,13 @@
 /*!
-    \file  gd32e23x_fmc.h
-    \brief definitions for the FMC
+    \file    gd32e23x_fmc.h
+    \brief   definitions for the FMC
 
     \version 2019-02-19, V1.0.0, firmware for GD32E23x
+    \version 2020-12-12, V1.1.0, firmware for GD32E23x
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -171,8 +170,8 @@ typedef enum
 
 /* option byte security protection level in FMC_OBSTAT register */
 #define OB_OBSTAT_PLEVEL_NO        ((uint8_t)0x00U)         /*!< no security protection */
-#define OB_OBSTAT_PLEVEL_LOW       ((uint8_t)0x01U)         /*!< low security protection */
-#define OB_OBSTAT_PLEVEL_HIGH      ((uint8_t)0x03U)         /*!< high security protection */
+#define OB_OBSTAT_PLEVEL_LOW       ((uint8_t)0x02U)         /*!< low security protection */
+#define OB_OBSTAT_PLEVEL_HIGH      ((uint8_t)0x06U)         /*!< high security protection */
 
 /* option byte user mask */
 #define OB_USER_MASK               ((uint8_t)0x88U)         /*!< OB_USER reserved bit mask */

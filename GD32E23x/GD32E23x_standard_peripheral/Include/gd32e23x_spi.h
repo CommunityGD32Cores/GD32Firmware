@@ -1,14 +1,13 @@
 /*!
-    \file  gd32e23x_spi.h
-    \brief definitions for the SPI
+    \file    gd32e23x_spi.h
+    \brief   definitions for the SPI
 
     \version 2019-02-19, V1.0.0, firmware for GD32E23x
+    \version 2020-12-12, V1.1.0, firmware for GD32E23x
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -44,16 +43,16 @@ OF SUCH DAMAGE.
 #define SPI1                            SPI_BASE
 
 /* SPI registers definitions */
-#define SPI_CTL0(spix)                  REG32((spix) + 0x00U)                   /*!< SPI control register 0 */
-#define SPI_CTL1(spix)                  REG32((spix) + 0x04U)                   /*!< SPI control register 1*/
-#define SPI_STAT(spix)                  REG32((spix) + 0x08U)                   /*!< SPI status register */
-#define SPI_DATA(spix)                  REG32((spix) + 0x0CU)                   /*!< SPI data register */
-#define SPI_CRCPOLY(spix)               REG32((spix) + 0x10U)                   /*!< SPI CRC polynomial register */
-#define SPI_RCRC(spix)                  REG32((spix) + 0x14U)                   /*!< SPI receive CRC register */
-#define SPI_TCRC(spix)                  REG32((spix) + 0x18U)                   /*!< SPI transmit CRC register */
-#define SPI_I2SCTL(spix)                REG32((spix) + 0x1CU)                   /*!< SPI I2S control register */
-#define SPI_I2SPSC(spix)                REG32((spix) + 0x20U)                   /*!< SPI I2S clock prescaler register */
-#define SPI_QCTL(spix)                  REG32((spix) + 0x80U)                   /*!< SPI quad mode control register(only SPI1) */
+#define SPI_CTL0(spix)                  REG32((spix) + 0x00000000U)             /*!< SPI control register 0 */
+#define SPI_CTL1(spix)                  REG32((spix) + 0x00000004U)             /*!< SPI control register 1*/
+#define SPI_STAT(spix)                  REG32((spix) + 0x00000008U)             /*!< SPI status register */
+#define SPI_DATA(spix)                  REG32((spix) + 0x0000000CU)             /*!< SPI data register */
+#define SPI_CRCPOLY(spix)               REG32((spix) + 0x00000010U)             /*!< SPI CRC polynomial register */
+#define SPI_RCRC(spix)                  REG32((spix) + 0x00000014U)             /*!< SPI receive CRC register */
+#define SPI_TCRC(spix)                  REG32((spix) + 0x00000018U)             /*!< SPI transmit CRC register */
+#define SPI_I2SCTL(spix)                REG32((spix) + 0x0000001CU)             /*!< SPI I2S control register */
+#define SPI_I2SPSC(spix)                REG32((spix) + 0x00000020U)             /*!< SPI I2S clock prescaler register */
+#define SPI_QCTL(spix)                  REG32((spix) + 0x00000080U)             /*!< SPI quad mode control register(only SPI1) */
 
 /* bits definitions */
 /* SPI_CTL0 */
@@ -222,10 +221,10 @@ typedef struct
 
 /* SPIx TXFIFO level(x=1) */
 #define CTL1_TXLVL(regval)              (BITS(11,12) & ((uint32_t)(regval) << 11))
-#define SPI_TXLVL_EMPTY                 CTL1_RXLVL(0)                           /*!< SPI TXFIFO is empty */
-#define SPI_TXLVL_QUARTER_FULL          CTL1_RXLVL(1)                           /*!< SPI TXFIFO is a quarter of full */
-#define SPI_TXLVL_HAlF_FULL             CTL1_RXLVL(2)                           /*!< SPI TXFIFO is a half of full */
-#define SPI_TXLVL_FULL                  CTL1_RXLVL(3)                           /*!< SPI TXFIFO is full */
+#define SPI_TXLVL_EMPTY                 CTL1_TXLVL(0)                           /*!< SPI TXFIFO is empty */
+#define SPI_TXLVL_QUARTER_FULL          CTL1_TXLVL(1)                           /*!< SPI TXFIFO is a quarter of full */
+#define SPI_TXLVL_HAlF_FULL             CTL1_TXLVL(2)                           /*!< SPI TXFIFO is a half of full */
+#define SPI_TXLVL_FULL                  CTL1_TXLVL(3)                           /*!< SPI TXFIFO is full */
 
 /* SPIx RXFIFO level(x=1) */
 #define CTL1_RXLVL(regval)              (BITS(9,10) & ((uint32_t)(regval) << 9))

@@ -1,14 +1,13 @@
 /*!
     \file    gd32e23x_crc.h
     \brief   definitions for the CRC
-
+    
     \version 2019-02-19, V1.0.0, firmware for GD32E23x
+    \version 2020-12-12, V1.1.0, firmware for GD32E23x
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -40,14 +39,14 @@ OF SUCH DAMAGE.
 #include "gd32e23x.h"
 
 /* CRC definitions */
-#define CRC                            CRC_BASE
+#define CRC                            CRC_BASE                        /*!< CRC bsae address */
 
 /* registers definitions */
-#define CRC_DATA                       REG32((CRC) + 0x00U)            /*!< CRC data register */
-#define CRC_FDATA                      REG32((CRC) + 0x04U)            /*!< CRC free data register */
-#define CRC_CTL                        REG32((CRC) + 0x08U)            /*!< CRC control register */
-#define CRC_IDATA                      REG32((CRC) + 0x10U)            /*!< CRC initialization data register */
-#define CRC_POLY                       REG32((CRC) + 0x14U)            /*!< CRC polynomial register */
+#define CRC_DATA                       REG32((CRC) + 0x00000000U)      /*!< CRC data register */
+#define CRC_FDATA                      REG32((CRC) + 0x00000004U)      /*!< CRC free data register */
+#define CRC_CTL                        REG32((CRC) + 0x00000008U)      /*!< CRC control register */
+#define CRC_IDATA                      REG32((CRC) + 0x00000010U)      /*!< CRC initialization data register */
+#define CRC_POLY                       REG32((CRC) + 0x00000014U)      /*!< CRC polynomial register */
 
 /* bits definitions */
 /* CRC_DATA */
@@ -83,6 +82,11 @@ OF SUCH DAMAGE.
 #define CRC_INPUT_DATA_HALFWORD        CTL_REV_I(2)                    /*!< input data reversed by half-word type */
 #define CRC_INPUT_DATA_WORD            CTL_REV_I(3)                    /*!< input data reversed by word type */
 
+/* input data format */
+#define INPUT_FORMAT_WORD              0U                              /*!< input data in word format */
+#define INPUT_FORMAT_HALFWORD          1U                              /*!< input data in half-word format */
+#define INPUT_FORMAT_BYTE              2U                              /*!< input data in byte format */
+
 /* function declarations */
 /* deinit CRC calculation unit */
 void crc_deinit(void);
@@ -92,7 +96,7 @@ void crc_reverse_output_data_enable(void);
 /* disable the reverse operation of output data */
 void crc_reverse_output_data_disable(void);
 
-/* reset data register to the value of initializaiton data register */
+/* reset data register to the value of initialization data register */
 void crc_data_register_reset(void);
 /* read the data register  */
 uint32_t crc_data_register_read(void);
@@ -112,9 +116,9 @@ void crc_polynomial_size_set(uint32_t poly_size);
 /* configure the CRC polynomial value function */
 void crc_polynomial_set(uint32_t poly);
 
-/* CRC calculate a 32-bit data */
-uint32_t crc_single_data_calculate(uint32_t sdata);
-/* CRC calculate a 32-bit data array */
-uint32_t crc_block_data_calculate(uint32_t array[], uint32_t size);
+/* CRC calculate single data */
+uint32_t crc_single_data_calculate(uint32_t sdata, uint8_t data_format);
+/* CRC calculate a data array */
+uint32_t crc_block_data_calculate(void *array, uint32_t size, uint8_t data_format);
 
 #endif /* GD32E23X_CRC_H */

@@ -3,12 +3,11 @@
     \brief definitions for the USART
     
     \version 2019-02-19, V1.0.0, firmware for GD32E23x
+    \version 2020-12-12, V1.1.0, firmware for GD32E23x
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -601,9 +600,9 @@ FlagStatus usart_flag_get(uint32_t usart_periph, usart_flag_enum flag);
 /* clear USART status */
 void usart_flag_clear(uint32_t usart_periph, usart_flag_enum flag);
 /* enable USART interrupt */
-void usart_interrupt_enable(uint32_t usart_periph, usart_interrupt_enum inttype);
+void usart_interrupt_enable(uint32_t usart_periph, usart_interrupt_enum interrupt);
 /* disable USART interrupt */
-void usart_interrupt_disable(uint32_t usart_periph, usart_interrupt_enum inttype);
+void usart_interrupt_disable(uint32_t usart_periph, usart_interrupt_enum interrupt);
 /* enable USART command */
 void usart_command_enable(uint32_t usart_periph, uint32_t cmdtype);
 /* get USART interrupt and flag status */

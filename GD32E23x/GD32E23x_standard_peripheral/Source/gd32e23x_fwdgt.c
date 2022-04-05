@@ -3,10 +3,11 @@
     \brief   FWDGT driver
     
     \version 2019-02-19, V1.0.0, firmware for GD32E23x
+    \version 2020-12-12, V1.1.0, firmware for GD32E23x
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     All rights reserved.
 
@@ -44,7 +45,7 @@ OF SUCH DAMAGE.
 #define WND_WND(regval)             (BITS(0,11) & ((uint32_t)(regval) << 0U))  /*!< write value to FWDGT_WND_WND bit field */
 
 /*!
-    \brief      enable write access to FWDGT_PSC and FWDGT_RLD
+    \brief      enable write access to FWDGT_PSC and FWDGT_RLD and FWDGT_WND
     \param[in]  none
     \param[out] none
     \retval     none

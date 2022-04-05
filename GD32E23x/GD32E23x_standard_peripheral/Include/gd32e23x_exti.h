@@ -3,12 +3,11 @@
     \brief   definitions for the EXTI
     
     \version 2019-02-19, V1.0.0, firmware for GD32E23x
+    \version 2020-12-12, V1.1.0, firmware for GD32E23x
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -43,12 +42,12 @@ OF SUCH DAMAGE.
 #define EXTI                         EXTI_BASE
 
 /* registers definitions */
-#define EXTI_INTEN                   REG32(EXTI + 0x00U)      /*!< interrupt enable register */
-#define EXTI_EVEN                    REG32(EXTI + 0x04U)      /*!< event enable register */
-#define EXTI_RTEN                    REG32(EXTI + 0x08U)      /*!< rising edge trigger enable register */
-#define EXTI_FTEN                    REG32(EXTI + 0x0CU)      /*!< falling trigger enable register */
-#define EXTI_SWIEV                   REG32(EXTI + 0x10U)      /*!< software interrupt event register */
-#define EXTI_PD                      REG32(EXTI + 0x14U)      /*!< pending register */
+#define EXTI_INTEN                  REG32(EXTI + 0x00000000U)       /*!< interrupt enable register */
+#define EXTI_EVEN                   REG32(EXTI + 0x00000004U)       /*!< event enable register */
+#define EXTI_RTEN                   REG32(EXTI + 0x00000008U)       /*!< rising edge trigger enable register */
+#define EXTI_FTEN                   REG32(EXTI + 0x0000000CU)       /*!< falling trigger enable register */
+#define EXTI_SWIEV                  REG32(EXTI + 0x00000010U)       /*!< software interrupt event register */
+#define EXTI_PD                     REG32(EXTI + 0x00000014U)       /*!< pending register */
 
 /* bits definitions */
 /* EXTI_INTEN */
@@ -242,27 +241,36 @@ typedef enum
 
 /* interrupt trigger mode */
 typedef enum
-{ 
+{
     EXTI_TRIG_RISING = 0,                                     /*!< EXTI rising edge trigger */
     EXTI_TRIG_FALLING,                                        /*!< EXTI falling edge trigger */
-    EXTI_TRIG_BOTH                                            /*!< EXTI rising and falling edge trigger */
+    EXTI_TRIG_BOTH,                                           /*!< EXTI rising and falling edge trigger */
+    EXTI_TRIG_NONE                                            /*!< without rising edge or falling edge trigger */
 }exti_trig_type_enum;
 
 /* function declarations */
-/* deinitialize the EXTI */
+/* initialization functions */
+/* reset the value of all EXTI registers with initial values */
 void exti_deinit(void);
-/* enable the configuration of EXTI initialize */
+/* initialize EXTI line x */
 void exti_init(exti_line_enum linex, exti_mode_enum mode, exti_trig_type_enum trig_type);
+
+/* enable functions */
 /* enable the interrupts from EXTI line x */
 void exti_interrupt_enable(exti_line_enum linex);
-/* enable the events from EXTI line x */
-void exti_event_enable(exti_line_enum linex);
 /* disable the interrupts from EXTI line x */
 void exti_interrupt_disable(exti_line_enum linex);
+/* enable the events from EXTI line x */
+void exti_event_enable(exti_line_enum linex);
 /* disable the events from EXTI line x */
 void exti_event_disable(exti_line_enum linex);
 
-/* get EXTI lines pending flag */
+/* interrupt & flag functions */
+/* enable EXTI software interrupt event */
+void exti_software_interrupt_enable(exti_line_enum linex);
+/* disable EXTI software interrupt event */
+void exti_software_interrupt_disable(exti_line_enum linex);
+/* get EXTI line x pending flag */
 FlagStatus exti_flag_get(exti_line_enum linex);
 /* clear EXTI lines pending flag */
 void exti_flag_clear(exti_line_enum linex);
@@ -270,9 +278,5 @@ void exti_flag_clear(exti_line_enum linex);
 FlagStatus exti_interrupt_flag_get(exti_line_enum linex);
 /* clear EXTI lines pending flag */
 void exti_interrupt_flag_clear(exti_line_enum linex);
-/* EXTI software interrupt event enable */
-void exti_software_interrupt_enable(exti_line_enum linex);
-/* EXTI software interrupt event disable */
-void exti_software_interrupt_disable(exti_line_enum linex);
 
 #endif /* GD32E23X_EXTI_H */

@@ -3,12 +3,11 @@
 ;    \brief   start up file
 ;
 ;    \version 2018-06-19, V1.0.0, firmware for GD32E230
+;    \version 2020-12-12, V1.1.0, firmware for GD32E23x
 ;*/
-;
+
 ;/*
-;    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-;
-;    All rights reserved.
+;    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 ;
 ;    Redistribution and use in source and binary forms, with or without modification, 
 ;are permitted provided that the following conditions are met:
@@ -52,15 +51,15 @@ __vector_table
 
         DCD     NMI_Handler                         ; Vector Number 2,NMI Handler
         DCD     HardFault_Handler                   ; Vector Number 3,Hard Fault Handler
-        DCD     MemManage_Handler                   ; Vector Number 4,MPU Fault Handler
-        DCD     BusFault_Handler                    ; Vector Number 5,Bus Fault Handler
-        DCD     UsageFault_Handler                  ; Vector Number 6,Usage Fault Handler
+        DCD     0                                   ; Reserved
+        DCD     0                                   ; Reserved
+        DCD     0                                   ; Reserved
         DCD     0                                   ; Reserved
         DCD     0                                   ; Reserved
         DCD     0                                   ; Reserved
         DCD     0                                   ; Reserved
         DCD     SVC_Handler                         ; Vector Number 11,SVCall Handler
-        DCD     DebugMon_Handler                    ; Vector Number 12,Debug Monitor Handler
+        DCD     0                                   ; Reserved
         DCD     0                                   ; Reserved
         DCD     PendSV_Handler                      ; Vector Number 14,PendSV Handler
         DCD     SysTick_Handler                     ; Vector Number 15,SysTick Handler
@@ -125,31 +124,11 @@ NMI_Handler
         SECTION .text:CODE:NOROOT:REORDER(1)
 HardFault_Handler
         B HardFault_Handler
-       
-        PUBWEAK MemManage_Handler
-        SECTION .text:CODE:NOROOT:REORDER(1)
-MemManage_Handler
-        B MemManage_Handler
-
-        PUBWEAK BusFault_Handler
-        SECTION .text:CODE:NOROOT:REORDER(1)
-BusFault_Handler
-        B BusFault_Handler
-
-        PUBWEAK UsageFault_Handler
-        SECTION .text:CODE:NOROOT:REORDER(1)
-UsageFault_Handler
-        B UsageFault_Handler
         
         PUBWEAK SVC_Handler
         SECTION .text:CODE:NOROOT:REORDER(1)
 SVC_Handler
         B SVC_Handler
-       
-        PUBWEAK DebugMon_Handler
-        SECTION .text:CODE:NOROOT:REORDER(1)
-DebugMon_Handler
-        B DebugMon_Handler
         
         PUBWEAK PendSV_Handler
         SECTION .text:CODE:NOROOT:REORDER(1)

@@ -2,13 +2,12 @@
     \file    gd32e23x_rcu.h
     \brief   definitions for the RCU
     
-    \version 2019-02-19, V1.0.1, firmware for GD32E23x
+    \version 2019-02-19, V1.0.0, firmware for GD32E23x
+    \version 2020-12-12, V1.1.0, firmware for GD32E23x
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:

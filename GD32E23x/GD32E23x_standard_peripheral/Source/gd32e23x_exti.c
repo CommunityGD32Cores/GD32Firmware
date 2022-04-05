@@ -3,12 +3,11 @@
     \brief   EXTI driver
     
     \version 2019-02-19, V1.0.0, firmware for GD32E23x
+    \version 2020-12-12, V1.1.0, firmware for GD32E23x
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -36,24 +35,30 @@ OF SUCH DAMAGE.
 
 #include "gd32e23x_exti.h"
 
+#define EXTI_INTEN_RESET_VAL    ((uint32_t)0x0F900000U)
+#define EXTI_EVEN_RESET_VAL     ((uint32_t)0x00000000U)
+#define EXTI_RTEN_RESET_VAL     ((uint32_t)0x00000000U)
+#define EXTI_FTEN_RESET_VAL     ((uint32_t)0x00000000U)
+#define EXTI_SWIEV_RESET_VAL    ((uint32_t)0x00000000U)
+
 /*!
-    \brief      deinitialize the EXTI
+    \brief      reset the value of all EXTI registers with initial values
     \param[in]  none
     \param[out] none
     \retval     none
 */
 void exti_deinit(void)
 {
-    /* reset the value of all the EXTI registers */
-    EXTI_INTEN = (uint32_t)0x0F940000U;
-    EXTI_EVEN  = (uint32_t)0x00000000U;
-    EXTI_RTEN  = (uint32_t)0x00000000U;
-    EXTI_FTEN  = (uint32_t)0x00000000U;
-    EXTI_SWIEV = (uint32_t)0x00000000U;
+    /* reset the value of the EXTI registers */
+    EXTI_INTEN = EXTI_INTEN_RESET_VAL;
+    EXTI_EVEN  = EXTI_EVEN_RESET_VAL;
+    EXTI_RTEN  = EXTI_RTEN_RESET_VAL;
+    EXTI_FTEN  = EXTI_FTEN_RESET_VAL;
+    EXTI_SWIEV = EXTI_SWIEV_RESET_VAL;
 }
 
 /*!
-    \brief      initialize the EXTI
+    \brief      initialize EXTI line x
     \param[in]  linex: EXTI line number, refer to exti_line_enum
                 only one parameter can be selected which is shown as below:
       \arg        EXTI_x (x=0..17,19,21): EXTI line x
@@ -66,6 +71,7 @@ void exti_deinit(void)
       \arg        EXTI_TRIG_RISING: rising edge trigger
       \arg        EXTI_TRIG_FALLING: falling trigger
       \arg        EXTI_TRIG_BOTH: rising and falling trigger
+      \arg        EXTI_TRIG_NONE: without rising edge or falling edge trigger
     \param[out] none
     \retval     none
 */
@@ -105,6 +111,7 @@ void exti_init(exti_line_enum linex, \
         EXTI_RTEN |= (uint32_t)linex;
         EXTI_FTEN |= (uint32_t)linex;
         break;
+    case EXTI_TRIG_NONE:
     default:
         break;
     }
@@ -124,19 +131,6 @@ void exti_interrupt_enable(exti_line_enum linex)
 }
 
 /*!
-    \brief      enable the events from EXTI line x
-    \param[in]  linex: EXTI line number, refer to exti_line_enum
-                only one parameter can be selected which is shown as below:
-      \arg        EXTI_x (x=0..27): EXTI line x
-    \param[out] none
-    \retval     none
-*/
-void exti_event_enable(exti_line_enum linex)
-{
-    EXTI_EVEN |= (uint32_t)linex;
-}
-
-/*!
     \brief      disable the interrupt from EXTI line x
     \param[in]  linex: EXTI line number, refer to exti_line_enum
                 only one parameter can be selected which is shown as below:
@@ -150,6 +144,19 @@ void exti_interrupt_disable(exti_line_enum linex)
 }
 
 /*!
+    \brief      enable the events from EXTI line x
+    \param[in]  linex: EXTI line number, refer to exti_line_enum
+                only one parameter can be selected which is shown as below:
+      \arg        EXTI_x (x=0..27): EXTI line x
+    \param[out] none
+    \retval     none
+*/
+void exti_event_enable(exti_line_enum linex)
+{
+    EXTI_EVEN |= (uint32_t)linex;
+}
+
+/*!
     \brief      disable the events from EXTI line x
     \param[in]  linex: EXTI line number, refer to exti_line_enum
                 only one parameter can be selected which is shown as below:
@@ -160,6 +167,32 @@ void exti_interrupt_disable(exti_line_enum linex)
 void exti_event_disable(exti_line_enum linex)
 {
     EXTI_EVEN &= ~(uint32_t)linex;
+}
+
+/*!
+    \brief      enable EXTI software interrupt event
+    \param[in]  linex: EXTI line number, refer to exti_line_enum
+                only one parameter can be selected which is shown as below:
+      \arg        EXTI_x (x=0..17,19,21): EXTI line x
+    \param[out] none
+    \retval     none
+*/
+void exti_software_interrupt_enable(exti_line_enum linex)
+{
+    EXTI_SWIEV |= (uint32_t)linex;
+}
+
+/*!
+    \brief      disable EXTI software interrupt event
+    \param[in]  linex: EXTI line number, refer to exti_line_enum
+                only one parameter can be selected which is shown as below:
+      \arg        EXTI_x (x=0..17,19,21): EXTI line x
+    \param[out] none
+    \retval     none
+*/
+void exti_software_interrupt_disable(exti_line_enum linex)
+{
+    EXTI_SWIEV &= ~(uint32_t)linex;
 }
 
 /*!
@@ -202,12 +235,7 @@ void exti_flag_clear(exti_line_enum linex)
 */
 FlagStatus exti_interrupt_flag_get(exti_line_enum linex)
 {
-    uint32_t flag_left, flag_right;
-    
-    flag_left = EXTI_PD & (uint32_t)linex;
-    flag_right = EXTI_INTEN & (uint32_t)linex;
-    
-    if((RESET != flag_left) && (RESET != flag_right)){
+    if(RESET != (EXTI_PD & (uint32_t)linex)){
         return SET;
     }else{
         return RESET;
@@ -225,30 +253,4 @@ FlagStatus exti_interrupt_flag_get(exti_line_enum linex)
 void exti_interrupt_flag_clear(exti_line_enum linex)
 {
     EXTI_PD = (uint32_t)linex;
-}
-
-/*!
-    \brief      enable EXTI software interrupt event
-    \param[in]  linex: EXTI line number, refer to exti_line_enum
-                only one parameter can be selected which is shown as below:
-      \arg        EXTI_x (x=0..17,19,21): EXTI line x
-    \param[out] none
-    \retval     none
-*/
-void exti_software_interrupt_enable(exti_line_enum linex)
-{
-    EXTI_SWIEV |= (uint32_t)linex;
-}
-
-/*!
-    \brief      disable EXTI software interrupt event
-    \param[in]  linex: EXTI line number, refer to exti_line_enum
-                only one parameter can be selected which is shown as below:
-      \arg        EXTI_x (x=0..17,19,21): EXTI line x
-    \param[out] none
-    \retval     none
-*/
-void exti_software_interrupt_disable(exti_line_enum linex)
-{
-    EXTI_SWIEV &= ~(uint32_t)linex;
 }

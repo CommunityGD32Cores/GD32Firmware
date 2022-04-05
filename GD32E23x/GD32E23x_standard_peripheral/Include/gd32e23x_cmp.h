@@ -3,12 +3,11 @@
     \brief definitions for the CMP
 
     \version 2019-02-19, V1.0.0, firmware for GD32E23x
+    \version 2020-12-12, V1.1.0, firmware for GD32E23x
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -145,7 +144,7 @@ void cmp_deinit(void);
 /* CMP mode init */
 void cmp_mode_init(operating_mode_enum operating_mode, inverting_input_enum inverting_input, cmp_hysteresis_enum output_hysteresis);
 /* CMP output init */
-void cmp_output_init(cmp_output_enum output_slection, uint32_t output_polarity);
+void cmp_output_init(cmp_output_enum output_selection, uint32_t output_polarity);
 /* enable CMP */
 void cmp_enable(void);
 /* disable CMP */
