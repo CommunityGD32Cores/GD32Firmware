@@ -75,6 +75,10 @@ OF SUCH DAMAGE.
 #define PMU_CS_LDRF                   BITS(18,19)              /*!< Low-driver mode ready flag */
 
 /* constants definitions */
+/* PMU ldo definitions */
+#define PMU_LDO_NORMAL                ((uint32_t)0x00000000U)  /*!< LDO normal work when PMU enter deepsleep mode */
+#define PMU_LDO_LOWPOWER              PMU_CTL_LDOLP            /*!< LDO work in low power status when PMU enter deepsleep mode */
+
 /* PMU low voltage detector threshold definitions */
 #define CTL_LVDT(regval)              (BITS(5,7)&((uint32_t)(regval)<<5))
 #define PMU_LVDT_0                    CTL_LVDT(0)              /*!< voltage threshold is 2.1V */
@@ -85,6 +89,16 @@ OF SUCH DAMAGE.
 #define PMU_LVDT_5                    CTL_LVDT(5)              /*!< voltage threshold is 2.9V */
 #define PMU_LVDT_6                    CTL_LVDT(6)              /*!< voltage threshold is 3.0V */
 #define PMU_LVDT_7                    CTL_LVDT(7)              /*!< voltage threshold is 3.1V */
+
+/* PMU low-driver mode when use low power LDO */
+#define CTL_LDLP(regval)              (BIT(10)&((uint32_t)(regval)<<10))
+#define PMU_NORMALDR_LOWPWR           CTL_LDLP(0)              /*!< normal driver when use low power LDO */
+#define PMU_LOWDR_LOWPWR              CTL_LDLP(1)              /*!< low-driver mode enabled when LDEN is 11 and use low power LDO */
+
+/* PMU low-driver mode when use normal power LDO */
+#define CTL_LDNP(regval)              (BIT(11)&((uint32_t)(regval)<<11))
+#define PMU_NORMALDR_NORMALPWR        CTL_LDNP(0)              /*!< normal driver when use normal power LDO */
+#define PMU_LOWDR_NORMALPWR           CTL_LDNP(1)              /*!< low-driver mode enabled when LDEN is 11 and use normal power LDO */
 
 /* PMU LDO output voltage select definitions */
 #define CTL_LDOVS(regval)             (BITS(14,15)&((uint32_t)(regval)<<14))
@@ -97,15 +111,9 @@ OF SUCH DAMAGE.
 #define PMU_HIGHDR_SWITCH_NONE        CTL_HDS(0)               /*!< no high-driver mode switch */
 #define PMU_HIGHDR_SWITCH_EN          CTL_HDS(1)               /*!< high-driver mode switch */
 
-/* PMU low-driver mode when use low power LDO */
-#define CTL_LDLP(regval)              (BIT(10)&((uint32_t)(regval)<<10))
-#define PMU_NORMALDR_LOWPWR           CTL_LDLP(0)              /*!< normal driver when use low power LDO */
-#define PMU_LOWDR_LOWPWR              CTL_LDLP(1)              /*!< low-driver mode enabled when LDEN is 11 and use low power LDO */
-
-/* PMU low-driver mode when use normal power LDO */
-#define CTL_LDNP(regval)              (BIT(11)&((uint32_t)(regval)<<11))
-#define PMU_NORMALDR_NORMALPWR        CTL_LDNP(0)              /*!< normal driver when use normal power LDO */
-#define PMU_LOWDR_NORMALPWR           CTL_LDNP(1)              /*!< low-driver mode enabled when LDEN is 11 and use normal power LDO */
+/* low-driver mode in deep-sleep mode */
+#define PMU_LOWDRIVER_DISABLE         ((uint32_t)0x00000000U)  /*!< low-driver mode disable in deep-sleep mode */
+#define PMU_LOWDRIVER_ENABLE          PMU_CTL_LDEN             /*!< low-driver mode enable in deep-sleep mode */
 
 /* PMU low power mode ready flag definitions */
 #define CS_LDRF(regval)               (BITS(18,19)&((uint32_t)(regval)<<18))
@@ -121,10 +129,6 @@ OF SUCH DAMAGE.
 #define PMU_FLAG_HDSRF                PMU_CS_HDSRF             /*!< high-driver switch ready flag */
 #define PMU_FLAG_LDRF                 PMU_CS_LDRF              /*!< low-driver mode ready flag */
 
-/* PMU ldo definitions */
-#define PMU_LDO_NORMAL                ((uint32_t)0x00000000U)  /*!< LDO normal work when PMU enter deepsleep mode */
-#define PMU_LDO_LOWPOWER              PMU_CTL_LDOLP            /*!< LDO work at low power status when PMU enter deepsleep mode */
-
 /* PMU flag reset definitions */
 #define PMU_FLAG_RESET_WAKEUP         ((uint8_t)0x00U)         /*!< wakeup flag reset */
 #define PMU_FLAG_RESET_STANDBY        ((uint8_t)0x01U)         /*!< standby flag reset */
@@ -137,6 +141,7 @@ OF SUCH DAMAGE.
 /* reset PMU registers */
 void pmu_deinit(void);
 
+/* LVD functions */
 /* select low voltage detector threshold */
 void pmu_lvd_select(uint32_t lvdt_n);
 /* select LDO output voltage */
@@ -161,11 +166,11 @@ void pmu_lowpower_driver_config(uint32_t mode);
 void pmu_normalpower_driver_config(uint32_t mode);
 
 /* set PMU mode */
-/* PMU work at sleep mode */
+/* PMU work in sleep mode */
 void pmu_to_sleepmode(uint8_t sleepmodecmd);
-/* PMU work at deepsleep mode */
-void pmu_to_deepsleepmode(uint32_t ldo, uint8_t deepsleepmodecmd);
-/* PMU work at standby mode */
+/* PMU work in deepsleep mode */
+void pmu_to_deepsleepmode(uint32_t ldo, uint32_t lowdrive, uint8_t deepsleepmodecmd);
+/* PMU work in standby mode */
 void pmu_to_standbymode(uint8_t standbymodecmd);
 /* enable PMU wakeup pin */
 void pmu_wakeup_pin_enable(void);
@@ -179,9 +184,9 @@ void pmu_backup_write_enable(void);
 void pmu_backup_write_disable(void);
 
 /* flag functions */
-/* clear flag bit */
-void pmu_flag_clear(uint32_t flag_reset);
 /* get flag state */
 FlagStatus pmu_flag_get(uint32_t flag);
+/* clear flag bit */
+void pmu_flag_clear(uint32_t flag);
 
 #endif /* GD32F30X_PMU_H */

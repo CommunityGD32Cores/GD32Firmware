@@ -115,10 +115,8 @@ void SystemInit (void)
     RCU_CTL |= RCU_CTL_IRC8MEN;
 
     RCU_MODIFY
- 
-    /* Reset CFG0 and CFG1 registers */
-    RCU_CFG0 = 0x00000000U;
-    RCU_CFG1 = 0x00000000U;
+    
+    RCU_CFG0 &= ~RCU_CFG0_SCS;
 
 #if (defined(GD32F30X_HD) || defined(GD32F30X_XD))
     /* reset HXTALEN, CKMEN and PLLEN bits */
@@ -134,6 +132,10 @@ void SystemInit (void)
 
     /* reset HXTALBPS bit */
     RCU_CTL &= ~(RCU_CTL_HXTALBPS);
+    
+    /* Reset CFG0 and CFG1 registers */
+    RCU_CFG0 = 0x00000000U;
+    RCU_CFG1 = 0x00000000U;
 
     /* configure the system clock source, PLL Multiplier, AHB/APBx prescalers and Flash settings */
     system_clock_config();
@@ -937,7 +939,7 @@ void SystemCoreClockUpdate(void)
             predv0sel = (RCU_CFG0 & RCU_CFG0_PREDV0);
             /* PREDV0 input source clock divided by 2 */
             if(RCU_CFG0_PREDV0 == predv0sel){
-                ck_src = HXTAL_VALUE / 2U;
+                ck_src /= 2U;
             }
 #elif defined(GD32F30X_CL)
             predv0sel = (RCU_CFG1 & RCU_CFG1_PREDV0SEL);

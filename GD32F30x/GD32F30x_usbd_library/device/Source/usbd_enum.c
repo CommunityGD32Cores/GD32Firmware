@@ -3,6 +3,7 @@
     \brief   USB enumeration function
 
     \version 2020-08-01, V3.0.0, firmware for GD32F30x
+    \version 2021-09-27, V3.0.1, firmware for GD32F30x
 */
 
 /*
@@ -170,7 +171,7 @@ static uint8_t* _usb_config_desc_get (usb_dev *udev, uint8_t index, uint16_t *le
 {
     (void)index;
 
-    *len = udev->desc->config_desc[2];
+    *len = udev->desc->config_desc[2] | (udev->desc->config_desc[3]<< 8);
 
     return udev->desc->config_desc;
 }

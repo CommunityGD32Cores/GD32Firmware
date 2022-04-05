@@ -70,6 +70,12 @@ void rcu_deinit(void)
     /* enable IRC8M */
     RCU_CTL |= RCU_CTL_IRC8MEN;
     rcu_osci_stab_wait(RCU_IRC8M);
+      
+    RCU_CFG0 &= ~RCU_CFG0_SCS;
+      
+    /* reset CTL register */
+    RCU_CTL &= ~(RCU_CTL_HXTALEN | RCU_CTL_CKMEN | RCU_CTL_PLLEN);
+    RCU_CTL &= ~RCU_CTL_HXTALBPS;
 
     /* reset CFG0 register */
 #if (defined(GD32F30X_HD) || defined(GD32F30X_XD))
@@ -1240,7 +1246,7 @@ uint32_t rcu_clock_freq_get(rcu_clock_freq_enum clock)
             predv0sel = (RCU_CFG0 & RCU_CFG0_PREDV0);
             /* PREDV0 input source clock divided by 2 */
             if(RCU_CFG0_PREDV0 == predv0sel){
-                ck_src = HXTAL_VALUE/2U;
+                ck_src /= 2U;
             }
 #elif defined(GD32F30X_CL)
             predv0sel = (RCU_CFG1 & RCU_CFG1_PREDV0SEL);

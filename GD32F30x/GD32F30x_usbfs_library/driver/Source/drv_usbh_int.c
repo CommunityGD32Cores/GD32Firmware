@@ -3,6 +3,7 @@
     \brief   USB host mode interrupt handler file
 
     \version 2020-08-01, V3.0.0, firmware for GD32F30x
+    \version 2021-08-06, V3.0.1, firmware for GD32F30x
 */
 
 /*
@@ -206,10 +207,12 @@ static uint32_t usbh_int_port (usb_core_driver *pudev)
                 pudev->regs.hr->HFT = 48000U;
 
                 if (HCTL_48MHZ != clock_type) {
-                    usb_phyclock_config (pudev, HCTL_48MHZ);
-                }
+                    if (USB_EMBEDDED_PHY == pudev->bp.phy_itf) {
+                        usb_phyclock_config (pudev, HCTL_48MHZ);
+                    }
 
-                port_reset = 1U;
+                    port_reset = 1U;
+                }
             } else {
                 /* for high speed device and others */
                 port_reset = 1U;

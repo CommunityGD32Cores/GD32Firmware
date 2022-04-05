@@ -4,6 +4,7 @@
 
     \version 2020-08-01, V3.0.0, firmware for GD32F30x
     \version 2020-12-07, V3.0.1, firmware for GD32F30x
+    \version 2021-06-22, V3.0.2, firmware for GD32F30x
 */
 
 /*
@@ -482,7 +483,7 @@ static uint8_t custom_hid_data_out (usb_dev *udev, uint8_t ep_num)
             break;
         }
 
-    usbd_ep_recev (udev, CUSTOMHID_IN_EP, hid->data, 2U);
+    usbd_ep_recev (udev, CUSTOMHID_OUT_EP, hid->data, 2U);
 
     return USBD_OK;
 }

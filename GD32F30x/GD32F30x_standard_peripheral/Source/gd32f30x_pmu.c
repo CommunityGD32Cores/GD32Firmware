@@ -197,7 +197,7 @@ void pmu_normalpower_driver_config(uint32_t mode)
 }
 
 /*!
-    \brief      PMU work at sleep mode
+    \brief      PMU work in sleep mode
     \param[in]  sleepmodecmd:
       \arg        WFI_CMD: use WFI command
       \arg        WFE_CMD: use WFE command
@@ -218,25 +218,40 @@ void pmu_to_sleepmode(uint8_t sleepmodecmd)
 }
 
 /*!
-    \brief      PMU work at deepsleep mode
-    \param[in]  ldo
+    \brief      PMU work in deepsleep mode
+    \param[in]  ldo:
+                only one parameter can be selected which is shown as below:
       \arg        PMU_LDO_NORMAL: LDO normal work when pmu enter deepsleep mode
-      \arg        PMU_LDO_LOWPOWER: LDO work at low power mode when pmu enter deepsleep mode
-    \param[in]  deepsleepmodecmd: 
+      \arg        PMU_LDO_LOWPOWER: LDO work in low power mode when pmu enter deepsleep mode
+    \param[in]  lowdrive:
+                only one parameter can be selected which is shown as below:
+      \arg        PMU_LOWDRIVER_ENABLE: low-driver mode enable in deep-sleep mode
+      \arg        PMU_LOWDRIVER_DISABLE: low-driver mode disable in deep-sleep mode
+    \param[in]  deepsleepmodecmd:
+                only one parameter can be selected which is shown as below:
       \arg        WFI_CMD: use WFI command
       \arg        WFE_CMD: use WFE command
     \param[out] none
     \retval     none
 */
-void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
+void pmu_to_deepsleepmode(uint32_t ldo, uint32_t lowdrive, uint8_t deepsleepmodecmd)
 {
     static uint32_t reg_snap[ 4 ];     
     /* clear stbmod and ldolp bits */
-    PMU_CTL &= ~((uint32_t)(PMU_CTL_STBMOD | PMU_CTL_LDOLP));
-    
+    PMU_CTL &= ~((uint32_t)(PMU_CTL_STBMOD | PMU_CTL_LDOLP | PMU_CTL_LDEN | PMU_CTL_LDNP | PMU_CTL_LDLP));
+
     /* set ldolp bit according to pmu_ldo */
     PMU_CTL |= ldo;
-    
+
+    /* low drive mode config in deep-sleep mode */
+    if(PMU_LOWDRIVER_ENABLE == lowdrive){
+        if(PMU_LDO_NORMAL == ldo){
+            PMU_CTL |= (uint32_t)(PMU_CTL_LDEN | PMU_CTL_LDNP);
+        }else{
+            PMU_CTL |= (uint32_t)(PMU_CTL_LDEN | PMU_CTL_LDLP);
+        }
+    }
+
     /* set sleepdeep bit of Cortex-M4 system control register */
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 
@@ -244,12 +259,12 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
     reg_snap[ 1 ] = REG32( 0xE000E100U );
     reg_snap[ 2 ] = REG32( 0xE000E104U );
     reg_snap[ 3 ] = REG32( 0xE000E108U );
-    
+
     REG32( 0xE000E010U ) &= 0x00010004U;
     REG32( 0xE000E180U )  = 0XFF7FF83DU;
-    REG32( 0xE000E184U )  = 0XBFFFF8FFU;
-    REG32( 0xE000E188U )  = 0xFFFFFFFFU;    
-    
+    REG32( 0xE000E184U )  = 0XFFFFF8FFU;
+    REG32( 0xE000E188U )  = 0xFFFFFFFFU;     
+
     /* select WFI or WFE command to enter deepsleep mode */
     if(WFI_CMD == deepsleepmodecmd){
         __WFI();
@@ -258,7 +273,7 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
         __WFE();
         __WFE();
     }
-    
+
     REG32( 0xE000E010U ) = reg_snap[ 0 ] ; 
     REG32( 0xE000E100U ) = reg_snap[ 1 ] ;
     REG32( 0xE000E104U ) = reg_snap[ 2 ] ;
@@ -269,7 +284,7 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
 }
 
 /*!
-    \brief      pmu work at standby mode
+    \brief      pmu work in standby mode
     \param[in]  standbymodecmd:
       \arg        WFI_CMD: use WFI command
       \arg        WFE_CMD: use WFE command
@@ -340,30 +355,6 @@ void pmu_wakeup_pin_disable(void)
 }
 
 /*!
-    \brief      clear flag bit
-    \param[in]  flag_reset:
-      \arg        PMU_FLAG_RESET_WAKEUP: reset wakeup flag
-      \arg        PMU_FLAG_RESET_STANDBY: reset standby flag
-    \param[out] none
-    \retval     none
-*/
-void pmu_flag_clear(uint32_t flag_reset)
-{
-    switch(flag_reset){
-    case PMU_FLAG_RESET_WAKEUP:
-        /* reset wakeup flag */
-        PMU_CTL |= PMU_CTL_WURST;
-        break;
-    case PMU_FLAG_RESET_STANDBY:
-        /* reset standby flag */
-        PMU_CTL |= PMU_CTL_STBRST;
-        break;
-    default :
-        break;
-    }
-}
-
-/*!
     \brief      get flag state
     \param[in]  flag:
       \arg        PMU_FLAG_WAKEUP: wakeup flag
@@ -382,5 +373,29 @@ FlagStatus pmu_flag_get(uint32_t flag)
         return  SET;
     }else{
         return  RESET;
+    }
+}
+
+/*!
+    \brief      clear flag bit
+    \param[in]  flag:
+      \arg        PMU_FLAG_RESET_WAKEUP: reset wakeup flag
+      \arg        PMU_FLAG_RESET_STANDBY: reset standby flag
+    \param[out] none
+    \retval     none
+*/
+void pmu_flag_clear(uint32_t flag)
+{
+    switch(flag){
+    case PMU_FLAG_RESET_WAKEUP:
+        /* reset wakeup flag */
+        PMU_CTL |= PMU_CTL_WURST;
+        break;
+    case PMU_FLAG_RESET_STANDBY:
+        /* reset standby flag */
+        PMU_CTL |= PMU_CTL_STBRST;
+        break;
+    default :
+        break;
     }
 }
