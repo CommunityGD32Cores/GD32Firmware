@@ -110,17 +110,6 @@ void wwdgt_config(uint16_t counter, uint16_t window, uint32_t prescaler)
 }
 
 /*!
-    \brief      enable early wakeup interrupt of WWDGT
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-void wwdgt_interrupt_enable(void)
-{
-    WWDGT_CFG |= WWDGT_CFG_EWIE;
-}
-
-/*!
     \brief      check early wakeup interrupt state of WWDGT
     \param[in]  none
     \param[out] none
@@ -144,4 +133,15 @@ FlagStatus wwdgt_flag_get(void)
 void wwdgt_flag_clear(void)
 {
     WWDGT_STAT &= (~WWDGT_STAT_EWIF);
+}
+
+/*!
+    \brief      enable early wakeup interrupt of WWDGT
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void wwdgt_interrupt_enable(void)
+{
+    WWDGT_CFG |= WWDGT_CFG_EWIE;
 }

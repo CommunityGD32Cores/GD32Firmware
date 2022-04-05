@@ -49,10 +49,10 @@ static uint8_t usbh_port_enabled  (usbh_host *puhost);
 static uint8_t usbh_port_disabled (usbh_host *puhost);
 static usbh_status usbh_enum_task (usbh_host *puhost);
 
-#ifdef USB_FS_LOW_PWR_ENABLE
+#if USB_LOW_POWER
 static void usb_hwp_suspend(usb_core_driver *pudev);
 static void usb_hwp_resume(usb_core_driver *pudev);
-#endif
+#endif /* USB_LOW_POWER */
 
 usbh_int_cb usbh_int_op = 
 {
@@ -237,11 +237,18 @@ void usbh_core_task (usbh_host *puhost)
             /* user callback for end of device basic enumeration */
             puhost->usr_cb->dev_enumerated();
 
-#ifdef USB_FS_LOW_PWR_ENABLE
+#if USB_LOW_POWER
             puhost->cur_state = HOST_SUSPENDED;
+
+            /* judge device remote wakup function */
+            if ((puhost->dev_prop.cfg_desc_set.cfg_desc.bmAttributes) & (1U << 5)) {
+                puhost->dev_supp_remote_wkup = 1;
+            }else{
+                puhost->dev_supp_remote_wkup = 0;
+            }
 #else
             puhost->cur_state = HOST_SET_WAKEUP_FEATURE;
-#endif
+#endif /* USB_LOW_POWER */
         }
         break;
 
@@ -286,26 +293,54 @@ void usbh_core_task (usbh_host *puhost)
         }
         break;
 
-#ifdef USB_FS_LOW_PWR_ENABLE
+#if USB_LOW_POWER
     case HOST_SUSPENDED:
-        if (USBH_OK == usbh_setdevfeature(puhost, FEATURE_SELECTOR_DEV, 0U)) {
-            puhost->suspend_flag = 1;
-            usb_hwp_suspend(puhost->data);
-            puhost->usr_cb->dev_user_input();
-            pmu_to_deepsleepmode(PMU_LDO_LOWPOWER, WFI_CMD);
-            puhost->cur_state = HOST_WAKEUP;
+        if(puhost->dev_supp_remote_wkup){
+            /* send set feature command*/
+            if (USBH_OK == usbh_setdevfeature(puhost, FEATURE_SELECTOR_REMOTEWAKEUP, 0U)) {
+
+                usb_hwp_suspend(&usbh_core);
+
+                usb_mdelay(20U);
+                puhost->suspend_flag = 1;
+                puhost->usr_cb->dev_user_input();
+
+                /* MCU enter deep-sleep*/
+                pmu_to_deepsleepmode(PMU_LDO_LOWPOWER, WFI_CMD);
+                puhost->cur_state = HOST_WAKEUP;
+            }
+        }else {
+                /* host suspend */
+                usb_hwp_suspend(&usbh_core);
+
+                usb_mdelay(20U);
+                puhost->suspend_flag = 1U;
+                puhost->usr_cb->dev_user_input();
+
+                /* MCU enter deep-sleep */
+                pmu_to_deepsleepmode(PMU_LDO_LOWPOWER, WFI_CMD);
+                puhost->cur_state = HOST_WAKEUP;
         }
         break;
 
     case HOST_WAKEUP:
-        if (USBH_OK == usbh_clrdevfeature(puhost, FEATURE_SELECTOR_DEV, 0U)) {
-            /* user callback for initalization */
-            puhost->usr_cb->dev_init();
+        /* judge suspend status */
+       if (0 == puhost->suspend_flag) {
+           usb_hwp_resume(&usbh_core);
+           usb_mdelay(500U);
 
-            puhost->cur_state = HOST_CHECK_CLASS;
-        }
-        break;
-#endif
+           if(puhost->dev_supp_remote_wkup){
+               if (USBH_OK == usbh_clrdevfeature(puhost, FEATURE_SELECTOR_DEV, 0U)) {
+                   /* user callback for initialization */
+                   puhost->usr_cb->dev_init();
+                   puhost->cur_state = HOST_CHECK_CLASS;
+               }
+           } else{
+                   puhost->cur_state = HOST_CHECK_CLASS;
+           }
+       }
+       break;
+#endif /* USB_LOW_POWER */
 
     case HOST_CLASS_ENUM:
         /* process class standard contol requests state machine */
@@ -453,7 +488,7 @@ static uint8_t usbh_port_disabled (usbh_host *puhost)
 */
 static usbh_status usbh_enum_task (usbh_host *puhost)
 {
-    uint8_t str_buf[64];
+    uint8_t str_buf[512];
 
     usbh_status status = USBH_BUSY;
 
@@ -594,7 +629,7 @@ static usbh_status usbh_enum_task (usbh_host *puhost)
 }
 
 
-#ifdef USB_FS_LOW_PWR_ENABLE
+#if USB_LOW_POWER
 
 /*!
     \brief      handles the USB resume from suspend mode
@@ -647,4 +682,4 @@ static void usb_hwp_suspend(usb_core_driver *pudev)
     *pudev->regs.PWRCLKCTL |= PWRCLKCTL_SHCLK;
 }
 
-#endif
+#endif /* USB_LOW_POWER */

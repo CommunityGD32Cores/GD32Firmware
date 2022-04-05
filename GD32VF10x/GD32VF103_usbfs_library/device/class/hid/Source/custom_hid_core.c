@@ -6,6 +6,7 @@
     \version 2020-12-08, V1.1.1, firmware for GD32VF103
     \version 2020-12-11, V1.1.2, firmware for GD32VF103
     \version 2021-05-19, V1.1.3, firmware for GD32VF103
+    \version 2021-08-03, V1.1.4, firmware for GD32VF103
 */
 
 /*
@@ -483,7 +484,7 @@ static uint8_t custom_hid_data_out (usb_dev *udev, uint8_t ep_num)
         break;
     }
 
-    usbd_ep_recev (udev, CUSTOMHID_IN_EP, hid->data, 2U);
+    usbd_ep_recev (udev, CUSTOMHID_OUT_EP, hid->data, 2U);
 
     return USBD_OK;
 }

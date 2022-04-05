@@ -77,11 +77,11 @@ void wwdgt_counter_update(uint16_t counter_value);
 /* configure counter value, window value, and prescaler divider value */
 void wwdgt_config(uint16_t counter, uint16_t window, uint32_t prescaler);
 
-/* enable early wakeup interrupt of WWDGT */
-void wwdgt_interrupt_enable(void);
 /* check early wakeup interrupt state of WWDGT */
 FlagStatus wwdgt_flag_get(void);
 /* clear early wakeup interrupt state of WWDGT */
 void wwdgt_flag_clear(void);
+/* enable early wakeup interrupt of WWDGT */
+void wwdgt_interrupt_enable(void);
 
 #endif /* GD32VF103_WWDGT_H */

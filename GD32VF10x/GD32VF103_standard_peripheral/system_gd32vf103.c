@@ -5,8 +5,7 @@
 
     \version 2019-06-05, V1.0.0, firmware for GD32VF103
     \version 2020-08-04, V1.1.0, firmware for GD32VF103
-    \version 2021-05-19, V1.1.1, firmware for GD32VF103
-*/
+    \version 2021-05-19, V1.1.1, firmware for GD32VF103*/
 
 /*
     Copyright (c) 2020, GigaDevice Semiconductor Inc.
@@ -61,6 +60,18 @@ OF SUCH DAMAGE.
 //#define __SYSTEM_CLOCK_72M_PLL_HXTAL            (uint32_t)(72000000)
 //#define __SYSTEM_CLOCK_96M_PLL_HXTAL            (uint32_t)(96000000)
 #define __SYSTEM_CLOCK_108M_PLL_HXTAL           (uint32_t)(108000000)
+
+#define RCU_MODIFY(__delay)     do{                                     \
+                                    volatile uint32_t i;                \
+                                    if(0 != __delay){                   \
+                                        RCU_CFG0 |= RCU_AHB_CKSYS_DIV2; \
+                                        for(i=0; i<__delay; i++){       \
+                                        }                               \
+                                        RCU_CFG0 |= RCU_AHB_CKSYS_DIV4; \
+                                        for(i=0; i<__delay; i++){       \
+                                        }                               \
+                                    }                                   \
+                                }while(0)
 
 #define SEL_IRC8M       0x00U
 #define SEL_HXTAL       0x01U
@@ -153,7 +164,9 @@ void SystemInit(void)
     /* reset the RCC clock configuration to the default reset state */
     /* enable IRC8M */
     RCU_CTL |= RCU_CTL_IRC8MEN;
-    
+    while(0U == (RCU_CTL & RCU_CTL_IRC8MSTB)){
+    }
+    RCU_MODIFY(0x50);
     /* reset SCS, AHBPSC, APB1PSC, APB2PSC, ADCPSC, CKOUT0SEL bits */
     RCU_CFG0 &= ~(RCU_CFG0_SCS | RCU_CFG0_AHBPSC | RCU_CFG0_APB1PSC | RCU_CFG0_APB2PSC |
                   RCU_CFG0_ADCPSC | RCU_CFG0_ADCPSC_2 | RCU_CFG0_CKOUT0SEL);

@@ -252,7 +252,7 @@ static uint8_t* _usb_config_desc_get (usb_core_driver *udev, uint8_t index, uint
 {
     (void)index;
 
-    *len = udev->dev.desc->config_desc[2];
+    *len = udev->dev.desc->config_desc[2] | (udev->dev.desc->config_desc[3]<< 8);
 
     return udev->dev.desc->config_desc;
 }
