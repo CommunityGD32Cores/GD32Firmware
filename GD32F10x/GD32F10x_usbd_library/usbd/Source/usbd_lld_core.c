@@ -3,6 +3,8 @@
     \brief   USB device low level driver core
 
     \version 2020-07-17, V3.0.0, firmware for GD32F10x
+    \version 2021-08-10, V3.0.1, firmware for GD32F10x
+    \version 2021-08-18, V3.0.2, firmware for GD32F10x
 */
 
 /*
@@ -217,7 +219,7 @@ static void usbd_ep_reset (usb_dev *udev)
 
     /* reset non-control endpoints */
     for (i = 1U; i < EP_COUNT; i++) {
-        USBD_EPxCS(i) = (USBD_EPxCS(i) & EPCS_MASK) | i;
+        USBD_EPxCS(i) = (USBD_EPxCS(i) & (~EPCS_MASK)) | i;
     }
 
     /* clear endpoint 0 register */
@@ -254,7 +256,7 @@ static void usbd_ep_setup (usb_dev *udev, uint8_t buf_kind, uint32_t buf_addr, c
     if (EP_DIR(ep_addr)) {
         transc = &udev->transc_in[ep_num];
 
-        transc->max_len = (uint8_t)max_len;
+        transc->max_len = max_len;
 
         if ((uint8_t)EP_BUF_SNG == buf_kind) {
             btable_ep[ep_num].tx_addr = buf_addr;
@@ -275,7 +277,7 @@ static void usbd_ep_setup (usb_dev *udev, uint8_t buf_kind, uint32_t buf_addr, c
     } else {
         transc = &udev->transc_out[ep_num];
 
-        transc->max_len = (uint8_t)max_len;
+        transc->max_len = max_len;
 
         if ((uint8_t)EP_BUF_SNG == buf_kind) {
             btable_ep[ep_num].rx_addr = buf_addr;

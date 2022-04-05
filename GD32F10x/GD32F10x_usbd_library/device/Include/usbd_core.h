@@ -3,6 +3,7 @@
     \brief   USB device driver core 
 
     \version 2020-07-17, V3.0.0, firmware for GD32F10x
+    \version 2021-08-10, V3.0.1, firmware for GD32F10x
 */
 
 /*
@@ -82,10 +83,10 @@ enum usbd_ep_kind {
 
 /* USB device transaction structure */
 typedef struct {
-    uint8_t   max_len;            /*!< packet max length */
+    uint16_t  max_len;            /*!< packet max length */
     uint8_t   ep_stall;           /*!< endpoint STALL */
 
-    uint8_t  *xfer_buf;           /*!< transfer buffer */
+    uint8_t   *xfer_buf;          /*!< transfer buffer */
     uint16_t  xfer_len;           /*!< transfer length */
     uint16_t  xfer_count;         /*!< transfer count */
 } usb_transc;

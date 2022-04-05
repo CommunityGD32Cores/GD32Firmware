@@ -303,39 +303,39 @@ void usart_mute_mode_disable(uint32_t usart_periph);
 void usart_mute_mode_wakeup_config(uint32_t usart_periph, uint32_t wmethod);
 
 /* LIN mode communication */
-/* LIN mode enable */
+/* enable LIN mode */
 void usart_lin_mode_enable(uint32_t usart_periph);
-/* LIN mode disable */
+/* disable LIN mode */
 void usart_lin_mode_disable(uint32_t usart_periph);
-/* LIN break detection length */
+/* configure LIN break frame length */
 void usart_lin_break_detection_length_config(uint32_t usart_periph, uint32_t lblen);
 /* send break frame */
 void usart_send_break(uint32_t usart_periph);
 
 /* half-duplex communication */
-/* half-duplex enable */
+/* enable half-duplex */
 void usart_halfduplex_enable(uint32_t usart_periph);
-/* half-duplex disable */
+/* disable half-duplex */
 void usart_halfduplex_disable(uint32_t usart_periph);
 
 /* synchronous communication */
-/* clock enable */
+/* enable CK pin in synchronous mode */
 void usart_synchronous_clock_enable(uint32_t usart_periph);
-/* clock disable */
+/* disable CK pin in synchronous mode */
 void usart_synchronous_clock_disable(uint32_t usart_periph);
 /* configure usart synchronous mode parameters */
 void usart_synchronous_clock_config(uint32_t usart_periph, uint32_t clen, uint32_t cph, uint32_t cpl);
 
 /* smartcard communication */
-/* guard time value configure in smartcard mode */
+/* configure guard time value in smartcard mode */
 void usart_guard_time_config(uint32_t usart_periph,uint32_t gaut);
-/* smartcard mode enable */
+/* enable smartcard mode */
 void usart_smartcard_mode_enable(uint32_t usart_periph);
-/* smartcard mode disable */
+/* disable smartcard mode */
 void usart_smartcard_mode_disable(uint32_t usart_periph);
-/* NACK enable in smartcard mode */
+/* enable NACK in smartcard mode */
 void usart_smartcard_mode_nack_enable(uint32_t usart_periph);
-/* NACK disable in smartcard mode */
+/* disable NACK in smartcard mode */
 void usart_smartcard_mode_nack_disable(uint32_t usart_periph);
 
 /* IrDA communication */
@@ -367,11 +367,11 @@ void usart_flag_clear(uint32_t usart_periph, usart_flag_enum flag);
 
 /* interrupt functions */
 /* enable USART interrupt */
-void usart_interrupt_enable(uint32_t usart_periph, uint32_t int_flag);
+void usart_interrupt_enable(uint32_t usart_periph, uint32_t interrupt);
 /* disable USART interrupt */
-void usart_interrupt_disable(uint32_t usart_periph, uint32_t int_flag);
+void usart_interrupt_disable(uint32_t usart_periph, uint32_t interrupt);
 /* get USART interrupt and flag status */
 FlagStatus usart_interrupt_flag_get(uint32_t usart_periph, uint32_t int_flag);
 /* clear interrupt flag in STAT register */
-void usart_interrupt_flag_clear(uint32_t usart_periph, uint32_t flag);
+void usart_interrupt_flag_clear(uint32_t usart_periph, uint32_t int_flag);
 #endif /* GD32F10X_USART_H */ 

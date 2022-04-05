@@ -8,6 +8,7 @@
     \version 2019-11-27, V2.1.1, firmware for GD32F10x
     \version 2020-07-14, V2.1.2, firmware for GD32F10x
     \version 2020-09-30, V2.2.0, firmware for GD32F10x
+    \version 2021-07-21, V2.2.1, firmware for GD32F10x
 */
 
 /*
@@ -843,7 +844,7 @@ uint8_t can_transmit_error_number_get(uint32_t can_periph)
       \arg        CAN_INT_BO: bus-off interrupt enable
       \arg        CAN_INT_ERRN: error number interrupt enable
       \arg        CAN_INT_ERR: error interrupt enable
-      \arg        CAN_INT_WU: wakeup interrupt enable
+      \arg        CAN_INT_WAKEUP: wakeup interrupt enable
       \arg        CAN_INT_SLPW: sleep working interrupt enable
     \param[out] none
     \retval     none
@@ -871,7 +872,7 @@ void can_interrupt_enable(uint32_t can_periph, uint32_t interrupt)
       \arg        CAN_INT_BO: bus-off interrupt enable
       \arg        CAN_INT_ERRN: error number interrupt enable
       \arg        CAN_INT_ERR: error interrupt enable
-      \arg        CAN_INT_WU: wakeup interrupt enable
+      \arg        CAN_INT_WAKEUP: wakeup interrupt enable
       \arg        CAN_INT_SLPW: sleep working interrupt enable
     \param[out] none
     \retval     none

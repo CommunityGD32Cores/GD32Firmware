@@ -172,7 +172,7 @@ static uint8_t* _usb_config_desc_get (usb_dev *udev, uint8_t index, uint16_t *le
 {
     (void)index;
 
-    *len = udev->desc->config_desc[2];
+    *len = udev->desc->config_desc[2] | (udev->desc->config_desc[3]<< 8U);
 
     return udev->desc->config_desc;
 }

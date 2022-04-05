@@ -1213,7 +1213,7 @@ typedef struct
 #define ENET_FORWARD_UNDERSZ_GOODFRAMES_DISABLE   ((uint32_t)0x00000000)                        /*!< RxFIFO drops all frames whose length is less than 64 bytes */
 #define ENET_FORWARD_UNDERSZ_GOODFRAMES           (ENET_DMA_CTL_FUF << 2)                       /*!< the function that forwarding undersized good frames */
 
-#define ENET_SECONDFRAME_OPT_ENABLE               ((uint32_t)0x00000000)                        /*!< TxDMA controller operate on second frame mode enable*/
+#define ENET_SECONDFRAME_OPT_ENABLE               ENET_DMA_CTL_OSF                              /*!< TxDMA controller operate on second frame mode enable*/
 #define ENET_SECONDFRAME_OPT_DISABLE              ((uint32_t)0x00000000)                        /*!< TxDMA controller operate on second frame mode disable */
 #define ENET_SECONDFRAME_OPT                      ENET_DMA_CTL_OSF                              /*!< TxDMA controller operate on second frame function */
 
