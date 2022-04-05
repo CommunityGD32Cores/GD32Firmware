@@ -1,16 +1,17 @@
 /*!
-    \file  gd32f1x0_crc.h
-    \brief definitions for the CRC
+    \file    gd32f1x0_crc.h
+    \brief   definitions for the CRC
 
     \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
     \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
     \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2020-09-21, V3.3.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -75,6 +76,11 @@ OF SUCH DAMAGE.
 #define CRC_INPUT_DATA_HALFWORD        CTL_REV_I(2)                    /*!< input data reversed by half-word type */
 #define CRC_INPUT_DATA_WORD            CTL_REV_I(3)                    /*!< input data reversed by word type */
 
+/* input data format */
+#define INPUT_FORMAT_WORD              0U                              /*!< input data in word format */
+#define INPUT_FORMAT_HALFWORD          1U                              /*!< input data in half-word format */
+#define INPUT_FORMAT_BYTE              2U                              /*!< input data in byte format */
+
 /* function declarations */
 
 /* deinit CRC calculation unit */
@@ -101,8 +107,8 @@ void crc_init_data_register_write(uint32_t init_data);
 void crc_input_data_reverse_config(uint32_t data_reverse);
 
 /* CRC calculate a 32-bit data */
-uint32_t crc_single_data_calculate(uint32_t sdata);
+uint32_t crc_single_data_calculate(uint32_t sdata, uint8_t data_format);
 /* CRC calculate a 32-bit data array */
-uint32_t crc_block_data_calculate(uint32_t array[], uint32_t size);
+uint32_t crc_block_data_calculate(void *array, uint32_t size, uint8_t data_format);
 
 #endif /* GD32F1X0_CRC_H */

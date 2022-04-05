@@ -1,16 +1,17 @@
 /*!
-    \file  gd32f1x0_timer.c
-    \brief TIMER driver
+    \file    gd32f1x0_timer.c
+    \brief   TIMER driver
 
     \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
     \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
     \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2020-09-21, V3.3.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -40,7 +41,7 @@ OF SUCH DAMAGE.
 
 /*!
     \brief      deinit a TIMER
-    \param[in]  timer_periph: TIMERx(x=0..2,13..16),TIMER5 just for GD32F150/GD32F190
+    \param[in]  timer_periph: TIMERx(x=0..2,13..16), TIMER5 just for GD32F150/GD32F190
     \param[out] none
     \retval     none
 */
@@ -413,7 +414,7 @@ void timer_ocpre_clear_source_config(uint32_t timer_periph, uint8_t ocpreclear)
       \arg        TIMER_INT_CH0: channel 0 interrupt enable, TIMERx(x=0..2,13..16)
       \arg        TIMER_INT_CH1: channel 1 interrupt enable, TIMERx(x=0..2,14)
       \arg        TIMER_INT_CH2: channel 2 interrupt enable, TIMERx(x=0..2)
-      \arg        TIMER_INT_CH3: channel 3 interrupt enable , TIMERx(x=0..2)
+      \arg        TIMER_INT_CH3: channel 3 interrupt enable, TIMERx(x=0..2)
       \arg        TIMER_INT_CMT: commutation interrupt enable, TIMERx(x=0,14..16)
       \arg        TIMER_INT_TRG: trigger interrupt enable, TIMERx(x=0..2,14)
       \arg        TIMER_INT_BRK: break interrupt enable, TIMERx(x=0,14..16)
@@ -434,7 +435,7 @@ void timer_interrupt_enable(uint32_t timer_periph, uint32_t interrupt)
       \arg        TIMER_INT_CH0: channel 0 interrupt disable, TIMERx(x=0..2,13..16)
       \arg        TIMER_INT_CH1: channel 1 interrupt disable, TIMERx(x=0..2,14)
       \arg        TIMER_INT_CH2: channel 2 interrupt disable, TIMERx(x=0..2)
-      \arg        TIMER_INT_CH3: channel 3 interrupt disable , TIMERx(x=0..2)
+      \arg        TIMER_INT_CH3: channel 3 interrupt disable, TIMERx(x=0..2)
       \arg        TIMER_INT_CMT: commutation interrupt disable, TIMERx(x=0,14..16)
       \arg        TIMER_INT_TRG: trigger interrupt disable, TIMERx(x=0..2,14)
       \arg        TIMER_INT_BRK: break interrupt disable, TIMERx(x=0,14..16)
@@ -578,7 +579,7 @@ void timer_dma_enable(uint32_t timer_periph, uint16_t dma)
       \arg        TIMER_DMA_CH1D: channel 1 DMA request, TIMERx(x=0..2,14)
       \arg        TIMER_DMA_CH2D: channel 2 DMA request, TIMERx(x=0..2)
       \arg        TIMER_DMA_CH3D: channel 3 DMA request, TIMERx(x=0..2)
-      \arg        TIMER_DMA_CMTD: commutation DMA request , TIMERx(x=0,14)
+      \arg        TIMER_DMA_CMTD: commutation DMA request, TIMERx(x=0,14)
       \arg        TIMER_DMA_TRGD: trigger DMA request, TIMERx(x=0..2,14)
     \param[out] none
     \retval     none

@@ -1,16 +1,17 @@
 /*!
-    \file  gd32f1x0_can.h
-    \brief definitions for the CAN
+    \file    gd32f1x0_can.h
+    \brief   definitions for the CAN
 
     \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
     \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
     \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2020-09-21, V3.3.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -396,7 +397,7 @@ typedef enum
     /* interrupt flags in RFIFO0 register */
     CAN_INT_FLAG_RFO1 = CAN_REGIDX_BITS(RFIFO1_REG_OFFSET, 4U, 6U),      /*!< receive FIFO1 overfull interrupt flag */
     CAN_INT_FLAG_RFF1 = CAN_REGIDX_BITS(RFIFO1_REG_OFFSET, 3U, 5U),      /*!< receive FIFO1 full interrupt flag */
-    CAN_INT_FLAG_RFL1  = CAN_REGIDX_BITS(RFIFO1_REG_OFFSET, 2U, 4U),     /*!< receive FIFO0 not empty interrupt flag */
+    CAN_INT_FLAG_RFL1  = CAN_REGIDX_BITS(RFIFO1_REG_OFFSET, 2U, 4U),     /*!< receive FIFO1 not empty interrupt flag */
     /* interrupt flags in ERR register */
     CAN_INT_FLAG_ERRN  = CAN_REGIDX_BITS(ERR_REG_OFFSET, 3U, 11U),       /*!< error number interrupt flag */ 
     CAN_INT_FLAG_BOERR = CAN_REGIDX_BITS(ERR_REG_OFFSET, 2U, 10U),       /*!< bus-off error interrupt flag */ 

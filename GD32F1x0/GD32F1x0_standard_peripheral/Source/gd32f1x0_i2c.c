@@ -1,16 +1,17 @@
 /*!
-    \file  gd32f1x0_i2c.c
-    \brief I2C driver
+    \file    gd32f1x0_i2c.c
+    \brief   I2C driver
 
     \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
     \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
     \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2020-09-21, V3.3.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -45,7 +46,7 @@ OF SUCH DAMAGE.
 #define I2C_ADDRESS2_MASK         ((uint32_t)0x000000FEU)             /*!< the second i2c address mask */
 
 /* I2C register bit offset */
-#define STAT1_PECV_OFFSET         ((uint32_t)0x00000008U)                      /* bit offset of PECV in I2C_STAT1 */
+#define STAT1_PECV_OFFSET         ((uint32_t)0x00000008U)             /* bit offset of PECV in I2C_STAT1 */
 
 /*!
     \brief      reset I2C
@@ -793,4 +794,3 @@ void i2c_sam_timeout_disable(uint32_t i2c_periph)
 }
 
 #endif /* GD32F170_190 */
-

@@ -1,16 +1,17 @@
 /*!
-    \file  gd32f1x0_opa.h
-    \brief definitions for the OPA
+    \file    gd32f1x0_opa.h
+    \brief   definitions for the OPA
 
     \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
     \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
     \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2020-09-21, V3.3.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -109,7 +110,7 @@ OF SUCH DAMAGE.
 #define OPA_S1OPA0              OPA_CTL_S1OPA0          /*!< S1 switch enable for OPA0 */
 #define OPA_S2OPA0              OPA_CTL_S2OPA0          /*!< S2 switch enable for OPA0 */
 #define OPA_S3OPA0              OPA_CTL_S3OPA0          /*!< S3 switch enable for OPA0 */
-#define OPA_T3OPA1              OPA_CTL_S3OPA1          /*!< T3 switch enable for OPA1 */
+#define OPA_T3OPA1              OPA_CTL_T3OPA1          /*!< T3 switch enable for OPA1 */
 #define OPA_S1OPA1              OPA_CTL_S1OPA1          /*!< S1 switch enable for OPA1 */
 #define OPA_S2OPA1              OPA_CTL_S2OPA1          /*!< S2 switch enable for OPA1 */
 #define OPA_S3OPA1              OPA_CTL_S3OPA1          /*!< S3 switch enable for OPA1 */

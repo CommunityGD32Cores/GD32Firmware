@@ -7,10 +7,11 @@
 ;    2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
 ;    2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
 ;    2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
+;    2020-09-21, V3.3.0, firmware update for GD32F1x0(x=3,5,7,9)
 ;*/
 
 ;/*
-;    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+;    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 ;
 ;    Redistribution and use in source and binary forms, with or without modification, 
 ;are permitted provided that the following conditions are met:
@@ -49,7 +50,7 @@
 
         DATA
 __vector_table
-        DCD     sfe(CSTACK)		                    ; top of stack
+        DCD     sfe(CSTACK)                         ; top of stack
         DCD     Reset_Handler                       ; Vector Number 1,Reset Handler
 
         DCD     NMI_Handler                         ; Vector Number 2,NMI Handler
@@ -380,7 +381,7 @@ USBD_HP_IRQHandler
         PUBWEAK USBDWakeUp_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 USBDWakeUp_IRQHandler
-        B USBDWakeUp_IRQHandler             
+        B USBDWakeUp_IRQHandler
 
         PUBWEAK CAN0_TX_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
@@ -428,12 +429,12 @@ CAN1_RX0_IRQHandler
         B CAN1_RX0_IRQHandler
 
         PUBWEAK CAN1_RX1_IRQHandler
-        SECTION .text:CODE:NOROOT:REORDER(1)	
+        SECTION .text:CODE:NOROOT:REORDER(1)
 CAN1_RX1_IRQHandler
         B CAN1_RX1_IRQHandler
-	
+
         PUBWEAK CAN1_SCE_IRQHandler
         SECTION .text:CODE:NOROOT:REORDER(1)
 CAN1_SCE_IRQHandler
-        B CAN1_SCE_IRQHandler	
+        B CAN1_SCE_IRQHandler
         END

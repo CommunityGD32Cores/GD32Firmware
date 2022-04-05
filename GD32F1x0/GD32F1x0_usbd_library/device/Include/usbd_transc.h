@@ -1,18 +1,12 @@
 /*!
-    \file  usbd_pwr.h
-    \brief USB device power management functions prototype
+    \file    usbd_transc.h
+    \brief   USBD transaction 
 
-    2014-12-26, V1.0.0, platform GD32F1x0(x=5)
-    2016-01-15, V2.0.0, platform GD32F1x0(x=5)
-    2016-04-30, V3.0.0, firmware update for GD32F1x0(x=5)
-    2017-06-19, V3.1.0, firmware update for GD32F1x0(x=5)
-    2019-11-20, V3.2.0, firmware update for GD32F1x0(x=5)
+    \version 2020-07-23, V3.0.0, firmware for GD32F1x0
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -38,17 +32,33 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#ifndef USBD_PWR_H
-#define USBD_PWR_H
+#ifndef __USB_TRANSC_H
+#define __USB_TRANSC_H
 
 #include "usbd_core.h"
 
-/* function declarations */
-/* USB wakeup first operation is to wakeup mcu */
-void  resume_mcu (void);
-/* set USB device to suspend mode */
-void  usbd_suspend (void);
-/* start to remote wakeup */
-void  usbd_remote_wakeup_active (void);
+/*!
+    \brief      USB transaction configure
+    \param[in]  transc: pointer to USB device transaction instance
+    \param[in]  buf: transfer data buffer
+    \param[in]  len: transfer data length
+    \param[in]  count: transfer data counter
+    \param[out] none
+    \retval     none
+*/
+__STATIC_INLINE void usb_transc_config (usb_transc *transc, uint8_t *buf, uint16_t len, uint16_t count)
+{
+    transc->xfer_buf = buf;
+    transc->xfer_len = len;
+    transc->xfer_count = count;
+}
 
-#endif /* USBD_PWR_H */
+/* function declarations */
+/* process USB SETUP transaction */
+void _usb_setup_transc (usb_dev *udev, uint8_t ep_num);
+/* process USB OUT transaction */
+void _usb_out0_transc (usb_dev *udev, uint8_t ep_num);
+/* process USB IN transaction */
+void _usb_in0_transc (usb_dev *udev, uint8_t ep_num);
+
+#endif /* __USB_TRANSC_H */

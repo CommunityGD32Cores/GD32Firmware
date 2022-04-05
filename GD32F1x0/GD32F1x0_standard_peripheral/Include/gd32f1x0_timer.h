@@ -1,16 +1,17 @@
 /*!
-    \file  gd32f1x0_timer.h
-    \brief definitions for the TIMER
+    \file    gd32f1x0_timer.h
+    \brief   definitions for the TIMER
 
     \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
     \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
     \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2020-09-21, V3.3.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -635,7 +636,7 @@ void timer_repetition_value_config(uint32_t timer_periph, uint16_t repetition);
 /* configure TIMER autoreload register value */
 void timer_autoreload_value_config(uint32_t timer_periph, uint32_t autoreload);
 /* configure TIMER counter register value */
-void timer_counter_value_config(uint32_t timer_periph , uint32_t counter);
+void timer_counter_value_config(uint32_t timer_periph, uint32_t counter);
 /* read TIMER counter value */
 uint32_t timer_counter_read(uint32_t timer_periph);
 /* read TIMER prescaler value */

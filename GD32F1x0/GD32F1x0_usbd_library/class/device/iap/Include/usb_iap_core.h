@@ -1,18 +1,12 @@
 /*!
-    \file  usbd_int.h
-    \brief usb device interrupt handler header file
+    \file    usb_iap_core.h
+    \brief   the header file of IAP driver
 
-    2014-12-26, V1.0.0, platform GD32F1x0(x=5)
-    2016-01-15, V2.0.0, platform GD32F1x0(x=5)
-    2016-04-30, V3.0.0, firmware update for GD32F1x0(x=5)
-    2017-06-19, V3.1.0, firmware update for GD32F1x0(x=5)
-    2019-11-20, V3.2.0, firmware update for GD32F1x0(x=5)
+    \version 2020-07-23, V3.0.0, firmware for GD32F1x0
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -38,26 +32,51 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#ifndef USBD_INT_H
-#define USBD_INT_H
+#ifndef __USB_IAP_CORE_H
+#define __USB_IAP_CORE_H
 
-#include "usbd_core.h"
-#include "usbd_std.h"
-#include "usbd_pwr.h"
+#include "usbd_enum.h"
+#include "usb_hid.h"
 
-extern usbd_core_handle_struct usb_device_dev;
+#define USB_DESC_LEN_IAP_REPORT             35U
+#define USB_DESC_LEN_IAP_CONFIG_SET         41U
+
+/* special commands with download request */
+#define IAP_OPTION_BYTE                     0x01U
+#define IAP_ERASE                           0x02U
+#define IAP_DNLOAD                          0x03U
+#define IAP_LEAVE                           0x04U
+#define IAP_GETBIN_ADDRESS                  0x05U
+
+typedef void (*app_func) (void);
 
 typedef struct
 {
-    uint8_t (*SOF) (usbd_core_handle_struct *pudev); /*!< SOF ISR callback */
-}usbd_int_cb_struct;
+    uint8_t report_buf[IAP_OUT_PACKET + 1U];
+    uint8_t option_byte[IAP_IN_PACKET];
 
-extern usbd_int_cb_struct *usbd_int_fops;
+    /* state machine variables */
+    uint8_t dev_status[IAP_IN_PACKET];
+    uint8_t bin_addr[IAP_IN_PACKET];
+
+    uint8_t reportID;
+    uint8_t flag;
+
+    uint32_t protocol;
+    uint32_t idlestate;
+
+    uint16_t transfer_times;
+    uint16_t page_count;
+    uint16_t lps;           /* last packet size */
+    uint32_t file_length;
+    uint32_t base_address;
+} usbd_iap_handler;
+
+extern usb_desc iap_desc;
+extern usb_class iap_class;
 
 /* function declarations */
-/* USB device interrupt service routine */
-void  usbd_isr (void);
-/* handle USB high priority successful transfer event */
-uint8_t  usbd_intf_hpst (usbd_core_handle_struct *pudev);
+/* send IAP report */
+uint8_t iap_report_send(usb_dev *udev, uint8_t *report, uint16_t len);
 
-#endif /* USBD_INT_H */
+#endif  /* __USB_IAP_CORE_H */

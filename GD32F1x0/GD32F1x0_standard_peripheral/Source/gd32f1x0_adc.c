@@ -1,16 +1,17 @@
 /*!
-    \file  gd32f1x0_adc.c
-    \brief ADC driver
+    \file    gd32f1x0_adc.c
+    \brief   ADC driver
 
     \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
     \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
     \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2020-09-21, V3.3.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -333,7 +334,7 @@ void adc_regular_channel_config(uint8_t rank, uint8_t channel, uint32_t sample_t
         rsq |= ((uint32_t)channel << (5U*(rank-12U)));
         ADC_RSQ0 = rsq;
     }else{
-	    /* illegal parameters */
+        /* illegal parameters */
     }
     
     /* configure ADC sampling time */
@@ -376,7 +377,7 @@ void adc_inserted_channel_config(uint8_t rank, uint8_t channel, uint32_t sample_
     uint8_t inserted_length;
     uint32_t isq,sampt;
 
-    inserted_length = (uint8_t)GET_BITS(ADC_ISQ , 20U , 21U);
+    inserted_length = (uint8_t)GET_BITS(ADC_ISQ, 20U, 21U);
   
     isq = ADC_ISQ;
     isq &= ~((uint32_t)(ADC_ISQ_ISQN << (15U - (inserted_length - rank)*5U)));
@@ -878,4 +879,5 @@ void adc_oversample_mode_disable(void)
 {
     ADC_OVSAMPCTL &= ~((uint32_t)ADC_OVSAMPCTL_OVSEN);
 }
+
 #endif /* GD32F170_190 */

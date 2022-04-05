@@ -1,16 +1,17 @@
 /*!
-    \file  gd32f1x0_opa.c
-    \brief OPA driver
+    \file    gd32f1x0_opa.c
+    \brief   OPA driver
 
     \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
     \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
     \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2020-09-21, V3.3.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -54,7 +55,7 @@ void opa_deinit(void)
 
 /*!
     \brief      enable OPA switch
-    \param[in]  opax_swy£ºOPA switch
+    \param[in]  opax_swyï¿½ï¿½OPA switch
                 only one parameter can be selected which is shown as below:
       \arg        OPA_T3OPA0: T3 switch enable for OPA0
       \arg        OPA_S1OPA0: S1 switch enable for OPA0
@@ -115,7 +116,7 @@ void opa_disable(uint32_t opa_periph)
 
 /*!
     \brief      disable OPA switch
-    \param[in]  opax_swy£ºOPA switch
+    \param[in]  opax_swyï¿½ï¿½OPA switch
                 only one parameter can be selected which is shown as below:
       \arg        OPA_T3OPA0: T3 switch enable for OPA0
       \arg        OPA_S1OPA0: S1 switch enable for OPA0
@@ -148,11 +149,11 @@ void opa_switch_disable(uint32_t opax_swy)
 void opa_low_power_enable(uint32_t opa_periph)
 {
     if(OPA0 == opa_periph){
-        OPA_CTL &= ~OPA_CTL_OPA0LPM;
+        OPA_CTL |= OPA_CTL_OPA0LPM;
     }else if(OPA1 == opa_periph){
-        OPA_CTL &= ~OPA_CTL_OPA1LPM;
+        OPA_CTL |= OPA_CTL_OPA1LPM;
     }else{
-        OPA_CTL &= ~OPA_CTL_OPA2LPM;
+        OPA_CTL |= OPA_CTL_OPA2LPM;
     }
 }
 
@@ -166,11 +167,11 @@ void opa_low_power_enable(uint32_t opa_periph)
 void opa_low_power_disable(uint32_t opa_periph)
 {
     if(OPA0 == opa_periph){
-        OPA_CTL |= OPA_CTL_OPA0LPM;
+        OPA_CTL &= ~OPA_CTL_OPA0LPM;
     }else if(OPA1 == opa_periph){
-        OPA_CTL |= OPA_CTL_OPA1LPM;
+        OPA_CTL &= ~OPA_CTL_OPA1LPM;
     }else{
-        OPA_CTL |= OPA_CTL_OPA2LPM;
+        OPA_CTL &= ~OPA_CTL_OPA2LPM;
     }
 }
 
@@ -300,7 +301,7 @@ void opa_trim_value_lp_config(uint32_t opa_periph,uint32_t opa_input,uint32_t op
             lpbt |= (opa_trimvalue << 5U);
         }
     }else if (OPA1 == opa_periph){
-        ctl &= (uint32_t)~(OPA_CTL_OPA0CAL_L | OPA_CTL_OPA0CAL_H);
+        ctl &= (uint32_t)~(OPA_CTL_OPA1CAL_L | OPA_CTL_OPA1CAL_H);
         ctl |= (uint32_t)(opa_input << 8U);
         if(OPA_INPUT_P == opa_input){
             /* clear the specified PMOS pairs low power mode 5-bit offset trim value */
@@ -345,7 +346,7 @@ FlagStatus opa_cal_out_get(uint32_t opa_periph)
 
     if(OPA0 == opa_periph){
         /* get opa0 calibration output bit status */
-        if ((uint32_t)RESET != (data & OPA_CTL_OPA1CALOUT)){
+        if ((uint32_t)RESET != (data & OPA_CTL_OPA0CALOUT)){
             bitstatus = SET;
         }else{
             bitstatus = RESET;
@@ -359,7 +360,7 @@ FlagStatus opa_cal_out_get(uint32_t opa_periph)
         }
     }else{
         /* get opa2 calibration output bit status */
-        if((uint32_t)RESET != (data & OPA_CTL_OPA1CALOUT)){
+        if((uint32_t)RESET != (data & OPA_CTL_OPA2CALOUT)){
             bitstatus = SET;
         }else{
             bitstatus = RESET;

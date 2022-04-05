@@ -1,16 +1,17 @@
 /*!
-    \file  gd32f1x0_fmc.c
-    \brief FMC driver
+    \file    gd32f1x0_fmc.c
+    \brief   FMC driver
 
     \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
     \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
     \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2020-09-21, V3.3.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -745,9 +746,9 @@ void fmc_interrupt_disable(uint32_t interrupt)
     \brief      get FMC interrupt flag state
     \param[in]  flag: FMC interrupt flags, refer to fmc_interrupt_flag_enum
                 only one parameter can be selected which is shown as below:
-      \arg        FMC_INT_FLAG_PGERR: FMC operation error interrupt flag bit
-      \arg        FMC_INT_FLAG_WPERR: FMC erase/program protection error interrupt flag bit
-      \arg        FMC_INT_FLAG_END: FMC end of operation interrupt flag bit
+      \arg        FMC_INT_FLAG_PGERR: FMC operation error interrupt flag
+      \arg        FMC_INT_FLAG_WPERR: FMC erase/program protection error interrupt flag
+      \arg        FMC_INT_FLAG_END: FMC end of operation interrupt flag
     \param[out] none
     \retval     FlagStatus: SET or RESET
 */
@@ -766,9 +767,9 @@ FlagStatus fmc_interrupt_flag_get(uint32_t flag)
     \brief      clear the FMC pending interrupt flag
     \param[in]  flag: FMC interrupt flags, refer to can_interrupt_flag_enum
                 one or more parameters can be selected which are shown as below:
-      \arg        FMC_INT_FLAG_PGERR: FMC operation error interrupt flag bit
-      \arg        FMC_INT_FLAG_WPERR: FMC erase/program protection error interrupt flag bit
-      \arg        FMC_INT_FLAG_END: FMC end of operation interrupt flag bit
+      \arg        FMC_INT_FLAG_PGERR: FMC operation error interrupt flag
+      \arg        FMC_INT_FLAG_WPERR: FMC erase/program protection error interrupt flag
+      \arg        FMC_INT_FLAG_END: FMC end of operation interrupt flag
     \param[out] none
     \retval     none
 */

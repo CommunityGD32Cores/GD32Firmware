@@ -1,16 +1,17 @@
 /*!
-    \file  gd32f1x0_pmu.c
-    \brief PMU driver
+    \file    gd32f1x0_pmu.c
+    \brief   PMU driver
 
     \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
     \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
     \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2020-09-21, V3.3.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -283,6 +284,5 @@ FlagStatus pmu_flag_get(uint32_t flag )
     if(PMU_CS & flag){
         ret_status = SET;
     }
-    
     return ret_status;
 }

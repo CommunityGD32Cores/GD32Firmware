@@ -1,16 +1,17 @@
 /*!
-    \file  gd32f1x0_can.c
-    \brief CAN driver
+    \file    gd32f1x0_can.c
+    \brief   CAN driver
 
     \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
     \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
     \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
     \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2020-09-21, V3.3.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -40,7 +41,7 @@ OF SUCH DAMAGE.
 
 #include "gd32f1x0_can.h"
 
-#define CAN_ERROR_HANDLE(s)     do{}while(1)
+#define CAN_ERROR_HANDLE(s)           do{}while(1)
 
 /*!
     \brief      deinitialize CAN 
@@ -91,7 +92,6 @@ void can_struct_para_init(can_struct_type_enum type, void* p_struct)
             ((can_parameter_struct*)p_struct)->time_triggered = DISABLE;
             ((can_parameter_struct*)p_struct)->trans_fifo_order = DISABLE;
             ((can_parameter_struct*)p_struct)->working_mode = CAN_NORMAL_MODE;
-            
             break;
         /* used for can_filter_init() */
         case CAN_FILTER_STRUCT:
@@ -104,34 +104,29 @@ void can_struct_para_init(can_struct_type_enum type, void* p_struct)
             ((can_filter_parameter_struct*)p_struct)->filter_mask_low = 0x0000U;
             ((can_filter_parameter_struct*)p_struct)->filter_mode = CAN_FILTERMODE_MASK;
             ((can_filter_parameter_struct*)p_struct)->filter_number = 0U;
-
             break;
         /* used for can_message_transmit() */
         case CAN_TX_MESSAGE_STRUCT:
             for(i = 0U; i < 8U; i++){
                 ((can_trasnmit_message_struct*)p_struct)->tx_data[i] = 0U;
             }
-            
             ((can_trasnmit_message_struct*)p_struct)->tx_dlen = 0u;
             ((can_trasnmit_message_struct*)p_struct)->tx_efid = 0U;
             ((can_trasnmit_message_struct*)p_struct)->tx_ff = (uint8_t)CAN_FF_STANDARD;
             ((can_trasnmit_message_struct*)p_struct)->tx_ft = (uint8_t)CAN_FT_DATA;
             ((can_trasnmit_message_struct*)p_struct)->tx_sfid = 0U;
-            
             break;
         /* used for can_message_receive() */
         case CAN_RX_MESSAGE_STRUCT:
             for(i = 0U; i < 8U; i++){
                 ((can_receive_message_struct*)p_struct)->rx_data[i] = 0U;
             }
-            
             ((can_receive_message_struct*)p_struct)->rx_dlen = 0U;
             ((can_receive_message_struct*)p_struct)->rx_efid = 0U;
             ((can_receive_message_struct*)p_struct)->rx_ff = (uint8_t)CAN_FF_STANDARD;
             ((can_receive_message_struct*)p_struct)->rx_fi = 0U;
             ((can_receive_message_struct*)p_struct)->rx_ft = (uint8_t)CAN_FT_DATA;
             ((can_receive_message_struct*)p_struct)->rx_sfid = 0U;
-            
             break;
 
         default:
@@ -304,7 +299,6 @@ void can_filter_init(can_filter_parameter_struct* can_filter_parameter_init)
     
     /* filter working */
     if(ENABLE == can_filter_parameter_init->filter_enable){
-        
         CAN_FW(CAN0) |= (uint32_t)val;
     }
     /* filter lock enable */
@@ -888,9 +882,9 @@ FlagStatus can_flag_get(uint32_t can_periph, can_flag_enum flag)
 void can_flag_clear(uint32_t can_periph, can_flag_enum flag)
 {
     if (flag == CAN_FLAG_RFO1){
-        CAN_REG_VALS(can_periph, flag) &= ~BIT(CAN_BIT_POS0(flag));
+        CAN_REG_VAL(can_periph, flag) &= ~BIT(CAN_BIT_POS(flag));
     } else {
-        CAN_REG_VALS(can_periph, flag) |= BIT(CAN_BIT_POS0(flag));
+        CAN_REG_VAL(can_periph, flag) |= BIT(CAN_BIT_POS(flag));
     }
 }
 
@@ -983,9 +977,9 @@ FlagStatus can_interrupt_flag_get(uint32_t can_periph, can_interrupt_flag_enum f
     uint32_t ret2 = RESET;
     
     /* get the staus of interrupt flag */
-    if (flag == CAN_INT_FLAG_RFF0) {
+    if (flag == CAN_INT_FLAG_RFL0) {
         ret1 = can_receive_message_length_get(can_periph, CAN_FIFO0);
-    } else if (flag == CAN_INT_FLAG_RFF1) {
+    } else if (flag == CAN_INT_FLAG_RFL1) {
         ret1 = can_receive_message_length_get(can_periph, CAN_FIFO1);
     } else if (flag == CAN_INT_FLAG_ERRN) {
         ret1 = can_error_get(can_periph);
