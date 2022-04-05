@@ -489,7 +489,7 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrStatus;
 #define RTC_BASE              (APB1_BUS_BASE + 0x00002800U) /*!< RTC base address */
 #define WWDGT_BASE            (APB1_BUS_BASE + 0x00002C00U) /*!< WWDGT base address */
 #define FWDGT_BASE            (APB1_BUS_BASE + 0x00003000U) /*!< FWDGT base address */
-#define I2S_add_BASE          (APB1_BUS_BASE + 0x00003400U) /*!< I2S_add base address */
+#define I2S_ADD_BASE          (APB1_BUS_BASE + 0x00003400U) /*!< I2S_add base address */
 #define SPI_BASE              (APB1_BUS_BASE + 0x00003800U) /*!< SPI base address */
 #define USART_BASE            (APB1_BUS_BASE + 0x00004400U) /*!< USART base address */
 #define I2C_BASE              (APB1_BUS_BASE + 0x00005400U) /*!< I2C base address */

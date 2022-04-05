@@ -5,6 +5,7 @@
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
     \version 2021-03-23, V1.2.0, firmware for GD32E50x
+    \version 2021-05-19, V1.2.1, firmware for GD32E50x
 */
 
 /*
@@ -67,8 +68,26 @@ void cmp_deinit(void)
 */
 void cmp_input_init(cmp_enum cmp_periph,inverting_input_enum inverting_input)
 {
-    /* initialize comparator mode */
-    CMP_CS(cmp_periph) |= CS_CMPMSEL(inverting_input);
+    uint32_t CMPx_CS = 0;
+    if(CMP1 == cmp_periph){
+        /* initialize comparator 1 mode */
+        CMPx_CS = CMP_CS(cmp_periph);
+        CMPx_CS &= ~(uint32_t)(CMP1_CS_CMP1MSEL);
+        CMPx_CS |= (uint32_t)(CS_CMPMSEL(inverting_input)); 
+        CMP_CS(cmp_periph) = CMPx_CS;
+    }else if(CMP3 == cmp_periph){
+        /* initialize comparator 3 mode */
+        CMPx_CS = CMP_CS(cmp_periph);
+        CMPx_CS &= ~(uint32_t)(CMP3_CS_CMP3MSEL);
+        CMPx_CS |= (uint32_t)(CS_CMPMSEL(inverting_input)); 
+        CMP_CS(cmp_periph) = CMPx_CS;
+    }else if(CMP5 == cmp_periph){
+        /* initialize comparator 5 mode */
+        CMPx_CS = CMP_CS(cmp_periph);
+        CMPx_CS &= ~(uint32_t)(CMP5_CS_CMP5MSEL);
+        CMPx_CS |= (uint32_t)(CS_CMPMSEL(inverting_input)); 
+        CMP_CS(cmp_periph) = CMPx_CS;
+    }
 }
 
 /*!
@@ -91,13 +110,43 @@ void cmp_input_init(cmp_enum cmp_periph,inverting_input_enum inverting_input)
 */
 void cmp_output_init(cmp_enum cmp_periph,cmp_output_enum output_slection, uint32_t output_polarity)
 {
-    /* initialize comparator output */
-    CMP_CS(cmp_periph) |= CS_CMPOSEL(output_slection);
-    /* output polarity */
-    if(CMP_OUTPUT_POLARITY_INVERTED == output_polarity){
-         CMP_CS(cmp_periph) |= CMP_CS_CMPPL;
-    }else{
-         CMP_CS(cmp_periph) &= ~CMP_CS_CMPPL;
+    uint32_t CMPx_CS = 0;
+    if(CMP1 == cmp_periph){
+        /* initialize comparator 1 output */
+        CMPx_CS = CMP_CS(cmp_periph);
+        CMPx_CS &= ~(uint32_t)CMP1_CS_CMP1OSEL;
+        CMPx_CS |= (uint32_t)CS_CMPOSEL(output_slection);
+        /* output polarity */
+        if(CMP_OUTPUT_POLARITY_INVERTED == output_polarity){
+            CMPx_CS |= (uint32_t)CMP1_CS_CMP1PL;
+        }else{
+            CMPx_CS &= ~(uint32_t)CMP1_CS_CMP1PL;
+        }
+        CMP_CS(cmp_periph) = CMPx_CS;
+    }else if(CMP3 == cmp_periph){
+        /* initialize comparator 3 output */
+        CMPx_CS = CMP_CS(cmp_periph);
+        CMPx_CS &= ~(uint32_t)CMP3_CS_CMP3OSEL;
+        CMPx_CS |= (uint32_t)CS_CMPOSEL(output_slection);
+        /* output polarity */
+        if(CMP_OUTPUT_POLARITY_INVERTED == output_polarity){
+            CMPx_CS |= (uint32_t)CMP3_CS_CMP3PL;
+        }else{
+            CMPx_CS &= ~(uint32_t)CMP3_CS_CMP3PL;
+        }
+        CMP_CS(cmp_periph) = CMPx_CS;
+    }else if(CMP5 == cmp_periph){
+        /* initialize comparator 5 output */
+        CMPx_CS = CMP_CS(cmp_periph);
+        CMPx_CS &= ~(uint32_t)CMP5_CS_CMP5OSEL;
+        CMPx_CS |= (uint32_t)CS_CMPOSEL(output_slection);
+        /* output polarity */
+        if(CMP_OUTPUT_POLARITY_INVERTED == output_polarity){
+            CMPx_CS |= (uint32_t)CMP5_CS_CMP5PL;
+        }else{
+            CMPx_CS &= ~(uint32_t)CMP5_CS_CMP5PL;
+        }
+        CMP_CS(cmp_periph) = CMPx_CS;
     }
 }
 
@@ -115,7 +164,23 @@ void cmp_output_init(cmp_enum cmp_periph,cmp_output_enum output_slection, uint32
 */
 void cmp_outputblank_init(cmp_enum cmp_periph,cmp_outputblank_enum output_blank)
 {
-   CMP_CS(cmp_periph) |= CS_CMPMBLK(output_blank);
+    uint32_t CMPx_CS = 0;
+    if(CMP1 == cmp_periph){
+        CMPx_CS = CMP_CS(cmp_periph);
+        CMPx_CS &= ~(uint32_t)(CMP1_CS_CMP1BLK);
+        CMPx_CS |= (uint32_t)(CS_CMPMBLK(output_blank)); 
+        CMP_CS(cmp_periph) = CMPx_CS;
+    }else if(CMP3 == cmp_periph){
+        CMPx_CS = CMP_CS(cmp_periph);
+        CMPx_CS &= ~(uint32_t)(CMP3_CS_CMP3BLK);
+        CMPx_CS |= (uint32_t)(CS_CMPMBLK(output_blank)); 
+        CMP_CS(cmp_periph) = CMPx_CS;
+    }else if(CMP5 == cmp_periph){
+        CMPx_CS = CMP_CS(cmp_periph);
+        CMPx_CS &= ~(uint32_t)(CMP5_CS_CMP5BLK);
+        CMPx_CS |= (uint32_t)(CS_CMPMBLK(output_blank)); 
+        CMP_CS(cmp_periph) = CMPx_CS;
+    }
 }
 
 /*!

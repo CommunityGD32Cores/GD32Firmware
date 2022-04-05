@@ -5,6 +5,7 @@
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
     \version 2021-03-23, V1.2.0, firmware for GD32E50x
+    \version 2021-04-16, V1.2.1, firmware for GD32E50x
 */
 
 /*
@@ -379,8 +380,6 @@ usb_status usb_transc_inxfer (usb_core_driver *udev, usb_transc *transc)
     udev->regs.er_in[ep_num]->DIEPCTL = epctl;
 
     if ((uint8_t)USB_USE_FIFO == udev->bp.transfer_mode) {
-        udev->regs.er_in[ep_num]->DIEPCTL = epctl;
-
         if (transc->ep_type != (uint8_t)USB_EPTYPE_ISOC) {
             /* enable the TX FIFO empty interrupt for this endpoint */
             if (transc->xfer_len > 0U) {

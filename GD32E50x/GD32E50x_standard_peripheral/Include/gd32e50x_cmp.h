@@ -5,6 +5,7 @@
     \version 2020-03-10, V1.0.0, firmware for GD32E50x
     \version 2020-08-26, V1.1.0, firmware for GD32E50x
     \version 2021-03-23, V1.2.0, firmware for GD32E50x
+    \version 2021-05-19, V1.2.1, firmware for GD32E50x
 */
 
 /*
