@@ -73,12 +73,7 @@ void wwdgt_enable(void)
 */
 void wwdgt_counter_update(uint16_t counter_value)
 {
-    uint32_t reg = 0x00000000U;
-    
-    reg = WWDGT_CTL &(~(uint32_t)WWDGT_CTL_CNT);
-    reg |= (uint32_t)(CTL_CNT(counter_value));
-    
-    WWDGT_CTL = (uint32_t)reg;
+    WWDGT_CTL = (uint32_t)(CTL_CNT(counter_value));
 }
 
 /*!
@@ -96,19 +91,8 @@ void wwdgt_counter_update(uint16_t counter_value)
 */
 void wwdgt_config(uint16_t counter, uint16_t window, uint32_t prescaler)
 {
-    uint32_t reg_cfg = 0x00000000U, reg_ctl = 0x00000000U;
-
-    /* clear WIN and PSC bits, clear CNT bit */
-    reg_cfg = WWDGT_CFG &(~((uint32_t)WWDGT_CFG_WIN|(uint32_t)WWDGT_CFG_PSC));
-    reg_ctl = WWDGT_CTL &(~(uint32_t)WWDGT_CTL_CNT);
-  
-    /* configure WIN and PSC bits, configure CNT bit */
-    reg_cfg |= (uint32_t)(CFG_WIN(window));
-    reg_cfg |= (uint32_t)(prescaler);
-    reg_ctl |= (uint32_t)(CTL_CNT(counter));
-    
-    WWDGT_CFG = (uint32_t)reg_cfg;
-    WWDGT_CTL = (uint32_t)reg_ctl;
+    WWDGT_CFG = (uint32_t)(CFG_WIN(window) | prescaler);
+    WWDGT_CTL = (uint32_t)(CTL_CNT(counter));
 }
 
 /*!
@@ -144,5 +128,5 @@ FlagStatus wwdgt_flag_get(void)
 */
 void wwdgt_flag_clear(void)
 {
-    WWDGT_STAT &= (uint32_t)(~(uint32_t)WWDGT_STAT_EWIF);
+    WWDGT_STAT &= (~(uint32_t)WWDGT_STAT_EWIF);
 }

@@ -736,9 +736,9 @@ void rtc_flag_clear(uint32_t flag)
     \brief      configure rtc alternate output source
     \param[in]  source: specify signal to output
                 only one parameter can be selected which is shown as below:
-      \arg        RTC_CALIBRATION_512HZ: when the LSE freqency is 32768Hz and the RTC_PSC 
+      \arg        RTC_CALIBRATION_512HZ: when the LXTAL freqency is 32768Hz and the RTC_PSC 
                                          is the default value, output 512Hz signal
-      \arg        RTC_CALIBRATION_1HZ: when the LSE freqency is 32768Hz and the RTC_PSC 
+      \arg        RTC_CALIBRATION_1HZ: when the LXTAL freqency is 32768Hz and the RTC_PSC 
                                        is the default value, output 512Hz signal
       \arg        RTC_ALARM_HIGH: when the  alarm flag is set, the output pin is high
       \arg        RTC_ALARM_LOW: when the  Alarm flag is set, the output pin is low

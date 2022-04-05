@@ -86,6 +86,7 @@ void nvic_system_reset(void)
 void nvic_vector_table_set(uint32_t nvic_vict_tab, uint32_t offset)
 {
     SCB->VTOR = nvic_vict_tab | (offset & NVIC_VECTTAB_OFFSET_MASK);
+    __DSB();
 }
 
 /*!

@@ -424,24 +424,13 @@ void spi_dma_disable(uint32_t spi_periph, uint8_t dma)
     \param[in]  spi_periph: SPIx(x=0,1)
     \param[in]  frame_format: SPI frame size
                 only one parameter can be selected which is shown as below:
-      \arg        SPI_FRAMESIZE_4BIT: SPI frame size is 4 bits
-      \arg        SPI_FRAMESIZE_5BIT: SPI frame size is 5 bits
-      \arg        SPI_FRAMESIZE_6BIT: SPI frame size is 6 bits
-      \arg        SPI_FRAMESIZE_7BIT: SPI frame size is 7 bits
-      \arg        SPI_FRAMESIZE_8BIT: SPI frame size is 8 bits
-      \arg        SPI_FRAMESIZE_9BIT: SPI frame size is 9 bits
-      \arg        SPI_FRAMESIZE_10BIT: SPI frame size is 10 bits
-      \arg        SPI_FRAMESIZE_11BIT: SPI frame size is 11 bits
-      \arg        SPI_FRAMESIZE_12BIT: SPI frame size is 12 bits
-      \arg        SPI_FRAMESIZE_13BIT: SPI frame size is 13 bits
-      \arg        SPI_FRAMESIZE_14BIT: SPI frame size is 14 bits
-      \arg        SPI_FRAMESIZE_15BIT: SPI frame size is 15 bits
-      \arg        SPI_FRAMESIZE_16BIT: SPI frame size is 16 bits
+      \arg         SPI_FRAMESIZE_xBIT(x=4,5..16, for SPI1, x=8,16, for SPI0):SPI frame size is x bits
     \param[out] none
     \retval     ErrStatus: ERROR or SUCCESS
 */
 ErrStatus spi_i2s_data_frame_format_config(uint32_t spi_periph, uint16_t frame_format)
 {
+    uint32_t reg;
     if(SPI0 == spi_periph)
     {
         /* check SPI0 frame size is 8bits/16bits or not*/
@@ -456,10 +445,12 @@ ErrStatus spi_i2s_data_frame_format_config(uint32_t spi_periph, uint16_t frame_f
         }
     }
     else{
+        reg = SPI_CTL1(spi_periph);
         /* clear SPI_CTL1_DZ bits */
-        SPI_CTL1(spi_periph) &= (uint32_t)(~SPI_CTL1_DZ);
-        /* confige SPI_CTL1_DZ bits */
-        SPI_CTL1(spi_periph) |= (uint32_t)frame_format;
+        reg &= (uint32_t)(~SPI_CTL1_DZ);
+        reg |= (uint32_t)frame_format;
+        /* configure SPI_CTL1_DZ bits */
+        SPI_CTL1(spi_periph) = reg;
     }
     return SUCCESS;
 }
