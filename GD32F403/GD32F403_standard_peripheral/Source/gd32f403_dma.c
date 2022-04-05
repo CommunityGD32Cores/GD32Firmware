@@ -1,15 +1,14 @@
 /*!
-    \file  gd32f403_dma.c
-    \brief DMA driver
+    \file    gd32f403_dma.c
+    \brief   DMA driver
 
     \version 2017-02-10, V1.0.0, firmware for gd32f403
     \version 2018-12-25, V2.0.0, firmware for gd32f403
+    \version 2020-09-30, V2.1.0, firmware for GD32F403
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -36,6 +35,7 @@ OF SUCH DAMAGE.
 */
 
 #include "gd32f403_dma.h"
+#include <stdlib.h>
 
 #define DMA_WRONG_HANDLE        while(1){}
 
@@ -76,6 +76,10 @@ void dma_deinit(uint32_t dma_periph, dma_channel_enum channelx)
 */
 void dma_struct_para_init(dma_parameter_struct* init_struct)
 {
+    if(NULL == init_struct){
+        DMA_WRONG_HANDLE
+    }
+
     /* set the DMA struct with the default values */
     init_struct->periph_addr  = 0U;
     init_struct->periph_width = 0U; 

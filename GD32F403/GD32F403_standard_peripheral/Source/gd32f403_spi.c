@@ -1,15 +1,14 @@
 /*!
-    \file  gd32f403_spi.c
-    \brief SPI driver
+    \file    gd32f403_spi.c
+    \brief   SPI driver
 
     \version 2017-02-10, V1.0.0, firmware for GD32F403
     \version 2018-12-25, V2.0.0, firmware for GD32F403
+    \version 2020-09-30, V2.1.0, firmware for GD32F403
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -36,6 +35,8 @@ OF SUCH DAMAGE.
 */
 
 #include "gd32f403_spi.h"
+
+#define SPI_ERROR_HANDLE(s)           do{}while(1)
 
 /* SPI/I2S parameter initialization mask */
 #define SPI_INIT_MASK                   ((uint32_t)0x00003040U)  /*!< SPI parameter initialization mask */
@@ -238,6 +239,11 @@ void i2s_psc_config(uint32_t spi_periph, uint32_t i2s_audiosample, uint32_t i2s_
     uint32_t clks = 0U;
     uint32_t i2sclock = 0U;
 
+     /* judge whether the audiosample is 0 */
+    if(0U == i2s_audiosample){
+        SPI_ERROR_HANDLE("the parameter can not be 0 \r\n");
+    }
+    
     /* deinit SPI_I2SPSC register */
     SPI_I2SPSC(spi_periph) = SPI_I2SPSC_DEFAULT_VALUE;
 
@@ -479,9 +485,6 @@ void spi_bidirectional_transfer_config(uint32_t spi_periph, uint32_t transfer_di
 */
 void spi_crc_polynomial_set(uint32_t spi_periph,uint16_t crc_poly)
 {
-    /* enable SPI CRC */
-    SPI_CTL0(spi_periph) |= (uint32_t)SPI_CTL0_CRCEN;
-
     /* set SPI CRC polynomial */
     SPI_CRCPOLY(spi_periph) = (uint32_t)crc_poly;
 }

@@ -3,6 +3,7 @@
     \brief   USB DFU device class core functions
 
     \version 2020-08-10, V3.0.0, firmware for GD32F403
+    \version 2020-12-07, V3.0.1, firmware for GD32F403
 */
 
 /*
@@ -45,7 +46,7 @@ OF SUCH DAMAGE.
 static uint8_t dfu_init(usb_dev *udev, uint8_t config_index);
 static uint8_t dfu_deinit(usb_dev *udev, uint8_t config_index);
 static uint8_t dfu_req_handler(usb_dev *udev, usb_req *req);
-static uint8_t dfu_data_in(usb_dev *udev, uint8_t ep_num);
+static uint8_t dfu_ctlx_in(usb_dev *udev);
 static void dfu_detach(usb_dev *udev, usb_req *req);
 static void dfu_dnload(usb_dev *udev, usb_req *req);
 static void dfu_upload(usb_dev *udev, usb_req *req);
@@ -222,7 +223,7 @@ usb_class_core dfu_class = {
     .init            = dfu_init,
     .deinit          = dfu_deinit,
     .req_proc        = dfu_req_handler,
-    .data_in         = dfu_data_in
+    .ctlx_in         = dfu_ctlx_in
 };
 
 /*!
@@ -299,11 +300,9 @@ static uint8_t dfu_req_handler (usb_dev *udev, usb_req *req)
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t dfu_data_in (usb_dev *udev, uint8_t ep_num)
+static uint8_t dfu_ctlx_in (usb_dev *udev)
 {
-    if (0U == ep_num) {
-        dfu_getstatus_complete(udev);
-    }
+    dfu_getstatus_complete(udev);
 
     return USBD_OK;
 }

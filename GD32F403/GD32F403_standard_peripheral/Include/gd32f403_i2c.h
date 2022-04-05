@@ -1,15 +1,15 @@
 /*!
-    \file  gd32f403_i2c.h
-    \brief definitions for the I2C
+    \file    gd32f403_i2c.h
+    \brief   definitions for the I2C
     
     \version 2017-02-10, V1.0.0, firmware for GD32F403
     \version 2018-12-25, V2.0.0, firmware for GD32F403
+    \version 2019-04-16, V2.0.1, firmware for GD32F403
+    \version 2020-09-30, V2.1.0, firmware for GD32F403
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -299,8 +299,10 @@ void i2c_ack_config(uint32_t i2c_periph, uint32_t ack);
 void i2c_ackpos_config(uint32_t i2c_periph, uint32_t pos);
 /* master sends slave address */
 void i2c_master_addressing(uint32_t i2c_periph, uint32_t addr, uint32_t trandirection);
-/* dual-address mode switch */
-void i2c_dualaddr_enable(uint32_t i2c_periph, uint32_t dualaddr);
+/* enable dual-address mode */
+void i2c_dualaddr_enable(uint32_t i2c_periph, uint32_t addr);
+/* disable dual-address mode */
+void i2c_dualaddr_disable(uint32_t i2c_periph);
 /* enable I2C */
 void i2c_enable(uint32_t i2c_periph);
 /* disable I2C */

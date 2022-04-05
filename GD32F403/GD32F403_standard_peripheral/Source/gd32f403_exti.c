@@ -1,15 +1,14 @@
 /*!
-    \file  gd32f403_exti.c
-    \brief EXTI driver
+    \file    gd32f403_exti.c
+    \brief   EXTI driver
     
     \version 2017-02-10, V1.0.0, firmware for GD32F403
     \version 2018-12-25, V2.0.0, firmware for GD32F403
+    \version 2020-09-30, V2.1.0, firmware for GD32F403
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -34,6 +33,7 @@ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWIS
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
 OF SUCH DAMAGE.
 */
+
 #include "gd32f403_exti.h"
 
 /*!

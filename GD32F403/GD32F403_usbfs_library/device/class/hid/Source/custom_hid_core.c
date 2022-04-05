@@ -3,6 +3,7 @@
     \brief   custom HID class driver
 
     \version 2020-08-10, V3.0.0, firmware for GD32F403
+    \version 2020-12-07, V3.0.1, firmware for GD32F403
 */
 
 /*
@@ -443,49 +444,44 @@ static uint8_t custom_hid_data_out (usb_dev *udev, uint8_t ep_num)
 {
     custom_hid_handler *hid = (custom_hid_handler *)udev->dev.class_data[CUSTOM_HID_INTERFACE];
 
-    if ((CUSTOMHID_OUT_EP & 0x7FU) == ep_num) {
-        switch (hid->data[0]){
-        case 0x11U:
-            if (RESET != hid->data[1]) {
-                gd_eval_led_on(LED5);
-            } else {
-                gd_eval_led_off(LED5);
-            }
-            break;
-
-        case 0x12U:
-            if (RESET != hid->data[1]) {
-                gd_eval_led_on(LED2);
-            } else {
-                gd_eval_led_off(LED2);
-            }
-            break;
-
-        case 0x13U:
-            if (RESET != hid->data[1]) {
-                gd_eval_led_on(LED3);
-            } else {
-                gd_eval_led_off(LED3);
-            }
-            break;
-
-        case 0x14U:
-            if (RESET != hid->data[1]) {
-                gd_eval_led_on(LED4);
-            } else {
-                gd_eval_led_off(LED4);
-            }
-            break;
-
-
-        default:
-            break;
+    switch (hid->data[0]){
+    case 0x11U:
+        if (RESET != hid->data[1]) {
+            gd_eval_led_on(LED5);
+        } else {
+            gd_eval_led_off(LED5);
         }
-    
-        usbd_ep_recev (udev, CUSTOMHID_IN_EP, hid->data, 2U);
+        break;
 
-        return USBD_OK;
-   }
+    case 0x12U:
+        if (RESET != hid->data[1]) {
+            gd_eval_led_on(LED2);
+        } else {
+            gd_eval_led_off(LED2);
+        }
+        break;
 
-   return USBD_FAIL;
+    case 0x13U:
+        if (RESET != hid->data[1]) {
+            gd_eval_led_on(LED3);
+        } else {
+            gd_eval_led_off(LED3);
+        }
+        break;
+
+    case 0x14U:
+        if (RESET != hid->data[1]) {
+            gd_eval_led_on(LED4);
+        } else {
+            gd_eval_led_off(LED4);
+        }
+        break;
+
+    default:
+        break;
+    }
+
+    usbd_ep_recev (udev, CUSTOMHID_IN_EP, hid->data, 2U);
+
+    return USBD_OK;
 }

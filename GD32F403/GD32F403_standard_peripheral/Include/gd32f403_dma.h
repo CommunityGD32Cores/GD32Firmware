@@ -1,15 +1,14 @@
 /*!
-    \file  gd32f403_dma.h
-    \brief definitions for the DMA
+    \file    gd32f403_dma.h
+    \brief   definitions for the DMA
 
     \version 2017-02-10, V1.0.0, firmware for gd32f403
     \version 2018-12-25, V2.0.0, firmware for gd32f403
+    \version 2020-09-30, V2.1.0, firmware for GD32F403
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:

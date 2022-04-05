@@ -1,15 +1,15 @@
 /*!
-    \file  gd32f403_i2c.c
-    \brief I2C driver
+    \file    gd32f403_i2c.c
+    \brief   I2C driver
     
     \version 2017-02-10, V1.0.0, firmware for GD32F403
     \version 2018-12-25, V2.0.0, firmware for GD32F403
+    \version 2019-04-16, V2.0.1, firmware for GD32F403
+    \version 2020-09-30, V2.1.0, firmware for GD32F403
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -37,11 +37,14 @@ OF SUCH DAMAGE.
 
 #include "gd32f403_i2c.h"
 
+#define I2C_ERROR_HANDLE(s)           do{}while(1)
+    
 /* I2C register bit mask */
 #define I2CCLK_MAX                    ((uint32_t)0x00000054U)             /*!< i2cclk maximum value */
 #define I2CCLK_MIN                    ((uint32_t)0x00000002U)             /*!< i2cclk minimum value */
 #define I2C_FLAG_MASK                 ((uint32_t)0x0000FFFFU)             /*!< i2c flag mask */
 #define I2C_ADDRESS_MASK              ((uint32_t)0x000003FFU)             /*!< i2c address mask */
+#define I2C_ADDRESS2_MASK         ((uint32_t)0x000000FEU)             /*!< the second i2c address mask */
 
 /* I2C register bit offset */
 #define STAT1_PECV_OFFSET             ((uint32_t)8U)     /* bit offset of PECV in I2C_STAT1 */
@@ -87,6 +90,11 @@ void i2c_clock_config(uint32_t i2c_periph, uint32_t clkspeed, uint32_t dutycyc)
     uint32_t pclk1, clkc, freq, risetime;
     uint32_t temp;
     
+    /* check the clkspeed value */
+    if(0U == clkspeed){
+        I2C_ERROR_HANDLE("the parameter can not be 0 \r\n");
+    }
+    
     pclk1 = rcu_clock_freq_get(CK_APB1);
     /* I2C peripheral clock frequency */
     freq = (uint32_t)(pclk1/1000000U);
@@ -109,7 +117,7 @@ void i2c_clock_config(uint32_t i2c_periph, uint32_t clkspeed, uint32_t dutycyc)
         }else{
             I2C_RT(i2c_periph) = risetime;
         }
-        clkc = (uint32_t)(pclk1/(clkspeed*2U)); 
+        clkc = (uint32_t)(pclk1/(clkspeed*2U));
         if(clkc < 0x04U){
             /* the CLKC in standard mode minmum value is 4 */
             clkc = 0x04U;
@@ -265,22 +273,28 @@ void i2c_master_addressing(uint32_t i2c_periph, uint32_t addr, uint32_t trandire
 }
 
 /*!
-    \brief      dual-address mode switch
+    \brief      enable dual-address mode
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  dualaddr:
-                only one parameter can be selected which is shown as below:
-      \arg        I2C_DUADEN_DISABLE: disable dual-address mode  
-      \arg        I2C_DUADEN_ENABLE: enable dual-address mode
+    \param[in]  addr: the second address in dual-address mode
     \param[out] none
     \retval     none
 */
-void i2c_dualaddr_enable(uint32_t i2c_periph, uint32_t dualaddr)
+void i2c_dualaddr_enable(uint32_t i2c_periph, uint32_t addr)
 {
-    if(I2C_DUADEN_ENABLE == dualaddr){
-        I2C_SADDR1(i2c_periph) |= I2C_SADDR1_DUADEN;
-    }else{
-        I2C_SADDR1(i2c_periph) &= ~(I2C_SADDR1_DUADEN);
-    }
+    /* configure address */
+    addr = addr & I2C_ADDRESS2_MASK;
+    I2C_SADDR1(i2c_periph) = (I2C_SADDR1_DUADEN | addr);
+}
+
+/*!
+    \brief      disable dual-address mode
+    \param[in]  i2c_periph: I2Cx(x=0,1) 
+    \param[out] none
+    \retval     none
+*/
+void i2c_dualaddr_disable(uint32_t i2c_periph)
+{
+    I2C_SADDR1(i2c_periph) &= ~(I2C_SADDR1_DUADEN);
 }
 
 /*!

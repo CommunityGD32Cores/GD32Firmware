@@ -1091,10 +1091,10 @@ static void system_clock_168m_hxtal(void)
     \param[out] none
     \retval     none
 */
-void SystemCoreClockUpdate (void)
+void SystemCoreClockUpdate(void)
 {
     uint32_t sws;
-    uint32_t pllsel, pllpresel, predv0sel, pllmf,ck_src;
+    uint32_t pllsel, pllpresel, predv0sel, pllmf, ck_src, ahb_pre;
     uint32_t predv0, predv1, pll1mf;
 
     sws = GET_BITS(RCU_CFG0, 2, 3);
@@ -1132,13 +1132,13 @@ void SystemCoreClockUpdate (void)
                 if(17U == pll1mf){
                     pll1mf = 20U;
                 }
-                ck_src = (ck_src/predv1)*pll1mf;
+                ck_src = (ck_src/predv1) * pll1mf;
             }
             predv0 = (RCU_CFG1 & RCU_CFG1_PREDV0) + 1U;
             ck_src /= predv0;
         }else{
             /* PLL clock source is IRC8M/2 */
-            ck_src = IRC8M_VALUE/2U;
+            ck_src = IRC8M_VALUE / 2U;
         }
 
         /* PLL multiplication factor */
@@ -1159,11 +1159,21 @@ void SystemCoreClockUpdate (void)
         if(pllmf > 61U){
             pllmf = 63U;
         }
-        SystemCoreClock = ck_src*pllmf;
+        SystemCoreClock = ck_src * pllmf;
 
         if(15U == pllmf){
-            SystemCoreClock = ck_src*6U + ck_src/2U;
+            SystemCoreClock = (ck_src * 6U) + (ck_src / 2U);
         }
+
+        ahb_pre = ((RCU_CFG0 & RCU_CFG0_AHBPSC) >> 4U);
+        if(8U > ahb_pre){
+            ahb_pre = 1U;
+        }else if(12U > ahb_pre){
+            ahb_pre = (uint32_t)0x2U << (ahb_pre - 7U);
+        }else{
+            ahb_pre = (uint32_t)0x2U << (ahb_pre - 6U);
+        }
+        SystemCoreClock = ck_src / ahb_pre;
 
         break;
     /* IRC8M is selected as CK_SYS */

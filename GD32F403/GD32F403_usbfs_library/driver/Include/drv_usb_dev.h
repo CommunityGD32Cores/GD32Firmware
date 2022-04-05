@@ -3,6 +3,7 @@
     \brief   USB device low level driver header file
 
     \version 2020-08-10, V3.0.0, firmware for GD32F403
+    \version 2020-12-07, V3.0.1, firmware for GD32F403
 */
 
 /*
@@ -116,6 +117,9 @@ typedef struct _usb_class_core
 
     uint8_t  (*data_in)               (usb_dev *udev, uint8_t ep_num);          /*!< device data in handler */
     uint8_t  (*data_out)              (usb_dev *udev, uint8_t ep_num);          /*!< device data out handler */
+
+    uint8_t  (*ctlx_in)               (usb_dev *udev);                          /*!< device contrl in callback */
+    uint8_t  (*ctlx_out)              (usb_dev *udev);                          /*!< device contrl out callback */
 
     uint8_t  (*SOF)                   (usb_dev *udev);                          /*!< Start of frame handler */
 
