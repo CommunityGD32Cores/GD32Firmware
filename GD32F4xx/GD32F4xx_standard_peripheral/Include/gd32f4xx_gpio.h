@@ -1,14 +1,15 @@
 /*!
     \file    gd32f4xx_gpio.h
     \brief   definitions for the GPIO
-    
+
     \version 2016-08-15, V1.0.0, firmware for GD32F4xx
     \version 2018-12-12, V2.0.0, firmware for GD32F4xx
     \version 2020-09-30, V2.1.0, firmware for GD32F4xx
+    \version 2022-03-09, V3.0.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -57,7 +58,7 @@ OF SUCH DAMAGE.
 #define GPIO_PUD(gpiox)            REG32((gpiox) + 0x0CU)    /*!< GPIO port pull-up/pull-down register */
 #define GPIO_ISTAT(gpiox)          REG32((gpiox) + 0x10U)    /*!< GPIO port input status register */
 #define GPIO_OCTL(gpiox)           REG32((gpiox) + 0x14U)    /*!< GPIO port output control register */
-#define GPIO_BOP(gpiox)            REG32((gpiox) + 0x18U)    /*!< GPIO port bit operation register */
+#define GPIO_BOP(gpiox)            REG32((gpiox) + 0x18U)    /*!< GPIO port bit operate register */
 #define GPIO_LOCK(gpiox)           REG32((gpiox) + 0x1CU)    /*!< GPIO port configuration lock register */
 #define GPIO_AFSEL0(gpiox)         REG32((gpiox) + 0x20U)    /*!< GPIO alternate function selected register 0 */
 #define GPIO_AFSEL1(gpiox)         REG32((gpiox) + 0x24U)    /*!< GPIO alternate function selected register 1 */
@@ -156,22 +157,22 @@ OF SUCH DAMAGE.
 #define GPIO_ISTAT_ISTAT15         BIT(15)                   /*!< pin 15 input status */
 
 /* GPIO_OCTL */
-#define GPIO_OCTL_OCTL0            BIT(0)                    /*!< pin 0 output bit */
-#define GPIO_OCTL_OCTL1            BIT(1)                    /*!< pin 1 output bit */
-#define GPIO_OCTL_OCTL2            BIT(2)                    /*!< pin 2 output bit */
-#define GPIO_OCTL_OCTL3            BIT(3)                    /*!< pin 3 output bit */
-#define GPIO_OCTL_OCTL4            BIT(4)                    /*!< pin 4 output bit */
-#define GPIO_OCTL_OCTL5            BIT(5)                    /*!< pin 5 output bit */
-#define GPIO_OCTL_OCTL6            BIT(6)                    /*!< pin 6 output bit */
-#define GPIO_OCTL_OCTL7            BIT(7)                    /*!< pin 7 output bit */
-#define GPIO_OCTL_OCTL8            BIT(8)                    /*!< pin 8 output bit */
-#define GPIO_OCTL_OCTL9            BIT(9)                    /*!< pin 9 output bit */
-#define GPIO_OCTL_OCTL10           BIT(10)                   /*!< pin 10 output bit */
-#define GPIO_OCTL_OCTL11           BIT(11)                   /*!< pin 11 output bit */
-#define GPIO_OCTL_OCTL12           BIT(12)                   /*!< pin 12 output bit */
-#define GPIO_OCTL_OCTL13           BIT(13)                   /*!< pin 13 output bit */
-#define GPIO_OCTL_OCTL14           BIT(14)                   /*!< pin 14 output bit */
-#define GPIO_OCTL_OCTL15           BIT(15)                   /*!< pin 15 output bit */
+#define GPIO_OCTL_OCTL0            BIT(0)                    /*!< pin 0 output control bit */
+#define GPIO_OCTL_OCTL1            BIT(1)                    /*!< pin 1 output control bit */
+#define GPIO_OCTL_OCTL2            BIT(2)                    /*!< pin 2 output control bit */
+#define GPIO_OCTL_OCTL3            BIT(3)                    /*!< pin 3 output control bit */
+#define GPIO_OCTL_OCTL4            BIT(4)                    /*!< pin 4 output control bit */
+#define GPIO_OCTL_OCTL5            BIT(5)                    /*!< pin 5 output control bit */
+#define GPIO_OCTL_OCTL6            BIT(6)                    /*!< pin 6 output control bit */
+#define GPIO_OCTL_OCTL7            BIT(7)                    /*!< pin 7 output control bit */
+#define GPIO_OCTL_OCTL8            BIT(8)                    /*!< pin 8 output control bit */
+#define GPIO_OCTL_OCTL9            BIT(9)                    /*!< pin 9 output control bit */
+#define GPIO_OCTL_OCTL10           BIT(10)                   /*!< pin 10 output control bit */
+#define GPIO_OCTL_OCTL11           BIT(11)                   /*!< pin 11 output control bit */
+#define GPIO_OCTL_OCTL12           BIT(12)                   /*!< pin 12 output control bit */
+#define GPIO_OCTL_OCTL13           BIT(13)                   /*!< pin 13 output control bit */
+#define GPIO_OCTL_OCTL14           BIT(14)                   /*!< pin 14 output control bit */
+#define GPIO_OCTL_OCTL15           BIT(15)                   /*!< pin 15 output control bit */
 
 /* GPIO_BOP */
 #define GPIO_BOP_BOP0              BIT(0)                    /*!< pin 0 set bit */
@@ -224,7 +225,7 @@ OF SUCH DAMAGE.
 #define GPIO_LOCK_LK13             BIT(13)                   /*!< pin 13 lock bit */
 #define GPIO_LOCK_LK14             BIT(14)                   /*!< pin 14 lock bit */
 #define GPIO_LOCK_LK15             BIT(15)                   /*!< pin 15 lock bit */
-#define GPIO_LOCK_LKK              BIT(16)                   /*!< pin sequence lock key */
+#define GPIO_LOCK_LKK              BIT(16)                   /*!< pin lock sequence key */
 
 /* GPIO_AFSEL0 */
 #define GPIO_AFSEL0_SEL0           BITS(0,3)                 /*!< pin 0 alternate function selected */
@@ -344,7 +345,7 @@ typedef FlagStatus bit_status;
 #define GPIO_OSPEED_2MHZ           GPIO_OSPEED_LEVEL0        /*!< output max speed 2MHz */
 #define GPIO_OSPEED_25MHZ          GPIO_OSPEED_LEVEL1        /*!< output max speed 25MHz */
 #define GPIO_OSPEED_50MHZ          GPIO_OSPEED_LEVEL2        /*!< output max speed 50MHz */
-#define GPIO_OSPEED_200MHZ         GPIO_OSPEED_LEVEL3        /*!< output max speed 200MHz */
+#define GPIO_OSPEED_MAX            GPIO_OSPEED_LEVEL3        /*!< GPIO very high output speed, max speed more than 50MHz */
 
 /* GPIO alternate function values */
 #define GPIO_AFR_SET(n, af)        ((uint32_t)((uint32_t)(af) << (4U * (n))))

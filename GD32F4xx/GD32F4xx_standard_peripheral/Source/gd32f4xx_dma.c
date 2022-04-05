@@ -1,39 +1,38 @@
 /*!
     \file    gd32f4xx_dma.c
     \brief   DMA driver
-
     \version 2016-08-15, V1.0.0, firmware for GD32F4xx
     \version 2018-12-12, V2.0.0, firmware for GD32F4xx
     \version 2020-09-30, V2.1.0, firmware for GD32F4xx
+    \version 2022-03-09, V3.0.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
-
 
 #include "gd32f4xx_dma.h"
 
@@ -41,7 +40,7 @@ OF SUCH DAMAGE.
 #define CHXCTL_PERIEN_OFFSET            ((uint32_t)25U)
 
 /*!
-    \brief      deinitialize DMA a channel registers
+    \brief    deinitialize DMA a channel registers
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel is deinitialized
@@ -52,29 +51,29 @@ OF SUCH DAMAGE.
 void dma_deinit(uint32_t dma_periph, dma_channel_enum channelx)
 {
     /* disable DMA a channel */
-    DMA_CHCTL(dma_periph,channelx) &= ~DMA_CHXCTL_CHEN;
+    DMA_CHCTL(dma_periph, channelx) &= ~DMA_CHXCTL_CHEN;
     /* reset DMA channel registers */
-    DMA_CHCTL(dma_periph,channelx) = DMA_CHCTL_RESET_VALUE;
-    DMA_CHCNT(dma_periph,channelx) = DMA_CHCNT_RESET_VALUE;
-    DMA_CHPADDR(dma_periph,channelx) = DMA_CHPADDR_RESET_VALUE;
-    DMA_CHM0ADDR(dma_periph,channelx) = DMA_CHMADDR_RESET_VALUE;
-    DMA_CHM1ADDR(dma_periph,channelx) = DMA_CHMADDR_RESET_VALUE;
-    DMA_CHFCTL(dma_periph,channelx) = DMA_CHFCTL_RESET_VALUE;
-    if(channelx < DMA_CH4){
-        DMA_INTC0(dma_periph) |= DMA_FLAG_ADD(DMA_CHINTF_RESET_VALUE,channelx);
-    }else{
+    DMA_CHCTL(dma_periph, channelx) = DMA_CHCTL_RESET_VALUE;
+    DMA_CHCNT(dma_periph, channelx) = DMA_CHCNT_RESET_VALUE;
+    DMA_CHPADDR(dma_periph, channelx) = DMA_CHPADDR_RESET_VALUE;
+    DMA_CHM0ADDR(dma_periph, channelx) = DMA_CHMADDR_RESET_VALUE;
+    DMA_CHM1ADDR(dma_periph, channelx) = DMA_CHMADDR_RESET_VALUE;
+    DMA_CHFCTL(dma_periph, channelx) = DMA_CHFCTL_RESET_VALUE;
+    if(channelx < DMA_CH4) {
+        DMA_INTC0(dma_periph) |= DMA_FLAG_ADD(DMA_CHINTF_RESET_VALUE, channelx);
+    } else {
         channelx -= (dma_channel_enum)4;
-        DMA_INTC1(dma_periph) |= DMA_FLAG_ADD(DMA_CHINTF_RESET_VALUE,channelx);
+        DMA_INTC1(dma_periph) |= DMA_FLAG_ADD(DMA_CHINTF_RESET_VALUE, channelx);
     }
 }
 
 /*!
-    \brief      initialize the DMA single data mode parameters struct with the default values
+    \brief    initialize the DMA single data mode parameters struct with the default values
     \param[in]  init_struct: the initialization data needed to initialize DMA channel
     \param[out] none
     \retval     none
 */
-void dma_single_data_para_struct_init(dma_single_data_parameter_struct* init_struct)
+void dma_single_data_para_struct_init(dma_single_data_parameter_struct *init_struct)
 {
     /* set the DMA struct with the default values */
     init_struct->periph_addr         = 0U;
@@ -89,12 +88,12 @@ void dma_single_data_para_struct_init(dma_single_data_parameter_struct* init_str
 }
 
 /*!
-    \brief      initialize the DMA multi data mode parameters struct with the default values
+    \brief    initialize the DMA multi data mode parameters struct with the default values
     \param[in]  init_struct: the initialization data needed to initialize DMA channel
     \param[out] none
     \retval     none
 */
-void dma_multi_data_para_struct_init(dma_multi_data_parameter_struct* init_struct)
+void dma_multi_data_para_struct_init(dma_multi_data_parameter_struct *init_struct)
 {
     /* set the DMA struct with the default values */
     init_struct->periph_addr         = 0U;
@@ -112,7 +111,7 @@ void dma_multi_data_para_struct_init(dma_multi_data_parameter_struct* init_struc
 }
 
 /*!
-    \brief      initialize DMA single data mode
+    \brief    initialize DMA single data mode
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel is initialized
@@ -123,61 +122,61 @@ void dma_multi_data_para_struct_init(dma_multi_data_parameter_struct* init_struc
                   memory0_addr: memory base address
                   memory_inc: DMA_MEMORY_INCREASE_ENABLE,DMA_MEMORY_INCREASE_DISABLE
                   periph_memory_width: DMA_PERIPH_WIDTH_8BIT,DMA_PERIPH_WIDTH_16BIT,DMA_PERIPH_WIDTH_32BIT
-                  circular_mode: DMA_CIRCULAR_MODE_ENABLE,DMA_CIRCULAR_MODE_DISABLE                 
+                  circular_mode: DMA_CIRCULAR_MODE_ENABLE,DMA_CIRCULAR_MODE_DISABLE
                   direction: DMA_PERIPH_TO_MEMORY,DMA_MEMORY_TO_PERIPH,DMA_MEMORY_TO_MEMORY
                   number: the number of remaining data to be transferred by the DMA
-                  priority: DMA_PRIORITY_LOW,DMA_PRIORITY_MEDIUM,DMA_PRIORITY_HIGH,DMA_PRIORITY_ULTRA_HIGH                
+                  priority: DMA_PRIORITY_LOW,DMA_PRIORITY_MEDIUM,DMA_PRIORITY_HIGH,DMA_PRIORITY_ULTRA_HIGH
     \param[out] none
     \retval     none
 */
-void dma_single_data_mode_init(uint32_t dma_periph, dma_channel_enum channelx, dma_single_data_parameter_struct* init_struct)
+void dma_single_data_mode_init(uint32_t dma_periph, dma_channel_enum channelx, dma_single_data_parameter_struct *init_struct)
 {
     uint32_t ctl;
-    
+
     /* select single data mode */
-    DMA_CHFCTL(dma_periph,channelx) &= ~DMA_CHXFCTL_MDMEN;
-    
+    DMA_CHFCTL(dma_periph, channelx) &= ~DMA_CHXFCTL_MDMEN;
+
     /* configure peripheral base address */
-    DMA_CHPADDR(dma_periph,channelx) = init_struct->periph_addr;
-    
+    DMA_CHPADDR(dma_periph, channelx) = init_struct->periph_addr;
+
     /* configure memory base address */
-    DMA_CHM0ADDR(dma_periph,channelx) = init_struct->memory0_addr;
-    
+    DMA_CHM0ADDR(dma_periph, channelx) = init_struct->memory0_addr;
+
     /* configure the number of remaining data to be transferred */
-    DMA_CHCNT(dma_periph,channelx) = init_struct->number;
-    
+    DMA_CHCNT(dma_periph, channelx) = init_struct->number;
+
     /* configure peripheral and memory transfer width,channel priotity,transfer mode */
-    ctl = DMA_CHCTL(dma_periph,channelx);
+    ctl = DMA_CHCTL(dma_periph, channelx);
     ctl &= ~(DMA_CHXCTL_PWIDTH | DMA_CHXCTL_MWIDTH | DMA_CHXCTL_PRIO | DMA_CHXCTL_TM);
     ctl |= (init_struct->periph_memory_width | (init_struct->periph_memory_width << 2) | init_struct->priority | init_struct->direction);
-    DMA_CHCTL(dma_periph,channelx) = ctl;
+    DMA_CHCTL(dma_periph, channelx) = ctl;
 
     /* configure peripheral increasing mode */
-    if(DMA_PERIPH_INCREASE_ENABLE == init_struct->periph_inc){
-        DMA_CHCTL(dma_periph,channelx) |= DMA_CHXCTL_PNAGA;
-    }else if(DMA_PERIPH_INCREASE_DISABLE == init_struct->periph_inc){
-        DMA_CHCTL(dma_periph,channelx) &= ~DMA_CHXCTL_PNAGA;
-    }else{
-        DMA_CHCTL(dma_periph,channelx) |= DMA_CHXCTL_PAIF;
+    if(DMA_PERIPH_INCREASE_ENABLE == init_struct->periph_inc) {
+        DMA_CHCTL(dma_periph, channelx) |= DMA_CHXCTL_PNAGA;
+    } else if(DMA_PERIPH_INCREASE_DISABLE == init_struct->periph_inc) {
+        DMA_CHCTL(dma_periph, channelx) &= ~DMA_CHXCTL_PNAGA;
+    } else {
+        DMA_CHCTL(dma_periph, channelx) |= DMA_CHXCTL_PAIF;
     }
 
     /* configure memory increasing mode */
-    if(DMA_MEMORY_INCREASE_ENABLE == init_struct->memory_inc){
-        DMA_CHCTL(dma_periph,channelx) |= DMA_CHXCTL_MNAGA;
-    }else{
-        DMA_CHCTL(dma_periph,channelx) &= ~DMA_CHXCTL_MNAGA;
+    if(DMA_MEMORY_INCREASE_ENABLE == init_struct->memory_inc) {
+        DMA_CHCTL(dma_periph, channelx) |= DMA_CHXCTL_MNAGA;
+    } else {
+        DMA_CHCTL(dma_periph, channelx) &= ~DMA_CHXCTL_MNAGA;
     }
 
     /* configure DMA circular mode */
-    if(DMA_CIRCULAR_MODE_ENABLE == init_struct->circular_mode){
-        DMA_CHCTL(dma_periph,channelx) |= DMA_CHXCTL_CMEN;
-    }else{
-        DMA_CHCTL(dma_periph,channelx) &= ~DMA_CHXCTL_CMEN;
+    if(DMA_CIRCULAR_MODE_ENABLE == init_struct->circular_mode) {
+        DMA_CHCTL(dma_periph, channelx) |= DMA_CHXCTL_CMEN;
+    } else {
+        DMA_CHCTL(dma_periph, channelx) &= ~DMA_CHXCTL_CMEN;
     }
 }
 
 /*!
-    \brief      initialize DMA multi data mode
+    \brief    initialize DMA multi data mode
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel is initialized
@@ -185,7 +184,7 @@ void dma_single_data_mode_init(uint32_t dma_periph, dma_channel_enum channelx, d
     \param[in]  dma_multi_data_parameter_struct: the data needed to initialize DMA multi data mode
                   periph_addr: peripheral base address
                   periph_width: DMA_PERIPH_WIDTH_8BIT,DMA_PERIPH_WIDTH_16BIT,DMA_PERIPH_WIDTH_32BIT
-                  periph_inc: DMA_PERIPH_INCREASE_ENABLE,DMA_PERIPH_INCREASE_DISABLE,DMA_PERIPH_INCREASE_FIX 
+                  periph_inc: DMA_PERIPH_INCREASE_ENABLE,DMA_PERIPH_INCREASE_DISABLE,DMA_PERIPH_INCREASE_FIX
                   memory0_addr: memory0 base address
                   memory_width: DMA_MEMORY_WIDTH_8BIT,DMA_MEMORY_WIDTH_16BIT,DMA_MEMORY_WIDTH_32BIT
                   memory_inc: DMA_MEMORY_INCREASE_ENABLE,DMA_MEMORY_INCREASE_DISABLE
@@ -195,58 +194,59 @@ void dma_single_data_mode_init(uint32_t dma_periph, dma_channel_enum channelx, d
                   circular_mode: DMA_CIRCULAR_MODE_ENABLE,DMA_CIRCULAR_MODE_DISABLE
                   direction: DMA_PERIPH_TO_MEMORY,DMA_MEMORY_TO_PERIPH,DMA_MEMORY_TO_MEMORY
                   number: the number of remaining data to be transferred by the DMA
-                  priority: DMA_PRIORITY_LOW,DMA_PRIORITY_MEDIUM,DMA_PRIORITY_HIGH,DMA_PRIORITY_ULTRA_HIGH            
+                  priority: DMA_PRIORITY_LOW,DMA_PRIORITY_MEDIUM,DMA_PRIORITY_HIGH,DMA_PRIORITY_ULTRA_HIGH
     \param[out] none
     \retval     none
 */
-void dma_multi_data_mode_init(uint32_t dma_periph, dma_channel_enum channelx, dma_multi_data_parameter_struct* init_struct)
+void dma_multi_data_mode_init(uint32_t dma_periph, dma_channel_enum channelx, dma_multi_data_parameter_struct *init_struct)
 {
     uint32_t ctl;
-    
+
     /* select multi data mode and configure FIFO critical value */
-    DMA_CHFCTL(dma_periph,channelx) |= (DMA_CHXFCTL_MDMEN | init_struct->critical_value);
-    
+    DMA_CHFCTL(dma_periph, channelx) |= (DMA_CHXFCTL_MDMEN | init_struct->critical_value);
+
     /* configure peripheral base address */
-    DMA_CHPADDR(dma_periph,channelx) = init_struct->periph_addr;
-    
+    DMA_CHPADDR(dma_periph, channelx) = init_struct->periph_addr;
+
     /* configure memory base address */
-    DMA_CHM0ADDR(dma_periph,channelx) = init_struct->memory0_addr;
-    
+    DMA_CHM0ADDR(dma_periph, channelx) = init_struct->memory0_addr;
+
     /* configure the number of remaining data to be transferred */
-    DMA_CHCNT(dma_periph,channelx) = init_struct->number;
-    
+    DMA_CHCNT(dma_periph, channelx) = init_struct->number;
+
     /* configure peripheral and memory transfer width,channel priotity,transfer mode,peripheral and memory burst transfer width */
-    ctl = DMA_CHCTL(dma_periph,channelx);
+    ctl = DMA_CHCTL(dma_periph, channelx);
     ctl &= ~(DMA_CHXCTL_PWIDTH | DMA_CHXCTL_MWIDTH | DMA_CHXCTL_PRIO | DMA_CHXCTL_TM | DMA_CHXCTL_PBURST | DMA_CHXCTL_MBURST);
-    ctl |= (init_struct->periph_width | (init_struct->memory_width ) | init_struct->priority | init_struct->direction | init_struct->memory_burst_width | init_struct->periph_burst_width);
-    DMA_CHCTL(dma_periph,channelx) = ctl;
+    ctl |= (init_struct->periph_width | (init_struct->memory_width) | init_struct->priority | init_struct->direction | init_struct->memory_burst_width |
+            init_struct->periph_burst_width);
+    DMA_CHCTL(dma_periph, channelx) = ctl;
 
     /* configure peripheral increasing mode */
-    if(DMA_PERIPH_INCREASE_ENABLE == init_struct->periph_inc){
-        DMA_CHCTL(dma_periph,channelx) |= DMA_CHXCTL_PNAGA;
-    }else if(DMA_PERIPH_INCREASE_DISABLE == init_struct->periph_inc){
-        DMA_CHCTL(dma_periph,channelx) &= ~DMA_CHXCTL_PNAGA;
-    }else{
-        DMA_CHCTL(dma_periph,channelx) |= DMA_CHXCTL_PAIF;
+    if(DMA_PERIPH_INCREASE_ENABLE == init_struct->periph_inc) {
+        DMA_CHCTL(dma_periph, channelx) |= DMA_CHXCTL_PNAGA;
+    } else if(DMA_PERIPH_INCREASE_DISABLE == init_struct->periph_inc) {
+        DMA_CHCTL(dma_periph, channelx) &= ~DMA_CHXCTL_PNAGA;
+    } else {
+        DMA_CHCTL(dma_periph, channelx) |= DMA_CHXCTL_PAIF;
     }
 
     /* configure memory increasing mode */
-    if(DMA_MEMORY_INCREASE_ENABLE == init_struct->memory_inc){
-        DMA_CHCTL(dma_periph,channelx) |= DMA_CHXCTL_MNAGA;
-    }else{
-        DMA_CHCTL(dma_periph,channelx) &= ~DMA_CHXCTL_MNAGA;
+    if(DMA_MEMORY_INCREASE_ENABLE == init_struct->memory_inc) {
+        DMA_CHCTL(dma_periph, channelx) |= DMA_CHXCTL_MNAGA;
+    } else {
+        DMA_CHCTL(dma_periph, channelx) &= ~DMA_CHXCTL_MNAGA;
     }
 
     /* configure DMA circular mode */
-    if(DMA_CIRCULAR_MODE_ENABLE == init_struct->circular_mode){
-        DMA_CHCTL(dma_periph,channelx) |= DMA_CHXCTL_CMEN;
-    }else{
-        DMA_CHCTL(dma_periph,channelx) &= ~DMA_CHXCTL_CMEN;
+    if(DMA_CIRCULAR_MODE_ENABLE == init_struct->circular_mode) {
+        DMA_CHCTL(dma_periph, channelx) |= DMA_CHXCTL_CMEN;
+    } else {
+        DMA_CHCTL(dma_periph, channelx) &= ~DMA_CHXCTL_CMEN;
     }
 }
 
 /*!
-    \brief      set DMA peripheral base address
+    \brief    set DMA peripheral base address
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel to set peripheral base address
@@ -257,14 +257,14 @@ void dma_multi_data_mode_init(uint32_t dma_periph, dma_channel_enum channelx, dm
 */
 void dma_periph_address_config(uint32_t dma_periph, dma_channel_enum channelx, uint32_t address)
 {
-    DMA_CHPADDR(dma_periph,channelx) = address;
+    DMA_CHPADDR(dma_periph, channelx) = address;
 }
 
 /*!
-    \brief      set DMA Memory0 base address
+    \brief    set DMA Memory0 base address
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
-    \param[in]  channelx: specify which DMA channel to set Memory base address 
+    \param[in]  channelx: specify which DMA channel to set Memory base address
       \arg        DMA_CHx(x=0..7)
     \param[in]  memory_flag: DMA_MEMORY_x(x=0,1)
     \param[in]  address: Memory base address
@@ -273,15 +273,15 @@ void dma_periph_address_config(uint32_t dma_periph, dma_channel_enum channelx, u
 */
 void dma_memory_address_config(uint32_t dma_periph, dma_channel_enum channelx, uint8_t memory_flag, uint32_t address)
 {
-    if(memory_flag){
-        DMA_CHM1ADDR(dma_periph,channelx) = address;
-    }else{
-        DMA_CHM0ADDR(dma_periph,channelx) = address;
+    if(memory_flag) {
+        DMA_CHM1ADDR(dma_periph, channelx) = address;
+    } else {
+        DMA_CHM0ADDR(dma_periph, channelx) = address;
     }
 }
 
 /*!
-    \brief      set the number of remaining data to be transferred by the DMA
+    \brief    set the number of remaining data to be transferred by the DMA
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel to set number
@@ -292,25 +292,25 @@ void dma_memory_address_config(uint32_t dma_periph, dma_channel_enum channelx, u
 */
 void dma_transfer_number_config(uint32_t dma_periph, dma_channel_enum channelx, uint32_t number)
 {
-    DMA_CHCNT(dma_periph,channelx) = number;
+    DMA_CHCNT(dma_periph, channelx) = number;
 }
 
 /*!
-    \brief      get the number of remaining data to be transferred by the DMA
+    \brief    get the number of remaining data to be transferred by the DMA
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
-    \param[in]  channelx: specify which DMA channel to set number 
+    \param[in]  channelx: specify which DMA channel to set number
       \arg        DMA_CHx(x=0..7)
     \param[out] none
-    \retval     uint32_t: the number of remaining data to be transferred by the DMA 
+    \retval     uint32_t: the number of remaining data to be transferred by the DMA
 */
 uint32_t dma_transfer_number_get(uint32_t dma_periph, dma_channel_enum channelx)
 {
-    return (uint32_t)DMA_CHCNT(dma_periph,channelx);
+    return (uint32_t)DMA_CHCNT(dma_periph, channelx);
 }
 
 /*!
-    \brief      configure priority level of DMA channel
+    \brief    configure priority level of DMA channel
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel
@@ -322,21 +322,21 @@ uint32_t dma_transfer_number_get(uint32_t dma_periph, dma_channel_enum channelx)
       \arg        DMA_PRIORITY_HIGH: high priority
       \arg        DMA_PRIORITY_ULTRA_HIGH: ultra high priority
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void dma_priority_config(uint32_t dma_periph, dma_channel_enum channelx, uint32_t priority)
 {
     uint32_t ctl;
     /* acquire DMA_CHxCTL register */
-    ctl = DMA_CHCTL(dma_periph,channelx);
+    ctl = DMA_CHCTL(dma_periph, channelx);
     /* assign regiser */
     ctl &= ~DMA_CHXCTL_PRIO;
     ctl |= priority;
-    DMA_CHCTL(dma_periph,channelx) = ctl;
+    DMA_CHCTL(dma_periph, channelx) = ctl;
 }
 
 /*!
-    \brief      configure transfer burst beats of memory
+    \brief    configure transfer burst beats of memory
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel
@@ -349,19 +349,19 @@ void dma_priority_config(uint32_t dma_periph, dma_channel_enum channelx, uint32_
     \param[out] none
     \retval     none
 */
-void dma_memory_burst_beats_config (uint32_t dma_periph, dma_channel_enum channelx, uint32_t mbeat)
+void dma_memory_burst_beats_config(uint32_t dma_periph, dma_channel_enum channelx, uint32_t mbeat)
 {
     uint32_t ctl;
     /* acquire DMA_CHxCTL register */
-    ctl = DMA_CHCTL(dma_periph,channelx);
+    ctl = DMA_CHCTL(dma_periph, channelx);
     /* assign regiser */
     ctl &= ~DMA_CHXCTL_MBURST;
     ctl |= mbeat;
-    DMA_CHCTL(dma_periph,channelx) = ctl;
+    DMA_CHCTL(dma_periph, channelx) = ctl;
 }
 
 /*!
-    \brief      configure transfer burst beats of peripheral
+    \brief    configure transfer burst beats of peripheral
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel
@@ -375,19 +375,19 @@ void dma_memory_burst_beats_config (uint32_t dma_periph, dma_channel_enum channe
     \param[out] none
     \retval     none
 */
-void dma_periph_burst_beats_config (uint32_t dma_periph, dma_channel_enum channelx, uint32_t pbeat)
+void dma_periph_burst_beats_config(uint32_t dma_periph, dma_channel_enum channelx, uint32_t pbeat)
 {
     uint32_t ctl;
     /* acquire DMA_CHxCTL register */
-    ctl = DMA_CHCTL(dma_periph,channelx);
+    ctl = DMA_CHCTL(dma_periph, channelx);
     /* assign regiser */
     ctl &= ~DMA_CHXCTL_PBURST;
     ctl |= pbeat;
-    DMA_CHCTL(dma_periph,channelx) = ctl;
+    DMA_CHCTL(dma_periph, channelx) = ctl;
 }
 
 /*!
-    \brief      configure transfer data size of memory
+    \brief    configure transfer data size of memory
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel
@@ -404,18 +404,18 @@ void dma_memory_width_config(uint32_t dma_periph, dma_channel_enum channelx, uin
 {
     uint32_t ctl;
     /* acquire DMA_CHxCTL register */
-    ctl = DMA_CHCTL(dma_periph,channelx);
+    ctl = DMA_CHCTL(dma_periph, channelx);
     /* assign regiser */
     ctl &= ~DMA_CHXCTL_MWIDTH;
     ctl |= msize;
-    DMA_CHCTL(dma_periph,channelx) = ctl;
+    DMA_CHCTL(dma_periph, channelx) = ctl;
 }
 
 /*!
-    \brief      configure transfer data size of peripheral 
+    \brief    configure transfer data size of peripheral
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
-    \param[in]  channelx: specify which DMA channel 
+    \param[in]  channelx: specify which DMA channel
       \arg        DMA_CHx(x=0..7)
     \param[in]  msize: transfer data size of peripheral
                 only one parameter can be selected which is shown as below:
@@ -425,22 +425,22 @@ void dma_memory_width_config(uint32_t dma_periph, dma_channel_enum channelx, uin
     \param[out] none
     \retval     none
 */
-void dma_periph_width_config (uint32_t dma_periph, dma_channel_enum channelx, uint32_t psize)
+void dma_periph_width_config(uint32_t dma_periph, dma_channel_enum channelx, uint32_t psize)
 {
     uint32_t ctl;
     /* acquire DMA_CHxCTL register */
-    ctl = DMA_CHCTL(dma_periph,channelx);
+    ctl = DMA_CHCTL(dma_periph, channelx);
     /* assign regiser */
     ctl &= ~DMA_CHXCTL_PWIDTH;
     ctl |= psize;
-    DMA_CHCTL(dma_periph,channelx) = ctl;
+    DMA_CHCTL(dma_periph, channelx) = ctl;
 }
 
 /*!
-    \brief      configure memory address generation generation_algorithm
+    \brief    configure memory address generation generation_algorithm
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
-    \param[in]  channelx: specify which DMA channel 
+    \param[in]  channelx: specify which DMA channel
       \arg        DMA_CHx(x=0..7)
     \param[in]  generation_algorithm: the address generation algorithm
                 only one parameter can be selected which is shown as below:
@@ -451,18 +451,18 @@ void dma_periph_width_config (uint32_t dma_periph, dma_channel_enum channelx, ui
 */
 void dma_memory_address_generation_config(uint32_t dma_periph, dma_channel_enum channelx, uint8_t generation_algorithm)
 {
-    if(DMA_MEMORY_INCREASE_ENABLE == generation_algorithm){
-        DMA_CHCTL(dma_periph,channelx) |= DMA_CHXCTL_MNAGA;
-    }else{
-        DMA_CHCTL(dma_periph,channelx) &= ~DMA_CHXCTL_MNAGA;
+    if(DMA_MEMORY_INCREASE_ENABLE == generation_algorithm) {
+        DMA_CHCTL(dma_periph, channelx) |= DMA_CHXCTL_MNAGA;
+    } else {
+        DMA_CHCTL(dma_periph, channelx) &= ~DMA_CHXCTL_MNAGA;
     }
 }
 
 /*!
-    \brief      configure peripheral address generation_algorithm
+    \brief    configure peripheral address generation_algorithm
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
-    \param[in]  channelx: specify which DMA channel 
+    \param[in]  channelx: specify which DMA channel
       \arg        DMA_CHx(x=0..7)
     \param[in]  generation_algorithm: the address generation algorithm
                 only one parameter can be selected which is shown as below:
@@ -474,77 +474,77 @@ void dma_memory_address_generation_config(uint32_t dma_periph, dma_channel_enum 
 */
 void dma_peripheral_address_generation_config(uint32_t dma_periph, dma_channel_enum channelx, uint8_t generation_algorithm)
 {
-    if(DMA_PERIPH_INCREASE_ENABLE == generation_algorithm){
-        DMA_CHCTL(dma_periph,channelx) |= DMA_CHXCTL_PNAGA;
-    }else if(DMA_PERIPH_INCREASE_DISABLE == generation_algorithm){
-        DMA_CHCTL(dma_periph,channelx) &= ~DMA_CHXCTL_PNAGA;
-    }else{
-        DMA_CHCTL(dma_periph,channelx) |= DMA_CHXCTL_PNAGA;
-        DMA_CHCTL(dma_periph,channelx) |= DMA_CHXCTL_PAIF;
+    if(DMA_PERIPH_INCREASE_ENABLE == generation_algorithm) {
+        DMA_CHCTL(dma_periph, channelx) |= DMA_CHXCTL_PNAGA;
+    } else if(DMA_PERIPH_INCREASE_DISABLE == generation_algorithm) {
+        DMA_CHCTL(dma_periph, channelx) &= ~DMA_CHXCTL_PNAGA;
+    } else {
+        DMA_CHCTL(dma_periph, channelx) |= DMA_CHXCTL_PNAGA;
+        DMA_CHCTL(dma_periph, channelx) |= DMA_CHXCTL_PAIF;
     }
 }
 
 /*!
-    \brief      enable DMA circulation mode
+    \brief    enable DMA circulation mode
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
-    \param[in]  channelx: specify which DMA channel 
+    \param[in]  channelx: specify which DMA channel
       \arg        DMA_CHx(x=0..7)
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void dma_circulation_enable(uint32_t dma_periph, dma_channel_enum channelx)
 {
-    DMA_CHCTL(dma_periph,channelx) |= DMA_CHXCTL_CMEN;
+    DMA_CHCTL(dma_periph, channelx) |= DMA_CHXCTL_CMEN;
 }
 
 /*!
-    \brief      disable DMA circulation mode
+    \brief    disable DMA circulation mode
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
-    \param[in]  channelx: specify which DMA channel 
+    \param[in]  channelx: specify which DMA channel
       \arg        DMA_CHx(x=0..7)
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void dma_circulation_disable(uint32_t dma_periph, dma_channel_enum channelx)
 {
-    DMA_CHCTL(dma_periph,channelx) &= ~DMA_CHXCTL_CMEN;
+    DMA_CHCTL(dma_periph, channelx) &= ~DMA_CHXCTL_CMEN;
 }
 
 /*!
-    \brief      enable DMA channel
+    \brief    enable DMA channel
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
-    \param[in]  channelx: specify which DMA channel 
+    \param[in]  channelx: specify which DMA channel
       \arg        DMA_CHx(x=0..7)
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void dma_channel_enable(uint32_t dma_periph, dma_channel_enum channelx)
 {
-    DMA_CHCTL(dma_periph,channelx) |= DMA_CHXCTL_CHEN;
+    DMA_CHCTL(dma_periph, channelx) |= DMA_CHXCTL_CHEN;
 }
 
 /*!
-    \brief      disable DMA channel
+    \brief    disable DMA channel
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
-    \param[in]  channelx: specify which DMA channel 
+    \param[in]  channelx: specify which DMA channel
       \arg        DMA_CHx(x=0..7)
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void dma_channel_disable(uint32_t dma_periph, dma_channel_enum channelx)
 {
-    DMA_CHCTL(dma_periph,channelx) &= ~DMA_CHXCTL_CHEN;
+    DMA_CHCTL(dma_periph, channelx) &= ~DMA_CHXCTL_CHEN;
 }
 
 /*!
-    \brief      configure the direction of  data transfer on the channel
+    \brief    configure the direction of  data transfer on the channel
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
-    \param[in]  channelx: specify which DMA channel 
+    \param[in]  channelx: specify which DMA channel
       \arg        DMA_CHx(x=0..7)
     \param[in]  direction: specify the direction of  data transfer
                 only one parameter can be selected which is shown as below:
@@ -558,85 +558,85 @@ void dma_transfer_direction_config(uint32_t dma_periph, dma_channel_enum channel
 {
     uint32_t ctl;
     /* acquire DMA_CHxCTL register */
-    ctl = DMA_CHCTL(dma_periph,channelx);
+    ctl = DMA_CHCTL(dma_periph, channelx);
     /* assign regiser */
     ctl &= ~DMA_CHXCTL_TM;
     ctl |= direction;
-    
-    DMA_CHCTL(dma_periph,channelx) = ctl;
+
+    DMA_CHCTL(dma_periph, channelx) = ctl;
 }
 
 /*!
-    \brief      DMA switch buffer mode config
+    \brief    DMA switch buffer mode config
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
-    \param[in]  channelx: specify which DMA channel 
+    \param[in]  channelx: specify which DMA channel
       \arg        DMA_CHx(x=0..7)
     \param[in]  memory1_addr: memory1 base address
     \param[in]  memory_select: DMA_MEMORY_0 or DMA_MEMORY_1
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void dma_switch_buffer_mode_config(uint32_t dma_periph, dma_channel_enum channelx, uint32_t memory1_addr, uint32_t memory_select)
 {
     /* configure memory1 base address */
-    DMA_CHM1ADDR(dma_periph,channelx) = memory1_addr;
+    DMA_CHM1ADDR(dma_periph, channelx) = memory1_addr;
 
-    if(DMA_MEMORY_0 == memory_select){
-        DMA_CHCTL(dma_periph,channelx) &= ~DMA_CHXCTL_MBS;
-    }else{
-        DMA_CHCTL(dma_periph,channelx) |= DMA_CHXCTL_MBS;
+    if(DMA_MEMORY_0 == memory_select) {
+        DMA_CHCTL(dma_periph, channelx) &= ~DMA_CHXCTL_MBS;
+    } else {
+        DMA_CHCTL(dma_periph, channelx) |= DMA_CHXCTL_MBS;
     }
 }
 
 /*!
-    \brief      DMA using memory get
+    \brief    DMA using memory get
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
-    \param[in]  channelx: specify which DMA channel 
+    \param[in]  channelx: specify which DMA channel
       \arg        DMA_CHx(x=0..7)
     \param[out] none
-    \retval     the using memory 
+    \retval     the using memory
 */
 uint32_t dma_using_memory_get(uint32_t dma_periph, dma_channel_enum channelx)
 {
-    if((DMA_CHCTL(dma_periph,channelx)) & DMA_CHXCTL_MBS){
+    if((DMA_CHCTL(dma_periph, channelx)) & DMA_CHXCTL_MBS) {
         return DMA_MEMORY_1;
-    }else{
+    } else {
         return DMA_MEMORY_0;
     }
 }
 
 /*!
-    \brief      DMA channel peripheral select
+    \brief    DMA channel peripheral select
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
-    \param[in]  channelx: specify which DMA channel 
+    \param[in]  channelx: specify which DMA channel
       \arg        DMA_CHx(x=0..7)
     \param[in]  sub_periph: specify DMA channel peripheral
       \arg        DMA_SUBPERIx(x=0..7)
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void dma_channel_subperipheral_select(uint32_t dma_periph, dma_channel_enum channelx, dma_subperipheral_enum sub_periph)
 {
     uint32_t ctl;
     /* acquire DMA_CHxCTL register */
-    ctl = DMA_CHCTL(dma_periph,channelx);
+    ctl = DMA_CHCTL(dma_periph, channelx);
     /* assign regiser */
     ctl &= ~DMA_CHXCTL_PERIEN;
     ctl |= ((uint32_t)sub_periph << CHXCTL_PERIEN_OFFSET);
-    
-    DMA_CHCTL(dma_periph,channelx) = ctl;
+
+    DMA_CHCTL(dma_periph, channelx) = ctl;
 }
 
 /*!
-    \brief      DMA flow controller configure
+    \brief    DMA flow controller configure
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
-    \param[in]  channelx: specify which DMA channel 
+    \param[in]  channelx: specify which DMA channel
       \arg        DMA_CHx(x=0..7)
-    \param[in]  controller: specify DMA flow controler 
+    \param[in]  controller: specify DMA flow controler
                 only one parameter can be selected which is shown as below:
       \arg        DMA_FLOW_CONTROLLER_DMA: DMA is the flow controller
       \arg        DMA_FLOW_CONTROLLER_PERI: peripheral is the flow controller
@@ -645,50 +645,50 @@ void dma_channel_subperipheral_select(uint32_t dma_periph, dma_channel_enum chan
 */
 void dma_flow_controller_config(uint32_t dma_periph, dma_channel_enum channelx, uint32_t controller)
 {
-    if(DMA_FLOW_CONTROLLER_DMA == controller){
-        DMA_CHCTL(dma_periph,channelx) &= ~DMA_CHXCTL_TFCS;
-    }else{
-        DMA_CHCTL(dma_periph,channelx) |= DMA_CHXCTL_TFCS;
+    if(DMA_FLOW_CONTROLLER_DMA == controller) {
+        DMA_CHCTL(dma_periph, channelx) &= ~DMA_CHXCTL_TFCS;
+    } else {
+        DMA_CHCTL(dma_periph, channelx) |= DMA_CHXCTL_TFCS;
     }
 }
 
 /*!
-    \brief      DMA switch buffer mode enable
+    \brief    DMA switch buffer mode enable
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
-    \param[in]  channelx: specify which DMA channel 
+    \param[in]  channelx: specify which DMA channel
       \arg        DMA_CHx(x=0..7)
     \param[in]  newvalue: ENABLE or DISABLE
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void dma_switch_buffer_mode_enable(uint32_t dma_periph, dma_channel_enum channelx, ControlStatus newvalue)
 {
-    if(ENABLE == newvalue){
+    if(ENABLE == newvalue) {
         /* switch buffer mode enable */
-        DMA_CHCTL(dma_periph,channelx) |= DMA_CHXCTL_SBMEN;
-    }else{
+        DMA_CHCTL(dma_periph, channelx) |= DMA_CHXCTL_SBMEN;
+    } else {
         /* switch buffer mode disable */
-        DMA_CHCTL(dma_periph,channelx) &= ~DMA_CHXCTL_SBMEN;
+        DMA_CHCTL(dma_periph, channelx) &= ~DMA_CHXCTL_SBMEN;
     }
 }
 
 /*!
-    \brief      DMA FIFO status get
+    \brief    DMA FIFO status get
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
-    \param[in]  channelx: specify which DMA channel 
+    \param[in]  channelx: specify which DMA channel
       \arg        DMA_CHx(x=0..7)
     \param[out] none
-    \retval     the using memory 
+    \retval     the using memory
 */
 uint32_t dma_fifo_status_get(uint32_t dma_periph, dma_channel_enum channelx)
 {
-    return (DMA_CHFCTL(dma_periph,channelx) & DMA_CHXFCTL_FCNT);
+    return (DMA_CHFCTL(dma_periph, channelx) & DMA_CHXFCTL_FCNT);
 }
 
 /*!
-    \brief      get DMA flag is set or not 
+    \brief    get DMA flag is set or not
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel to get flag
@@ -705,24 +705,24 @@ uint32_t dma_fifo_status_get(uint32_t dma_periph, dma_channel_enum channelx)
 */
 FlagStatus dma_flag_get(uint32_t dma_periph, dma_channel_enum channelx, uint32_t flag)
 {
-    if(channelx < DMA_CH4){
-        if(DMA_INTF0(dma_periph) & DMA_FLAG_ADD(flag,channelx)){
+    if(channelx < DMA_CH4) {
+        if(DMA_INTF0(dma_periph) & DMA_FLAG_ADD(flag, channelx)) {
             return SET;
-        }else{
+        } else {
             return RESET;
         }
-    }else{
+    } else {
         channelx -= (dma_channel_enum)4;
-        if(DMA_INTF1(dma_periph) & DMA_FLAG_ADD(flag,channelx)){
+        if(DMA_INTF1(dma_periph) & DMA_FLAG_ADD(flag, channelx)) {
             return SET;
-        }else{
+        } else {
             return RESET;
         }
     }
 }
 
 /*!
-    \brief      clear DMA a channel flag
+    \brief    clear DMA a channel flag
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel to get flag
@@ -739,16 +739,66 @@ FlagStatus dma_flag_get(uint32_t dma_periph, dma_channel_enum channelx, uint32_t
 */
 void dma_flag_clear(uint32_t dma_periph, dma_channel_enum channelx, uint32_t flag)
 {
-    if(channelx < DMA_CH4){
-        DMA_INTC0(dma_periph) |= DMA_FLAG_ADD(flag,channelx);
-    }else{
+    if(channelx < DMA_CH4) {
+        DMA_INTC0(dma_periph) |= DMA_FLAG_ADD(flag, channelx);
+    } else {
         channelx -= (dma_channel_enum)4;
-        DMA_INTC1(dma_periph) |= DMA_FLAG_ADD(flag,channelx);
+        DMA_INTC1(dma_periph) |= DMA_FLAG_ADD(flag, channelx);
     }
 }
 
 /*!
-    \brief      get DMA interrupt flag is set or not 
+    \brief    enable DMA interrupt
+    \param[in]  dma_periph: DMAx(x=0,1)
+      \arg        DMAx(x=0,1)
+    \param[in]  channelx: specify which DMA channel
+      \arg        DMA_CHx(x=0..7)
+    \param[in]  source: specify which interrupt to enbale
+                only one parameters can be selected which are shown as below:
+      \arg        DMA_CHXCTL_SDEIE: single data mode exception interrupt enable
+      \arg        DMA_CHXCTL_TAEIE: tranfer access error interrupt enable
+      \arg        DMA_CHXCTL_HTFIE: half transfer finish interrupt enable
+      \arg        DMA_CHXCTL_FTFIE: full transfer finish interrupt enable
+      \arg        DMA_CHXFCTL_FEEIE: FIFO exception interrupt enable
+    \param[out] none
+    \retval     none
+*/
+void dma_interrupt_enable(uint32_t dma_periph, dma_channel_enum channelx, uint32_t source)
+{
+    if(DMA_CHXFCTL_FEEIE != source) {
+        DMA_CHCTL(dma_periph, channelx) |= source;
+    } else {
+        DMA_CHFCTL(dma_periph, channelx) |= source;
+    }
+}
+
+/*!
+    \brief    disable DMA interrupt
+    \param[in]  dma_periph: DMAx(x=0,1)
+      \arg        DMAx(x=0,1)
+    \param[in]  channelx: specify which DMA channel
+      \arg        DMA_CHx(x=0..7)
+    \param[in]  source: specify which interrupt to disbale
+                only one parameters can be selected which are shown as below:
+      \arg        DMA_CHXCTL_SDEIE: single data mode exception interrupt enable
+      \arg        DMA_CHXCTL_TAEIE: tranfer access error interrupt enable
+      \arg        DMA_CHXCTL_HTFIE: half transfer finish interrupt enable
+      \arg        DMA_CHXCTL_FTFIE: full transfer finish interrupt enable
+      \arg        DMA_CHXFCTL_FEEIE: FIFO exception interrupt enable
+    \param[out] none
+    \retval     none
+*/
+void dma_interrupt_disable(uint32_t dma_periph, dma_channel_enum channelx, uint32_t source)
+{
+    if(DMA_CHXFCTL_FEEIE != source) {
+        DMA_CHCTL(dma_periph, channelx) &= ~source;
+    } else {
+        DMA_CHFCTL(dma_periph, channelx) &= ~source;
+    }
+}
+
+/*!
+    \brief    get DMA interrupt flag is set or not
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel to get interrupt flag
@@ -765,70 +815,70 @@ void dma_flag_clear(uint32_t dma_periph, dma_channel_enum channelx, uint32_t fla
 */
 FlagStatus dma_interrupt_flag_get(uint32_t dma_periph, dma_channel_enum channelx, uint32_t interrupt)
 {
-    uint32_t interrupt_enable = 0U,interrupt_flag = 0U;
+    uint32_t interrupt_enable = 0U, interrupt_flag = 0U;
     dma_channel_enum channel_flag_offset = channelx;
-    if(channelx < DMA_CH4){
-        switch(interrupt){
+    if(channelx < DMA_CH4) {
+        switch(interrupt) {
         case DMA_INTF_FEEIF:
-            interrupt_flag = DMA_INTF0(dma_periph) & DMA_FLAG_ADD(interrupt,channelx);
-            interrupt_enable = DMA_CHFCTL(dma_periph,channelx) & DMA_CHXFCTL_FEEIE;
+            interrupt_flag = DMA_INTF0(dma_periph) & DMA_FLAG_ADD(interrupt, channelx);
+            interrupt_enable = DMA_CHFCTL(dma_periph, channelx) & DMA_CHXFCTL_FEEIE;
             break;
         case DMA_INTF_SDEIF:
-            interrupt_flag = DMA_INTF0(dma_periph) & DMA_FLAG_ADD(interrupt,channelx);
-            interrupt_enable = DMA_CHCTL(dma_periph,channelx) & DMA_CHXCTL_SDEIE;
+            interrupt_flag = DMA_INTF0(dma_periph) & DMA_FLAG_ADD(interrupt, channelx);
+            interrupt_enable = DMA_CHCTL(dma_periph, channelx) & DMA_CHXCTL_SDEIE;
             break;
         case DMA_INTF_TAEIF:
-            interrupt_flag = DMA_INTF0(dma_periph) & DMA_FLAG_ADD(interrupt,channelx);
-            interrupt_enable = DMA_CHCTL(dma_periph,channelx) & DMA_CHXCTL_TAEIE;
+            interrupt_flag = DMA_INTF0(dma_periph) & DMA_FLAG_ADD(interrupt, channelx);
+            interrupt_enable = DMA_CHCTL(dma_periph, channelx) & DMA_CHXCTL_TAEIE;
             break;
         case DMA_INTF_HTFIF:
-            interrupt_flag = DMA_INTF0(dma_periph) & DMA_FLAG_ADD(interrupt,channelx);
-            interrupt_enable = DMA_CHCTL(dma_periph,channelx) & DMA_CHXCTL_HTFIE;
+            interrupt_flag = DMA_INTF0(dma_periph) & DMA_FLAG_ADD(interrupt, channelx);
+            interrupt_enable = DMA_CHCTL(dma_periph, channelx) & DMA_CHXCTL_HTFIE;
             break;
         case DMA_INTF_FTFIF:
-            interrupt_flag = (DMA_INTF0(dma_periph) & DMA_FLAG_ADD(interrupt,channelx));
-            interrupt_enable = (DMA_CHCTL(dma_periph,channelx) & DMA_CHXCTL_FTFIE);
+            interrupt_flag = (DMA_INTF0(dma_periph) & DMA_FLAG_ADD(interrupt, channelx));
+            interrupt_enable = (DMA_CHCTL(dma_periph, channelx) & DMA_CHXCTL_FTFIE);
             break;
         default:
             break;
         }
-    }else{
+    } else {
         channel_flag_offset -= (dma_channel_enum)4;
-        switch(interrupt){
+        switch(interrupt) {
         case DMA_INTF_FEEIF:
-            interrupt_flag = DMA_INTF1(dma_periph) & DMA_FLAG_ADD(interrupt,channel_flag_offset);
-            interrupt_enable = DMA_CHFCTL(dma_periph,channelx) & DMA_CHXFCTL_FEEIE;
+            interrupt_flag = DMA_INTF1(dma_periph) & DMA_FLAG_ADD(interrupt, channel_flag_offset);
+            interrupt_enable = DMA_CHFCTL(dma_periph, channelx) & DMA_CHXFCTL_FEEIE;
             break;
         case DMA_INTF_SDEIF:
-            interrupt_flag = DMA_INTF1(dma_periph) & DMA_FLAG_ADD(interrupt,channel_flag_offset);
-            interrupt_enable = DMA_CHCTL(dma_periph,channelx) & DMA_CHXCTL_SDEIE;
+            interrupt_flag = DMA_INTF1(dma_periph) & DMA_FLAG_ADD(interrupt, channel_flag_offset);
+            interrupt_enable = DMA_CHCTL(dma_periph, channelx) & DMA_CHXCTL_SDEIE;
             break;
         case DMA_INTF_TAEIF:
-            interrupt_flag = DMA_INTF1(dma_periph) & DMA_FLAG_ADD(interrupt,channel_flag_offset);
-            interrupt_enable = DMA_CHCTL(dma_periph,channelx) & DMA_CHXCTL_TAEIE;
+            interrupt_flag = DMA_INTF1(dma_periph) & DMA_FLAG_ADD(interrupt, channel_flag_offset);
+            interrupt_enable = DMA_CHCTL(dma_periph, channelx) & DMA_CHXCTL_TAEIE;
             break;
         case DMA_INTF_HTFIF:
-            interrupt_flag = DMA_INTF1(dma_periph) & DMA_FLAG_ADD(interrupt,channel_flag_offset);
-            interrupt_enable = DMA_CHCTL(dma_periph,channelx) & DMA_CHXCTL_HTFIE;
+            interrupt_flag = DMA_INTF1(dma_periph) & DMA_FLAG_ADD(interrupt, channel_flag_offset);
+            interrupt_enable = DMA_CHCTL(dma_periph, channelx) & DMA_CHXCTL_HTFIE;
             break;
         case DMA_INTF_FTFIF:
-            interrupt_flag = DMA_INTF1(dma_periph) & DMA_FLAG_ADD(interrupt,channel_flag_offset);
-            interrupt_enable = DMA_CHCTL(dma_periph,channelx) & DMA_CHXCTL_FTFIE;
+            interrupt_flag = DMA_INTF1(dma_periph) & DMA_FLAG_ADD(interrupt, channel_flag_offset);
+            interrupt_enable = DMA_CHCTL(dma_periph, channelx) & DMA_CHXCTL_FTFIE;
             break;
         default:
             break;
         }
     }
-    
-    if(interrupt_flag && interrupt_enable){
+
+    if(interrupt_flag && interrupt_enable) {
         return SET;
-    }else{
+    } else {
         return RESET;
     }
 }
 
 /*!
-    \brief      clear DMA a channel interrupt flag
+    \brief    clear DMA a channel interrupt flag
     \param[in]  dma_periph: DMAx(x=0,1)
       \arg        DMAx(x=0,1)
     \param[in]  channelx: specify which DMA channel to clear interrupt flag
@@ -845,61 +895,10 @@ FlagStatus dma_interrupt_flag_get(uint32_t dma_periph, dma_channel_enum channelx
 */
 void dma_interrupt_flag_clear(uint32_t dma_periph, dma_channel_enum channelx, uint32_t interrupt)
 {
-    if(channelx < DMA_CH4){
-        DMA_INTC0(dma_periph) |= DMA_FLAG_ADD(interrupt,channelx);
-    }else{
+    if(channelx < DMA_CH4) {
+        DMA_INTC0(dma_periph) |= DMA_FLAG_ADD(interrupt, channelx);
+    } else {
         channelx -= (dma_channel_enum)4;
-        DMA_INTC1(dma_periph) |= DMA_FLAG_ADD(interrupt,channelx);
+        DMA_INTC1(dma_periph) |= DMA_FLAG_ADD(interrupt, channelx);
     }
 }
-
-/*!
-    \brief      enable DMA interrupt
-    \param[in]  dma_periph: DMAx(x=0,1)
-      \arg        DMAx(x=0,1)
-    \param[in]  channelx: specify which DMA channel 
-      \arg        DMA_CHx(x=0..7)
-    \param[in]  source: specify which interrupt to enbale
-                one or more parameters can be selected which are shown as below:
-      \arg        DMA_CHXCTL_SDEIE: single data mode exception interrupt enable
-      \arg        DMA_CHXCTL_TAEIE: tranfer access error interrupt enable
-      \arg        DMA_CHXCTL_HTFIE: half transfer finish interrupt enable
-      \arg        DMA_CHXCTL_FTFIE: full transfer finish interrupt enable
-      \arg        DMA_CHXFCTL_FEEIE: FIFO exception interrupt enable
-    \param[out] none
-    \retval     none
-*/
-void dma_interrupt_enable(uint32_t dma_periph, dma_channel_enum channelx, uint32_t source)
-{
-    if(DMA_CHXFCTL_FEEIE != source){
-        DMA_CHCTL(dma_periph,channelx) |= source;
-    }else{
-        DMA_CHFCTL(dma_periph,channelx) |= source;
-    }
-}
-
-/*!
-    \brief      disable DMA interrupt
-    \param[in]  dma_periph: DMAx(x=0,1)
-      \arg        DMAx(x=0,1)
-    \param[in]  channelx: specify which DMA channel 
-      \arg        DMA_CHx(x=0..7)
-    \param[in]  source: specify which interrupt to disbale
-                one or more parameters can be selected which are shown as below:
-      \arg        DMA_CHXCTL_SDEIE: single data mode exception interrupt enable
-      \arg        DMA_CHXCTL_TAEIE: tranfer access error interrupt enable
-      \arg        DMA_CHXCTL_HTFIE: half transfer finish interrupt enable
-      \arg        DMA_CHXCTL_FTFIE: full transfer finish interrupt enable
-      \arg        DMA_CHXFCTL_FEEIE: FIFO exception interrupt enable
-    \param[out] none
-    \retval     none
-*/
-void dma_interrupt_disable(uint32_t dma_periph, dma_channel_enum channelx, uint32_t source)
-{
-    if(DMA_CHXFCTL_FEEIE != source){
-        DMA_CHCTL(dma_periph,channelx) &= ~source;
-    }else{
-        DMA_CHFCTL(dma_periph,channelx) &= ~source;
-    }
-}
-

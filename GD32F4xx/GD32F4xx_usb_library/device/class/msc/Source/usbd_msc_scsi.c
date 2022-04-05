@@ -3,10 +3,11 @@
     \brief   USB SCSI layer functions
 
     \version 2020-08-01, V3.0.0, firmware for GD32F4xx
+    \version 2022-03-09, V3.1.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -31,13 +32,53 @@ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWIS
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
 OF SUCH DAMAGE.
 */
+
 #include "usbd_enum.h"
 #include "usbd_msc_bbb.h"
 #include "usbd_msc_scsi.h"
-#include "usbd_msc_data.h"
+
+/* USB mass storage page 0 inquiry data */
+const uint8_t msc_page00_inquiry_data[] = 
+{
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    (INQUIRY_PAGE00_LENGTH - 4U),
+    0x80U,
+    0x83U,
+};
+
+/* USB mass storage sense 6 data */
+const uint8_t msc_mode_sense6_data[] = 
+{
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U
+};
+
+/* USB mass storage sense 10 data */
+const uint8_t msc_mode_sense10_data[] = 
+{
+    0x00U,
+    0x06U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U
+};
 
 /* local function prototypes ('static') */
 static int8_t scsi_test_unit_ready      (usb_core_driver *udev, uint8_t lun, uint8_t *params);
+static int8_t scsi_mode_select6         (usb_core_driver *udev, uint8_t lun, uint8_t *params);
+static int8_t scsi_mode_select10        (usb_core_driver *udev, uint8_t lun, uint8_t *params);
 static int8_t scsi_inquiry              (usb_core_driver *udev, uint8_t lun, uint8_t *params);
 static int8_t scsi_read_format_capacity (usb_core_driver *udev, uint8_t lun, uint8_t *params);
 static int8_t scsi_read_capacity10      (usb_core_driver *udev, uint8_t lun, uint8_t *params);
@@ -110,6 +151,12 @@ int8_t scsi_process_cmd(usb_core_driver *udev, uint8_t lun, uint8_t *params)
     case SCSI_READ_TOC_DATA:
         return scsi_toc_cmd_read (udev, lun, params);
 
+    case SCSI_MODE_SELECT6:
+        return scsi_mode_select6 (udev, lun, params);
+
+    case SCSI_MODE_SELECT10:
+        return scsi_mode_select10 (udev, lun, params);
+
     default:
         scsi_sense_code (udev, lun, ILLEGAL_REQUEST, INVALID_CDB);
         return -1;
@@ -163,9 +210,39 @@ static int8_t scsi_test_unit_ready (usb_core_driver *udev, uint8_t lun, uint8_t 
         return -1;
     }
     
-    if (1U == msc->scsi_disk_pop) {
-        usbd_disconnect (udev);
-    }
+    msc->bbb_datalen = 0U;
+
+    return 0;
+}
+
+/*!
+    \brief      process Inquiry command
+    \param[in]  udev: pointer to USB device instance
+    \param[in]  lun: logical unit number
+    \param[in]  params: command parameters
+    \param[out] none
+    \retval     status
+*/
+static int8_t scsi_mode_select6 (usb_core_driver *udev, uint8_t lun, uint8_t *params)
+{
+    usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
+
+    msc->bbb_datalen = 0U;
+
+    return 0;
+}
+
+/*!
+    \brief      process Inquiry command
+    \param[in]  udev: pointer to USB device instance
+    \param[in]  lun: logical unit number
+    \param[in]  params: command parameters
+    \param[out] none
+    \retval     status
+*/
+static int8_t scsi_mode_select10 (usb_core_driver *udev, uint8_t lun, uint8_t *params)
+{
+    usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
 
     msc->bbb_datalen = 0U;
 

@@ -1,12 +1,13 @@
 /*!
-    \file    dfu_mal.c
+    \file    dfu_mem.c
     \brief   USB DFU device media access layer functions
 
     \version 2020-08-01, V3.0.0, firmware for GD32F4xx
+    \version 2022-03-09, V3.1.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -32,7 +33,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#include "dfu_mal.h"
+#include "dfu_mem.h"
 #include "flash_if.h"
 #include "drv_usb_hw.h"
 #include "usbd_transc.h"
@@ -46,8 +47,8 @@ extern struct {
     uint32_t base_addr;
 } prog;
 
-dfu_mal_prop* tMALTab[MAX_USED_MEMORY_MEDIA] = {
-    &DFU_Flash_cb
+dfu_mem_prop* mem_tab[MAX_USED_MEMORY_MEDIA] = {
+    &dfu_flash_cb
 };
 
 /* The list of memory interface string descriptor pointers. This list
@@ -57,74 +58,74 @@ const uint8_t* USBD_DFU_StringDesc[MAX_USED_MEMORY_MEDIA] =
     (const uint8_t *)FLASH_IF_STRING
 };
 
-static uint8_t dfu_mal_checkaddr (uint32_t addr);
+static uint8_t dfu_mem_checkaddr (uint32_t addr);
 
 /*!
     \brief      initialize the memory media on the GD32
     \param[in]  none
     \param[out] none
-    \retval     MAL_OK
+    \retval     MEM_OK
 */
-uint8_t dfu_mal_init (void)
+uint8_t dfu_mem_init (void)
 {
     uint32_t mem_index = 0U;
 
     /* initialize all supported memory medias */
     for (mem_index = 0U; mem_index < MAX_USED_MEMORY_MEDIA; mem_index++) {
         /* check if the memory media exists */
-        if (NULL != tMALTab[mem_index]->mal_init) {
-            tMALTab[mem_index]->mal_init();
+        if (NULL != mem_tab[mem_index]->mem_init) {
+            mem_tab[mem_index]->mem_init();
         }
     }
 
-    return MAL_OK;
+    return MEM_OK;
 }
 
 /*!
     \brief      deinitialize the memory media on the GD32
     \param[in]  none
     \param[out] none
-    \retval     MAL_OK
+    \retval     MEM_OK
 */
-uint8_t dfu_mal_deinit (void)
+uint8_t dfu_mem_deinit (void)
 {
     uint32_t mem_index = 0U;
 
     /* deinitialize all supported memory medias */
     for (mem_index = 0U; mem_index < MAX_USED_MEMORY_MEDIA; mem_index++) {
         /* check if the memory media exists */
-        if (NULL != tMALTab[mem_index]->mal_deinit) {
-            tMALTab[mem_index]->mal_deinit();
+        if (NULL != mem_tab[mem_index]->mem_deinit) {
+            mem_tab[mem_index]->mem_deinit();
         }
     }
 
-    return MAL_OK;
+    return MEM_OK;
 }
 
 /*!
     \brief      erase a memory sector
     \param[in]  addr: memory sector address/code
     \param[out] none
-    \retval     MAL_OK
+    \retval     MEM_OK
 */
-uint8_t dfu_mal_erase (uint32_t addr)
+uint8_t dfu_mem_erase (uint32_t addr)
 {
-    uint32_t mem_index = dfu_mal_checkaddr(addr);
+    uint32_t mem_index = dfu_mem_checkaddr(addr);
 
     /* check if the address is in protected area */
     if (IS_PROTECTED_AREA(addr)) {
-        return MAL_FAIL;
+        return MEM_FAIL;
     }
 
     if (mem_index < MAX_USED_MEMORY_MEDIA) {
         /* check if the operation is supported */
-        if (NULL != tMALTab[mem_index]->mal_erase) {
-            return tMALTab[mem_index]->mal_erase(addr);
+        if (NULL != mem_tab[mem_index]->mem_erase) {
+            return mem_tab[mem_index]->mem_erase(addr);
         } else {
-            return MAL_FAIL;
+            return MEM_FAIL;
         }
     } else {
-        return MAL_FAIL;
+        return MEM_FAIL;
     }
 }
 
@@ -134,26 +135,34 @@ uint8_t dfu_mal_erase (uint32_t addr)
     \param[in]  addr: memory sector address/code
     \param[in]  len: data length
     \param[out] none
-    \retval     MAL_OK
+    \retval     MEM_OK
 */
-uint8_t dfu_mal_write (uint8_t *buf, uint32_t addr, uint32_t len)
+uint8_t dfu_mem_write (uint8_t *buf, uint32_t addr, uint32_t len)
 {
-    uint32_t mem_index = dfu_mal_checkaddr(addr);
+    uint32_t mem_index = dfu_mem_checkaddr(addr);
 
     /* check if the address is in protected area */
     if (IS_PROTECTED_AREA(addr)) {
-        return MAL_FAIL;
+        return MEM_FAIL;
+    }
+
+    if ((addr & MAL_MASK_OB) == OB_RDPT) {
+        option_byte_write(addr, buf);
+
+        NVIC_SystemReset();
+
+        return MEM_OK;
     }
 
     if (mem_index < MAX_USED_MEMORY_MEDIA) {
         /* check if the operation is supported */
-        if (NULL != tMALTab[mem_index]->mal_write) {
-            return tMALTab[mem_index]->mal_write(buf, addr, len);
+        if (NULL != mem_tab[mem_index]->mem_write) {
+            return mem_tab[mem_index]->mem_write(buf, addr, len);
         } else {
-            return MAL_FAIL;
+            return MEM_FAIL;
         }
     } else {
-        return MAL_FAIL;
+        return MEM_FAIL;
     }
 }
 
@@ -165,18 +174,18 @@ uint8_t dfu_mal_write (uint8_t *buf, uint32_t addr, uint32_t len)
     \param[out] none
     \retval     pointer to buffer
 */
-uint8_t* dfu_mal_read (uint8_t *buf, uint32_t addr, uint32_t len)
+uint8_t* dfu_mem_read (uint8_t *buf, uint32_t addr, uint32_t len)
 {
     uint32_t mem_index = 0U;
 
     if (OB_RDPT != addr) {
-        mem_index = dfu_mal_checkaddr(addr);
+        mem_index = dfu_mem_checkaddr(addr);
     }
 
     if (mem_index < MAX_USED_MEMORY_MEDIA) {
         /* check if the operation is supported */
-        if (NULL != tMALTab[mem_index]->mal_read) {
-            return tMALTab[mem_index]->mal_read(buf, addr, len);
+        if (NULL != mem_tab[mem_index]->mem_read) {
+            return mem_tab[mem_index]->mem_read(buf, addr, len);
         } else {
             return buf;
         }
@@ -191,22 +200,22 @@ uint8_t* dfu_mal_read (uint8_t *buf, uint32_t addr, uint32_t len)
     \param[in]  cmd: 0 for erase and 1 for write
     \param[in]  buffer: pointer to the buffer where the status data will be stored
     \param[out] none
-    \retval     MAL_OK if all operations are OK, MAL_FAIL else
+    \retval     MEM_OK if all operations are OK, MEM_FAIL else
 */
-uint8_t dfu_mal_getstatus (uint32_t addr, uint8_t cmd, uint8_t *buffer)
+uint8_t dfu_mem_getstatus (uint32_t addr, uint8_t cmd, uint8_t *buffer)
 {
-    uint32_t mem_index = dfu_mal_checkaddr(addr);
+    uint32_t mem_index = dfu_mem_checkaddr(addr);
 
     if (mem_index < MAX_USED_MEMORY_MEDIA) {
         if (cmd & 0x01U) {
-            SET_POLLING_TIMEOUT(tMALTab[mem_index]->write_timeout);
+            POLLING_TIMEOUT_SET(mem_tab[mem_index]->write_timeout);
         } else {
-            SET_POLLING_TIMEOUT(tMALTab[mem_index]->erase_timeout);
+            POLLING_TIMEOUT_SET(mem_tab[mem_index]->erase_timeout);
         }
 
-        return MAL_OK;
+        return MEM_OK;
     } else {
-        return MAL_FAIL;
+        return MEM_FAIL;
     }
 }
 
@@ -216,14 +225,14 @@ uint8_t dfu_mal_getstatus (uint32_t addr, uint8_t cmd, uint8_t *buffer)
     \param[out] none
     \retval     index of the addressed memory
 */
-static uint8_t dfu_mal_checkaddr (uint32_t addr)
+static uint8_t dfu_mem_checkaddr (uint32_t addr)
 {
     uint8_t mem_index = 0U;
 
     /* check with all supported memories */
     for (mem_index = 0U; mem_index < MAX_USED_MEMORY_MEDIA; mem_index++) {
         /* if the check address is supported, return the memory index */
-        if (MAL_OK == tMALTab[mem_index]->mal_checkaddr(addr)) {
+        if (MEM_OK == mem_tab[mem_index]->mem_checkaddr(addr)) {
             return mem_index;
         }
     }

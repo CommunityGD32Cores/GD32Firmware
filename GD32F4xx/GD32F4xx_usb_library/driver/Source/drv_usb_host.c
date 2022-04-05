@@ -3,10 +3,11 @@
     \brief   USB host mode low level driver
 
     \version 2020-08-01, V3.0.0, firmware for GD32F4xx
+    \version 2022-03-09, V3.1.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -240,9 +241,8 @@ usb_status usb_pipe_init (usb_core_driver *udev, uint8_t pipe_num)
                     | HCHINTEN_DTERIE | HCHINTEN_NAKIE;
 
         if (!pp->ep.dir) {
-            pp_inten |= HCHINTEN_NYETIE;
-
-            if (pp->ping) {
+            if (PORT_SPEED_HIGH == pp->dev_speed) {
+                pp_inten |= HCHINTEN_NYETIE;
                 pp_inten |= HCHINTEN_ACKIE;
             }
         }

@@ -1,14 +1,15 @@
 /*!
     \file    gd32f4xx_fwdgt.c
     \brief   FWDGT driver
-    
+
     \version 2016-08-15, V1.0.0, firmware for GD32F4xx
     \version 2018-12-12, V2.0.0, firmware for GD32F4xx
     \version 2020-09-30, V2.1.0, firmware for GD32F4xx
+    \version 2022-03-09, V3.0.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -42,7 +43,7 @@ OF SUCH DAMAGE.
 #define RLD_RLD(regval)             (BITS(0,11) & ((uint32_t)(regval) << 0))
 
 /*!
-    \brief      enable write access to FWDGT_PSC and FWDGT_RLD
+    \brief    enable write access to FWDGT_PSC and FWDGT_RLD
     \param[in]  none
     \param[out] none
     \retval     none
@@ -53,7 +54,7 @@ void fwdgt_write_enable(void)
 }
 
 /*!
-    \brief      disable write access to FWDGT_PSC and FWDGT_RLD
+    \brief    disable write access to FWDGT_PSC and FWDGT_RLD
     \param[in]  none
     \param[out] none
     \retval     none
@@ -64,7 +65,7 @@ void fwdgt_write_disable(void)
 }
 
 /*!
-    \brief      start the free watchdog timer counter
+    \brief    start the free watchdog timer counter
     \param[in]  none
     \param[out] none
     \retval     none
@@ -75,7 +76,7 @@ void fwdgt_enable(void)
 }
 
 /*!
-    \brief      reload the counter of FWDGT
+    \brief    reload the counter of FWDGT
     \param[in]  none
     \param[out] none
     \retval     none
@@ -86,7 +87,7 @@ void fwdgt_counter_reload(void)
 }
 
 /*!
-    \brief      configure counter reload value, and prescaler divider value
+    \brief    configure counter reload value, and prescaler divider value
     \param[in]  reload_value: specify reload value(0x0000 - 0x0FFF)
     \param[in]  prescaler_div: FWDGT prescaler value
                 only one parameter can be selected which is shown as below:
@@ -139,7 +140,7 @@ ErrStatus fwdgt_config(uint16_t reload_value, uint8_t prescaler_div)
 }
 
 /*!
-    \brief      get flag state of FWDGT
+    \brief    get flag state of FWDGT
     \param[in]  flag: flag to get 
                 only one parameter can be selected which is shown as below:
       \arg        FWDGT_STAT_PUD: a write operation to FWDGT_PSC register is on going

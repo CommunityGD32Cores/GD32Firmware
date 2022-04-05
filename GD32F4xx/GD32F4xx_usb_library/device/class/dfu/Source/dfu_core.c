@@ -3,10 +3,11 @@
     \brief   USB DFU device class core functions
 
     \version 2020-08-01, V3.0.0, firmware for GD32F4xx
+    \version 2022-03-09, V3.1.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -33,8 +34,8 @@ OF SUCH DAMAGE.
 */
 
 #include "dfu_core.h"
+#include "dfu_mem.h"
 #include "drv_usb_hw.h"
-#include "dfu_mal.h"
 #include "flash_if.h"
 #include <string.h>
 
@@ -45,7 +46,8 @@ OF SUCH DAMAGE.
 static uint8_t dfu_init(usb_dev *udev, uint8_t config_index);
 static uint8_t dfu_deinit(usb_dev *udev, uint8_t config_index);
 static uint8_t dfu_req_handler(usb_dev *udev, usb_req *req);
-static uint8_t dfu_data_in(usb_dev *udev, uint8_t ep_num);
+static uint8_t dfu_ctlx_in(usb_dev *udev);
+
 static void dfu_detach(usb_dev *udev, usb_req *req);
 static void dfu_dnload(usb_dev *udev, usb_req *req);
 static void dfu_upload(usb_dev *udev, usb_req *req);
@@ -222,7 +224,7 @@ usb_class_core dfu_class = {
     .init            = dfu_init,
     .deinit          = dfu_deinit,
     .req_proc        = dfu_req_handler,
-    .data_in         = dfu_data_in
+    .ctlx_in         = dfu_ctlx_in
 };
 
 /*!
@@ -237,7 +239,7 @@ static uint8_t dfu_init (usb_dev *udev, uint8_t config_index)
     static __ALIGN_BEGIN usbd_dfu_handler dfu_handler __ALIGN_END;
 
     /* unlock the internal flash */
-    dfu_mal_init();
+    dfu_mem_init();
 
     memset((void *)&dfu_handler, 0, sizeof(usbd_dfu_handler));
 
@@ -252,7 +254,7 @@ static uint8_t dfu_init (usb_dev *udev, uint8_t config_index)
 }
 
 /*!
-    \brief      de-initialize the DFU device
+    \brief      deinitialize the DFU device
     \param[in]  udev: pointer to USB device instance
     \param[in]  config_index: configuration index
     \param[out] none
@@ -269,7 +271,7 @@ static uint8_t dfu_deinit (usb_dev *udev, uint8_t config_index)
     dfu->bStatus = STATUS_OK;
 
     /* lock the internal flash */
-    dfu_mal_deinit();
+    dfu_mem_deinit();
 
     return USBD_OK;
 }
@@ -299,11 +301,9 @@ static uint8_t dfu_req_handler (usb_dev *udev, usb_req *req)
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t dfu_data_in (usb_dev *udev, uint8_t ep_num)
+static uint8_t dfu_ctlx_in (usb_dev *udev)
 {
-    if (0U == ep_num) {
-        dfu_getstatus_complete(udev);
-    }
+    dfu_getstatus_complete(udev);
 
     return USBD_OK;
 }
@@ -326,7 +326,7 @@ static void dfu_mode_leave (usb_dev *udev)
         dfu->bState = STATE_DFU_MANIFEST_WAIT_RESET;
 
         /* lock the internal flash */
-        dfu_mal_deinit();
+        dfu_mem_deinit();
 
         /* generate system reset to allow jumping to the user code */
         NVIC_SystemReset();
@@ -359,7 +359,7 @@ static uint8_t dfu_getstatus_complete (usb_dev *udev)
                 } else if (ERASE == dfu->buf[0]) {
                     dfu->base_addr = *(uint32_t *)(dfu->buf + 1U);
 
-                    dfu_mal_erase(dfu->base_addr);
+                    dfu_mem_erase(dfu->base_addr);
                 } else {
                     /* no operation */
                 }
@@ -370,7 +370,7 @@ static uint8_t dfu_getstatus_complete (usb_dev *udev)
             /* decode the required address */
             addr = (dfu->block_num - 2U) * TRANSFER_SIZE + dfu->base_addr;
 
-            dfu_mal_write (dfu->buf, addr, dfu->data_len);
+            dfu_mem_write (dfu->buf, addr, dfu->data_len);
 
             dfu->block_num = 0U;
         } else {
@@ -515,7 +515,7 @@ static void  dfu_upload (usb_dev *udev, usb_req *req)
             addr = (dfu->block_num - 2U) * TRANSFER_SIZE + dfu->base_addr;
 
             /* return the physical address where data are stored */
-            phy_addr = dfu_mal_read (dfu->buf, addr, dfu->data_len);
+            phy_addr = dfu_mem_read (dfu->buf, addr, dfu->data_len);
 
             /* send the status data over EP0 */
             transc->xfer_buf = phy_addr;
@@ -552,9 +552,9 @@ static void  dfu_getstatus (usb_dev *udev, usb_req *req)
 
             if (0U == dfu->block_num) {
                 if (ERASE == dfu->buf[0]) {
-                    dfu_mal_getstatus (dfu->base_addr, CMD_ERASE, (uint8_t *)&dfu->bwPollTimeout0);
+                    dfu_mem_getstatus (dfu->base_addr, CMD_ERASE, (uint8_t *)&dfu->bwPollTimeout0);
                 } else {
-                    dfu_mal_getstatus (dfu->base_addr, CMD_WRITE, (uint8_t *)&dfu->bwPollTimeout0);
+                    dfu_mem_getstatus (dfu->base_addr, CMD_WRITE, (uint8_t *)&dfu->bwPollTimeout0);
                 }
             }
         } else {

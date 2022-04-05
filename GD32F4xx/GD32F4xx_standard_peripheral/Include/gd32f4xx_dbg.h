@@ -5,10 +5,11 @@
     \version 2016-08-15, V1.0.0, firmware for GD32F4xx
     \version 2018-12-12, V2.0.0, firmware for GD32F4xx
     \version 2020-09-30, V2.1.0, firmware for GD32F4xx
+    \version 2022-03-09, V3.0.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -57,7 +58,6 @@ OF SUCH DAMAGE.
 #define DBG_CTL0_DSLP_HOLD       BIT(1)                     /*!< keep debugger connection during deepsleep mode */
 #define DBG_CTL0_STB_HOLD        BIT(2)                     /*!< keep debugger connection during standby mode */
 #define DBG_CTL0_TRACE_IOEN      BIT(5)                     /*!< enable trace pin assignment */
-#define DBG_CTL0_TRACE_MODE      BITS(6,7)                  /*!< trace pin mode selection */
 
 /* DBG_CTL1 */
 #define DBG_CTL1_TIMER1_HOLD     BIT(0)                     /*!< hold TIMER1 counter when core is halted */
@@ -122,18 +122,12 @@ typedef enum
     DBG_I2C2_HOLD              = DBG_REGIDX_BIT(DBG_IDX_CTL1, 23U),                   /*!< hold I2C2 smbus when core is halted */
     DBG_CAN0_HOLD              = DBG_REGIDX_BIT(DBG_IDX_CTL1, 25U),                   /*!< debug CAN0 kept when core is halted */
     DBG_CAN1_HOLD              = DBG_REGIDX_BIT(DBG_IDX_CTL1, 26U),                   /*!< debug CAN1 kept when core is halted */
-    DBG_TIMER0_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL2, 0U),        /*!< hold TIMER0 counter when core is halted */
-    DBG_TIMER7_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL2, 1U),        /*!< hold TIMER7 counter when core is halted */
-    DBG_TIMER8_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL2, 16U),       /*!< hold TIMER8 counter when core is halted */
-    DBG_TIMER9_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL2, 17U),       /*!< hold TIMER9 counter when core is halted */
-    DBG_TIMER10_HOLD           = DBG_REGIDX_BIT(DBG_IDX_CTL2, 18U)       /*!< hold TIMER10 counter when core is halted */
+    DBG_TIMER0_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL2, 0U),                    /*!< hold TIMER0 counter when core is halted */
+    DBG_TIMER7_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL2, 1U),                    /*!< hold TIMER7 counter when core is halted */
+    DBG_TIMER8_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL2, 16U),                   /*!< hold TIMER8 counter when core is halted */
+    DBG_TIMER9_HOLD            = DBG_REGIDX_BIT(DBG_IDX_CTL2, 17U),                   /*!< hold TIMER9 counter when core is halted */
+    DBG_TIMER10_HOLD           = DBG_REGIDX_BIT(DBG_IDX_CTL2, 18U)                    /*!< hold TIMER10 counter when core is halted */
 }dbg_periph_enum;
-
-#define CTL0_TRACE_MODE(regval)       (BITS(6,7)&((uint32_t)(regval)<<6))
-#define TRACE_MODE_ASYNC              CTL0_TRACE_MODE(0)    /*!< trace pin used for async mode */
-#define TRACE_MODE_SYNC_DATASIZE_1    CTL0_TRACE_MODE(1)    /*!< trace pin used for sync mode and data size is 1 */
-#define TRACE_MODE_SYNC_DATASIZE_2    CTL0_TRACE_MODE(2)    /*!< trace pin used for sync mode and data size is 2 */
-#define TRACE_MODE_SYNC_DATASIZE_4    CTL0_TRACE_MODE(3)    /*!< trace pin used for sync mode and data size is 4 */
 
 /* function declarations */
 /* deinitialize the DBG */
@@ -155,7 +149,5 @@ void dbg_periph_disable(dbg_periph_enum dbg_periph);
 void dbg_trace_pin_enable(void);
 /* disable trace pin assignment */
 void dbg_trace_pin_disable(void);
-/* set trace pin mode */
-void dbg_trace_pin_mode_set(uint32_t trace_mode);
 
 #endif /* GD32F4XX_DBG_H */

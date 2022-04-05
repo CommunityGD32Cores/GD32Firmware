@@ -3,10 +3,11 @@
     \brief   USB device mode low level driver
 
     \version 2020-08-01, V3.0.0, firmware for GD32F4xx
+    \version 2022-03-09, V3.1.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -394,8 +395,6 @@ usb_status usb_transc_inxfer (usb_core_driver *udev, usb_transc *transc)
     udev->regs.er_in[ep_num]->DIEPCTL = epctl;
 
     if ((uint8_t)USB_USE_FIFO == udev->bp.transfer_mode) {
-        udev->regs.er_in[ep_num]->DIEPCTL = epctl;
-
         if (transc->ep_type != (uint8_t)USB_EPTYPE_ISOC) {
             /* enable the TX FIFO empty interrupt for this endpoint */
             if (transc->xfer_len > 0U) {
@@ -631,7 +630,7 @@ void usb_dev_suspend (usb_core_driver *udev)
         *udev->regs.PWRCLKCTL |= PWRCLKCTL_SHCLK;
 
         /* enter DEEP_SLEEP mode with LDO in low power mode */
-        pmu_to_deepsleepmode(PMU_LDO_LOWPOWER, WFI_CMD);
+        pmu_to_deepsleepmode(PMU_LDO_LOWPOWER,PMU_LOWDRIVER_DISABLE,WFI_CMD);
     }
 }
 

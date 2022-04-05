@@ -5,10 +5,11 @@
     \version 2016-08-15, V1.0.0, firmware for GD32F4xx
     \version 2018-12-12, V2.0.0, firmware for GD32F4xx
     \version 2020-09-30, V2.1.0, firmware for GD32F4xx
+    \version 2022-03-09, V3.0.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -1068,10 +1069,10 @@ typedef enum
 
 /* Deep-sleep mode voltage */
 #define DSV_DSLPVS(regval)              (BITS(0,2) & ((uint32_t)(regval) << 0))
-#define RCU_DEEPSLEEP_V_1_2             DSV_DSLPVS(0)                      /*!< core voltage is 1.2V in deep-sleep mode */
-#define RCU_DEEPSLEEP_V_1_1             DSV_DSLPVS(1)                      /*!< core voltage is 1.1V in deep-sleep mode */
-#define RCU_DEEPSLEEP_V_1_0             DSV_DSLPVS(2)                      /*!< core voltage is 1.0V in deep-sleep mode */
-#define RCU_DEEPSLEEP_V_0_9             DSV_DSLPVS(3)                      /*!< core voltage is 0.9V in deep-sleep mode */
+#define RCU_DEEPSLEEP_V_0               DSV_DSLPVS(0)                      /*!< core voltage is default value in deep-sleep mode */
+#define RCU_DEEPSLEEP_V_1               DSV_DSLPVS(1)                      /*!< core voltage is (default value-0.1)V in deep-sleep mode(customers are not recommended to use it)*/
+#define RCU_DEEPSLEEP_V_2               DSV_DSLPVS(2)                      /*!< core voltage is (default value-0.2)V in deep-sleep mode(customers are not recommended to use it)*/
+#define RCU_DEEPSLEEP_V_3               DSV_DSLPVS(3)                      /*!< core voltage is (default value-0.3)V in deep-sleep mode(customers are not recommended to use it)*/
 
 
 /* function declarations */

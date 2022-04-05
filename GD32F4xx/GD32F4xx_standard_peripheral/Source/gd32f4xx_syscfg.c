@@ -1,43 +1,44 @@
 /*!
     \file    gd32f4xx_syscfg.c
     \brief   SYSCFG driver
-    
+
     \version 2016-08-15, V1.0.0, firmware for GD32F4xx
     \version 2018-12-12, V2.0.0, firmware for GD32F4xx
     \version 2020-09-30, V2.1.0, firmware for GD32F4xx
+    \version 2022-03-09, V3.0.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
 #include "gd32f4xx_syscfg.h"
 
 /*!
-    \brief      reset the SYSCFG registers
+    \brief    reset the SYSCFG registers
     \param[in]  none
     \param[out] none
     \retval     none
@@ -49,7 +50,7 @@ void syscfg_deinit(void)
 }
 
 /*!
-    \brief      configure the boot mode 
+    \brief    configure the boot mode
     \param[in]  syscfg_bootmode: selects the memory remapping
                 only one parameter can be selected which is shown as below:
       \arg        SYSCFG_BOOTMODE_FLASH: main flash memory (0x08000000~0x083BFFFF) is mapped at address 0x00000000
@@ -68,7 +69,7 @@ void syscfg_bootmode_config(uint8_t syscfg_bootmode)
 }
 
 /*!
-    \brief      FMC memory mapping swap
+    \brief    FMC memory mapping swap
     \param[in]  syscfg_fmc_swap: selects the interal flash bank swapping
                 only one parameter can be selected which is shown as below:
       \arg        SYSCFG_FMC_SWP_BANK0: bank 0 is mapped at address 0x08000000 and bank 1 is mapped at address 0x08100000
@@ -86,7 +87,7 @@ void syscfg_fmc_swap_config(uint32_t syscfg_fmc_swap)
 }
 
 /*!
-    \brief      EXMC memory mapping swap
+    \brief    EXMC memory mapping swap
     \param[in]  syscfg_exmc_swap: selects the memories in EXMC swapping
                 only one parameter can be selected which is shown as below:
       \arg        SYSCFG_EXMC_SWP_ENABLE: SDRAM bank 0 and bank 1 are swapped with NAND bank 1 and PC card
@@ -105,7 +106,7 @@ void syscfg_exmc_swap_config(uint32_t syscfg_exmc_swap)
 }
 
 /*!
-    \brief      configure the GPIO pin as EXTI Line
+    \brief    configure the GPIO pin as EXTI Line
     \param[in]  exti_port: specify the GPIO port used in EXTI
                 only one parameter can be selected which is shown as below:
       \arg        EXTI_SOURCE_GPIOx(x = A,B,C,D,E,F,G,H,I): EXTI GPIO port
@@ -120,7 +121,7 @@ void syscfg_exti_line_config(uint8_t exti_port, uint8_t exti_pin)
     uint32_t clear_exti_mask = ~((uint32_t)EXTI_SS_MASK << (EXTI_SS_MSTEP(exti_pin)));
     uint32_t config_exti_mask = ((uint32_t)exti_port) << (EXTI_SS_MSTEP(exti_pin));
 
-    switch(exti_pin/EXTI_SS_JSTEP){
+    switch(exti_pin / EXTI_SS_JSTEP) {
     case EXTISS0:
         /* clear EXTI source line(0..3) */
         SYSCFG_EXTISS0 &= clear_exti_mask;
@@ -151,18 +152,18 @@ void syscfg_exti_line_config(uint8_t exti_port, uint8_t exti_pin)
 }
 
 /*!
-    \brief      configure the PHY interface for the ethernet MAC
+    \brief    configure the PHY interface for the ethernet MAC
     \param[in]  syscfg_enet_phy_interface: specifies the media interface mode.
                 only one parameter can be selected which is shown as below:
       \arg        SYSCFG_ENET_PHY_MII: MII mode is selected
-      \arg        SYSCFG_ENET_PHY_RMII: RMII mode is selected 
+      \arg        SYSCFG_ENET_PHY_RMII: RMII mode is selected
     \param[out] none
     \retval     none
 */
 void syscfg_enet_phy_interface_config(uint32_t syscfg_enet_phy_interface)
-{ 
+{
     uint32_t reg;
-    
+
     reg = SYSCFG_CFG1;
     /* reset the ENET_PHY_SEL bit and set according to syscfg_enet_phy_interface */
     reg &= ~SYSCFG_CFG1_ENET_PHY_SEL;
@@ -170,7 +171,7 @@ void syscfg_enet_phy_interface_config(uint32_t syscfg_enet_phy_interface)
 }
 
 /*!
-    \brief      configure the I/O compensation cell
+    \brief    configure the I/O compensation cell
     \param[in]  syscfg_compensation: specifies the I/O compensation cell mode
                 only one parameter can be selected which is shown as below:
       \arg        SYSCFG_COMPENSATION_ENABLE: I/O compensation cell is enabled
@@ -178,7 +179,7 @@ void syscfg_enet_phy_interface_config(uint32_t syscfg_enet_phy_interface)
     \param[out] none
     \retval     none
 */
-void syscfg_compensation_config(uint32_t syscfg_compensation) 
+void syscfg_compensation_config(uint32_t syscfg_compensation)
 {
     uint32_t reg;
 
@@ -189,16 +190,16 @@ void syscfg_compensation_config(uint32_t syscfg_compensation)
 }
 
 /*!
-    \brief      checks whether the I/O compensation cell ready flag is set or not
+    \brief    checks whether the I/O compensation cell ready flag is set or not
     \param[in]  none
     \param[out] none
     \retval     FlagStatus: SET or RESET
   */
 FlagStatus syscfg_flag_get(void)
 {
-    if(((uint32_t)RESET) != (SYSCFG_CPSCTL & SYSCFG_CPSCTL_CPS_RDY)){
+    if(((uint32_t)RESET) != (SYSCFG_CPSCTL & SYSCFG_CPSCTL_CPS_RDY)) {
         return SET;
-    }else{
+    } else {
         return RESET;
     }
 }

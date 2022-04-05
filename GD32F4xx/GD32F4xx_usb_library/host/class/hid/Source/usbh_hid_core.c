@@ -3,10 +3,11 @@
     \brief   USB host HID class driver
 
     \version 2020-08-01, V3.0.0, firmware for GD32F4xx
+    \version 2022-03-09, V3.1.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -32,14 +33,13 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#include "usbh_pipe.h"
-#include "usbh_hid_core.h"
-#include "usbh_hid_mouse.h"
-#include "usbh_hid_keybd.h"
-
 #include <string.h>
 #include <stdbool.h>
+#include "usbh_pipe.h"
+#include "usbh_hid_core.h"
+#include "usbh_standard_hid.h"
 
+/* local function prototypes ('static') */
 static void usbh_hiddesc_parse (usb_desc_hid *hid_desc, uint8_t *buf);
 static void usbh_hid_itf_deinit (usbh_host *uhost);
 static usbh_status usbh_hid_itf_init (usbh_host *uhost);
@@ -200,104 +200,12 @@ uint8_t usbh_hid_poll_interval_get (usb_core_driver *udev, usbh_host *uhost)
 
     if ((HOST_CLASS_ENUM == uhost->cur_state) ||
          (HOST_USER_INPUT == uhost->cur_state) ||
-           (HOST_CHECK_CLASS == uhost->cur_state) ||
+           (HOST_CLASS_CHECK == uhost->cur_state) ||
              (HOST_CLASS_HANDLER == uhost->cur_state)) {
         return (uint8_t)(hid->poll);
     } else {
         return 0U;
     }
-}
-
-/*!
-    \brief      read from FIFO
-    \param[in]  fifo: fifo address
-    \param[in]  buf: read buffer
-    \param[in]  nbytes: number of item to read
-    \param[out] none
-    \retval     number of read items
-*/
-uint16_t usbh_hid_fifo_read (data_fifo *fifo, void *buf, uint16_t nbytes)
-{
-    uint16_t i = 0U;
-    uint8_t *p = (uint8_t*) buf;
-
-    if (0U == fifo->lock) {
-        fifo->lock = 1U;
-
-        for (i = 0U; i < nbytes; i++) {
-            if (fifo->tail != fifo->head) {
-                *p++ = fifo->buf[fifo->tail];
-                fifo->tail++;
-
-                if (fifo->tail == fifo->size) {
-                    fifo->tail = 0U;
-                }
-            } else {
-                fifo->lock = 0U;
-
-                return i;
-            }
-        }
-    }
-
-    fifo->lock = 0U;
-
-    return nbytes;
-}
-
-/*!
-    \brief      write to FIFO
-    \param[in]  fifo: fifo address
-    \param[in]  buf: read buffer
-    \param[in]  nbytes: number of item to read
-    \param[out] none
-    \retval     number of write items
-*/
-uint16_t usbh_hid_fifo_write (data_fifo *fifo, void *buf, uint16_t nbytes)
-{
-    uint16_t i = 0U;
-    uint8_t *p = (uint8_t*) buf;
-
-    if (0U == fifo->lock) {
-        fifo->lock = 1U;
-
-        for (i = 0U; i < nbytes; i++) {
-            if ((fifo->head + 1U == fifo->tail) ||
-                 ((fifo->head + 1U == fifo->size) && (0U == fifo->tail))) {
-                fifo->lock = 0U;
-
-                return i;
-            } else {
-                fifo->buf[fifo->head] = *p++;
-                fifo->head++;
-        
-                if (fifo->head == fifo->size) {
-                    fifo->head = 0U;
-                }
-            }
-        }
-    }
-
-    fifo->lock = 0U;
-
-    return nbytes;
-}
-
-/*!
-    \brief      initialize FIFO
-    \param[in]  fifo: fifo address
-    \param[in]  buf: read buffer
-    \param[in]  size: size of FIFO
-    \param[out] none
-    \retval     none
-*/
-void usbh_hid_fifo_init (data_fifo *fifo, uint8_t *buf, uint16_t size)
-{
-    fifo->head = 0U;
-    fifo->tail = 0U;
-    fifo->lock = 0U;
-    fifo->size = size;
-    fifo->buf = buf;
 }
 
 /*!
@@ -328,11 +236,11 @@ static usbh_status usbh_hid_itf_init (usbh_host *uhost)
 
         uint8_t itf_protocol = uhost->dev_prop.cfg_desc_set.itf_desc_set[uhost->dev_prop.cur_itf][0].itf_desc.bInterfaceProtocol;
         if (USB_HID_PROTOCOL_KEYBOARD == itf_protocol) {
-            hid_handler.init = usbh_hid_keybd_init;
-            hid_handler.machine = usbh_hid_keybrd_machine;
+            hid_handler.init = usbh_hid_keybrd_init;
+            hid_handler.decode = usbh_hid_keybrd_decode;
         } else if (USB_HID_PROTOCOL_MOUSE == itf_protocol) {
             hid_handler.init = usbh_hid_mouse_init;
-            hid_handler.machine = usbh_hid_mouse_machine;
+            hid_handler.decode = usbh_hid_mouse_decode;
         } else {
             status = USBH_FAIL;
         }
@@ -495,11 +403,10 @@ static usbh_status usbh_hid_handle (usbh_host *uhost)
 
     case HID_POLL:
         if (URB_DONE == usbh_urbstate_get (uhost->data, hid->pipe_in)) {
-            if (0U == hid->data_ready) { /* handle data once */
-                usbh_hid_fifo_write(&hid->fifo, hid->pdata, hid->len);
+            if (0U == hid->data_ready) {
                 hid->data_ready = 1U;
 
-                hid->machine(uhost->data, uhost);
+                hid->decode(hid->pdata);
             }
         } else {
             if (URB_STALL == usbh_urbstate_get (uhost->data, hid->pipe_in)) { /* IN endpoint stalled */

@@ -1,14 +1,15 @@
 ;/*!
-;    \file    startup_gd32f407.s
+;    \file    startup_gd32f450_470.s
 ;    \brief   start up file
 ;
 ;    \version 2016-08-15, V1.0.0, firmware for GD32F4xx
 ;    \version 2018-12-12, V2.0.0, firmware for GD32F4xx
 ;    \version 2020-09-30, V2.1.0, firmware for GD32F4xx
+;    \version 2022-03-09, V3.0.0, firmware for GD32F4xx
 ;*/
 ;
 ;/*
-;    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+;    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 ;
 ;    Redistribution and use in source and binary forms, with or without modification, 
 ;are permitted provided that the following conditions are met:
@@ -93,7 +94,7 @@ __vector_table
                 DCD     TIMER0_BRK_TIMER8_IRQHandler      ; 40:TIMER0 Break and TIMER8
                 DCD     TIMER0_UP_TIMER9_IRQHandler       ; 41:TIMER0 Update and TIMER9
                 DCD     TIMER0_TRG_CMT_TIMER10_IRQHandler ; 42:TIMER0 Trigger and Commucation and TIMER10
-                DCD     TIMER0_Channel_IRQHandler         ; 43:TIMER0 Capture Compare
+                DCD     TIMER0_Channel_IRQHandler         ; 43:TIMER0 Channel Capture Compare
                 DCD     TIMER1_IRQHandler                 ; 44:TIMER1
                 DCD     TIMER2_IRQHandler                 ; 45:TIMER2
                 DCD     TIMER3_IRQHandler                 ; 46:TIMER3
@@ -148,6 +149,16 @@ __vector_table
                 DCD     0                                 ; 95:Reserved
                 DCD     TRNG_IRQHandler                   ; 96:TRNG
                 DCD     FPU_IRQHandler                    ; 97:FPU
+                DCD     UART6_IRQHandler                  ; 98:UART6
+                DCD     UART7_IRQHandler                  ; 99:UART7
+                DCD     SPI3_IRQHandler                   ; 100:SPI3
+                DCD     SPI4_IRQHandler                   ; 101:SPI4
+                DCD     SPI5_IRQHandler                   ; 102:SPI5
+                DCD     0                                 ; 103:Reserved
+                DCD     TLI_IRQHandler                    ; 104:TLI
+                DCD     TLI_ER_IRQHandler                 ; 105:TLI Error
+                DCD     IPA_IRQHandler                    ; 106:IPA
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -613,4 +624,43 @@ TRNG_IRQHandler
 FPU_IRQHandler                    
         B FPU_IRQHandler                    
 
+        PUBWEAK UART6_IRQHandler                  
+        SECTION .text:CODE:NOROOT:REORDER(1)
+UART6_IRQHandler                  
+        B UART6_IRQHandler                  
+
+        PUBWEAK UART7_IRQHandler                  
+        SECTION .text:CODE:NOROOT:REORDER(1)
+UART7_IRQHandler                  
+        B UART7_IRQHandler                  
+
+        PUBWEAK SPI3_IRQHandler                   
+        SECTION .text:CODE:NOROOT:REORDER(1)
+SPI3_IRQHandler                   
+        B SPI3_IRQHandler                   
+
+        PUBWEAK SPI4_IRQHandler                   
+        SECTION .text:CODE:NOROOT:REORDER(1)
+SPI4_IRQHandler                   
+        B SPI4_IRQHandler                   
+
+        PUBWEAK SPI5_IRQHandler                   
+        SECTION .text:CODE:NOROOT:REORDER(1)
+SPI5_IRQHandler                   
+        B SPI5_IRQHandler                   
+
+        PUBWEAK TLI_IRQHandler                    
+        SECTION .text:CODE:NOROOT:REORDER(1)
+TLI_IRQHandler                    
+        B TLI_IRQHandler                    
+
+        PUBWEAK TLI_ER_IRQHandler                 
+        SECTION .text:CODE:NOROOT:REORDER(1)
+TLI_ER_IRQHandler                 
+        B TLI_ER_IRQHandler                 
+
+        PUBWEAK IPA_IRQHandler                    
+        SECTION .text:CODE:NOROOT:REORDER(1)
+IPA_IRQHandler                    
+        B IPA_IRQHandler                    
         END

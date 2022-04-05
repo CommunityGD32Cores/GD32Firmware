@@ -3,10 +3,11 @@
     \brief   CDC ACM driver
 
     \version 2020-08-01, V3.0.0, firmware for GD32F4xx
+    \version 2022-03-09, V3.1.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -259,6 +260,7 @@ usb_desc cdc_desc =
 static uint8_t cdc_acm_init   (usb_dev *udev, uint8_t config_index);
 static uint8_t cdc_acm_deinit (usb_dev *udev, uint8_t config_index);
 static uint8_t cdc_acm_req    (usb_dev *udev, usb_req *req);
+static uint8_t cdc_ctlx_out   (usb_dev *udev);
 static uint8_t cdc_acm_in     (usb_dev *udev, uint8_t ep_num);
 static uint8_t cdc_acm_out    (usb_dev *udev, uint8_t ep_num);
 
@@ -270,9 +272,8 @@ usb_class_core cdc_class =
 
     .init      = cdc_acm_init,
     .deinit    = cdc_acm_deinit,
-
     .req_proc  = cdc_acm_req,
-
+    .ctlx_out  = cdc_ctlx_out,
     .data_in   = cdc_acm_in,
     .data_out  = cdc_acm_out
 };
@@ -357,10 +358,10 @@ static uint8_t cdc_acm_init (usb_dev *udev, uint8_t config_index)
     cdc_handler.receive_length = 0U;
 
     cdc_handler.line_coding = (acm_line){
-        .dwDTERate   = 115200,
-        .bCharFormat = 0,
-        .bParityType = 0,
-        .bDataBits   = 0x08
+        .dwDTERate   = 115200U,
+        .bCharFormat = 0U,
+        .bParityType = 0U,
+        .bDataBits   = 0x08U
     };
 
     udev->dev.class_data[CDC_COM_INTERFACE] = (void *)&cdc_handler;
@@ -369,7 +370,7 @@ static uint8_t cdc_acm_init (usb_dev *udev, uint8_t config_index)
 }
 
 /*!
-    \brief      de-initialize the CDC ACM device
+    \brief      deinitialize the CDC ACM device
     \param[in]  udev: pointer to USB device instance
     \param[in]  config_index: configuration index
     \param[out] none
@@ -398,7 +399,7 @@ static uint8_t cdc_acm_req (usb_dev *udev, usb_req *req)
 {
     usb_cdc_handler *cdc = (usb_cdc_handler *)udev->dev.class_data[CDC_COM_INTERFACE];
 
-    usb_transc *transc = &udev->dev.transc_in[0];
+    usb_transc *transc = NULL;
 
     switch (req->bRequest) {
     case SEND_ENCAPSULATED_COMMAND:
@@ -422,6 +423,8 @@ static uint8_t cdc_acm_req (usb_dev *udev, usb_req *req)
         break;
 
     case SET_LINE_CODING:
+        transc = &udev->dev.transc_out[0];
+
         /* set the value of the current command to be processed */
         udev->dev.class_core->alter_set = req->bRequest;
 
@@ -431,6 +434,8 @@ static uint8_t cdc_acm_req (usb_dev *udev, usb_req *req)
         break;
 
     case GET_LINE_CODING:
+        transc = &udev->dev.transc_in[0];
+
         cdc->cmd[0] = (uint8_t)(cdc->line_coding.dwDTERate);
         cdc->cmd[1] = (uint8_t)(cdc->line_coding.dwDTERate >> 8);
         cdc->cmd[2] = (uint8_t)(cdc->line_coding.dwDTERate >> 16);
@@ -453,6 +458,27 @@ static uint8_t cdc_acm_req (usb_dev *udev, usb_req *req)
 
     default:
         break;
+    }
+
+    return USBD_OK;
+}
+
+static uint8_t cdc_ctlx_out (usb_dev *udev)
+{
+    usb_cdc_handler *cdc = (usb_cdc_handler *)udev->dev.class_data[CDC_COM_INTERFACE];
+
+    if (udev->dev.class_core->alter_set != NO_CMD) {
+        /* process the command data */
+        cdc->line_coding.dwDTERate = (uint32_t)((uint32_t)cdc->cmd[0] | 
+                                               ((uint32_t)cdc->cmd[1] << 8U) | 
+                                               ((uint32_t)cdc->cmd[2] << 16U) | 
+                                               ((uint32_t)cdc->cmd[3] << 24U));
+
+        cdc->line_coding.bCharFormat = cdc->cmd[4];
+        cdc->line_coding.bParityType = cdc->cmd[5];
+        cdc->line_coding.bDataBits = cdc->cmd[6];
+
+        udev->dev.class_core->alter_set = NO_CMD;
     }
 
     return USBD_OK;
@@ -491,25 +517,8 @@ static uint8_t cdc_acm_out (usb_dev *udev, uint8_t ep_num)
 {
     usb_cdc_handler *cdc = (usb_cdc_handler *)udev->dev.class_data[CDC_COM_INTERFACE];
 
-    if (0U == ep_num) {
-        if (udev->dev.class_core->alter_set != NO_CMD)
-        {
-            /* process the command data */
-            cdc->line_coding.dwDTERate = (uint32_t)((uint32_t)cdc->cmd[0] | 
-                                                   ((uint32_t)cdc->cmd[1] << 8U) | 
-                                                   ((uint32_t)cdc->cmd[2] << 16U) | 
-                                                   ((uint32_t)cdc->cmd[3] << 24U));
-
-            cdc->line_coding.bCharFormat = cdc->cmd[4];
-            cdc->line_coding.bParityType = cdc->cmd[5];
-            cdc->line_coding.bDataBits = cdc->cmd[6];
-
-            udev->dev.class_core->alter_set = NO_CMD;
-        }
-    } else {
-        cdc->packet_receive = 1U;
-        cdc->receive_length = ((usb_core_driver *)udev)->dev.transc_out[ep_num].xfer_count;
-    }
+    cdc->packet_receive = 1U;
+    cdc->receive_length = ((usb_core_driver *)udev)->dev.transc_out[ep_num].xfer_count;
 
     return USBD_OK;
 }

@@ -42,13 +42,16 @@ OF SUCH DAMAGE.
 #endif 
 
 /* define GD32F4xx */
-#if !defined (GD32F450)  && !defined (GD32F405) && !defined (GD32F407)
+#if !defined (GD32F450)  && !defined (GD32F405) && !defined (GD32F407) && !defined (GD32F470)  && !defined (GD32F425) && !defined (GD32F427)
   /* #define GD32F450 */
   /* #define GD32F405 */
   /* #define GD32F407 */
+  /* #define GD32F470 */
+  /* #define GD32F425 */
+  /* #define GD32F427 */
 #endif /* define GD32F4xx */
    
-#if !defined (GD32F450)  && !defined (GD32F405) && !defined (GD32F407)
+#if !defined (GD32F450)  && !defined (GD32F405) && !defined (GD32F407) && !defined (GD32F470)  && !defined (GD32F425) && !defined (GD32F427)
  #error "Please select the target GD32F4xx device in gd32f4xx.h file"
 #endif /* undefine GD32F4xx tip */
 
@@ -163,7 +166,7 @@ typedef enum IRQn
     TIMER7_Channel_IRQn          = 46,     /*!< TIMER7 channel capture compare interrupt                 */
     DMA0_Channel7_IRQn           = 47,     /*!< DMA0 channel7 interrupt                                  */
     
-#if defined (GD32F450)
+#if defined (GD32F450) || defined (GD32F470)
     EXMC_IRQn                    = 48,     /*!< EXMC interrupt                                           */
     SDIO_IRQn                    = 49,     /*!< SDIO interrupt                                           */
     TIMER4_IRQn                  = 50,     /*!< TIMER4 interrupt                                         */
@@ -205,9 +208,9 @@ typedef enum IRQn
     TLI_IRQn                     = 88,     /*!< TLI interrupt                                            */
     TLI_ER_IRQn                  = 89,     /*!< TLI error interrupt                                      */
     IPA_IRQn                     = 90,     /*!< IPA interrupt                                            */
-#endif /* GD32F450 */
+#endif /* GD32F450 and GD32F470 */
 
-#if defined (GD32F405)
+#if defined (GD32F405) || defined (GD32F425)
     SDIO_IRQn                    = 49,     /*!< SDIO interrupt                                           */
     TIMER4_IRQn                  = 50,     /*!< TIMER4 interrupt                                         */
     SPI2_IRQn                    = 51,     /*!< SPI2 interrupt                                           */
@@ -238,9 +241,9 @@ typedef enum IRQn
     DCI_IRQn                     = 78,     /*!< DCI interrupt                                            */
     TRNG_IRQn                    = 80,     /*!< TRNG interrupt                                           */
     FPU_IRQn                     = 81,     /*!< FPU interrupt                                            */
-#endif /* GD32F405 */
+#endif /* GD32F405 and GD32F425 */
 
-#if defined (GD32F407)
+#if defined (GD32F407) || defined (GD32F427)
     EXMC_IRQn                    = 48,     /*!< EXMC interrupt                                           */
     SDIO_IRQn                    = 49,     /*!< SDIO interrupt                                           */
     TIMER4_IRQn                  = 50,     /*!< TIMER4 interrupt                                         */
@@ -274,7 +277,7 @@ typedef enum IRQn
     DCI_IRQn                     = 78,     /*!< DCI interrupt                                            */
     TRNG_IRQn                    = 80,     /*!< TRNG interrupt                                           */
     FPU_IRQn                     = 81,     /*!< FPU interrupt                                            */
-#endif /* GD32F407 */
+#endif /* GD32F407 and GD32F427 */
 
 } IRQn_Type;
 

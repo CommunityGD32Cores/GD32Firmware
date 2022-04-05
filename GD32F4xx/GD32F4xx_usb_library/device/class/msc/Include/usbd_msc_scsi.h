@@ -3,10 +3,11 @@
     \brief   the header file of the usbd_msc_scsi.c file
 
     \version 2020-08-01, V3.0.0, firmware for GD32F4xx
+    \version 2022-03-09, V3.1.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -35,11 +36,19 @@ OF SUCH DAMAGE.
 #ifndef __USBD_MSC_SCSI_H
 #define __USBD_MSC_SCSI_H
 
-#include "usbd_msc_data.h"
 #include "usbd_msc_bbb.h"
 #include "msc_scsi.h"
 
 #define SENSE_LIST_DEEPTH                           4U
+
+#define MODE_SENSE6_LENGTH                          8U
+#define MODE_SENSE10_LENGTH                         8U
+#define INQUIRY_PAGE00_LENGTH                       96U
+#define FORMAT_CAPACITIES_LENGTH                    20U
+
+extern const uint8_t msc_page00_inquiry_data[];
+extern const uint8_t msc_mode_sense6_data[];
+extern const uint8_t msc_mode_sense10_data[];
 
 /* function declarations */
 /* process SCSI commands */

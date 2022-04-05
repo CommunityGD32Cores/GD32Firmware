@@ -3,10 +3,11 @@
     \brief   USB cell registers definition and handle macros
 
     \version 2020-08-01, V3.0.0, firmware for GD32F4xx
+    \version 2022-03-09, V3.1.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -658,5 +659,9 @@ extern const uint32_t PIPE_DPID[2];
 #define EP2_IN                    ((uint8_t)0x82)                       /*!< endpoint in 2 */
 #define EP3_OUT                   ((uint8_t)0x03)                       /*!< endpoint out 3 */
 #define EP3_IN                    ((uint8_t)0x83)                       /*!< endpoint in 3 */
+#define EP4_OUT                   ((uint8_t)0x04)                       /*!< endpoint out 4 */
+#define EP4_IN                    ((uint8_t)0x84)                       /*!< endpoint in 4 */
+#define EP5_OUT                   ((uint8_t)0x05)                       /*!< endpoint out 5 */
+#define EP5_IN                    ((uint8_t)0x85)                       /*!< endpoint in 5 */
 
 #endif /* __DRV_USB_REGS_H */

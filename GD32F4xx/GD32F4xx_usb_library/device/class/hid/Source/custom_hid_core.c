@@ -3,10 +3,11 @@
     \brief   custom HID class driver
 
     \version 2020-08-01, V3.0.0, firmware for GD32F4xx
+    \version 2022-03-09, V3.1.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -353,7 +354,7 @@ static uint8_t custom_hid_init (usb_dev *udev, uint8_t config_index)
 }
 
 /*!
-    \brief      de-initialize the HID device
+    \brief      deinitialize the HID device
     \param[in]  udev: pointer to USB device instance
     \param[in]  config_index: configuration index
     \param[out] none
@@ -444,43 +445,40 @@ static uint8_t custom_hid_data_out (usb_dev *udev, uint8_t ep_num)
 {
     custom_hid_handler *hid = (custom_hid_handler *)udev->dev.class_data[CUSTOM_HID_INTERFACE];
 
-    if ((CUSTOMHID_OUT_EP & 0x7FU) == ep_num) {
-        switch (hid->data[0]){
-        case 0x11U:
-            if (RESET != hid->data[1]) {
-                gd_eval_led_on(LED1);
-            } else {
-                gd_eval_led_off(LED1);
-            }
-            break;
-
-        case 0x12U:
-            if (RESET != hid->data[1]) {
-                gd_eval_led_on(LED2);
-            } else {
-                gd_eval_led_off(LED2);
-            }
-            break;
-
-        case 0x13U:
-            if (RESET != hid->data[1]) {
-                gd_eval_led_on(LED3);
-            } else {
-                gd_eval_led_off(LED3);
-            }
-            break;
-
-        case 0x14U:
-            break;
-
-        default:
-            break;
+    /* light the LED */
+    switch (hid->data[0]){
+    case 0x11U:
+        if (RESET != hid->data[1]) {
+            gd_eval_led_on(LED1);
+        } else {
+            gd_eval_led_off(LED1);
         }
+        break;
 
-        usbd_ep_recev (udev, CUSTOMHID_IN_EP, hid->data, 2U);
+    case 0x12U:
+        if (RESET != hid->data[1]) {
+            gd_eval_led_on(LED2);
+        } else {
+            gd_eval_led_off(LED2);
+        }
+        break;
 
-        return USBD_OK;
-   }
+    case 0x13U:
+        if (RESET != hid->data[1]) {
+            gd_eval_led_on(LED3);
+        } else {
+            gd_eval_led_off(LED3);
+        }
+        break;
 
-   return USBD_FAIL;
+    case 0x14U:
+        break;
+
+    default:
+        break;
+    }
+
+    usbd_ep_recev (udev, CUSTOMHID_OUT_EP, hid->data, 2U);
+
+    return USBD_OK;
 }

@@ -3,10 +3,11 @@
     \brief   USB host core state machine header file
 
     \version 2020-08-01, V3.0.0, firmware for GD32F4xx
+    \version 2022-03-09, V3.1.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -64,15 +65,15 @@ typedef enum
 {
     HOST_DEFAULT = 0U,
     HOST_DETECT_DEV_SPEED,
-    HOST_DEV_ATTACHED,
+    HOST_DEV_CONNECT,
     HOST_DEV_DETACHED,
-    HOST_ENUM,
-    HOST_SET_WAKEUP_FEATURE,
-    HOST_CHECK_CLASS,
+    HOST_DEV_ENUM,
+    HOST_PWR_FEATURE_SET,
+    HOST_CLASS_CHECK,
     HOST_CLASS_ENUM,
     HOST_CLASS_HANDLER,
     HOST_USER_INPUT,
-    HOST_SUSPENDED,
+    HOST_SUSPEND,
     HOST_WAKEUP,
     HOST_ERROR
 } usb_host_state;
@@ -114,18 +115,9 @@ typedef enum
 /* user action state */
 typedef enum
 {
-    USBH_USER_NO_RESP = 0U,
-    USBH_USER_RESP_OK = 1U,
+    USR_IN_NO_RESP = 0U,
+    USR_IN_RESP_OK = 1U,
 } usbh_user_status;
-
-typedef enum
-{
-    USBH_PORT_EVENT = 1U,
-    USBH_URB_EVENT,
-    USBH_CONTROL_EVENT,
-    USBH_CLASS_EVENT,
-    USBH_STATE_CHANGED_EVENT,
-}usbh_os_event;
 
 /* control transfer information */
 typedef struct _usbh_control
@@ -169,9 +161,9 @@ typedef struct
     usb_desc_dev              dev_desc;
     usb_desc_cfg_set          cfg_desc_set;
 
-#if (USBH_KEEP_CFG_DESCRIPTOR == 1U)
+#if (USBH_CFG_DESC_KEEP == 1U)
     uint8_t                   cfgdesc_rawdata[USBH_CFGSET_MAX_LEN];
-#endif /* (USBH_KEEP_CFG_DESCRIPTOR == 1U) */
+#endif /* (USBH_CFG_DESC_KEEP == 1U) */
 } usb_dev_prop;
 
 struct _usbh_host;
@@ -234,9 +226,11 @@ typedef struct _usbh_host
 
     void                                *data;                              /*!< used for... */
 
-#ifdef USB_LOW_PWR_ENABLE
-    uint8_t                             suspend_flag;  
-#endif /* USB_LOW_PWR_ENABLE*/
+#if USB_LOW_POWER
+    uint8_t                             suspend_flag;                       /*!< host suspend flag */
+    uint8_t                             dev_supp_remote_wkup;               /*!< record device remote wakeup function */
+    uint8_t                             wakeup_mode;                        /*!< record wakeup mode */
+#endif /* USB_LOW_POWER*/
 } usbh_host;
 
 /*!

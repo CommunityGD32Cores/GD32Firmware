@@ -5,10 +5,11 @@
     \version 2016-08-15, V1.0.0, firmware for GD32F4xx
     \version 2018-12-12, V2.0.0, firmware for GD32F4xx
     \version 2020-09-30, V2.1.0, firmware for GD32F4xx
+    \version 2022-03-09, V3.0.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -524,7 +525,7 @@ typedef struct
 #define RTC_AF1_TAMPER0                    RTC_TAMP_TP0SEL                            /*!< RTC_AF1 use for tamper0 */
 
 /* RTC flags */
-#define RTC_FLAG_ALRM0W										 RTC_STAT_ALRM0WF                           /*!< alarm0 configuration can be write flag */
+#define RTC_FLAG_ALRM0W                    RTC_STAT_ALRM0WF                           /*!< alarm0 configuration can be write flag */
 #define RTC_FLAG_ALRM1W                    RTC_STAT_ALRM1WF                           /*!< alarm1 configuration can be write flag */
 #define RTC_FLAG_WTW                       RTC_STAT_WTWF                              /*!< wakeup timer can be write flag */
 #define RTC_FLAG_SOP                       RTC_STAT_SOPF                              /*!< shift function operation pending flag */

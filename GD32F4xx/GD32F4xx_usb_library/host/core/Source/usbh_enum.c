@@ -3,10 +3,11 @@
     \brief   USB host mode enumeration driver
 
     \version 2020-08-01, V3.0.0, firmware for GD32F4xx
+    \version 2022-03-09, V3.1.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -111,11 +112,11 @@ usbh_status usbh_cfgdesc_get (usbh_host *uhost, uint16_t len)
 
     usbh_control *usb_ctl = &uhost->control;
 
-#if (USBH_KEEP_CFG_DESCRIPTOR == 1U)
+#if (USBH_CFG_DESC_KEEP == 1U)
     pdata = uhost->dev_prop.cfgdesc_rawdata;
 #else
     pdata = uhost->dev_prop.data;
-#endif
+#endif /* USBH_CFG_DESC_KEEP */
 
     if (CTL_IDLE == usb_ctl->ctl_state) {
         usb_ctl->setup.req = (usb_req) {

@@ -3,10 +3,11 @@
     \brief   USB host mode transactions driver
 
     \version 2020-08-01, V3.0.0, firmware for GD32F4xx
+    \version 2022-03-09, V3.1.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -220,7 +221,9 @@ usbh_status usbh_ctl_handler (usbh_host *uhost)
 */
 static usb_urb_state usbh_urb_wait (usbh_host *uhost, uint8_t pp_num, uint32_t wait_time)
 {
+    uint32_t timeout = 0U;
     usb_urb_state urb_status = URB_IDLE;
+    timeout = uhost->control.timer;
 
     while (URB_DONE != (urb_status = usbh_urbstate_get(uhost->data, pp_num))) {
         if (URB_NOTREADY == urb_status) {
@@ -231,7 +234,8 @@ static usb_urb_state usbh_urb_wait (usbh_host *uhost, uint8_t pp_num, uint32_t w
         } else if (URB_ERROR == urb_status) {
             uhost->control.ctl_state = CTL_ERROR;
             break;
-        } else if ((wait_time > 0U) && ((usb_curframe_get(uhost->data)- uhost->control.timer) > wait_time)) {
+        }else if ((wait_time > 0U) && (((usb_curframe_get(uhost->data) > timeout) && ((usb_curframe_get(uhost->data) - timeout) > wait_time)) \
+              || ((usb_curframe_get(uhost->data) < timeout) && ((usb_curframe_get(uhost->data) + 0x3FFFU - timeout) > wait_time)))){
             /* timeout for in transfer */
             uhost->control.ctl_state = CTL_ERROR;
             break;
@@ -294,7 +298,6 @@ static void usbh_data_in_transc (usbh_host *uhost)
     if (URB_DONE == usbh_urb_wait (uhost, uhost->control.pipe_in_num, DATA_STAGE_TIMEOUT)) {
         uhost->control.ctl_state = CTL_STATUS_OUT;
 
-        uhost->control.timer = (uint16_t)usb_curframe_get(uhost->data);
     }
 }
 
@@ -315,8 +318,6 @@ static void usbh_data_out_transc (usbh_host *uhost)
 
     if (URB_DONE == usbh_urb_wait (uhost, uhost->control.pipe_out_num, DATA_STAGE_TIMEOUT)) {
         uhost->control.ctl_state = CTL_STATUS_IN;
-
-        uhost->control.timer = (uint16_t)usb_curframe_get(uhost->data);
     }
 }
 
@@ -365,6 +366,11 @@ static uint32_t usbh_request_submit (usb_core_driver *udev, uint8_t pp_num)
 {
     udev->host.pipe[pp_num].urb_state = URB_IDLE;
     udev->host.pipe[pp_num].xfer_count = 0U;
+
+    if (1U == udev->host.pipe[pp_num].do_ping) {
+        (void)usb_pipe_ping (udev, (uint8_t)pp_num);
+        return USB_OK;
+    }
 
     return (uint32_t)usb_pipe_xfer (udev, pp_num);
 }

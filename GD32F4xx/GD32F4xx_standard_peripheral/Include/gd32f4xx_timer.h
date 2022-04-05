@@ -5,11 +5,11 @@
     \version 2016-08-15, V1.0.0, firmware for GD32F4xx
     \version 2018-12-12, V2.0.0, firmware for GD32F4xx
     \version 2020-09-30, V2.1.0, firmware for GD32F4xx
+    \version 2022-03-09, V3.0.0, firmware for GD32F4xx
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
-    All rights reserved.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -341,8 +341,6 @@ typedef struct
 #define TIMER_INT_FLAG_TRG                  TIMER_INTF_TRGIF                        /*!< trigger interrupt flag */
 #define TIMER_INT_FLAG_BRK                  TIMER_INTF_BRKIF
 
-
-
 /* TIMER DMA source enable */
 #define TIMER_DMA_UPD                       ((uint16_t)TIMER_DMAINTEN_UPDEN)        /*!< update DMA enable */
 #define TIMER_DMA_CH0D                      ((uint16_t)TIMER_DMAINTEN_CH0DEN)       /*!< channel 0 DMA enable */
@@ -418,8 +416,8 @@ typedef struct
 #define TIMER_COUNTER_CENTER_BOTH           CTL0_CAM(3)                             /*!< center-aligned and counting up/down assert mode */
 
 /* TIMER prescaler reload mode */
-#define TIMER_PSC_RELOAD_NOW                ((uint32_t)0x00000000U)                        /*!< the prescaler is loaded right now */
-#define TIMER_PSC_RELOAD_UPDATE             ((uint32_t)0x00000001U)                        /*!< the prescaler is loaded at the next update event */
+#define TIMER_PSC_RELOAD_NOW                ((uint32_t)0x00000000U)                 /*!< the prescaler is loaded right now */
+#define TIMER_PSC_RELOAD_UPDATE             ((uint32_t)0x00000001U)                 /*!< the prescaler is loaded at the next update event */
 
 /* count direction */
 #define TIMER_COUNTER_UP                    ((uint16_t)0x0000U)                     /*!< counter up direction */
@@ -432,12 +430,12 @@ typedef struct
 #define TIMER_CKDIV_DIV4                    CTL0_CKDIV(2)                           /*!< clock division value is 4, fDTS= fTIMER_CK/4 */
 
 /* single pulse mode */
-#define TIMER_SP_MODE_SINGLE                ((uint32_t)0x00000000U)                        /*!< single pulse mode */
-#define TIMER_SP_MODE_REPETITIVE            ((uint32_t)0x00000001U)                        /*!< repetitive pulse mode */
+#define TIMER_SP_MODE_SINGLE                ((uint32_t)0x00000000U)                 /*!< single pulse mode */
+#define TIMER_SP_MODE_REPETITIVE            ((uint32_t)0x00000001U)                 /*!< repetitive pulse mode */
 
 /* update source */
-#define TIMER_UPDATE_SRC_REGULAR            ((uint32_t)0x00000000U)                        /*!< update generate only by counter overflow/underflow */
-#define TIMER_UPDATE_SRC_GLOBAL             ((uint32_t)0x00000001U)                        /*!< update generate by setting of UPG bit or the counter overflow/underflow,or the slave mode controller trigger */
+#define TIMER_UPDATE_SRC_REGULAR            ((uint32_t)0x00000000U)                 /*!< update generate only by counter overflow/underflow */
+#define TIMER_UPDATE_SRC_GLOBAL             ((uint32_t)0x00000001U)                 /*!< update generate by setting of UPG bit or the counter overflow/underflow,or the slave mode controller trigger */
 
 /* run mode off-state configure */
 #define TIMER_ROS_STATE_ENABLE              ((uint16_t)TIMER_CCHP_ROS)              /*!< when POEN bit is set, the channel output signals (CHx_O/CHx_ON) are enabled, with relationship to CHxEN/CHxNEN bits */
@@ -539,7 +537,7 @@ typedef struct
 #define TIMER_IC_PSC_DIV8                   ((uint16_t)0x000CU)                     /*!< divided by 8 */
 
 /* trigger selection */
-#define SMCFG_TRGSEL(regval)                (BITS(4, 6) & ((uint32_t)(regval) << 4U))
+#define SMCFG_TRGSEL(regval)                 (BITS(4, 6) & ((uint32_t)(regval) << 4U))
 #define TIMER_SMCFG_TRGSEL_ITI0              SMCFG_TRGSEL(0)                        /*!< internal trigger 0 */
 #define TIMER_SMCFG_TRGSEL_ITI1              SMCFG_TRGSEL(1)                        /*!< internal trigger 1 */
 #define TIMER_SMCFG_TRGSEL_ITI2              SMCFG_TRGSEL(2)                        /*!< internal trigger 2 */
@@ -572,8 +570,8 @@ typedef struct
 #define TIMER_SLAVE_MODE_EXTERNAL0          SMCFG_SMC(7)                            /*!< external clock mode 0 */
 
 /* master slave mode selection */ 
-#define TIMER_MASTER_SLAVE_MODE_ENABLE      ((uint32_t)0x00000000U)                        /*!< master slave mode enable */
-#define TIMER_MASTER_SLAVE_MODE_DISABLE     ((uint32_t)0x00000001U)                        /*!< master slave mode disable */
+#define TIMER_MASTER_SLAVE_MODE_ENABLE      ((uint32_t)0x00000000U)                 /*!< master slave mode enable */
+#define TIMER_MASTER_SLAVE_MODE_DISABLE     ((uint32_t)0x00000001U)                 /*!< master slave mode disable */
 
 /* external trigger prescaler */
 #define SMCFG_ETPSC(regval)                 (BITS(12, 13) & ((uint32_t)(regval) << 12U))
@@ -587,8 +585,8 @@ typedef struct
 #define TIMER_ETP_RISING                    ((uint32_t)0x00000000U)                 /*!< active high or rising edge active */
 
 /* channel 0 trigger input selection */ 
-#define TIMER_HALLINTERFACE_ENABLE          ((uint32_t)0x00000000U)                        /*!< TIMER hall sensor mode enable */
-#define TIMER_HALLINTERFACE_DISABLE         ((uint32_t)0x00000001U)                        /*!< TIMER hall sensor mode disable */
+#define TIMER_HALLINTERFACE_ENABLE          ((uint32_t)0x00000000U)                 /*!< TIMER hall sensor mode enable */
+#define TIMER_HALLINTERFACE_DISABLE         ((uint32_t)0x00000001U)                 /*!< TIMER hall sensor mode disable */
 
 /* timer1 internal trigger input1 remap */
 #define TIMER1_IRMP(regval)                 (BITS(10, 11) & ((uint32_t)(regval) << 10U))       
@@ -610,8 +608,8 @@ typedef struct
 #define TIMER10_ITI1_RMP_RTC_HXTAL_DIV      TIMER10_IRMP(2)                         /*!< timer10 internal trigger input1 remap  HXTAL _DIV(clock used for RTC which is HXTAL clock divided by RTCDIV bits in RCU_CFG0 register) */
 
 /* timerx(x=0,1,2,13,14,15,16) write cc register selection */
-#define TIMER_CHVSEL_ENABLE                  ((uint16_t)0x0002U)                     /*!< write CHxVAL register selection enable  */
-#define TIMER_CHVSEL_DISABLE                 ((uint16_t)0x0000U)                     /*!< write CHxVAL register selection disable */
+#define TIMER_CHVSEL_ENABLE                  ((uint16_t)0x0002U)                    /*!< write CHxVAL register selection enable  */
+#define TIMER_CHVSEL_DISABLE                 ((uint16_t)0x0000U)                    /*!< write CHxVAL register selection disable */
 
 /* the output value selection */
 #define TIMER_OUTSEL_ENABLE                 ((uint16_t)0x0001U)                     /*!< output value selection enable */
@@ -659,20 +657,6 @@ uint16_t timer_prescaler_read(uint32_t timer_periph);
 void timer_single_pulse_mode_config(uint32_t timer_periph, uint32_t spmode);
 /* configure TIMER update source */
 void timer_update_source_config(uint32_t timer_periph, uint32_t update);
-
-/* TIMER interrupt and flag*/
-/* enable the TIMER interrupt */
-void timer_interrupt_enable(uint32_t timer_periph, uint32_t interrupt);
-/* disable the TIMER interrupt */
-void timer_interrupt_disable(uint32_t timer_periph, uint32_t interrupt);
-/* get timer interrupt flag */
-FlagStatus timer_interrupt_flag_get(uint32_t timer_periph, uint32_t interrupt);
-/* clear TIMER interrupt flag */
-void timer_interrupt_flag_clear(uint32_t timer_periph, uint32_t interrupt);
-/* get TIMER flags */
-FlagStatus timer_flag_get(uint32_t timer_periph, uint32_t flag);
-/* clear TIMER flags */
-void timer_flag_clear(uint32_t timer_periph, uint32_t flag);
 
 /* timer DMA and event*/
 /* enable the TIMER DMA */
@@ -777,5 +761,19 @@ void timer_channel_remap_config(uint32_t timer_periph,uint32_t remap);
 void timer_write_chxval_register_config(uint32_t timer_periph, uint16_t ccsel);
 /* configure TIMER output value selection */
 void timer_output_value_selection_config(uint32_t timer_periph, uint16_t outsel);
+
+/* TIMER interrupt and flag*/
+/* get TIMER flags */
+FlagStatus timer_flag_get(uint32_t timer_periph, uint32_t flag);
+/* clear TIMER flags */
+void timer_flag_clear(uint32_t timer_periph, uint32_t flag);
+/* enable the TIMER interrupt */
+void timer_interrupt_enable(uint32_t timer_periph, uint32_t interrupt);
+/* disable the TIMER interrupt */
+void timer_interrupt_disable(uint32_t timer_periph, uint32_t interrupt);
+/* get timer interrupt flag */
+FlagStatus timer_interrupt_flag_get(uint32_t timer_periph, uint32_t interrupt);
+/* clear TIMER interrupt flag */
+void timer_interrupt_flag_clear(uint32_t timer_periph, uint32_t interrupt);
 
 #endif /* GD32F4XX_TIMER_H */
