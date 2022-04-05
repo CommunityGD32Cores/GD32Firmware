@@ -3,7 +3,6 @@
     \brief   HID class driver
 
     \version 2020-08-13, V3.0.0, firmware for GD32F3x0
-    \version 2020-12-07, V3.0.1, firmware for GD32F3x0
 */
 
 /*
@@ -201,9 +200,7 @@ const uint8_t hid_report_desc[USB_HID_REPORT_DESC_LEN] =
 
     0x95, 0x06,  /* REPORT_COUNT (6) */
     0x75, 0x08,  /* REPORT_SIZE (8) */
-    0x15, 0x00,  /* LOGICAL_MINIMUM (0) */
-    0x26, 0xFF, 0x00,  /* LOGICAL_MAXIMUM (255) */
-    0x05, 0x07,  /* USAGE_PAGE (Keyboard/Keypad) */
+    0x25, 0xFF,  /* LOGICAL_MAXIMUM (255) */
     0x19, 0x00,  /* USAGE_MINIMUM (Reserved (no event indicated)) */
     0x29, 0x65,  /* USAGE_MAXIMUM (Keyboard Application) */
     0x81, 0x00,  /* INPUT (Data,Ary,Abs) */
@@ -354,9 +351,6 @@ static uint8_t hid_req (usb_dev *udev, usb_req *req)
             transc->xfer_buf = (uint8_t *)hid_report_desc;
 
             return REQ_SUPP;
-        } else if (USB_DESCTYPE_HID == (req->wValue >> 8U)) {
-            transc->remain_len = USB_MIN(9U, req->wLength);
-            transc->xfer_buf = (uint8_t *)(&(hid_config_desc.hid_vendor));
         }
         break;
 

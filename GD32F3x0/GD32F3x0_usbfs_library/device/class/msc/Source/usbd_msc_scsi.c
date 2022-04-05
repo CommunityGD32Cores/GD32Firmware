@@ -39,8 +39,6 @@ OF SUCH DAMAGE.
 
 /* local function prototypes ('static') */
 static int8_t scsi_test_unit_ready      (usb_core_driver *pudev, uint8_t lun, uint8_t *params);
-static int8_t scsi_mode_select6         (usb_core_driver *pudev, uint8_t lun, uint8_t *params);
-static int8_t scsi_mode_select10        (usb_core_driver *pudev, uint8_t lun, uint8_t *params);
 static int8_t scsi_inquiry              (usb_core_driver *pudev, uint8_t lun, uint8_t *params);
 static int8_t scsi_read_format_capacity (usb_core_driver *pudev, uint8_t lun, uint8_t *params);
 static int8_t scsi_read_capacity10      (usb_core_driver *pudev, uint8_t lun, uint8_t *params);
@@ -111,12 +109,6 @@ int8_t scsi_process_cmd(usb_core_driver *pudev, uint8_t lun, uint8_t *params)
 
     case SCSI_READ_TOC_DATA:
         return scsi_toc_cmd_read (pudev, lun, params);
-    
-    case SCSI_MODE_SELECT6:
-        return scsi_mode_select6 (pudev, lun, params);
-    
-    case SCSI_MODE_SELECT10:
-        return scsi_mode_select10 (pudev, lun, params);
 
     default:
         scsi_sense_code (pudev, lun, ILLEGAL_REQUEST, INVALID_CDB);
@@ -171,39 +163,9 @@ static int8_t scsi_test_unit_ready (usb_core_driver *pudev, uint8_t lun, uint8_t
         return -1;
     }
     
-    msc->bbb_datalen = 0U;
-
-    return 0;
-}
-
-/*!
-    \brief      process Inquiry command
-    \param[in]  udev: pointer to USB device instance
-    \param[in]  lun: logical unit number
-    \param[in]  params: command parameters
-    \param[out] none
-    \retval     status
-*/
-static int8_t scsi_mode_select6 (usb_core_driver *pudev, uint8_t lun, uint8_t *params)
-{
-    usbd_msc_handler *msc = (usbd_msc_handler *)pudev->dev.class_data[USBD_MSC_INTERFACE];
-
-    msc->bbb_datalen = 0U;
-
-    return 0;
-}
-
-/*!
-    \brief      process Inquiry command
-    \param[in]  udev: pointer to USB device instance
-    \param[in]  lun: logical unit number
-    \param[in]  params: command parameters
-    \param[out] none
-    \retval     status
-*/
-static int8_t scsi_mode_select10 (usb_core_driver *pudev, uint8_t lun, uint8_t *params)
-{
-    usbd_msc_handler *msc = (usbd_msc_handler *)pudev->dev.class_data[USBD_MSC_INTERFACE];
+    if (1U == msc->scsi_disk_pop) {
+        usbd_disconnect (pudev);
+    }
 
     msc->bbb_datalen = 0U;
 

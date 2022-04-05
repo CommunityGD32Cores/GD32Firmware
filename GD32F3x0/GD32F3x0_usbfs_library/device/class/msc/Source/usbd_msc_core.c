@@ -3,7 +3,6 @@
     \brief   USB MSC device class core functions
 
     \version 2020-08-13, V3.0.0, firmware for GD32F3x0
-    \version 2020-12-07, V3.0.1, firmware for GD32F3x0
 */
 
 /*
@@ -299,7 +298,9 @@ static uint8_t msc_core_req (usb_dev *pudev, usb_req *req)
 */
 static uint8_t msc_core_in (usb_dev *pudev, uint8_t ep_num)
 {
-    msc_bbb_data_in(pudev, ep_num);
+    if ((MSC_IN_EP & 0x7FU) == ep_num) {
+        msc_bbb_data_in(pudev, ep_num);
+    }
 
     return USBD_OK;
 }
@@ -313,7 +314,9 @@ static uint8_t msc_core_in (usb_dev *pudev, uint8_t ep_num)
 */
 static uint8_t msc_core_out (usb_dev *pudev, uint8_t ep_num)
 {
-    msc_bbb_data_out (pudev, ep_num);
+    if (MSC_OUT_EP == ep_num) {
+        msc_bbb_data_out (pudev, ep_num);
+    }
 
     return USBD_OK;
 }

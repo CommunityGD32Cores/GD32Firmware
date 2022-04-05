@@ -133,7 +133,7 @@ static void system_clock_config(void);
 void SystemInit (void)
 {
 #if (defined(GD32F350))
-    RCU_APB2EN |= BIT(0);
+    RCU_APB2EN = BIT(0);
     CMP_CS |= (CMP_CS_CMP1MSEL | CMP_CS_CMP0MSEL);
 #endif /* GD32F350 */
     if(((FMC_OBSTAT & OB_OBSTAT_PLEVEL_HIGH) != OB_OBSTAT_PLEVEL_HIGH) &&

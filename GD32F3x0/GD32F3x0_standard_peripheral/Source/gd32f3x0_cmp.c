@@ -75,19 +75,14 @@ void cmp_deinit(void)
 */
 void cmp_mode_init(uint32_t cmp_periph, operating_mode_enum operating_mode, inverting_input_enum inverting_input, cmp_hysteresis_enum output_hysteresis)
 {
-    uint32_t CMPx_CS = 0;
     if(CMP0 == cmp_periph){
         /* initialize comparator 0 mode */
-        CMPx_CS = CMP_CS;
-        CMPx_CS &= ~(uint32_t)(CMP_CS_CMP0M | CMP_CS_CMP0MSEL | CMP_CS_CMP0HST ); 
-        CMPx_CS |= CS_CMP0M(operating_mode) | CS_CMP0MSEL(inverting_input) | CS_CMP0HST(output_hysteresis);
-        CMP_CS = CMPx_CS;
+        CMP_CS &= ~(uint32_t)(CMP_CS_CMP0M | CMP_CS_CMP0MSEL | CMP_CS_CMP0HST ); 
+        CMP_CS |= CS_CMP0M(operating_mode) | CS_CMP0MSEL(inverting_input) | CS_CMP0HST(output_hysteresis);
     }else{
         /* initialize comparator 1 mode */
-        CMPx_CS = CMP_CS;
-        CMPx_CS &= ~(uint32_t)(CMP_CS_CMP1M | CMP_CS_CMP1MSEL | CMP_CS_CMP1HST );
-        CMPx_CS |= CS_CMP1M(operating_mode) | CS_CMP1MSEL(inverting_input) | CS_CMP1HST(output_hysteresis);
-        CMP_CS = CMPx_CS;
+        CMP_CS &= ~(uint32_t)(CMP_CS_CMP1M | CMP_CS_CMP1MSEL | CMP_CS_CMP1HST );
+        CMP_CS |= CS_CMP1M(operating_mode) | CS_CMP1MSEL(inverting_input) | CS_CMP1HST(output_hysteresis);
     }
 }
 
@@ -113,31 +108,26 @@ void cmp_mode_init(uint32_t cmp_periph, operating_mode_enum operating_mode, inve
 */
 void cmp_output_init(uint32_t cmp_periph, cmp_output_enum output_slection, uint32_t output_polarity)
 {
-    uint32_t CMPx_CS = 0;
     /* initialize comparator 0 output */
     if(CMP0 == cmp_periph){
-        CMPx_CS = CMP_CS;
-        CMPx_CS &= ~(uint32_t)CMP_CS_CMP0OSEL;
-        CMPx_CS |= CS_CMP0OSEL(output_slection);
+        CMP_CS &= ~(uint32_t)CMP_CS_CMP0OSEL;
+        CMP_CS |= CS_CMP0OSEL(output_slection);
         /* output polarity */
         if(CMP_OUTPUT_POLARITY_INVERTED == output_polarity){
-            CMPx_CS |= CMP_CS_CMP0PL;
+            CMP_CS |= CMP_CS_CMP0PL;
         }else{ 
-            CMPx_CS &= ~CMP_CS_CMP0PL;
+            CMP_CS &= ~CMP_CS_CMP0PL;
         }
-        CMP_CS = CMPx_CS;
-    }else if(CMP1 == cmp_periph){
+    }else{
         /* initialize comparator 1 output */
-        CMPx_CS = CMP_CS;
-        CMPx_CS &= ~(uint32_t)CMP_CS_CMP1OSEL;
-        CMPx_CS |= CS_CMP1OSEL(output_slection);
+        CMP_CS &= ~(uint32_t)CMP_CS_CMP1OSEL;
+        CMP_CS |= CS_CMP1OSEL(output_slection);
         /* output polarity */
         if(CMP_OUTPUT_POLARITY_INVERTED == output_polarity){
-            CMPx_CS |= CMP_CS_CMP1PL;
+            CMP_CS |= CMP_CS_CMP1PL;
         }else{ 
-            CMPx_CS &= ~CMP_CS_CMP1PL;
+            CMP_CS &= ~CMP_CS_CMP1PL;
         }
-        CMP_CS = CMPx_CS;
     }
 }
 
