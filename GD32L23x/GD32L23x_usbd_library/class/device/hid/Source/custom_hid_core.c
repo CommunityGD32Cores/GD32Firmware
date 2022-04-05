@@ -3,6 +3,7 @@
     \brief   custom HID class driver
 
     \version 2021-08-04, V1.0.0, firmware for GD32L23x
+    \version 2021-11-09, V1.0.1, firmware for GD32L23x
 */
 
 /*
@@ -377,6 +378,11 @@ static uint8_t custom_hid_req_handler(usb_dev *udev, usb_req *req)
                               0U);
 
             status = REQ_SUPP;
+        } else if (USB_DESCTYPE_HID == (req->wValue >> 8U)) {
+            usb_transc_config(&udev->transc_in[0U], 
+                              (uint8_t *)(&(custom_hid_config_desc.hid_vendor)), 
+                              USB_MIN(9U, req->wLength), 
+                              0U);
         }
         break;
 

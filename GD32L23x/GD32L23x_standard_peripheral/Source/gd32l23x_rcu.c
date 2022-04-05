@@ -55,11 +55,12 @@ void rcu_deinit(void)
     RCU_CTL |= RCU_CTL_IRC16MEN;
     while(0U == (RCU_CTL & RCU_CTL_IRC16MSTB)) {
     }
+    RCU_CFG0 &= ~RCU_CFG0_SCS;
+    RCU_CTL &= ~(RCU_CTL_HXTALEN | RCU_CTL_CKMEN | RCU_CTL_PLLEN | RCU_CTL_HXTALBPS);
     /* reset RCU */
     RCU_CFG0 &= ~(RCU_CFG0_SCS | RCU_CFG0_AHBPSC | RCU_CFG0_APB1PSC | RCU_CFG0_APB2PSC | \
                   RCU_CFG0_ADCPSC | RCU_CFG0_CKOUTSEL | RCU_CFG0_CKOUTDIV | RCU_CFG0_PLLDV);
     RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF  | RCU_CFG0_PLLDV);
-    RCU_CTL &= ~(RCU_CTL_HXTALEN | RCU_CTL_CKMEN | RCU_CTL_PLLEN | RCU_CTL_HXTALBPS);
     RCU_CFG1 &= ~(RCU_CFG1_PREDV);
     RCU_CFG2 &= ~(RCU_CFG2_USART0SEL | RCU_CFG2_ADCSEL);
     RCU_CFG2 &= ~RCU_CFG2_ADCPSC2;
@@ -441,7 +442,7 @@ void rcu_pll_config(uint32_t pll_src, uint32_t pll_mul)
     \param[in]  usart_idx: IDX_USARTx(x=0,1)
     \param[in]  ck_usart: USART clock source selection
                 only one parameter can be selected which is shown as below:
-      \arg        RCU_USARTSRC_CKAPB: CK_USART select CK_APB1/2
+      \arg        RCU_USARTSRC_CKAPB: CK_USART select CK_APB1/CK_APB2
       \arg        RCU_USARTSRC_CKSYS: CK_USART select CK_SYS
       \arg        RCU_USARTSRC_LXTAL: CK_USART select CK_LXTAL
       \arg        RCU_USARTSRC_IRC16MDIV: CK_USART select CK_IRC16MDIV

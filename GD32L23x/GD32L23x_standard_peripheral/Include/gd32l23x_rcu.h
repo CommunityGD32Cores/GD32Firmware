@@ -758,7 +758,7 @@ typedef enum {
 
 /* USARTx(x=0,1) clock source selection */
 #define CFG2_USART0SEL(regval)      (BITS(0,1) & ((uint32_t)(regval) << 0U))
-#define RCU_USARTSRC_CKAPB           CFG2_USART0SEL(0)                  /*!< CK_USART select CK_APB1/2 */
+#define RCU_USARTSRC_CKAPB           CFG2_USART0SEL(0)                  /*!< CK_USART select CK_APB1/CK_APB2 */
 #define RCU_USARTSRC_CKSYS           CFG2_USART0SEL(1)                  /*!< CK_USART select CK_SYS */
 #define RCU_USARTSRC_LXTAL           CFG2_USART0SEL(2)                  /*!< CK_USART select LXTAL */
 #define RCU_USARTSRC_IRC16MDIV       CFG2_USART0SEL(3)                  /*!< CK_USART select IRC16MDIV */
