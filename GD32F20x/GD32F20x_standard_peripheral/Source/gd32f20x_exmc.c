@@ -1,13 +1,39 @@
 /*!
     \file  gd32f20x_exmc.c
     \brief EXMC driver
+
+    \version 2015-07-15, V1.0.0, firmware for GD32F20x
+    \version 2017-06-05, V2.0.0, firmware for GD32F20x
+    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2015-07-15, V1.0.0, firmware for GD32F20x
-    2017-06-05, V2.0.0, firmware for GD32F20x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "gd32f20x_exmc.h"
@@ -70,9 +96,9 @@
 #define NPATCFG_ATTHLD_OFFSET             ((uint32_t)16U)
 #define NPATCFG_ATTHIZ_OFFSET             ((uint32_t)24U)
 
-#define PIOTCFG_IOWAIT_OFFSET            ((uint32_t)8U)
-#define PIOTCFG_IOHLD_OFFSET             ((uint32_t)16U)
-#define PIOTCFG_IOHIZ_OFFSET             ((uint32_t)24U)
+#define PIOTCFG_IOWAIT_OFFSET             ((uint32_t)8U)
+#define PIOTCFG_IOHLD_OFFSET              ((uint32_t)16U)
+#define PIOTCFG_IOHIZ_OFFSET              ((uint32_t)24U)
 
 #define SDCTL_WPEN_OFFSET                 ((uint32_t)9U)
 #define SDCTL_BRSTRD_OFFSET               ((uint32_t)12U)
@@ -202,7 +228,7 @@ void exmc_norsram_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct)
     \param[out] exmc_norsram_init_struct: the initialized struct exmc_norsram_parameter_struct pointer
     \retval     none
 */
-void exmc_norsram_parameter_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct)
+void exmc_norsram_struct_para_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct)
 {
     /* configure the structure with default value */
     exmc_norsram_init_struct->norsram_region = EXMC_BANK0_NORSRAM_REGION0;
@@ -320,12 +346,12 @@ void exmc_nand_init(exmc_nand_parameter_struct* exmc_nand_init_struct)
 }
 
 /*!
-    \brief      initialize the struct exmc_norsram_parameter_struct
+    \brief      initialize the struct exmc_nand_init_struct
     \param[in]  none
-    \param[out] the initialized struct exmc_norsram_parameter_struct pointer
+    \param[out] the initialized struct exmc_nand_init_struct pointer
     \retval     none
 */
-void exmc_nand_parameter_init(exmc_nand_parameter_struct* exmc_nand_init_struct)
+void exmc_nand_struct_para_init(exmc_nand_parameter_struct* exmc_nand_init_struct)
 {
     /* configure the structure with default value */
     exmc_nand_init_struct->nand_bank = EXMC_BANK1_NAND;
@@ -461,7 +487,7 @@ void exmc_pccard_init(exmc_pccard_parameter_struct* exmc_pccard_init_struct)
     \param[out] the initialized struct exmc_pccard_parameter_struct pointer
     \retval     none
 */
-void exmc_pccard_parameter_init(exmc_pccard_parameter_struct* exmc_pccard_init_struct)
+void exmc_pccard_struct_para_init(exmc_pccard_parameter_struct* exmc_pccard_init_struct)
 {
     /* configure the structure with default value */
     exmc_pccard_init_struct->wait_feature = DISABLE;
@@ -505,7 +531,7 @@ void exmc_pccard_disable(void)
 
 /*!
     \brief      deinitialize EXMC SDRAM device
-    \param[in]  none
+    \param[in]  exmc_sdram_device:
     \param[out] none
     \retval     none
 */
@@ -599,9 +625,9 @@ void exmc_sdram_init(exmc_sdram_parameter_struct* exmc_sdram_init_struct)
 }
 
 /*!
-    \brief      initialize the struct exmc_pccard_parameter_struct
+    \brief      initialize the struct exmc_sdram_parameter_struct
     \param[in]  none
-    \param[out] the initialized struct exmc_pccard_parameter_struct pointer
+    \param[out] the initialized struct exmc_sdram_parameter_struct pointer
     \retval     none
 */
 void exmc_sdram_parameter_init(exmc_sdram_parameter_struct* exmc_sdram_init_struct)
@@ -841,7 +867,7 @@ void exmc_sqpipsram_read_command_set(uint32_t read_command_mode, uint32_t read_w
       \arg        EXMC_SQPIPSRAM_WRITE_MODE_SQPI: SQPI mode
       \arg        EXMC_SQPIPSRAM_WRITE_MODE_QPI: QPI mode
     \param[in]  write_wait_cycle: wait cycle number after address phase,0..15
-    \param[in]  write_command_code: read command for AHB read transfer
+    \param[in]  write_command_code: write command for AHB write transfer
     \param[out] none
     \retval     none
 */

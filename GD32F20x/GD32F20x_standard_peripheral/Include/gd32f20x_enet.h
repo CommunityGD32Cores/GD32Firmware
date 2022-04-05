@@ -1,13 +1,39 @@
 /*!
     \file  gd32f20x_enet.h
     \brief definitions for the ENET
+
+    \version 2015-07-15, V1.0.0, firmware for GD32F20x
+    \version 2017-06-05, V2.0.0, firmware for GD32F20x
+    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2015-07-15, V1.0.0, firmware for GD32F20x
-    2017-06-05, V2.0.0, firmware for GD32F20x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F20X_ENET_H
@@ -429,8 +455,9 @@
   
 /* ENET_DMA_MFBOCNT */
 #define ENET_DMA_MFBOCNT_MSFC            BITS(0,15)                             /*!< missed frames by the controller */
+#define ENET_DMA_MFBOCNT_OBMFC           BIT(16)                                /*!< overflow bit for missed frame counter */
 #define ENET_DMA_MFBOCNT_MSFA            BITS(17,27)                            /*!< missed frames by the application */
-#define ENET_DMA_MFBOCNT_OBFOC           BITS(28)                               /*!< Overflow bit for FIFO overflow counter */
+#define ENET_DMA_MFBOCNT_OBFOC           BIT(28)                                /*!< overflow bit for FIFO overflow counter */
 
 /* ENET_DMA_CTDADDR */
 #define ENET_DMA_CTDADDR_TDAP            BITS(0,31)                             /*!< transmit descriptor address pointer */
@@ -603,7 +630,7 @@ typedef enum
     ENET_DMA_FLAG_TST               = ENET_REGIDX_BIT(DMA_STAT_REG_OFFSET, 29U),    /*!< timestamp trigger status flag */                        
 }enet_flag_enum;
 
-/* ENET stutus flag clear */
+/* ENET status flag clear */
 typedef enum
 {
     /* ENET_DMA_STAT register */
@@ -759,7 +786,7 @@ typedef enum
 /* phy mode and mac loopback configurations */
 typedef enum
 {
-    ENET_AUTO_NEGOTIATION           = 0x01u,                                        /*!< PHY auto negotiation */
+    ENET_AUTO_NEGOTIATION           = 0x01U,                                        /*!< PHY auto negotiation */
     ENET_100M_FULLDUPLEX            = (ENET_MAC_CFG_SPD | ENET_MAC_CFG_DPM),        /*!< 100Mbit/s, full-duplex */
     ENET_100M_HALFDUPLEX            = ENET_MAC_CFG_SPD ,                            /*!< 100Mbit/s, half-duplex */
     ENET_10M_FULLDUPLEX             = ENET_MAC_CFG_DPM,                             /*!< 10Mbit/s, full-duplex */
@@ -855,7 +882,7 @@ typedef struct
     uint32_t interframegap;                                                         /*!< inter frame gap related parameters */
 }enet_initpara_struct;
 
-/* structure for ENET DMA desciptors */ 
+/* structure for ENET DMA descriptors */ 
 typedef struct  
 {
     uint32_t status;                                                                /*!< status */
@@ -1181,11 +1208,11 @@ typedef struct
 
 #define ENET_FORWARD_ERRFRAMES_ENABLE             (ENET_DMA_CTL_FERF<<2)                        /*!< all frame received with error except runt error are forwarded to memory */
 #define ENET_FORWARD_ERRFRAMES_DISABLE            ((uint32_t)0x00000000)                        /*!< RxFIFO drop error frame */
-#define ENET_FORWARD_ERRFRAMES                    (ENET_DMA_CTL_FERF<<2)                             /*!< the function that all frame received with error except runt error are forwarded to memory */
+#define ENET_FORWARD_ERRFRAMES                    (ENET_DMA_CTL_FERF<<2)                        /*!< the function that all frame received with error except runt error are forwarded to memory */
 
 #define ENET_FORWARD_UNDERSZ_GOODFRAMES_ENABLE    (ENET_DMA_CTL_FUF<<2)                         /*!< forward undersized good frames */
 #define ENET_FORWARD_UNDERSZ_GOODFRAMES_DISABLE   ((uint32_t)0x00000000)                        /*!< RxFIFO drops all frames whose length is less than 64 bytes */  
-#define ENET_FORWARD_UNDERSZ_GOODFRAMES           (ENET_DMA_CTL_FUF<<2)                            /*!< the function that forwarding undersized good frames */
+#define ENET_FORWARD_UNDERSZ_GOODFRAMES           (ENET_DMA_CTL_FUF<<2)                         /*!< the function that forwarding undersized good frames */
 
 #define ENET_SECONDFRAME_OPT_ENABLE               ENET_DMA_CTL_OSF                              /*!< TxDMA controller operate on second frame mode enable*/
 #define ENET_SECONDFRAME_OPT_DISABLE              ((uint32_t)0x00000000)                        /*!< TxDMA controller operate on second frame mode disable */
@@ -1379,10 +1406,10 @@ FlagStatus enet_desc_flag_get(enet_descriptors_struct *desc, uint32_t desc_flag)
 void enet_desc_flag_set(enet_descriptors_struct *desc, uint32_t desc_flag);
 /* clear the bit flag of ENET dma tx descriptor */
 void enet_desc_flag_clear(enet_descriptors_struct *desc, uint32_t desc_flag); 
-/* when receiving the completed, set RS bit in ENET_DMA_STAT register will immediately set */
-void enet_rx_desc_immediate_receive_complete_interrupt(enet_descriptors_struct *desc);
-/* when receiving the completed, set RS bit in ENET_DMA_STAT register will is set after a configurable delay time */
-void enet_rx_desc_delay_receive_complete_interrupt(enet_descriptors_struct *desc, uint32_t delay_time);
+/* when receiving the completed, set RS bit in ENET_DMA_STAT register will set */
+void enet_desc_receive_complete_bit_enable(enet_descriptors_struct *desc);
+/* when receiving the completed, set RS bit in ENET_DMA_STAT register will not set */
+void enet_desc_receive_complete_bit_disable(enet_descriptors_struct *desc);
 /* drop current receive frame */
 void enet_rxframe_drop(void);
 /* enable DMA feature */
@@ -1444,8 +1471,6 @@ void enet_ptp_timestamp_update_config(uint32_t sign, uint32_t second, uint32_t s
 void enet_ptp_expected_time_config(uint32_t second, uint32_t nanosecond);
 /* get the PTP current system time */
 void enet_ptp_system_time_get(enet_ptp_systime_struct *systime_struct);
-/* configure the PPS output frequency */
-void enet_ptp_pps_output_frequency_config(uint32_t freq);
 /* configure and start PTP timestamp counter */
 void enet_ptp_start(int32_t updatemethod, uint32_t init_sec, uint32_t init_subsec, uint32_t carry_cfg, uint32_t accuracy_cfg);
 /* adjust frequency in fine method by configure addend register */

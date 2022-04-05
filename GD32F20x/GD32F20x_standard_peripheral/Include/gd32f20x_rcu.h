@@ -1,13 +1,39 @@
 /*!
     \file  gd32f20x_rcu.h
     \brief definitions for the RCU
+
+    \version 2015-07-15, V1.0.0, firmware for GD32F20x
+    \version 2017-06-05, V2.0.0, firmware for GD32F20x
+    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2015-07-15, V1.0.0, firmware for GD32F20x
-    2017-06-05, V2.0.0, firmware for GD32F20x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F20X_RCU_H
@@ -20,8 +46,8 @@
 
 /* registers definitions */
 #define RCU_CTL                         REG32(RCU + 0x00U)        /*!< control register */
-#define RCU_CFG0                        REG32(RCU + 0x04U)        /*!< configuration register 0 */
-#define RCU_INT                         REG32(RCU + 0x08U)        /*!< interrupt register */
+#define RCU_CFG0                        REG32(RCU + 0x04U)        /*!< clock configuration register 0 */
+#define RCU_INT                         REG32(RCU + 0x08U)        /*!< clock interrupt register */
 #define RCU_APB2RST                     REG32(RCU + 0x0CU)        /*!< APB2 reset register */
 #define RCU_APB1RST                     REG32(RCU + 0x10U)        /*!< APB1 reset register */
 #define RCU_AHB1EN                      REG32(RCU + 0x14U)        /*!< AHB1 enable register */
@@ -951,6 +977,7 @@ typedef enum
 #define RCU_PLLTSRC_HXTAL               RCU_PLLTCFG_PLLTSEL                  /*!< HXTAL selected as source clock of PLLT */
 
 /* function declarations */
+/* initialization, peripheral clock enable/disable functions */
 /* deinitialize the RCU */
 void rcu_deinit(void);
 /* enable the peripherals clock */
@@ -970,6 +997,7 @@ void rcu_bkp_reset_enable(void);
 /* disable the BKP domain reset */
 void rcu_bkp_reset_disable(void);
 
+/* clock configuration functions */
 /* configure the system clock source */
 void rcu_system_clock_source_config(uint32_t ck_sys);
 /* get the system clock source */
@@ -998,6 +1026,7 @@ void rcu_pll1_config(uint32_t pll_mul);
 /* configure the PLL2 clock */
 void rcu_pll2_config(uint32_t pll_mul);
 
+/* peripheral clock configuration functions */
 /* configure the ADC division factor */
 void rcu_adc_clock_config(uint32_t adc_psc);
 /* configure the USBFS/TRNG prescaler factor */
@@ -1047,7 +1076,7 @@ void rcu_hxtal_clock_monitor_enable(void);
 void rcu_hxtal_clock_monitor_disable(void);
 
 /* set the IRC8M adjust value */
-void rcu_irc8m_adjust_value_set(uint32_t irc8m_adjval);
+void rcu_irc8m_adjust_value_set(uint8_t irc8m_adjval);
 
 /* set the deep sleep mode voltage */
 void rcu_deepsleep_voltage_set(uint32_t dsvol);

@@ -1,24 +1,52 @@
 /*!
     \file  gd32f20x_gpio.c
     \brief GPIO driver
+
+    \version 2015-07-15, V1.0.0, firmware for GD32F20x
+    \version 2017-06-05, V2.0.0, firmware for GD32F20x
+    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2015-07-15, V1.0.0, firmware for GD32F20x
-    2017-06-05, V2.0.0, firmware for GD32F20x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "gd32f20x_gpio.h"
 
-#define AFIO_EXTI_SOURCE_FIELDS         ((uint8_t)0x04U)             /*!< select AFIO exti source registers */
-#define LSB_16BIT_MASK                  ((uint16_t)0xFFFFU)          /*!< LSB 16-bit mask */
-#define PCF_POSITION_MASK               ((uint32_t)0x000F0000U)      /*!< AFIO_PCF register position mask */
-#define PCF_SWJCFG_MASK                 ((uint32_t)0xF0FFFFFFU)      /*!< AFIO_PCF register SWJCFG mask */
-#define PCF_LOCATION1_MASK              ((uint32_t)0x00200000U)      /*!< AFIO_PCF register location1 mask */
-#define PCF_LOCATION2_MASK              ((uint32_t)0x00100000U)      /*!< AFIO_PCF register location2 mask */
-#define AFIO_PCF1_FIELDS                ((uint32_t)0x80000000U)      /*!< select AFIO_PCF1 register */
+#define AFIO_EXTI_SOURCE_MASK              ((uint8_t)0x03U)         /*!< AFIO exti source selection mask*/  
+#define AFIO_EXTI_SOURCE_FIELDS            ((uint8_t)0x04U)         /*!< select AFIO exti source registers */
+#define LSB_16BIT_MASK                     ((uint16_t)0xFFFFU)      /*!< LSB 16-bit mask */
+#define PCF_POSITION_MASK                  ((uint32_t)0x000F0000U)  /*!< AFIO_PCF register position mask */
+#define PCF_SWJCFG_MASK                    ((uint32_t)0xF0FFFFFFU)  /*!< AFIO_PCF register SWJCFG mask */
+#define PCF_LOCATION1_MASK                 ((uint32_t)0x00200000U)  /*!< AFIO_PCF register location1 mask */
+#define PCF_LOCATION2_MASK                 ((uint32_t)0x00100000U)  /*!< AFIO_PCF register location2 mask */
+#define AFIO_PCF1_FIELDS                   ((uint32_t)0x80000000U)  /*!< select AFIO_PCF1 register */
+#define GPIO_OUTPUT_PORT_OFFSET            ((uint32_t)4U)           /*!< GPIO event output port offset*/
 
 /*!
     \brief      reset GPIO port
@@ -95,6 +123,7 @@ void gpio_afio_deinit(void)
     \brief      GPIO parameter initialization
     \param[in]  gpio_periph: GPIOx(x = A,B,C,D,E,F,G,H,I) 
     \param[in]  mode: gpio pin mode
+                only one parameter can be selected which is shown as below:
       \arg        GPIO_MODE_AIN: analog input mode
       \arg        GPIO_MODE_IN_FLOATING: floating input mode
       \arg        GPIO_MODE_IPD: pull-down input mode
@@ -104,10 +133,14 @@ void gpio_afio_deinit(void)
       \arg        GPIO_MODE_AF_OD: AFIO output with open-drain
       \arg        GPIO_MODE_AF_PP: AFIO output with push-pull
     \param[in]  speed: gpio output max speed value
+                only one parameter can be selected which is shown as below:
       \arg        GPIO_OSPEED_10MHZ: output max speed 10MHz
       \arg        GPIO_OSPEED_2MHZ: output max speed 2MHz
       \arg        GPIO_OSPEED_50MHZ: output max speed 50MHz
-    \param[in]  pin: GPIO_PIN_x(x=0..15), GPIO_PIN_ALL
+    \param[in]  pin: GPIO pin
+                one or more parameters can be selected which are shown as below:
+      \arg        GPIO_PIN_x(x=0..15), GPIO_PIN_ALL
+
     \param[out] none
     \retval     none
 */
@@ -139,11 +172,11 @@ void gpio_init(uint32_t gpio_periph, uint32_t mode, uint32_t speed, uint32_t pin
             /* set IPD or IPU */
             if(GPIO_MODE_IPD == mode){
                 /* reset the corresponding OCTL bit */
-                GPIO_BC(gpio_periph) = (uint32_t)pin;
+                GPIO_BC(gpio_periph) = (uint32_t)((1U << i) & pin);
             }else{
                 /* set the corresponding OCTL bit */
                 if(GPIO_MODE_IPU == mode){
-                    GPIO_BOP(gpio_periph) = (uint32_t)pin;
+                    GPIO_BOP(gpio_periph) = (uint32_t)((1U << i) & pin);
                 }
             }
             /* set GPIO_CTL0 register */
@@ -163,11 +196,11 @@ void gpio_init(uint32_t gpio_periph, uint32_t mode, uint32_t speed, uint32_t pin
             /* set IPD or IPU */
             if(GPIO_MODE_IPD == mode){
                 /* reset the corresponding OCTL bit */
-                GPIO_BC(gpio_periph) = (uint32_t)pin;
+                GPIO_BC(gpio_periph) = (uint32_t)((1U << i) & pin);
             }else{
                 /* set the corresponding OCTL bit */
                 if(GPIO_MODE_IPU == mode){
-                    GPIO_BOP(gpio_periph) = (uint32_t)pin;
+                    GPIO_BOP(gpio_periph) = (uint32_t)((1U << i) & pin);
                 }
             }
             /* set GPIO_CTL1 register */
@@ -179,7 +212,9 @@ void gpio_init(uint32_t gpio_periph, uint32_t mode, uint32_t speed, uint32_t pin
 /*!
     \brief      set GPIO pin
     \param[in]  gpio_periph: GPIOx(x = A,B,C,D,E,F,G,H,I) 
-    \param[in]  pin: GPIO_PIN_x(x=0..15), GPIO_PIN_ALL
+    \param[in]  pin: GPIO pin
+                one or more parameters can be selected which are shown as below:
+      \arg        GPIO_PIN_x(x=0..15), GPIO_PIN_ALL
     \param[out] none
     \retval     none
 */
@@ -191,7 +226,9 @@ void gpio_bit_set(uint32_t gpio_periph,uint32_t pin)
 /*!
     \brief      reset GPIO pin
     \param[in]  gpio_periph: GPIOx(x = A,B,C,D,E,F,G,H,I) 
-    \param[in]  pin: GPIO_PIN_x(x=0..15), GPIO_PIN_ALL
+    \param[in]  pin: GPIO pin
+                one or more parameters can be selected which are shown as below:
+      \arg        GPIO_PIN_x(x=0..15), GPIO_PIN_ALL
     \param[out] none
     \retval     none
 */
@@ -203,7 +240,9 @@ void gpio_bit_reset(uint32_t gpio_periph,uint32_t pin)
 /*!
     \brief      write data to the specified GPIO pin
     \param[in]  gpio_periph: GPIOx(x = A,B,C,D,E,F,G,H,I) 
-    \param[in]  pin: GPIO_PIN_x(x=0..15), GPIO_PIN_ALL
+    \param[in]  pin: GPIO pin
+                one or more parameters can be selected which are shown as below:
+      \arg        GPIO_PIN_x(x=0..15), GPIO_PIN_ALL
     \param[in]  bit_value: SET or RESET
       \arg        RESET: clear the port pin
       \arg        SET: set the port pin
@@ -234,7 +273,9 @@ void gpio_port_write(uint32_t gpio_periph,uint16_t data)
 /*!
     \brief      get GPIO pin input status
     \param[in]  gpio_periph: GPIOx(x = A,B,C,D,E,F,G,H,I)
-    \param[in]  pin: GPIO_PIN_x(x=0..15), GPIO_PIN_ALL
+    \param[in]  pin: GPIO pin
+                only one parameter can be selected which are shown as below:
+      \arg        GPIO_PIN_x(x=0..15), GPIO_PIN_ALL
     \param[out] none
     \retval     input status of gpio pin: SET or RESET
 */
@@ -261,7 +302,9 @@ uint16_t gpio_input_port_get(uint32_t gpio_periph)
 /*!
     \brief      get GPIO pin output status
     \param[in]  gpio_periph: GPIOx(x = A,B,C,D,E,F,G,H,I)
-    \param[in]  pin: GPIO_PIN_x(x=0..15), GPIO_PIN_ALL
+    \param[in]  pin: GPIO pin
+                only one parameter can be selected which are shown as below:
+      \arg        GPIO_PIN_x(x=0..15), GPIO_PIN_ALL
     \param[out] none
     \retval     output status of gpio pin: SET or RESET
 */
@@ -283,132 +326,6 @@ FlagStatus gpio_output_bit_get(uint32_t gpio_periph,uint32_t pin)
 uint16_t gpio_output_port_get(uint32_t gpio_periph)
 {
     return ((uint16_t)GPIO_OCTL(gpio_periph));
-}
-
-/*!
-    \brief      lock GPIO pin
-    \param[in]  gpio_periph: GPIOx(x = A,B,C,D,E,F,G,H,I)
-    \param[in]  pin: GPIO_PIN_x(x=0..15), GPIO_PIN_ALL
-    \param[out] none
-    \retval     none
-*/
-void gpio_pin_lock(uint32_t gpio_periph,uint32_t pin)
-{
-    uint32_t lock = 0x00010000U;
-    lock |= pin;
-
-    /* lock key writing sequence: write 1 -> write 0 -> write 1 -> read 0 -> read 1 */
-    GPIO_LOCK(gpio_periph) = (uint32_t)lock;
-    GPIO_LOCK(gpio_periph) = (uint32_t)pin;
-    GPIO_LOCK(gpio_periph) = (uint32_t)lock;
-    lock = GPIO_LOCK(gpio_periph);
-    lock = GPIO_LOCK(gpio_periph);
-}
-
-/*!
-    \brief      configure GPIO pin event output
-    \param[in]  output_port: gpio event output port
-      \arg        GPIO_EVENT_PORT_GPIOA: event output port A
-      \arg        GPIO_EVENT_PORT_GPIOB: event output port B
-      \arg        GPIO_EVENT_PORT_GPIOC: event output port C
-      \arg        GPIO_EVENT_PORT_GPIOD: event output port D
-      \arg        GPIO_EVENT_PORT_GPIOE: event output port E
-    \param[in]  output_pin: GPIO_EVENT_PIN_x(x=0..15)
-    \param[out] none
-    \retval     none
-*/
-void gpio_event_output_config(uint8_t output_port, uint8_t output_pin)
-{
-    uint32_t reg = 0U;
-    reg = AFIO_EC;
-    
-    /* clear AFIO_EC_PORT and AFIO_EC_PIN bits */
-    reg &= (uint32_t)(~(AFIO_EC_PORT|AFIO_EC_PIN));
-    
-    reg |= (uint32_t)((uint32_t)output_port << 0x04U);
-    reg |= (uint32_t)output_pin;
-    
-    AFIO_EC = reg;
-}
-
-/*!
-    \brief      enable GPIO pin event output
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-void gpio_event_output_enable(void)
-{
-    AFIO_EC |= AFIO_EC_EOE;
-}
-
-/*!
-    \brief      disable GPIO pin event output
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-void gpio_event_output_disable(void)
-{
-    AFIO_EC &= (uint32_t)(~AFIO_EC_EOE);
-}
-
-/*!
-    \brief      select GPIO pin exti sources
-    \param[in]  output_port: gpio event output port
-      \arg        GPIO_PORT_SOURCE_GPIOA: output port source A
-      \arg        GPIO_PORT_SOURCE_GPIOB: output port source B
-      \arg        GPIO_PORT_SOURCE_GPIOC: output port source C
-      \arg        GPIO_PORT_SOURCE_GPIOD: output port source D
-      \arg        GPIO_PORT_SOURCE_GPIOE: output port source E 
-      \arg        GPIO_PORT_SOURCE_GPIOF: output port source F
-      \arg        GPIO_PORT_SOURCE_GPIOG: output port source G
-      \arg        GPIO_PORT_SOURCE_GPIOH: output port source H
-      \arg        GPIO_PORT_SOURCE_GPIOI: output port source I
-    \param[in]  output_pin: GPIO_PIN_SOURCE_x(x=0..15)
-    \param[out] none
-    \retval     none
-*/
-void gpio_exti_source_select(uint8_t output_port, uint8_t output_pin)
-{
-    uint32_t source = 0U;
-    source = ((uint32_t)0x0FU) << (AFIO_EXTI_SOURCE_FIELDS * (output_pin & (uint8_t)0x03U));
-
-    /* select EXTI sources */
-    if(GPIO_PIN_SOURCE_4 > output_pin){
-        /* select EXTI0/EXTI1/EXTI2/EXTI3 */
-        AFIO_EXTISS0 &= ~source;
-        AFIO_EXTISS0 |= (((uint32_t)output_port) << (AFIO_EXTI_SOURCE_FIELDS * (output_pin & (uint8_t)0x03U)));
-    }else if(GPIO_PIN_SOURCE_8 > output_pin){
-        /* select EXTI4/EXTI5/EXTI6/EXTI7 */
-        AFIO_EXTISS1 &= ~source;
-        AFIO_EXTISS1 |= (((uint32_t)output_port) << (AFIO_EXTI_SOURCE_FIELDS * (output_pin & (uint8_t)0x03U)));
-    }else if(GPIO_PIN_SOURCE_12 > output_pin){
-        /* select EXTI8/EXTI9/EXTI10/EXTI11 */
-        AFIO_EXTISS2 &= ~source;
-        AFIO_EXTISS2 |= (((uint32_t)output_port) << (AFIO_EXTI_SOURCE_FIELDS * (output_pin & (uint8_t)0x03U)));
-    }else{
-        /* select EXTI12/EXTI13/EXTI14/EXTI15 */
-        AFIO_EXTISS3 &= ~source;
-        AFIO_EXTISS3 |= (((uint32_t)output_port) << (AFIO_EXTI_SOURCE_FIELDS * (output_pin & (uint8_t)0x03U)));
-    }
-}
-
-/*!
-    \brief      select ethernet MII or RMII PHY
-    \param[in]  enet_sel: ethernet MII or RMII PHY selection
-      \arg        GPIO_ENET_PHY_MII: configure ethernet MAC for connection with an MII PHY
-      \arg        GPIO_ENET_PHY_RMII: configure ethernet MAC for connection with an RMII PHY
-    \param[out] none
-    \retval     none
-*/
-void gpio_ethernet_phy_select(uint32_t enet_sel)
-{
-    /* clear AFIO_PCF0_ENET_PHY_SEL bit */
-    AFIO_PCF0 &= (uint32_t)(~AFIO_PCF0_ENET_PHY_SEL);
-
-    /* select MII or RMII PHY */
-    AFIO_PCF0 |= (uint32_t)enet_sel;
 }
 
 /*!
@@ -442,7 +359,7 @@ void gpio_ethernet_phy_select(uint32_t enet_sel)
       \arg        GPIO_SWJ_SWDPENABLE_REMAP: JTAG-DP disabled and SW-DP enabled
       \arg        GPIO_SWJ_DISABLE_REMAP: JTAG-DP disabled and SW-DP disabled
       \arg        GPIO_SPI2_REMAP: SPI2 remapping
-      \arg        GPIO_TIMER1ITR0_REMAP: TIMER1 internal trigger 0 remapping
+      \arg        GPIO_TIMER1ITI1_REMAP: TIMER1 internal trigger 1 remapping
       \arg        GPIO_PTP_PPS_REMAP: ethernet PTP PPS remapping 
       \arg        GPIO_TIMER8_REMAP: TIMER8 remapping
       \arg        GPIO_TIMER9_REMAP: TIMER9 remapping
@@ -458,7 +375,7 @@ void gpio_pin_remap_config(uint32_t gpio_remap, ControlStatus newvalue)
 {
     uint32_t remap1 = 0U, remap2 = 0U, temp_reg = 0U, temp_mask = 0U;
 
-    if(((uint32_t)0x80000000U) == (gpio_remap & 0x80000000U)){
+    if(AFIO_PCF1_FIELDS == (gpio_remap & AFIO_PCF1_FIELDS)){
         /* get AFIO_PCF1 regiter value */
         temp_reg = AFIO_PCF1;
     }else{
@@ -676,4 +593,135 @@ void gpio_pin_remap1_config(uint8_t remap_reg, uint32_t remap, ControlStatus new
             /* illegal parameters */
         }
     }
+}
+
+/*!
+    \brief      select GPIO pin exti sources
+    \param[in]  output_port: gpio event output port
+      \arg        GPIO_PORT_SOURCE_GPIOA: output port source A
+      \arg        GPIO_PORT_SOURCE_GPIOB: output port source B
+      \arg        GPIO_PORT_SOURCE_GPIOC: output port source C
+      \arg        GPIO_PORT_SOURCE_GPIOD: output port source D
+      \arg        GPIO_PORT_SOURCE_GPIOE: output port source E 
+      \arg        GPIO_PORT_SOURCE_GPIOF: output port source F
+      \arg        GPIO_PORT_SOURCE_GPIOG: output port source G
+      \arg        GPIO_PORT_SOURCE_GPIOH: output port source H
+      \arg        GPIO_PORT_SOURCE_GPIOI: output port source I
+    \param[in]  output_pin: GPIO_PIN_SOURCE_x(x=0..15)
+    \param[out] none
+    \retval     none
+*/
+void gpio_exti_source_select(uint8_t output_port, uint8_t output_pin)
+{
+    uint32_t source = 0U;
+    source = ((uint32_t)0x0FU) << (AFIO_EXTI_SOURCE_FIELDS * (output_pin & AFIO_EXTI_SOURCE_MASK));
+
+    /* select EXTI sources */
+    if(GPIO_PIN_SOURCE_4 > output_pin){
+        /* select EXTI0/EXTI1/EXTI2/EXTI3 */
+        AFIO_EXTISS0 &= ~source;
+        AFIO_EXTISS0 |= (((uint32_t)output_port) << (AFIO_EXTI_SOURCE_FIELDS * (output_pin & AFIO_EXTI_SOURCE_MASK)));
+    }else if(GPIO_PIN_SOURCE_8 > output_pin){
+        /* select EXTI4/EXTI5/EXTI6/EXTI7 */
+        AFIO_EXTISS1 &= ~source;
+        AFIO_EXTISS1 |= (((uint32_t)output_port) << (AFIO_EXTI_SOURCE_FIELDS * (output_pin & AFIO_EXTI_SOURCE_MASK)));
+    }else if(GPIO_PIN_SOURCE_12 > output_pin){
+        /* select EXTI8/EXTI9/EXTI10/EXTI11 */
+        AFIO_EXTISS2 &= ~source;
+        AFIO_EXTISS2 |= (((uint32_t)output_port) << (AFIO_EXTI_SOURCE_FIELDS * (output_pin & AFIO_EXTI_SOURCE_MASK)));
+    }else{
+        /* select EXTI12/EXTI13/EXTI14/EXTI15 */
+        AFIO_EXTISS3 &= ~source;
+        AFIO_EXTISS3 |= (((uint32_t)output_port) << (AFIO_EXTI_SOURCE_FIELDS * (output_pin & AFIO_EXTI_SOURCE_MASK)));
+    }
+}
+
+/*!
+    \brief      configure GPIO pin event output
+    \param[in]  output_port: gpio event output port
+                only one parameter can be selected which are shown as below:
+      \arg        GPIO_EVENT_PORT_GPIOA: event output port A
+      \arg        GPIO_EVENT_PORT_GPIOB: event output port B
+      \arg        GPIO_EVENT_PORT_GPIOC: event output port C
+      \arg        GPIO_EVENT_PORT_GPIOD: event output port D
+      \arg        GPIO_EVENT_PORT_GPIOE: event output port E
+    \param[in]  output_pin:
+                only one parameter can be selected which are shown as below:
+      \arg        GPIO_EVENT_PIN_x(x=0..15)
+    \param[out] none
+    \retval     none
+*/
+void gpio_event_output_config(uint8_t output_port, uint8_t output_pin)
+{
+    uint32_t reg = 0U;
+    reg = AFIO_EC;
+    
+    /* clear AFIO_EC_PORT and AFIO_EC_PIN bits */
+    reg &= (uint32_t)(~(AFIO_EC_PORT|AFIO_EC_PIN));
+    
+    reg |= (uint32_t)((uint32_t)output_port << GPIO_OUTPUT_PORT_OFFSET);
+    reg |= (uint32_t)output_pin;
+    
+    AFIO_EC = reg;
+}
+
+/*!
+    \brief      enable GPIO pin event output
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void gpio_event_output_enable(void)
+{
+    AFIO_EC |= AFIO_EC_EOE;
+}
+
+/*!
+    \brief      disable GPIO pin event output
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void gpio_event_output_disable(void)
+{
+    AFIO_EC &= (uint32_t)(~AFIO_EC_EOE);
+}
+
+/*!
+    \brief      lock GPIO pin
+    \param[in]  gpio_periph: GPIOx(x = A,B,C,D,E,F,G,H,I)
+    \param[in]  pin: GPIO pin
+                one or more parameters can be selected which are shown as below:
+      \arg        GPIO_PIN_x(x=0..15), GPIO_PIN_ALL
+    \param[out] none
+    \retval     none
+*/
+void gpio_pin_lock(uint32_t gpio_periph,uint32_t pin)
+{
+    uint32_t lock = 0x00010000U;
+    lock |= pin;
+
+    /* lock key writing sequence: write 1 -> write 0 -> write 1 -> read 0 -> read 1 */
+    GPIO_LOCK(gpio_periph) = (uint32_t)lock;
+    GPIO_LOCK(gpio_periph) = (uint32_t)pin;
+    GPIO_LOCK(gpio_periph) = (uint32_t)lock;
+    lock = GPIO_LOCK(gpio_periph);
+    lock = GPIO_LOCK(gpio_periph);
+}
+
+/*!
+    \brief      select ethernet MII or RMII PHY
+    \param[in]  enet_sel: ethernet MII or RMII PHY selection
+      \arg        GPIO_ENET_PHY_MII: configure ethernet MAC for connection with an MII PHY
+      \arg        GPIO_ENET_PHY_RMII: configure ethernet MAC for connection with an RMII PHY
+    \param[out] none
+    \retval     none
+*/
+void gpio_ethernet_phy_select(uint32_t enet_sel)
+{
+    /* clear AFIO_PCF0_ENET_PHY_SEL bit */
+    AFIO_PCF0 &= (uint32_t)(~AFIO_PCF0_ENET_PHY_SEL);
+
+    /* select MII or RMII PHY */
+    AFIO_PCF0 |= (uint32_t)enet_sel;
 }

@@ -1,13 +1,39 @@
 /*!
     \file  gd32f20x_cau.h
     \brief definitions for the CAU
+
+    \version 2015-07-15, V1.0.0, firmware for GD32F20x
+    \version 2017-06-05, V2.0.0, firmware for GD32F20x
+    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2015-07-15, V1.0.0, firmware for GD32F20x
-    2017-06-05, V2.0.0, firmware for GD32F20x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F20X_CAU_H
@@ -113,6 +139,15 @@ typedef struct
     uint32_t iv_1_low;    /*!< init vector 1 low  */
 }cau_iv_parameter_struct;
 
+/* structure for vectors initialization of the cau */
+typedef struct
+{
+    uint8_t *input;      /*!< pointer to the input buffer */
+    uint32_t in_length;  /*!< length of the input buffer, 
+                              must be a multiple of 8(DES and TDES) or 16(AES) */
+    uint8_t *output;     /*!< pointer to the returned buffer */
+}cau_text_struct;
+
 /* cau_ctl register value */
 #define CAU_ENCRYPT                 ((uint32_t)0x00000000)                     /*!< encrypt */
 #define CAU_DECRYPT                 CAU_CTL_CAUDIR                             /*!< decrypt */
@@ -162,6 +197,7 @@ typedef struct
 #define CAU_INT_FLAG_OUTFIFO        CAU_INTF_OINTF                             /*!< OUT FIFO interrupt status */
 
 /* function declarations */
+/* initialization functions */
 /* reset the CAU peripheral */
 void cau_deinit(void);
 /* enable the CAU peripheral */
@@ -172,54 +208,52 @@ void cau_disable(void);
 void cau_dma_enable(uint32_t dma_req);
 /* disable the CAU DMA interface */
 void cau_dma_disable(uint32_t dma_req);
-
 /* initialize the CAU peripheral */
 void cau_init(uint32_t algo_dir, uint32_t algo_mode, uint32_t swapping);
 /* configure key size if used AES algorithm */
 void cau_aes_keysize_config(uint32_t key_size);
 /* initialize the key parameters */
 void cau_key_init(cau_key_parameter_struct* key_initpara);
-/* initialize the sturct cau_key_initpara */
+/* initialize the structure cau_key_initpara */
 void cau_key_parameter_init(cau_key_parameter_struct* key_initpara);
 /* initialize the vectors parameters */
 void cau_iv_init(cau_iv_parameter_struct* iv_initpara);
 /* initialize the vectors parameters */
 void cau_iv_parameter_init(cau_iv_parameter_struct* iv_initpara);
-
 /* flush the IN and OUT FIFOs */
 void cau_fifo_flush(void);
 /* return whether CAU peripheral is enabled or disabled */
 ControlStatus cau_enable_state_get(void);
-
 /* write data to the IN FIFO */
 void cau_data_write(uint32_t data);
 /* return the last data entered into the output FIFO */
 uint32_t cau_data_read(void);
 
+/* function configuration */
+/* calculate digest in HASH mode */
+/* encrypt and decrypt using AES in ECB mode */
+ErrStatus cau_aes_ecb(uint32_t algo_dir, uint8_t *key, uint16_t keysize, cau_text_struct *text);
+/* encrypt and decrypt using AES in CBC mode */
+ErrStatus cau_aes_cbc(uint32_t algo_dir, uint8_t *key, uint16_t keysize, uint8_t iv[16], cau_text_struct *text);
+/* encrypt and decrypt using AES in CTR mode */
+ErrStatus cau_aes_ctr(uint32_t algo_dir, uint8_t *key, uint16_t keysize, uint8_t iv[16], cau_text_struct *text);
+/* encrypt and decrypt using TDES in ECB mode */
+ErrStatus cau_tdes_ecb(uint32_t algo_dir, uint8_t key[24], cau_text_struct *text);
+/* encrypt and decrypt using TDES in CBC mode */
+ErrStatus cau_tdes_cbc(uint32_t algo_dir, uint8_t key[24], uint8_t iv[8], cau_text_struct *text);
+/* encrypt and decrypt using DES in ECB mode */
+ErrStatus cau_des_ecb(uint32_t algo_dir, uint8_t key[24], cau_text_struct *text);
+/* encrypt and decrypt using DES in CBC mode */
+ErrStatus cau_des_cbc(uint32_t algo_dir, uint8_t key[24], uint8_t iv[8], cau_text_struct *text);
+
+/* interrupt & flag functions */
+/* get the CAU flag status */
+FlagStatus cau_flag_get(uint32_t flag);
 /* enable the CAU interrupts */
 void cau_interrupt_enable(uint32_t interrupt);
 /* disable the CAU interrupts */
 void cau_interrupt_disable(uint32_t interrupt);
 /* get the interrupt flag */
-FlagStatus cau_interrupt_flag_get(uint32_t interrupt);
-/* get the CAU flag status */
-FlagStatus cau_flag_get(uint32_t flag);
-
-/* encrypt and decrypt using AES in ECB mode */
-ErrStatus cau_aes_ecb(uint32_t algo_dir, uint8_t *key, uint16_t keysize, uint8_t *input, uint32_t in_length, uint8_t *output);
-/* encrypt and decrypt using AES in CBC mode */
-ErrStatus cau_aes_cbc(uint32_t algo_dir, uint8_t *key, uint16_t keysize, uint8_t iv[16], uint8_t *input, uint32_t in_length, uint8_t *output);
-/* encrypt and decrypt using AES in CTR mode */
-ErrStatus cau_aes_ctr(uint32_t algo_dir, uint8_t *key, uint16_t keysize, uint8_t iv[16], uint8_t *input, uint32_t in_length, uint8_t *output);
-
-/* encrypt and decrypt using TDES in ECB mode */
-ErrStatus cau_tdes_ecb(uint32_t algo_dir, uint8_t key[24], uint8_t *input, uint32_t in_length, uint8_t *output);
-/* encrypt and decrypt using TDES in CBC mode */
-ErrStatus cau_tdes_cbc(uint32_t algo_dir, uint8_t key[24], uint8_t iv[8], uint8_t *input, uint32_t in_length, uint8_t *output);
-
-/* encrypt and decrypt using DES in ECB mode */
-ErrStatus cau_des_ecb(uint32_t algo_dir, uint8_t key[24], uint8_t *input, uint32_t in_length, uint8_t *output);
-/* encrypt and decrypt using DES in CBC mode */
-ErrStatus cau_des_cbc(uint32_t algo_dir, uint8_t key[24], uint8_t iv[8], uint8_t *input, uint32_t in_length, uint8_t *output);
+FlagStatus cau_interrupt_flag_get(uint32_t int_flag);
 
 #endif /* GD32F20X_CAU_H */

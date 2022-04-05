@@ -1,13 +1,39 @@
 /*!
     \file  gd32f20x_tli.c
     \brief TLI driver
+
+    \version 2015-07-15, V1.0.0, firmware for GD32F20x
+    \version 2017-06-05, V2.0.0, firmware for GD32F20x
+    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2015-07-15, V1.0.0, firmware for GD32F20x
-    2017-06-05, V2.0.0, firmware for GD32F20x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "gd32f20x_tli.h"
@@ -65,7 +91,6 @@ void tli_init(tli_parameter_struct *tli_struct)
     TLI_CTL &= ~(TLI_CTL_HPPS|TLI_CTL_VPPS|TLI_CTL_DEPS|TLI_CTL_CLKPS);
     TLI_CTL |= (tli_struct->signalpolarity_hs|tli_struct->signalpolarity_vs|\
                 tli_struct->signalpolarity_de|tli_struct->signalpolarity_pixelck);
-
 }
 
 /*!
@@ -121,106 +146,6 @@ void tli_reload_config(uint8_t reloadmode)
         TLI_RL |= TLI_RL_FBR;
     }else{
         TLI_RL |= TLI_RL_RQR;
-    }
-}
-
-/*!
-    \brief      enable TLI interrupt 
-    \param[in]  intflag: TLI interrupt flags
-      \arg        TLI_INT_LM: line mark interrupt 
-      \arg        TLI_INT_FE: FIFO error interrupt 
-      \arg        TLI_INT_TE: transaction error interrupt 
-      \arg        TLI_INT_LCR: layer configuration reloaded interrupt 
-    \param[out] none
-    \retval     none
-*/
-void tli_interrupt_enable(uint32_t intflag)
-{
-    TLI_INTEN |= (intflag);
-}
-
-/*!
-    \brief      disable TLI interrupt 
-    \param[in]  intflag: TLI interrupt flags
-      \arg        TLI_INT_LM: line mark interrupt 
-      \arg        TLI_INT_FE: FIFO error interrupt 
-      \arg        TLI_INT_TE: transaction error interrupt 
-      \arg        TLI_INT_LCR: layer configuration reloaded interrupt 
-    \param[out] none
-    \retval     none
-*/
-void tli_interrupt_disable(uint32_t intflag)
-{
-    TLI_INTEN &= ~(intflag);
-}
-
-/*!
-    \brief      get TLI interrupt flag 
-    \param[in]  intflag: TLI interrupt flags
-      \arg        TLI_INT_FLAG_LM: line mark interrupt flag
-      \arg        TLI_INT_FLAG_FE: FIFO error interrupt flag
-      \arg        TLI_INT_FLAG_TE: transaction error interrupt flag
-      \arg        TLI_INT_FLAG_LCR: layer configuration reloaded interrupt flag
-    \param[out] none
-    \retval     FlagStatus: SET or RESET
-*/
-FlagStatus tli_interrupt_flag_get(uint32_t intflag)
-{
-    uint32_t state;
-    state = TLI_INTF;
-    if(state & intflag){
-        state = TLI_INTEN;
-        /* check whether the corresponding bit in TLI_INTEN is set or not */
-        if(state & intflag){
-            return SET;
-        }
-    }
-    return RESET;
-}
-
-/*!
-    \brief      clear TLI interrupt flag 
-    \param[in]  intflag: TLI interrupt flags
-      \arg        TLI_INT_FLAG_LM: line mark interrupt flag
-      \arg        TLI_INT_FLAG_FE: FIFO error interrupt flag
-      \arg        TLI_INT_FLAG_TE: transaction error interrupt flag
-      \arg        TLI_INT_FLAG_LCR: layer configuration reloaded interrupt flag
-    \param[out] none
-    \retval     none
-*/
-void tli_interrupt_flag_clear(uint32_t intflag)
-{
-    TLI_INTC |= (intflag);
-}
-
-/*!
-    \brief      get TLI flag or state
-    \param[in]  flag: TLI flags or states
-      \arg        TLI_FLAG_VDE: current VDE state 
-      \arg        TLI_FLAG_HDE: current HDE state
-      \arg        TLI_FLAG_VS: current vs state
-      \arg        TLI_FLAG_HS: current hs state 
-      \arg        TLI_FLAG_LM: line mark interrupt flag
-      \arg        TLI_FLAG_FE: FIFO error interrupt flag
-      \arg        TLI_FLAG_TE: transaction error interrupt flag 
-      \arg        TLI_FLAG_LCR: layer configuration reloaded interrupt flag 
-    \param[out] none
-    \retval     FlagStatus: SET or RESET
-*/
-FlagStatus tli_flag_get(uint32_t flag)
-{
-    uint32_t stat;
-    if(flag >> 31){
-        /* get flag status from TLI_INTF register */
-        stat = TLI_INTF;
-    }else{
-        /* get flag status from TLI_STAT register */
-        stat = TLI_STAT;
-    }
-    if(flag & stat){
-        return SET;
-    }else{
-        return RESET;
     }
 }
 
@@ -373,7 +298,6 @@ void tli_layer_init(uint32_t layerx,tli_layer_parameter_struct *layer_struct)
     /* configure layer frame total line number */
     TLI_LxFTLN(layerx) &= ~(TLI_LxFTLN_FTLN); 
     TLI_LxFTLN(layerx) = (layer_struct->layer_frame_total_line_number);
-
 }
 
 /*!
@@ -455,4 +379,104 @@ void tli_lut_init(uint32_t layerx,tli_layer_lut_parameter_struct *lut_struct)
 void tli_ckey_init(uint32_t layerx,uint32_t redkey,uint32_t greenkey,uint32_t bluekey)
 {
     TLI_LxCKEY(layerx) = ((bluekey)|(greenkey<<8U)|(redkey<<16U));
+}
+
+/*!
+    \brief      get TLI flag or state
+    \param[in]  flag: TLI flags or states
+      \arg        TLI_FLAG_VDE: current VDE state 
+      \arg        TLI_FLAG_HDE: current HDE state
+      \arg        TLI_FLAG_VS: current vs state
+      \arg        TLI_FLAG_HS: current hs state 
+      \arg        TLI_FLAG_LM: line mark interrupt flag
+      \arg        TLI_FLAG_FE: FIFO error interrupt flag
+      \arg        TLI_FLAG_TE: transaction error interrupt flag 
+      \arg        TLI_FLAG_LCR: layer configuration reloaded interrupt flag 
+    \param[out] none
+    \retval     FlagStatus: SET or RESET
+*/
+FlagStatus tli_flag_get(uint32_t flag)
+{
+    uint32_t stat;
+    if(flag >> 31){
+        /* get flag status from TLI_INTF register */
+        stat = TLI_INTF;
+    }else{
+        /* get flag status from TLI_STAT register */
+        stat = TLI_STAT;
+    }
+    if(flag & stat){
+        return SET;
+    }else{
+        return RESET;
+    }
+}
+
+/*!
+    \brief      enable TLI interrupt 
+    \param[in]  interrupt: TLI interrupt flags
+      \arg        TLI_INT_LM: line mark interrupt 
+      \arg        TLI_INT_FE: FIFO error interrupt 
+      \arg        TLI_INT_TE: transaction error interrupt 
+      \arg        TLI_INT_LCR: layer configuration reloaded interrupt 
+    \param[out] none
+    \retval     none
+*/
+void tli_interrupt_enable(uint32_t interrupt)
+{
+    TLI_INTEN |= (interrupt);
+}
+
+/*!
+    \brief      disable TLI interrupt 
+    \param[in]  interrupt: TLI interrupt flags
+      \arg        TLI_INT_LM: line mark interrupt 
+      \arg        TLI_INT_FE: FIFO error interrupt 
+      \arg        TLI_INT_TE: transaction error interrupt 
+      \arg        TLI_INT_LCR: layer configuration reloaded interrupt 
+    \param[out] none
+    \retval     none
+*/
+void tli_interrupt_disable(uint32_t interrupt)
+{
+    TLI_INTEN &= ~(interrupt);
+}
+
+/*!
+    \brief      get TLI interrupt flag 
+    \param[in]  int_flag: TLI interrupt flags
+      \arg        TLI_INT_FLAG_LM: line mark interrupt flag
+      \arg        TLI_INT_FLAG_FE: FIFO error interrupt flag
+      \arg        TLI_INT_FLAG_TE: transaction error interrupt flag
+      \arg        TLI_INT_FLAG_LCR: layer configuration reloaded interrupt flag
+    \param[out] none
+    \retval     FlagStatus: SET or RESET
+*/
+FlagStatus tli_interrupt_flag_get(uint32_t int_flag)
+{
+    uint32_t state;
+    state = TLI_INTF;
+    if(state & int_flag){
+        state = TLI_INTEN;
+        /* check whether the corresponding bit in TLI_INTEN is set or not */
+        if(state & int_flag){
+            return SET;
+        }
+    }
+    return RESET;
+}
+
+/*!
+    \brief      clear TLI interrupt flag 
+    \param[in]  int_flag: TLI interrupt flags
+      \arg        TLI_INT_FLAG_LM: line mark interrupt flag
+      \arg        TLI_INT_FLAG_FE: FIFO error interrupt flag
+      \arg        TLI_INT_FLAG_TE: transaction error interrupt flag
+      \arg        TLI_INT_FLAG_LCR: layer configuration reloaded interrupt flag
+    \param[out] none
+    \retval     none
+*/
+void tli_interrupt_flag_clear(uint32_t int_flag)
+{
+    TLI_INTC |= (int_flag);
 }

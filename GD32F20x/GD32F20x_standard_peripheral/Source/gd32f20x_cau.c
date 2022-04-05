@@ -1,13 +1,39 @@
 /*!
     \file  gd32f20x_cau.c
     \brief CAU driver
+
+    \version 2015-07-15, V1.0.0, firmware for GD32F20x
+    \version 2017-06-05, V2.0.0, firmware for GD32F20x
+    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2015-07-15, V1.0.0, firmware for GD32F20x
-    2017-06-05, V2.0.0, firmware for GD32F20x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "gd32f20x_cau.h"
@@ -277,57 +303,6 @@ uint32_t cau_data_read(void)
 }
 
 /*!
-    \brief      enable the CAU interrupts
-    \param[in]  interrupt: specify the CAU interrupt source to be enabled
-                one or more parameters can be selected which are shown as below
-      \arg        CAU_INT_INFIFO: input FIFO interrupt 
-      \arg        CAU_INT_OUTFIFO: output FIFO interrupt
-    \param[out] none
-    \retval     none
-*/
-void cau_interrupt_enable(uint32_t interrupt)
-{
-    /* enable the selected CAU interrupt */
-    CAU_INTEN |= interrupt;
-}
-
-/*!
-    \brief      disable the CAU interrupts
-    \param[in]  interrupt: specify the CAU interrupt source to be disabled
-                one or more parameters can be selected which are shown as below
-      \arg        CAU_INT_INFIFO: input FIFO interrupt 
-      \arg        CAU_INT_OUTFIFO: output FIFO interrupt
-    \param[out] none
-    \retval     none
-*/
-void cau_interrupt_disable(uint32_t interrupt)
-{
-    /* disable the selected CAU interrupt */
-    CAU_INTEN &= ~(interrupt);
-}
-
-/*!
-    \brief      get the interrupt flag
-    \param[in]  interrupt: CAU interrupt flag
-                only one parameter can be selected which is shown as below
-      \arg        CAU_INT_FLAG_INFIFO: input FIFO interrupt 
-      \arg        CAU_INT_FLAG_OUTFIFO: output FIFO interrupt
-    \param[out] none
-    \retval     FlagStatus: SET or RESET
-*/
-FlagStatus cau_interrupt_flag_get(uint32_t interrupt)
-{
-    FlagStatus flag = RESET;
-  
-    /* check the status of the specified CAU interrupt */
-    if(RESET != (CAU_INTF & interrupt)){
-        flag = SET;
-    }
-    
-    return flag;
-}
-
-/*!
     \brief      get the CAU flag status
     \param[in]  flag: CAU flag status
                 only one parameter can be selected which is shown as below
@@ -360,4 +335,55 @@ FlagStatus cau_flag_get(uint32_t flag)
     }
      
     return ret_flag;
+}
+
+/*!
+    \brief      enable the CAU interrupts
+    \param[in]  interrupt: specify the CAU interrupt source to be enabled
+                one or more parameters can be selected which are shown as below
+      \arg        CAU_INT_INFIFO: input FIFO interrupt 
+      \arg        CAU_INT_OUTFIFO: output FIFO interrupt
+    \param[out] none
+    \retval     none
+*/
+void cau_interrupt_enable(uint32_t interrupt)
+{
+    /* enable the selected CAU interrupt */
+    CAU_INTEN |= interrupt;
+}
+
+/*!
+    \brief      disable the CAU interrupts
+    \param[in]  interrupt: specify the CAU interrupt source to be disabled
+                one or more parameters can be selected which are shown as below
+      \arg        CAU_INT_INFIFO: input FIFO interrupt 
+      \arg        CAU_INT_OUTFIFO: output FIFO interrupt
+    \param[out] none
+    \retval     none
+*/
+void cau_interrupt_disable(uint32_t interrupt)
+{
+    /* disable the selected CAU interrupt */
+    CAU_INTEN &= ~(interrupt);
+}
+
+/*!
+    \brief      get the interrupt flag
+    \param[in]  int_flag: CAU interrupt flag
+                only one parameter can be selected which is shown as below
+      \arg        CAU_INT_FLAG_INFIFO: input FIFO interrupt 
+      \arg        CAU_INT_FLAG_OUTFIFO: output FIFO interrupt
+    \param[out] none
+    \retval     FlagStatus: SET or RESET
+*/
+FlagStatus cau_interrupt_flag_get(uint32_t int_flag)
+{
+    FlagStatus flag = RESET;
+  
+    /* check the status of the specified CAU interrupt */
+    if(RESET != (CAU_INTF & int_flag)){
+        flag = SET;
+    }
+    
+    return flag;
 }

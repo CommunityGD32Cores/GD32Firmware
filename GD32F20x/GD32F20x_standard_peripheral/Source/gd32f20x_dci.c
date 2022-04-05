@@ -1,13 +1,39 @@
 /*!
     \file  gd32f20x_dci.c
     \brief DCI driver
+
+    \version 2015-07-15, V1.0.0, firmware for GD32F20x
+    \version 2017-06-05, V2.0.0, firmware for GD32F20x
+    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2015-07-15, V1.0.0, firmware for GD32F20x
-    2017-06-05, V2.0.0, firmware for GD32F20x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "gd32f20x_dci.h"
@@ -26,7 +52,7 @@ void dci_deinit(void)
 
 /*!
     \brief      initialize DCI registers
-    \param[in]  dci_struct: DCI parameter initialization stuct
+    \param[in]  dci_struct: DCI parameter initialization structure
                 members of the structure and the member values are shown as below:
                 capture_mode    : DCI_CAPTURE_MODE_CONTINUOUS, DCI_CAPTURE_MODE_SNAPSHOT
                 colck_polarity  : DCI_CK_POLARITY_FALLING, DCI_CK_POLARITY_RISING
@@ -43,7 +69,7 @@ void dci_init(dci_parameter_struct* dci_struct)
     uint32_t reg = 0U;
     /* disable capture function and DCI */
     DCI_CTL &= ~(DCI_CTL_CAP | DCI_CTL_DCIEN);
-    /* config DCI parameter */
+    /* configure DCI parameter */
     reg |= dci_struct->capture_mode;
     reg |= dci_struct->clock_polarity;
     reg |= dci_struct->hsync_polarity;
@@ -143,7 +169,7 @@ void dci_crop_window_disable(void)
 }
 
 /*!
-    \brief      config DCI cropping window 
+    \brief      configure DCI cropping window 
     \param[in]  start_x: window horizontal start position
     \param[in]  start_y: window vertical start position
     \param[in]  size_width: window horizontal size
@@ -218,38 +244,6 @@ uint32_t dci_data_read(void)
 }
 
 /*!
-    \brief      enable specified DCI interrupt
-    \param[in]  interrupt:
-      \arg         DCI_INT_EF: end of frame interrupt
-      \arg         DCI_INT_OVR: FIFO overrun interrupt
-      \arg         DCI_INT_ESE: embedded synchronous error interrupt 
-      \arg         DCI_INT_VSYNC: vsync interrupt
-      \arg         DCI_INT_EL: end of line interrupt
-    \param[out] none
-    \retval     none
-*/
-void dci_interrupt_enable(uint32_t interrupt)
-{
-    DCI_INTEN |= interrupt;
-}
-
-/*!
-    \brief      disable specified DCI interrupt
-    \param[in]  interrupt:
-      \arg         DCI_INT_EF: end of frame interrupt
-      \arg         DCI_INT_OVR: FIFO overrun interrupt
-      \arg         DCI_INT_ESE: embedded synchronous error interrupt 
-      \arg         DCI_INT_VSYNC: vsync interrupt
-      \arg         DCI_INT_EL: end of line interrupt
-    \param[out] none
-    \retval     none
-*/
-void dci_interrupt_disable(uint32_t interrupt)
-{
-    DCI_INTEN &= ~interrupt;
-}
-
-/*!
     \brief      get specified flag
     \param[in]  flag:
       \arg         DCI_FLAG_HS: HS line status
@@ -283,27 +277,7 @@ FlagStatus dci_flag_get(uint32_t flag)
 }
 
 /*!
-    \brief      get specified interrupt flag
-    \param[in]  interrupt:
-      \arg         DCI_INT_FLAG_EF: end of frame interrupt flag
-      \arg         DCI_INT_FLAG_OVR: FIFO overrun interrupt flag
-      \arg         DCI_INT_FLAG_ESE: embedded synchronous error interrupt flag 
-      \arg         DCI_INT_FLAG_VSYNC: vsync interrupt flag
-      \arg         DCI_INT_FLAG_EL: end of line interrupt flag
-    \param[out] none
-    \retval     FlagStatus: SET or RESET
-*/
-FlagStatus dci_interrupt_flag_get(uint32_t interrupt)
-{
-    if(RESET == (DCI_INTF & interrupt)){
-        return RESET;
-    }else{
-        return SET;
-    }
-}
-
-/*!
-    \brief      clear specified interrupt flag
+    \brief      enable specified DCI interrupt
     \param[in]  interrupt:
       \arg         DCI_INT_EF: end of frame interrupt
       \arg         DCI_INT_OVR: FIFO overrun interrupt
@@ -313,7 +287,59 @@ FlagStatus dci_interrupt_flag_get(uint32_t interrupt)
     \param[out] none
     \retval     none
 */
-void dci_interrupt_flag_clear(uint32_t interrupt)
+void dci_interrupt_enable(uint32_t interrupt)
 {
-    DCI_INTC |= interrupt;
+    DCI_INTEN |= interrupt;
+}
+
+/*!
+    \brief      disable specified DCI interrupt
+    \param[in]  interrupt:
+      \arg         DCI_INT_EF: end of frame interrupt
+      \arg         DCI_INT_OVR: FIFO overrun interrupt
+      \arg         DCI_INT_ESE: embedded synchronous error interrupt 
+      \arg         DCI_INT_VSYNC: vsync interrupt
+      \arg         DCI_INT_EL: end of line interrupt
+    \param[out] none
+    \retval     none
+*/
+void dci_interrupt_disable(uint32_t interrupt)
+{
+    DCI_INTEN &= ~interrupt;
+}
+
+/*!
+    \brief      get specified interrupt flag
+    \param[in]  int_flag:
+      \arg         DCI_INT_FLAG_EF: end of frame interrupt flag
+      \arg         DCI_INT_FLAG_OVR: FIFO overrun interrupt flag
+      \arg         DCI_INT_FLAG_ESE: embedded synchronous error interrupt flag 
+      \arg         DCI_INT_FLAG_VSYNC: vsync interrupt flag
+      \arg         DCI_INT_FLAG_EL: end of line interrupt flag
+    \param[out] none
+    \retval     FlagStatus: SET or RESET
+*/
+FlagStatus dci_interrupt_flag_get(uint32_t int_flag)
+{
+    if(RESET == (DCI_INTF & int_flag)){
+        return RESET;
+    }else{
+        return SET;
+    }
+}
+
+/*!
+    \brief      clear specified interrupt flag
+    \param[in]  int_flag:
+      \arg         DCI_INT_EF: end of frame interrupt
+      \arg         DCI_INT_OVR: FIFO overrun interrupt
+      \arg         DCI_INT_ESE: embedded synchronous error interrupt 
+      \arg         DCI_INT_VSYNC: vsync interrupt
+      \arg         DCI_INT_EL: end of line interrupt
+    \param[out] none
+    \retval     none
+*/
+void dci_interrupt_flag_clear(uint32_t int_flag)
+{
+    DCI_INTC |= int_flag;
 }

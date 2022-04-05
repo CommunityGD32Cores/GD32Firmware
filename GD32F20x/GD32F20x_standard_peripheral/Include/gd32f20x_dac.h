@@ -1,13 +1,39 @@
 /*!
     \file  gd32f20x_dac.h
     \brief definitions for the DAC
+
+    \version 2015-07-15, V1.0.0, firmware for GD32F20x
+    \version 2017-06-05, V2.0.0, firmware for GD32F20x
+    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2015-07-15, V1.0.0, firmware for GD32F20x
-    2017-06-05, V2.0.0, firmware for GD32F20x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F20X_DAC_H
@@ -160,6 +186,7 @@
 #define DAC_ALIGN_8B_R          DATA_ALIGN(2)        /*!< data right  8b alignment */
 
 /* function declarations */
+/* initialization functions */
 /* deinitialize DAC */
 void dac_deinit(void);
 /* enable DAC */
@@ -174,17 +201,25 @@ void dac_dma_disable(uint32_t dac_periph);
 void dac_output_buffer_enable(uint32_t dac_periph);
 /* disable DAC output buffer */
 void dac_output_buffer_disable(uint32_t dac_periph);
+/* get the last data output value */
+uint16_t dac_output_value_get(uint32_t dac_periph);
+/* set DAC data holding register value */
+void dac_data_set(uint32_t dac_periph, uint32_t dac_align, uint16_t data);
+
+/* function configuration */
+/* DAC trigger configuration */
 /* enable DAC trigger */
 void dac_trigger_enable(uint32_t dac_periph);
 /* disable DAC trigger */
 void dac_trigger_disable(uint32_t dac_periph);
+/* configure DAC trigger source */
+void dac_trigger_source_config(uint32_t dac_periph, uint32_t triggersource);
 /* enable DAC software trigger */
 void dac_software_trigger_enable(uint32_t dac_periph);
 /* disable DAC software trigger */
 void dac_software_trigger_disable(uint32_t dac_periph);
 
-/* configure DAC trigger source */
-void dac_trigger_source_config(uint32_t dac_periph, uint32_t triggersource);
+/* DAC wave mode configuration */
 /* configure DAC wave mode */
 void dac_wave_mode_config(uint32_t dac_periph, uint32_t wave_mode);
 /* configure DAC wave bit width */
@@ -193,14 +228,8 @@ void dac_wave_bit_width_config(uint32_t dac_periph, uint32_t bit_width);
 void dac_lfsr_noise_config(uint32_t dac_periph, uint32_t unmask_bits);
 /* configure DAC triangle noise mode */
 void dac_triangle_noise_config(uint32_t dac_periph, uint32_t amplitude);
-/* get the last data output value */
-uint16_t dac_output_value_get(uint32_t dac_periph);
 
-/* set DAC data holding register value */
-void dac_data_set(uint32_t dac_periph, uint32_t dac_align, uint16_t data);
-/* set DAC concurrent mode data holding register value */
-void dac_concurrent_data_set(uint32_t dac_align, uint16_t data0, uint16_t data1); 
-
+/* DAC concurrent mode configuration */
 /* enable DAC concurrent mode */
 void dac_concurrent_enable(void);
 /* disable DAC concurrent mode */
@@ -213,5 +242,7 @@ void dac_concurrent_software_trigger_disable(void);
 void dac_concurrent_output_buffer_enable(void);
 /* disable DAC concurrent buffer function */
 void dac_concurrent_output_buffer_disable(void);
+/* set DAC concurrent mode data holding register value */
+void dac_concurrent_data_set(uint32_t dac_align, uint16_t data0, uint16_t data1); 
 
 #endif /* GD32F20X_DAC_H */

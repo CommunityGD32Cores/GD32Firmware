@@ -1,13 +1,39 @@
 /*!
     \file  gd32f20x_exmc.h
     \brief definitions for the EXMC
+
+    \version 2015-07-15, V1.0.0, firmware for GD32F20x
+    \version 2017-06-05, V2.0.0, firmware for GD32F20x
+    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2015-07-15, V1.0.0, firmware for GD32F20x
-    2017-06-05, V2.0.0, firmware for GD32F20x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F20X_EXMC_H
@@ -224,7 +250,7 @@
 #define EXMC_SIDL_SIDH                    BITS(0,31)                    /*!< ID high Data saved for SPI read ID command */
 
 /* constants definitions */
-/* EXMC NOR/SRAM timing initialize struct */
+/* EXMC NOR/SRAM timing initialize structure */
 typedef struct
 {
     uint32_t asyn_access_mode;                                          /*!< asynchronous access mode */
@@ -248,7 +274,7 @@ typedef struct
                                                                         /*!< the range is 1 to 16 HCLK */
 }exmc_norsram_timing_parameter_struct;
 
-/* EXMC NOR/SRAM initialize struct */
+/* EXMC NOR/SRAM initialize structure */
 typedef struct
 {
     uint32_t norsram_region;                                            /*!< select the region of EXMC NOR/SRAM bank */
@@ -312,7 +338,7 @@ typedef struct
                                                                         /*!< the range is 1 to 256 HCLK */
 }exmc_nand_pccard_timing_parameter_struct;
 
-/* EXMC NAND initialize struct */
+/* EXMC NAND initialize structure */
 typedef struct
 {
     uint32_t nand_bank;                                                 /*!< select the bank of NAND */
@@ -341,7 +367,7 @@ typedef struct
     exmc_nand_pccard_timing_parameter_struct* attribute_space_timing;   /*!< the timing parameters for NAND flash Attribute Space */
 }exmc_nand_parameter_struct;
 
-/* EXMC PC card initialize struct */
+/* EXMC PC card initialize structure */
 typedef struct
 {
     uint32_t atr_latency;                                               /*!< configure the latency of ALE low to RB low */
@@ -360,7 +386,7 @@ typedef struct
     exmc_nand_pccard_timing_parameter_struct*  io_space_timing;         /*!< the timing parameters for NAND flash IO Space */
 }exmc_pccard_parameter_struct;;
 
-/* EXMC SDRAM timing initialize struct */
+/* EXMC SDRAM timing initialize structure */
 typedef struct
 {
     uint32_t row_to_column_delay;                                       /*!< configure the row to column delay */
@@ -385,7 +411,7 @@ typedef struct
                                                                         /*!< the range is 1 to 16 cycles */
 }exmc_sdram_timing_parameter_struct;
 
-/* EXMC SDRAM initialize struct */
+/* EXMC SDRAM initialize structure */
 typedef struct
 {
     uint32_t sdram_device;                                              /*!< device of SDRAM */
@@ -421,7 +447,7 @@ typedef struct
     exmc_sdram_timing_parameter_struct* timing;                         /*!< the timing parameters for write and read SDRAM */
 }exmc_sdram_parameter_struct;
 
-/* EXMC SDRAM command initialize struct */
+/* EXMC SDRAM command initialize structure */
 typedef struct
 {
     uint32_t mode_register_content;                                     /*!< the SDRAM mode register content */
@@ -439,7 +465,7 @@ typedef struct
                                                                                       EXMC_SDRAM_POWERDOWN_ENTRY */
 }exmc_sdram_command_parameter_struct;
 
-/* EXMC SQPISRAM initialize struct */
+/* EXMC SQPISRAM initialize structure */
 typedef struct{
     uint32_t sample_polarity;                                           /*!< read data sample polarity */
                                                                         /*!< sample_polarity: EXMC_SDRAM_SAMPLE_RISING_EDGE,EXMC_SDRAM_SAMPLE_FALLING_EDGE */
@@ -796,24 +822,24 @@ typedef struct{
 #define EXMC_SDRAM_INT_FLAG_REFRESH       EXMC_SDARI_REIE               /*!< interrupt refresh error enable */
 
 /* function declarations */
+/* function configuration */
 /* deinitialize EXMC NOR/SRAM region */
 void exmc_norsram_deinit(uint32_t exmc_norsram_region);
+/* exmc_norsram_parameter_struct parameter initialize */
+void exmc_norsram_struct_para_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct);
 /* initialize EXMC NOR/SRAM region */
 void exmc_norsram_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct);
-/* exmc_norsram_parameter_struct parameter initialize */
-void exmc_norsram_parameter_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct);
 /* EXMC NOR/SRAM bank enable */
 void exmc_norsram_enable(uint32_t exmc_norsram_region);
 /* EXMC NOR/SRAM bank disable */
 void exmc_norsram_disable(uint32_t exmc_norsram_region);
 
-
 /* deinitialize EXMC NAND bank */
 void exmc_nand_deinit(uint32_t exmc_nand_bank);
 /* initialize EXMC NAND bank */
 void exmc_nand_init(exmc_nand_parameter_struct* exmc_nand_init_struct);
-/* exmc_norsram_parameter_struct parameter initialize */
-void exmc_nand_parameter_init(exmc_nand_parameter_struct* exmc_nand_init_struct);
+/* exmc_nand_init_struct parameter initialize */
+void exmc_nand_struct_para_init(exmc_nand_parameter_struct* exmc_nand_init_struct);
 /* EXMC NAND bank enable */
 void exmc_nand_enable(uint32_t exmc_nand_bank);
 /* EXMC NAND bank disable */
@@ -823,18 +849,16 @@ void exmc_nand_ecc_config(uint32_t exmc_nand_bank, ControlStatus newvalue);
 /* get the EXMC ECC value */
 uint32_t exmc_ecc_get(uint32_t exmc_nand_bank);
 
-
 /* deinitialize EXMC PC card bank */
 void exmc_pccard_deinit(void);
 /* initialize EXMC PC card bank */
 void exmc_pccard_init(exmc_pccard_parameter_struct* exmc_pccard_init_struct);
 /* exmc_pccard_parameter_struct parameter initialize */
-void exmc_pccard_parameter_init(exmc_pccard_parameter_struct* exmc_pccard_init_struct);
+void exmc_pccard_struct_para_init(exmc_pccard_parameter_struct* exmc_pccard_init_struct);
 /* EXMC PC card bank enable */
 void exmc_pccard_enable(void);
 /* EXMC PC card bank disable */
 void exmc_pccard_disable(void);
-
 
 /* deinitialize EXMC SDRAM device */
 void exmc_sdram_deinit(uint32_t exmc_sdram_device);
@@ -859,7 +883,6 @@ void exmc_sdram_readsample_enable(void);
 /* disable read sample */
 void exmc_sdram_readsample_disable(void);
 
-
 /* deinitialize EXMC SQPIPSRAM */
 void exmc_sqpipsram_deinit(void);
 /* initialize EXMC SQPIPSRAM */
@@ -881,7 +904,7 @@ uint32_t exmc_sqpipsram_high_id_get(void);
 /* get the bit value of EXMC send write command bit or read ID command */
 FlagStatus exmc_sqpipsram_send_command_state_get(uint32_t send_command_flag);
 
-
+/* interrupt & flag functions */
 /* check EXMC flag is set or not */
 FlagStatus exmc_flag_get(uint32_t bank, uint32_t flag);
 /* clear EXMC flag */

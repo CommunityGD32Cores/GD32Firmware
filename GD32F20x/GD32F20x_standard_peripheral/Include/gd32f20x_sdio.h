@@ -1,13 +1,39 @@
 /*!
     \file  gd32f20x_sdio.h
     \brief definitions for the SDIO
+
+    \version 2015-07-15, V1.0.0, firmware for GD32F20x
+    \version 2017-06-05, V2.0.0, firmware for GD32F20x
+    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2015-07-15, V1.0.0, firmware for GD32F20x
-    2017-06-05, V2.0.0, firmware for GD32F20x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F20X_SDIO_H
@@ -244,15 +270,15 @@
 #define SDIO_BUSMODE_8BIT               CLKCTL_BUSMODE(2)      /*!< 8-bit SDIO card bus mode */
 
 /* SDIO_CLK clock edge selection */
-#define SDIO_SDIOCLKEDGE_RISING         (uint32_t)0x00000000U  /*!< select the rising edge of the SDIOCLK to generate SDIO_CLK */
+#define SDIO_SDIOCLKEDGE_RISING         ((uint32_t)0x00000000U)/*!< select the rising edge of the SDIOCLK to generate SDIO_CLK */
 #define SDIO_SDIOCLKEDGE_FALLING        SDIO_CLKCTL_CLKEDGE    /*!< select the falling edge of the SDIOCLK to generate SDIO_CLK */
 
 /* clock bypass enable or disable */
-#define SDIO_CLOCKBYPASS_DISABLE        (uint32_t)0x00000000U  /*!< no bypass */
+#define SDIO_CLOCKBYPASS_DISABLE        ((uint32_t)0x00000000U)/*!< no bypass */
 #define SDIO_CLOCKBYPASS_ENABLE         SDIO_CLKCTL_CLKBYP     /*!< clock bypass */
 
 /* SDIO_CLK clock dynamic switch on/off for power saving */
-#define SDIO_CLOCKPWRSAVE_DISABLE       (uint32_t)0x00000000U  /*!< SDIO_CLK clock is always on */
+#define SDIO_CLOCKPWRSAVE_DISABLE       ((uint32_t)0x00000000U)/*!< SDIO_CLK clock is always on */
 #define SDIO_CLOCKPWRSAVE_ENABLE        SDIO_CLKCTL_CLKPWRSAV  /*!< SDIO_CLK closed when bus is idle */
 
 /* SDIO command response type */
@@ -262,14 +288,14 @@
 #define SDIO_RESPONSETYPE_LONG          CMDCTL_CMDRESP(3)      /*!< long response */
 
 /* command state machine wait type */
-#define SDIO_WAITTYPE_NO                (uint32_t)0x00000000U  /*!< not wait interrupt */
+#define SDIO_WAITTYPE_NO                ((uint32_t)0x00000000U)/*!< not wait interrupt */
 #define SDIO_WAITTYPE_INTERRUPT         SDIO_CMDCTL_INTWAIT    /*!< wait interrupt */
 #define SDIO_WAITTYPE_DATAEND           SDIO_CMDCTL_WAITDEND   /*!< wait the end of data transfer */
 
-#define SDIO_RESPONSE0                  (uint32_t)0x00000000U  /*!< card response[31:0]/card response[127:96] */
-#define SDIO_RESPONSE1                  (uint32_t)0x00000001U  /*!< card response[95:64] */
-#define SDIO_RESPONSE2                  (uint32_t)0x00000002U  /*!< card response[63:32] */
-#define SDIO_RESPONSE3                  (uint32_t)0x00000003U  /*!< card response[31:1], plus bit 0 */
+#define SDIO_RESPONSE0                  ((uint32_t)0x00000000U)/*!< card response[31:0]/card response[127:96] */
+#define SDIO_RESPONSE1                  ((uint32_t)0x00000001U)/*!< card response[95:64] */
+#define SDIO_RESPONSE2                  ((uint32_t)0x00000002U)/*!< card response[63:32] */
+#define SDIO_RESPONSE3                  ((uint32_t)0x00000003U)/*!< card response[31:1], plus bit 0 */
 
 /* SDIO data block size */
 #define DATACTL_BLKSZ(regval)           (BITS(4,7) & ((uint32_t)(regval) << 4))
@@ -290,18 +316,19 @@
 #define SDIO_DATABLOCKSIZE_16384BYTES   DATACTL_BLKSZ(14)      /*!< block size = 16384 bytes */
 
 /* SDIO data transfer mode */
-#define SDIO_TRANSMODE_BLOCK            (uint32_t)0x00000000U  /*!< block transfer */
+#define SDIO_TRANSMODE_BLOCK            ((uint32_t)0x00000000U)/*!< block transfer */
 #define SDIO_TRANSMODE_STREAM           SDIO_DATACTL_TRANSMOD  /*!< stream transfer or SDIO multibyte transfer */
 
 /* SDIO data transfer direction */
-#define SDIO_TRANSDIRECTION_TOCARD      (uint32_t)0x00000000U  /*!< write data to card */
+#define SDIO_TRANSDIRECTION_TOCARD      ((uint32_t)0x00000000U)/*!< write data to card */
 #define SDIO_TRANSDIRECTION_TOSDIO      SDIO_DATACTL_DATADIR   /*!< read data from card */
 
 /* SDIO read wait type */
-#define SDIO_READWAITTYPE_DAT2          (uint32_t)0x00000000U  /*!< read wait control using SDIO_DAT[2] */
+#define SDIO_READWAITTYPE_DAT2          ((uint32_t)0x00000000U)/*!< read wait control using SDIO_DAT[2] */
 #define SDIO_READWAITTYPE_CLK           SDIO_DATACTL_RWTYPE    /*!< read wait control by stopping SDIO_CLK */
 
 /* function declarations */
+/* initialization functions */
 /* deinitialize the SDIO */
 void sdio_deinit(void);
 /* configure the SDIO clock */
@@ -321,6 +348,7 @@ void sdio_clock_enable(void);
 /* disable SDIO_CLK clock output */
 void sdio_clock_disable(void);
 
+/* function configuration */
 /* configure the command index, argument, response type, wait type and CSM to send command */
 /* configure the command and response */
 void sdio_command_response_config(uint32_t cmd_index, uint32_t cmd_argument, uint32_t response_type);
@@ -357,19 +385,6 @@ void sdio_dma_enable(void);
 /* disable the DMA request for SDIO */
 void sdio_dma_disable(void);
 
-/* get the flags state of SDIO */
-FlagStatus sdio_flag_get(uint32_t flag);
-/* clear the pending flags of SDIO */
-void sdio_flag_clear(uint32_t flag);
-/* enable the SDIO interrupt */
-void sdio_interrupt_enable(uint32_t int_flag);
-/* disable the SDIO interrupt */
-void sdio_interrupt_disable(uint32_t int_flag);
-/* get the interrupt flags state of SDIO */
-FlagStatus sdio_interrupt_flag_get(uint32_t int_flag);
-/* clear the interrupt pending flags of SDIO */
-void sdio_interrupt_flag_clear(uint32_t int_flag);
-
 /* enable the read wait mode(SD I/O only) */
 void sdio_readwait_enable(void);
 /* disable the read wait mode(SD I/O only) */
@@ -401,5 +416,19 @@ void sdio_ceata_interrupt_disable(void);
 void sdio_ceata_command_completion_enable(void);
 /* disable the CE-ATA command completion signal(CE-ATA only) */
 void sdio_ceata_command_completion_disable(void);
+
+/* interrupt & flag functions */
+/* get the flags state of SDIO */
+FlagStatus sdio_flag_get(uint32_t flag);
+/* clear the pending flags of SDIO */
+void sdio_flag_clear(uint32_t flag);
+/* enable the SDIO interrupt */
+void sdio_interrupt_enable(uint32_t int_flag);
+/* disable the SDIO interrupt */
+void sdio_interrupt_disable(uint32_t int_flag);
+/* get the interrupt flags state of SDIO */
+FlagStatus sdio_interrupt_flag_get(uint32_t int_flag);
+/* clear the interrupt pending flags of SDIO */
+void sdio_interrupt_flag_clear(uint32_t int_flag);
 
 #endif /* GD32F20X_SDIO_H */

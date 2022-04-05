@@ -1,13 +1,39 @@
 /*!
     \file  gd32f20x_cau_tdes.c
     \brief CAU_TDES driver
+
+    \version 2015-07-15, V1.0.0, firmware for GD32F20x
+    \version 2017-06-05, V2.0.0, firmware for GD32F20x
+    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2015-07-15, V1.0.0, firmware for GD32F20x
-    2017-06-05, V2.0.0, firmware for GD32F20x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "gd32f20x_cau.h"
@@ -24,13 +50,14 @@ static ErrStatus cau_tdes_calculate(uint8_t *input, uint32_t in_length, uint8_t 
       \arg        CAU_ENCRYPT: encrypt
       \arg        CAU_DECRYPT: decrypt
     \param[in]  key: key used for TDES algorithm  
-    \param[in]  input: pointer to the input buffer     
-    \param[in]  in_length: length of the input buffer, must be a multiple of 8  
-    \param[in]  output: pointer to the returned buffer    
+    \param[in]  text: pointer to the text information struct 
+                  input: pointer to the input buffer
+                  in_length: length of the input buffer, must be a multiple of 8
+                  output: pointer to the returned buffer
     \param[out] none
     \retval     ErrStatus: SUCCESS or ERROR
 */  
-ErrStatus cau_tdes_ecb(uint32_t algo_dir, uint8_t key[24], uint8_t *input, uint32_t in_length, uint8_t *output)
+ErrStatus cau_tdes_ecb(uint32_t algo_dir, uint8_t key[24], cau_text_struct *text)
 {
     ErrStatus ret = ERROR;
     cau_key_parameter_struct key_initpara;
@@ -62,7 +89,7 @@ ErrStatus cau_tdes_ecb(uint32_t algo_dir, uint8_t key[24], uint8_t *input, uint3
     /* enable the CAU peripheral */
     cau_enable();
     /* TDES calculate process */
-    ret = cau_tdes_calculate(input, in_length, output);
+    ret = cau_tdes_calculate(text->input, text->in_length, text->output);
     /* disable the CAU peripheral */
     cau_disable();
 
@@ -77,13 +104,14 @@ ErrStatus cau_tdes_ecb(uint32_t algo_dir, uint8_t key[24], uint8_t *input, uint3
       \arg        CAU_DECRYPT: decrypt
     \param[in]  key: key used for TDES algorithm
     \param[in]  iv: initialization vectors used for TDES algorithm 
-    \param[in]  input: pointer to the input buffer     
-    \param[in]  in_length: length of the input buffer, must be a multiple of 8  
-    \param[in]  output: pointer to the returned buffer    
+    \param[in]  text: pointer to the text information struct 
+                  input: pointer to the input buffer
+                  in_length: length of the input buffer, must be a multiple of 8
+                  output: pointer to the returned buffer
     \param[out] none
     \retval     ErrStatus: SUCCESS or ERROR
 */ 
-ErrStatus cau_tdes_cbc(uint32_t algo_dir, uint8_t key[24], uint8_t iv[8], uint8_t *input, uint32_t in_length, uint8_t *output)                         
+ErrStatus cau_tdes_cbc(uint32_t algo_dir, uint8_t key[24], uint8_t iv[8], cau_text_struct *text)
 {
     ErrStatus ret = ERROR;
     cau_key_parameter_struct key_initpara;
@@ -123,7 +151,7 @@ ErrStatus cau_tdes_cbc(uint32_t algo_dir, uint8_t key[24], uint8_t iv[8], uint8_
     /* enable the CAU peripheral */
     cau_enable();
     /* TDES calculate process */
-    ret = cau_tdes_calculate(input, in_length, output);
+    ret = cau_tdes_calculate(text->input, text->in_length, text->output);
     /* disable the CAU peripheral */
     cau_disable();
 

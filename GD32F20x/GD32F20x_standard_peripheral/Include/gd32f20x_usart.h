@@ -1,13 +1,39 @@
 /*!
     \file  gd32f20x_usart.h
     \brief definitions for the USART
+
+    \version 2015-07-15, V1.0.0, firmware for GD32F20x
+    \version 2017-06-05, V2.0.0, firmware for GD32F20x
+    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2015-07-15, V1.0.0, firmware for GD32F20x
-    2017-06-05, V2.0.0, firmware for GD32F20x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F20X_USART_H
@@ -311,6 +337,7 @@ void usart_word_length_set(uint32_t usart_periph, uint32_t wlen);
 /* configure USART stop bit length */
 void usart_stop_bit_set(uint32_t usart_periph, uint32_t stblen);
 
+/* function configuration */
 /* USART normal mode communication */
 /* enable USART */
 void usart_enable(uint32_t usart_periph);
@@ -331,7 +358,7 @@ void usart_receiver_timeout_disable(uint32_t usart_periph);
 /* configure receiver timeout threshold */
 void usart_receiver_timeout_threshold_config(uint32_t usart_periph, uint32_t rtimeout);
 /* USART transmit data function */
-void usart_data_transmit(uint32_t usart_periph, uint32_t data);
+void usart_data_transmit(uint32_t usart_periph, uint16_t data);
 /* USART receive data function */
 uint16_t usart_data_receive(uint32_t usart_periph);
 
@@ -351,7 +378,7 @@ void usart_lin_mode_enable(uint32_t usart_periph);
 /* LIN mode disable */
 void usart_lin_mode_disable(uint32_t usart_periph);
 /* LIN break detection length */
-void usart_lin_break_dection_length_config(uint32_t usart_periph, uint32_t lblen);
+void usart_lin_break_detection_length_config(uint32_t usart_periph, uint32_t lblen);
 /* send break frame */
 void usart_send_break(uint32_t usart_periph);
 
@@ -406,13 +433,11 @@ void usart_dma_receive_config(uint32_t usart_periph, uint32_t dmacmd);
 /* configure USART DMA for transmission */
 void usart_dma_transmit_config(uint32_t usart_periph, uint32_t dmacmd);
 
-/* flag functions */
+/* interrupt & flag functions */
 /* get flag in STAT0/STAT1 register */
 FlagStatus usart_flag_get(uint32_t usart_periph, usart_flag_enum flag);
 /* clear flag in STAT0/STAT1 register */
 void usart_flag_clear(uint32_t usart_periph, usart_flag_enum flag);
-
-/* interrupt functions */
 /* enable USART interrupt */
 void usart_interrupt_enable(uint32_t usart_periph, uint32_t int_flag);
 /* disable USART interrupt */
@@ -421,4 +446,5 @@ void usart_interrupt_disable(uint32_t usart_periph, uint32_t int_flag);
 FlagStatus usart_interrupt_flag_get(uint32_t usart_periph, uint32_t int_flag);
 /* clear interrupt flag in STAT0/STAT1 register */
 void usart_interrupt_flag_clear(uint32_t usart_periph, uint32_t flag);
+
 #endif /* GD32F20X_USART_H */ 

@@ -1,13 +1,39 @@
 /*!
     \file  gd32f20x_hau_sha_md5.c
     \brief HAU_SHA_MD5 driver
+
+    \version 2015-07-15, V1.0.0, firmware for GD32F20x
+    \version 2017-06-05, V2.0.0, firmware for GD32F20x
+    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2015-07-15, V1.0.0, firmware for GD32F20x
-    2017-06-05, V2.0.0, firmware for GD32F20x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "gd32f20x_hau.h"
@@ -20,39 +46,6 @@ static void hau_sha_md5_digest_read(uint32_t algo, uint8_t *output);
 static ErrStatus hau_hash_calculate(uint32_t algo, uint8_t *input, uint32_t in_length, uint8_t *output); 
 /* HAU digest calculate process in HMAC mode */
 static ErrStatus hau_hmac_calculate(uint32_t algo, uint8_t *key, uint32_t keysize, uint8_t *input, uint32_t in_length, uint8_t *output);
-
-/*!
-    \brief      calculate digest using MD5 in HASH mode  
-    \param[in]  input: pointer to the input buffer     
-    \param[in]  in_length: length of the input buffer  
-    \param[in]  output: the result digest    
-    \param[out] none
-    \retval     ErrStatus: SUCCESS or ERROR
-*/
-ErrStatus hau_hash_md5(uint8_t *input, uint32_t in_length, uint8_t output[16])
-{
-    ErrStatus ret = ERROR;
-    ret = hau_hash_calculate(HAU_ALGO_MD5, input, in_length, output);
-    return ret;
-}
-
-/*!
-    \brief      calculate digest using MD5 in HMAC mode
-    \param[in]  algo: algorithm selection
-    \param[in]  key: pointer to the key used for HMAC
-    \param[in]  keysize: length of the key used for HMAC 
-    \param[in]  input: pointer to the input buffer     
-    \param[in]  in_length: length of the input buffer  
-    \param[in]  output: the result digest    
-    \param[out] none
-    \retval     ErrStatus: SUCCESS or ERROR
-*/
-ErrStatus hau_hmac_md5(uint8_t *key, uint32_t keysize, uint8_t *input, uint32_t in_length, uint8_t output[16])
-{
-    ErrStatus ret = ERROR;
-    ret = hau_hmac_calculate(HAU_ALGO_MD5, key, keysize, input, in_length, output);
-    return ret;
-}
 
 /*!
     \brief      calculate digest using SHA1 in HASH mode  
@@ -71,7 +64,6 @@ ErrStatus hau_hash_sha_1(uint8_t *input, uint32_t in_length, uint8_t output[20])
 
 /*!
     \brief      calculate digest using SHA1 in HMAC mode
-    \param[in]  algo: algorithm selection
     \param[in]  key: pointer to the key used for HMAC
     \param[in]  keysize: length of the key used for HMAC 
     \param[in]  input: pointer to the input buffer     
@@ -104,7 +96,6 @@ ErrStatus hau_hash_sha_224(uint8_t *input, uint32_t in_length, uint8_t output[28
 
 /*!
     \brief      calculate digest using SHA224 in HMAC mode
-    \param[in]  algo: algorithm selection
     \param[in]  key: pointer to the key used for HMAC
     \param[in]  keysize: length of the key used for HMAC 
     \param[in]  input: pointer to the input buffer     
@@ -137,7 +128,6 @@ ErrStatus hau_hash_sha_256(uint8_t *input, uint32_t in_length, uint8_t output[32
 
 /*!
     \brief      calculate digest using SHA256 in HMAC mode
-    \param[in]  algo: algorithm selection
     \param[in]  key: pointer to the key used for HMAC
     \param[in]  keysize: length of the key used for HMAC 
     \param[in]  input: pointer to the input buffer     
@@ -151,6 +141,38 @@ ErrStatus hau_hmac_sha_256(uint8_t *key, uint32_t keysize, uint8_t *input, uint3
     ErrStatus ret = ERROR;
     ret = hau_hmac_calculate(HAU_ALGO_SHA256, key, keysize, input, in_length, output);
     return ret; 
+}
+
+/*!
+    \brief      calculate digest using MD5 in HASH mode  
+    \param[in]  input: pointer to the input buffer     
+    \param[in]  in_length: length of the input buffer  
+    \param[in]  output: the result digest    
+    \param[out] none
+    \retval     ErrStatus: SUCCESS or ERROR
+*/
+ErrStatus hau_hash_md5(uint8_t *input, uint32_t in_length, uint8_t output[16])
+{
+    ErrStatus ret = ERROR;
+    ret = hau_hash_calculate(HAU_ALGO_MD5, input, in_length, output);
+    return ret;
+}
+
+/*!
+    \brief      calculate digest using MD5 in HMAC mode
+    \param[in]  key: pointer to the key used for HMAC
+    \param[in]  keysize: length of the key used for HMAC 
+    \param[in]  input: pointer to the input buffer     
+    \param[in]  in_length: length of the input buffer  
+    \param[in]  output: the result digest    
+    \param[out] none
+    \retval     ErrStatus: SUCCESS or ERROR
+*/
+ErrStatus hau_hmac_md5(uint8_t *key, uint32_t keysize, uint8_t *input, uint32_t in_length, uint8_t output[16])
+{
+    ErrStatus ret = ERROR;
+    ret = hau_hmac_calculate(HAU_ALGO_MD5, key, keysize, input, in_length, output);
+    return ret;
 }
 
 /*!

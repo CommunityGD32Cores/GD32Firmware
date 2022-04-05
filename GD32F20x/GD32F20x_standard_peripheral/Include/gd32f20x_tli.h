@@ -1,13 +1,39 @@
 /*!
     \file  gd32f20x_tli.h
     \brief definitions for the TLI
+
+    \version 2015-07-15, V1.0.0, firmware for GD32F20x
+    \version 2017-06-05, V2.0.0, firmware for GD32F20x
+    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2015-07-15, V1.0.0, firmware for GD32F20x
-    2017-06-05, V2.0.0, firmware for GD32F20x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F20X_TLI_H
@@ -167,7 +193,7 @@
 #define TLI_LxLUT_TADD                    BITS(24,31)      /*!< look up table write address */
 
 /* constants definitions */
-/* TLI parameter struct definitions */
+/* TLI parameter structure definitions */
 typedef struct
 {   
     uint32_t synpsz_vpsz;                     /*!< size of the vertical synchronous pulse */
@@ -187,7 +213,7 @@ typedef struct
     uint32_t signalpolarity_pixelck;          /*!< pixel clock polarity selection */
 }tli_parameter_struct; 
 
-/* TLI layer parameter struct definitions */
+/* TLI layer parameter structure definitions */
 typedef struct
 {   
     uint32_t layer_window_rightpos;           /*!< window right position */
@@ -208,7 +234,7 @@ typedef struct
     uint32_t layer_frame_total_line_number;   /*!< frame total line number */
 }tli_layer_parameter_struct; 
 
-/* TLI layer LUT parameter struct definitions */
+/* TLI layer LUT parameter structure definitions */
 typedef struct
 {
     uint32_t layer_table_addr;                /*!< look up table write address */
@@ -287,6 +313,7 @@ typedef enum
 #define LAYER_ACF2_PASA               LxBLEND_ACF2(7)              /*!< normalization pixel alpha * normalization specified alpha */
 
 /* function declarations */
+/* initialization functions */
 /* deinitialize TLI */
 void tli_deinit(void);
 /* initialize TLI */
@@ -300,22 +327,12 @@ void tli_disable(void);
 /* configure TLI reload mode */
 void tli_reload_config(uint8_t reloadmode);
 
-/* enable TLI interrupt */
-void tli_interrupt_enable(uint32_t intflag);
-/* disable TLI interrupt */
-void tli_interrupt_disable(uint32_t intflag);
-/* get TLI interrupt flag */
-FlagStatus tli_interrupt_flag_get(uint32_t intflag);
-/* clear TLI interrupt flag */
-void tli_interrupt_flag_clear(uint32_t intflag);
-/* get TLI flag or state */
-FlagStatus tli_flag_get(uint32_t flag);
-
 /* set line mark value */
 void tli_line_mark_set(uint32_t linenum);
 /* get current displayed position */
 uint32_t tli_current_pos_get(void);
 
+/* function configuration */
 /* TLI layer enable */
 void tli_layer_enable(uint32_t layerx);
 /* TLI layer disable */
@@ -336,5 +353,17 @@ void tli_layer_window_offset_modify(uint32_t layerx,uint32_t offset_x,uint32_t o
 void tli_lut_init(uint32_t layerx,tli_layer_lut_parameter_struct *lut_struct);
 /* TLI layer key initialize */
 void tli_ckey_init(uint32_t layerx,uint32_t redkey,uint32_t greenkey,uint32_t bluekey);
+
+/* interrupt & flag functions */
+/* get TLI flag or state */
+FlagStatus tli_flag_get(uint32_t flag);
+/* enable TLI interrupt */
+void tli_interrupt_enable(uint32_t interrupt);
+/* disable TLI interrupt */
+void tli_interrupt_disable(uint32_t interrupt);
+/* get TLI interrupt flag */
+FlagStatus tli_interrupt_flag_get(uint32_t int_flag);
+/* clear TLI interrupt flag */
+void tli_interrupt_flag_clear(uint32_t int_flag);
 
 #endif /* GD32F20X_TLI_H */

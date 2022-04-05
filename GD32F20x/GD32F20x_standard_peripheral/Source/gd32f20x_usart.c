@@ -1,13 +1,39 @@
 /*!
     \file  gd32f20x_usart.c
     \brief USART driver
+
+    \version 2015-07-15, V1.0.0, firmware for GD32F20x
+    \version 2017-06-05, V2.0.0, firmware for GD32F20x
+    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2015-07-15, V1.0.0, firmware for GD32F20x
-    2017-06-05, V2.0.0, firmware for GD32F20x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "gd32f20x_usart.h"
@@ -22,34 +48,42 @@ void usart_deinit(uint32_t usart_periph)
 {
     switch(usart_periph){
     case USART0:
+        /* reset USART0 */
         rcu_periph_reset_enable(RCU_USART0RST);
         rcu_periph_reset_disable(RCU_USART0RST);
         break;
     case USART1:
+        /* reset USART1 */
         rcu_periph_reset_enable(RCU_USART1RST);
         rcu_periph_reset_disable(RCU_USART1RST);
         break;
     case USART2:
+        /* reset USART2 */
         rcu_periph_reset_enable(RCU_USART2RST);
         rcu_periph_reset_disable(RCU_USART2RST);
         break;
     case USART5:
+        /* reset USART5 */
         rcu_periph_reset_enable(RCU_USART5RST);
         rcu_periph_reset_disable(RCU_USART5RST);
         break;
     case UART3:
+        /* reset UART3 */
         rcu_periph_reset_enable(RCU_UART3RST);
         rcu_periph_reset_disable(RCU_UART3RST);
         break;
     case UART4:
+        /* reset UART4 */
         rcu_periph_reset_enable(RCU_UART4RST);
         rcu_periph_reset_disable(RCU_UART4RST);
         break;
     case UART6:
+        /* reset UART6 */
         rcu_periph_reset_enable(RCU_UART6RST);
         rcu_periph_reset_disable(RCU_UART6RST);
         break;
     case UART7:
+        /* reset UART7 */
         rcu_periph_reset_enable(RCU_UART7RST);
         rcu_periph_reset_disable(RCU_UART7RST);
         break;
@@ -69,29 +103,36 @@ void usart_baudrate_set(uint32_t usart_periph, uint32_t baudval)
 {
     uint32_t uclk=0U, intdiv=0U, fradiv=0U, udiv=0U;
     switch(usart_periph){
-    case USART0:
          /* get clock frequency */
+    case USART0:
+         /* get USART0 clock */
          uclk=rcu_clock_freq_get(CK_APB2);
          break;
     case USART5:
+         /* get USART5 clock */
          uclk=rcu_clock_freq_get(CK_APB2);
          break;
     case USART1:
+         /* get USART1 clock */
          uclk=rcu_clock_freq_get(CK_APB1);
          break;
     case USART2:
+         /* get USART2 clock */
          uclk=rcu_clock_freq_get(CK_APB1);
          break;
     case UART3:
+         /* get UART3 clock */
          uclk=rcu_clock_freq_get(CK_APB1);
          break;
     case UART4:
-         uclk=rcu_clock_freq_get(CK_APB1);
+         /* get UART4 clock */
          break;
     case UART6:
+         /* get UART6 clock */
          uclk=rcu_clock_freq_get(CK_APB1);
          break;
     case UART7:
+         /* get UART7 clock */
          uclk=rcu_clock_freq_get(CK_APB1);
          break;
     default:
@@ -101,13 +142,14 @@ void usart_baudrate_set(uint32_t usart_periph, uint32_t baudval)
     udiv = (uclk+baudval/2U)/baudval;
     intdiv = udiv & 0xfff0U;
     fradiv = udiv & 0xfU;
-    USART_BAUD(usart_periph) |= ((USART_BAUD_FRADIV | USART_BAUD_INTDIV) & (intdiv | fradiv));
+    USART_BAUD(usart_periph) = ((USART_BAUD_FRADIV | USART_BAUD_INTDIV) & (intdiv | fradiv));
 }
 
 /*!
     \brief     configure USART parity
     \param[in] usart_periph: USARTx(x=0,1,2,5)/UARTx(x=3,4,6,7)
     \param[in] paritycfg: configure USART parity
+               only one parameter can be selected which is shown as below:
       \arg       USART_PM_NONE: no parity
       \arg       USART_PM_ODD:  odd parity
       \arg       USART_PM_EVEN: even parity 
@@ -126,6 +168,7 @@ void usart_parity_config(uint32_t usart_periph, uint32_t paritycfg)
     \brief     configure USART word length
     \param[in] usart_periph: USARTx(x=0,1,2,5)/UARTx(x=3,4,6,7)
     \param[in] wlen: USART word length configure
+               only one parameter can be selected which is shown as below:
       \arg       USART_WL_8BIT: 8 bits
       \arg       USART_WL_9BIT: 9 bits
     \param[out] none
@@ -143,6 +186,7 @@ void usart_word_length_set(uint32_t usart_periph, uint32_t wlen)
     \brief     configure USART stop bit length
     \param[in] usart_periph: USARTx(x=0,1,2,5)/UARTx(x=3,4,6,7)
     \param[in] stblen: USART stop bit configure
+               only one parameter can be selected which is shown as below:
       \arg       USART_STB_1BIT:   1 bit
       \arg       USART_STB_0_5BIT: 0.5 bit(not available for UARTx(x=3,4,6,7))
       \arg       USART_STB_2BIT:   2 bits
@@ -183,6 +227,7 @@ void usart_disable(uint32_t usart_periph)
     \brief      configure USART transmitter
     \param[in]  usart_periph: USARTx(x=0,1,2,5)/UARTx(x=3,4,6,7)
     \param[in]  txconfig: enable or disable USART transmitter
+                only one parameter can be selected which is shown as below:
       \arg        USART_TRANSMIT_ENABLE: enable USART transmission
       \arg        USART_TRANSMIT_DISABLE: enable USART transmission
     \param[out] none
@@ -203,6 +248,7 @@ void usart_transmit_config(uint32_t usart_periph, uint32_t txconfig)
     \brief      configure USART receiver
     \param[in]  usart_periph: USARTx(x=0,1,2,5)/UARTx(x=3,4,6,7)
     \param[in]  rxconfig: enable or disable USART receiver
+                only one parameter can be selected which is shown as below:
       \arg        USART_RECEIVE_ENABLE: enable USART reception
       \arg        USART_RECEIVE_DISABLE: disable USART reception
     \param[out] none
@@ -215,7 +261,7 @@ void usart_receive_config(uint32_t usart_periph, uint32_t rxconfig)
     ctl = USART_CTL0(usart_periph);
     ctl &= ~USART_CTL0_REN;
     ctl |= rxconfig;
-    /* configure transfer mode */
+    /* configure receiver mode */
     USART_CTL0(usart_periph) = ctl;
 }
 
@@ -316,7 +362,7 @@ void usart_receiver_timeout_threshold_config(uint32_t usart_periph, uint32_t rti
     \param[out] none
     \retval     none
 */
-void usart_data_transmit(uint32_t usart_periph, uint32_t data)
+void usart_data_transmit(uint32_t usart_periph, uint16_t data)
 {
     USART_DATA(usart_periph) = ((uint16_t)USART_DATA_DATA & data);
 }
@@ -371,6 +417,7 @@ void usart_mute_mode_disable(uint32_t usart_periph)
     \brief      configure wakeup method in mute mode
     \param[in]  usart_periph: USARTx(x=0,1,2,5)/UARTx(x=3,4,6,7)
     \param[in]  wmethod: two methods be used to enter or exit the mute mode
+                only one parameter can be selected which is shown as below:
       \arg        USART_WM_IDLE: idle line
       \arg        USART_WM_ADDR: address mask
     \param[out] none
@@ -408,12 +455,13 @@ void usart_lin_mode_disable(uint32_t usart_periph)
     \brief      configure lin break frame length
     \param[in]  usart_periph: USARTx(x=0,1,2,5)/UARTx(x=3,4,6,7)
     \param[in]  lblen: lin break frame length
+                only one parameter can be selected which is shown as below:
       \arg        USART_LBLEN_10B: 10 bits
       \arg        USART_LBLEN_11B: 11 bits
     \param[out] none
     \retval     none
 */
-void usart_lin_break_dection_length_config(uint32_t usart_periph, uint32_t lblen)
+void usart_lin_break_detection_length_config(uint32_t usart_periph, uint32_t lblen)
 {
     USART_CTL1(usart_periph) &= ~(USART_CTL1_LBLEN);
     USART_CTL1(usart_periph) |= (USART_CTL1_LBLEN & lblen);
@@ -478,12 +526,15 @@ void usart_synchronous_clock_disable(uint32_t usart_periph)
     \brief      configure USART synchronous mode parameters
     \param[in]  usart_periph: USARTx(x=0,1,2,5)
     \param[in]  clen: CK length
+                only one parameter can be selected which is shown as below:
       \arg        USART_CLEN_NONE: there are 7 CK pulses for an 8 bit frame and 8 CK pulses for a 9 bit frame 
       \arg        USART_CLEN_EN:   there are 8 CK pulses for an 8 bit frame and 9 CK pulses for a 9 bit frame
     \param[in]  cph: clock phase
+                only one parameter can be selected which is shown as below:
       \arg        USART_CPH_1CK: first clock transition is the first data capture edge 
       \arg        USART_CPH_2CK: second clock transition is the first data capture edge
-    \param[in]  cpl: clock polarity 
+    \param[in]  cpl: clock polarity
+                only one parameter can be selected which is shown as below:
       \arg        USART_CPL_LOW:  steady low value on CK pin 
       \arg        USART_CPL_HIGH: steady high value on CK pin
     \param[out] none
@@ -495,10 +546,11 @@ void usart_synchronous_clock_config(uint32_t usart_periph, uint32_t clen, uint32
     
     /* read USART_CTL1 register */
     ctl = USART_CTL1(usart_periph);
+    ctl &= ~(USART_CTL1_CLEN | USART_CTL1_CPH | USART_CTL1_CPL);
     /* set CK length, CK phase, CK polarity */
     ctl |= (USART_CTL1_CLEN & clen) | (USART_CTL1_CPH & cph) | (USART_CTL1_CPL & cpl);
 
-    USART_CTL1(usart_periph) |= ctl;
+    USART_CTL1(usart_periph) = ctl;
 }
 
 /*!
@@ -609,7 +661,7 @@ void usart_irda_mode_disable(uint32_t usart_periph)
 /*!
     \brief      configure the peripheral clock prescaler in USART IrDA low-power mode
     \param[in]  usart_periph: USARTx(x=0,1,2,5)/UARTx(x=3,4,6,7)
-    \param[in]  psc: 0-0xFF
+    \param[in]  psc: 0x00-0xFF
     \param[out] none
     \retval     none
 */
@@ -623,7 +675,8 @@ void usart_prescaler_config(uint32_t usart_periph, uint8_t psc)
     \brief      configure IrDA low-power
     \param[in]  usart_periph: USARTx(x=0,1,2,5)/UARTx(x=3,4,6,7)
     \param[in]  irlp: IrDA low-power or normal
-      \arg        USART_IRLP_LOW:    low-power
+                only one parameter can be selected which is shown as below:
+      \arg        USART_IRLP_LOW: low-power
       \arg        USART_IRLP_NORMAL: normal
     \param[out] none
     \retval     none
@@ -638,6 +691,7 @@ void usart_irda_lowpower_config(uint32_t usart_periph, uint32_t irlp)
     \brief      configure hardware flow control RTS
     \param[in]  usart_periph: USARTx(x=0,1,2,5)
     \param[in]  hardwareflow: enable or disable RTS
+                only one parameter can be selected which is shown as below:
       \arg        USART_RTS_ENABLE:  enable RTS
       \arg        USART_RTS_DISABLE: disable RTS
     \param[out] none
@@ -658,6 +712,7 @@ void usart_hardware_flow_rts_config(uint32_t usart_periph, uint32_t rtsconfig)
     \brief      configure hardware flow control CTS
     \param[in]  usart_periph: USARTx(x=0,1,2,5)
     \param[in]  hardwareflow: enable or disable CTS
+                only one parameter can be selected which is shown as below:
       \arg        USART_CTS_ENABLE:  enable CTS
       \arg        USART_CTS_DISABLE: disable CTS
     \param[out] none
@@ -678,6 +733,7 @@ void usart_hardware_flow_cts_config(uint32_t usart_periph, uint32_t ctsconfig)
     \brief      configure USART DMA reception
     \param[in]  usart_periph: USARTx(x=0,1,2,5)/UARTx(x=3,4,6,7)
     \param[in]  dmacmd: enable or disable DMA for reception
+                only one parameter can be selected which is shown as below:
       \arg        USART_DENR_ENABLE:  DMA enable for reception
       \arg        USART_DENR_DISABLE: DMA disable for reception
     \param[out] none
@@ -698,6 +754,7 @@ void usart_dma_receive_config(uint32_t usart_periph, uint32_t dmacmd)
     \brief      configure USART DMA transmission
     \param[in]  usart_periph: USARTx(x=0,1,2,5)/UARTx(x=3,4,6,7)
     \param[in]  dmacmd: enable or disable DMA for transmission
+                only one parameter can be selected which is shown as below:
       \arg        USART_DENT_ENABLE:  DMA enable for transmission
       \arg        USART_DENT_DISABLE: DMA disable for transmission
     \param[out] none
@@ -718,6 +775,7 @@ void usart_dma_transmit_config(uint32_t usart_periph, uint32_t dmacmd)
     \brief      get flag in STAT0/STAT1 register
     \param[in]  usart_periph: USARTx(x=0,1,2,5)/UARTx(x=3,4,6,7)
     \param[in]  flag: USART flags, refer to usart_flag_enum
+                only one parameter can be selected which is shown as below:
       \arg        USART_FLAG_CTS: CTS change flag
       \arg        USART_FLAG_LBD: LIN break detected flag
       \arg        USART_FLAG_TBE: transmit data buffer empty
@@ -747,6 +805,7 @@ FlagStatus usart_flag_get(uint32_t usart_periph, usart_flag_enum flag)
     \brief      clear flag in STAT0/STAT1 register
     \param[in]  usart_periph: USARTx(x=0,1,2,5)/UARTx(x=3,4,6,7)
     \param[in]  flag: USART flags, refer to usart_flag_enum
+                only one parameter can be selected which is shown as below:
       \arg        USART_FLAG_CTS: CTS change flag
       \arg        USART_FLAG_LBD: LIN break detected flag
       \arg        USART_FLAG_TC: transmission complete
@@ -765,6 +824,7 @@ void usart_flag_clear(uint32_t usart_periph, usart_flag_enum flag)
     \brief      enable USART interrupt
      \param[in]  usart_periph: USARTx(x=0,1,2,5)/UARTx(x=3,4,6,7)
     \param[in]  int_flag
+                only one parameter can be selected which is shown as below:
       \arg        USART_INT_PERR: parity error interrupt
       \arg        USART_INT_TBE: transmitter buffer empty interrupt
       \arg        USART_INT_TC: transmission complete interrupt
@@ -787,6 +847,7 @@ void usart_interrupt_enable(uint32_t usart_periph, uint32_t int_flag)
     \brief      disable USART interrupt
      \param[in]  usart_periph: USARTx(x=0,1,2,5)/UARTx(x=3,4,6,7)
     \param[in]  int_flag
+                only one parameter can be selected which is shown as below:
       \arg        USART_INT_PERR: parity error interrupt
       \arg        USART_INT_TBE: transmitter buffer empty interrupt
       \arg        USART_INT_TC: transmission complete interrupt
@@ -809,6 +870,7 @@ void usart_interrupt_disable(uint32_t usart_periph, uint32_t int_flag)
     \brief      get USART interrupt and flag status
      \param[in]  usart_periph: USARTx(x=0,1,2,5)/UARTx(x=3,4,6,7)
     \param[in]  int_flag
+                only one parameter can be selected which is shown as below:
       \arg        USART_INT_FLAG_PERR: parity error interrupt and flag
       \arg        USART_INT_FLAG_TBE: transmitter buffer empty interrupt and flag
       \arg        USART_INT_FLAG_TC: transmission complete interrupt and flag
@@ -844,12 +906,13 @@ FlagStatus usart_interrupt_flag_get(uint32_t usart_periph, uint32_t int_flag)
     \brief      clear USART interrupt flag in STAT0/STAT1 register
     \param[in]  usart_periph: USARTx(x=0,1,2,5)/UARTx(x=3,4,6,7)
     \param[in]  flag: USART interrupt flag
-      \arg        USART_INT_FLAG_CTS: CTS change flag
-      \arg        USART_INT_FLAG_LBD: LIN break detected flag
-      \arg        USART_INT_FLAG_TC: transmission complete
-      \arg        USART_INT_FLAG_RBNE: read data buffer not empty
-      \arg        USART_INT_FLAG_EB: end of block flag
-      \arg        USART_INT_FLAG_RT: receiver timeout flag
+                only one parameter can be selected which is shown as below:
+      \arg        USART_INT_FLAG_CTS: CTS interrupt and flag
+      \arg        USART_INT_FLAG_LBD: LIN break detected interrupt and flag
+      \arg        USART_INT_FLAG_TC: transmission complete interrupt and flag
+      \arg        USART_INT_FLAG_RBNE: read data buffer not empty interrupt and flag
+      \arg        USART_INT_FLAG_EB: interrupt enable bit of end of block event and flag
+      \arg        USART_INT_FLAG_RT: interrupt enable bit of receive timeout event and flag
     \param[out] none
     \retval     none
 */

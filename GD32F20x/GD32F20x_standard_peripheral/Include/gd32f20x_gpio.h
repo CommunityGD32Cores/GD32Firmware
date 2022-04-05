@@ -1,13 +1,39 @@
 /*!
     \file  gd32f20x_gpio.h
     \brief definitions for the GPIO
+
+    \version 2015-07-15, V1.0.0, firmware for GD32F20x
+    \version 2017-06-05, V2.0.0, firmware for GD32F20x
+    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2015-07-15, V1.0.0, firmware for GD32F20x
-    2017-06-05, V2.0.0, firmware for GD32F20x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F20X_GPIO_H
@@ -223,7 +249,7 @@
 #define AFIO_PCF0_ENET_PHY_SEL           BIT(23)             /*!< ethernet MII or RMII PHY selection */
 #define AFIO_PCF0_SWJ_CFG                BITS(24,26)         /*!< serial wire JTAG configuration */
 #define AFIO_PCF0_SPI2_REMAP             BIT(28)             /*!< SPI2/I2S2 remapping */
-#define AFIO_PCF0_TIMER1ITR0_REMAP       BIT(29)             /*!< TIMER1 internal trigger 0 remapping */
+#define AFIO_PCF0_TIMER1ITI1_REMAP       BIT(29)             /*!< TIMER1 internal trigger 1 remapping */
 #define AFIO_PCF0_PTP_PPS_REMAP          BIT(30)             /*!< ethernet PTP PPS remapping */
 
 /* AFIO_EXTISS0 */
@@ -493,7 +519,7 @@ typedef FlagStatus bit_status;
 #define GPIO_SWJ_SWDPENABLE_REMAP        ((uint32_t)0x00300200U)   /*!< JTAG-DP disabled and SW-DP enabled */
 #define GPIO_SWJ_DISABLE_REMAP           ((uint32_t)0x00300400U)   /*!< JTAG-DP disabled and SW-DP disabled */
 #define GPIO_SPI2_REMAP                  ((uint32_t)0x00201100U)   /*!< SPI2 remapping */
-#define GPIO_TIMER1ITR0_REMAP            ((uint32_t)0x00202000U)   /*!< TIMER1 internal trigger 0 remapping */
+#define GPIO_TIMER1ITI1_REMAP            ((uint32_t)0x00202000U)   /*!< TIMER1 internal trigger 1 remapping */
 #define GPIO_PTP_PPS_REMAP               ((uint32_t)0x00204000U)   /*!< ethernet PTP PPS remapping */
 #define GPIO_TIMER8_REMAP                ((uint32_t)0x80000020U)   /*!< TIMER8 remapping */
 #define GPIO_TIMER9_REMAP                ((uint32_t)0x80000040U)   /*!< TIMER9 remapping */
@@ -643,6 +669,7 @@ typedef FlagStatus bit_status;
 #define GPIO_ENET_PHY_RMII               AFIO_PCF0_ENET_PHY_SEL    /*!< configure ethernet MAC for connection with an RMII PHY */
 
 /* function declarations */
+/* initialization functions */
 /* reset GPIO port */
 void gpio_deinit(uint32_t gpio_periph);
 /* reset alternate function I/O(AFIO) */
@@ -650,6 +677,7 @@ void gpio_afio_deinit(void);
 /* GPIO parameter initialization */
 void gpio_init(uint32_t gpio_periph, uint32_t mode, uint32_t speed, uint32_t pin);
 
+/* function configuration */
 /* set GPIO pin bit */
 void gpio_bit_set(uint32_t gpio_periph, uint32_t pin);
 /* reset GPIO pin bit */
@@ -668,9 +696,13 @@ FlagStatus gpio_output_bit_get(uint32_t gpio_periph, uint32_t pin);
 /* get GPIO port output status */
 uint16_t gpio_output_port_get(uint32_t gpio_periph);
 
-/* lock GPIO pin bit */
-void gpio_pin_lock(uint32_t gpio_periph, uint32_t pin);
+/* configure GPIO pin remap */
+void gpio_pin_remap_config(uint32_t gpio_remap, ControlStatus newvalue);
+/* configure GPIO pin remap1 */
+void gpio_pin_remap1_config(uint8_t remap_reg, uint32_t remap, ControlStatus newvalue);
 
+/* select GPIO pin exti sources */
+void gpio_exti_source_select(uint8_t output_port, uint8_t output_pin);
 /* configure GPIO pin event output */
 void gpio_event_output_config(uint8_t output_port, uint8_t output_pin);
 /* enable GPIO pin event output */
@@ -678,15 +710,10 @@ void gpio_event_output_enable(void);
 /* disable GPIO pin event output */
 void gpio_event_output_disable(void);
 
-/* select GPIO pin exti sources */
-void gpio_exti_source_select(uint8_t output_port, uint8_t output_pin);
+/* lock GPIO pin bit */
+void gpio_pin_lock(uint32_t gpio_periph, uint32_t pin);
 
 /* select ethernet MII or RMII PHY */
 void gpio_ethernet_phy_select(uint32_t enet_sel);
-
-/* configure GPIO pin remap */
-void gpio_pin_remap_config(uint32_t gpio_remap, ControlStatus newvalue);
-/* configure GPIO pin remap1 */
-void gpio_pin_remap1_config(uint8_t remap_reg, uint32_t remap, ControlStatus newvalue);
 
 #endif /* GD32F20X_GPIO_H */

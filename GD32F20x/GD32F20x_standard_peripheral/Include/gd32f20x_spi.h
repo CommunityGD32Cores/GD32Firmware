@@ -1,13 +1,39 @@
 /*!
     \file  gd32f20x_spi.h
     \brief definitions for the SPI
+
+    \version 2015-07-15, V1.0.0, firmware for GD32F20x
+    \version 2017-06-05, V2.0.0, firmware for GD32F20x
+    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2015-07-15, V1.0.0, firmware for GD32F20x
-    2017-06-05, V2.0.0, firmware for GD32F20x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F20X_SPI_H
@@ -104,12 +130,12 @@
 typedef struct
 {   
     uint32_t device_mode;                                                       /*!< SPI master or slave */
-    uint32_t trans_mode;                                                        /*!< SPI transtype */
+    uint32_t trans_mode;                                                        /*!< SPI transfer type */
     uint32_t frame_size;                                                        /*!< SPI frame size */
-    uint32_t nss;                                                               /*!< SPI NSS control by handware or software */
+    uint32_t nss;                                                               /*!< SPI NSS control by hardware or software */
     uint32_t endian;                                                            /*!< SPI big endian or little endian */
     uint32_t clock_polarity_phase;                                              /*!< SPI clock phase and polarity */
-    uint32_t prescale;                                                          /*!< SPI prescale factor */
+    uint32_t prescale;                                                          /*!< SPI prescaler factor */
 }spi_parameter_struct;
 
 /* SPI mode definitions */
@@ -210,12 +236,12 @@ typedef struct
 #define SPI_I2S_INT_ERR                 ((uint8_t)0x02U)                        /*!< error interrupt */
 
 /* SPI/I2S interrupt flag constants definitions */
-#define SPI_I2S_INT_FLAG_TBE            ((uint8_t)0x00U)                        /*!< transmit buffer empty interrupt */
-#define SPI_I2S_INT_FLAG_RBNE           ((uint8_t)0x01U)                        /*!< receive buffer not empty interrupt */
-#define SPI_I2S_INT_FLAG_RXORERR        ((uint8_t)0x02U)                        /*!< overrun interrupt */
-#define SPI_INT_FLAG_CONFERR            ((uint8_t)0x03U)                        /*!< config error interrupt */
-#define SPI_INT_FLAG_CRCERR             ((uint8_t)0x04U)                        /*!< CRC error interrupt */
-#define I2S_INT_FLAG_TXURERR            ((uint8_t)0x05U)                        /*!< underrun error interrupt */
+#define SPI_I2S_INT_FLAG_TBE            ((uint8_t)0x00U)                        /*!< transmit buffer empty interrupt flag */
+#define SPI_I2S_INT_FLAG_RBNE           ((uint8_t)0x01U)                        /*!< receive buffer not empty interrupt flag */
+#define SPI_I2S_INT_FLAG_RXORERR        ((uint8_t)0x02U)                        /*!< overrun interrupt flag */
+#define SPI_INT_FLAG_CONFERR            ((uint8_t)0x03U)                        /*!< config error interrupt flag */
+#define SPI_INT_FLAG_CRCERR             ((uint8_t)0x04U)                        /*!< CRC error interrupt flag */
+#define I2S_INT_FLAG_TXURERR            ((uint8_t)0x05U)                        /*!< underrun error interrupt flag */
 
 /* SPI/I2S flag definitions */                                                  
 #define SPI_FLAG_RBNE                   SPI_STAT_RBNE                           /*!< receive buffer not empty flag */
@@ -232,8 +258,11 @@ typedef struct
 #define I2S_FLAG_TRANS                  SPI_STAT_TRANS                          /*!< transmit on-going flag */
 
 /* function declarations */
+/* SPI/I2S deinitialization and initialization functions */
 /* reset SPI and I2S */
 void spi_i2s_deinit(uint32_t spi_periph);
+/* initialize the parameters of SPI structure with the default values */
+void spi_struct_para_init(spi_parameter_struct* spi_struct);
 /* initialize SPI parameter */
 void spi_init(uint32_t spi_periph, spi_parameter_struct* spi_struct);
 /* enable SPI */
@@ -250,6 +279,7 @@ void i2s_enable(uint32_t spi_periph);
 /* disable I2S */
 void i2s_disable(uint32_t spi_periph);
 
+/* NSS functions */
 /* enable SPI NSS output */
 void spi_nss_output_enable(uint32_t spi_periph);
 /* disable SPI NSS output */
@@ -259,11 +289,13 @@ void spi_nss_internal_high(uint32_t spi_periph);
 /* SPI NSS pin low level in software mode */
 void spi_nss_internal_low(uint32_t spi_periph);
 
+/* DMA communication */
 /* enable SPI DMA */
 void spi_dma_enable(uint32_t spi_periph, uint8_t dma);
 /* disable SPI DMA */
 void spi_dma_disable(uint32_t spi_periph, uint8_t dma);
 
+/* normal mode communication */
 /* configure SPI/I2S data frame format */
 void spi_i2s_data_frame_format_config(uint32_t spi_periph, uint16_t frame_format);
 /* SPI transmit data */
@@ -272,18 +304,8 @@ void spi_i2s_data_transmit(uint32_t spi_periph, uint16_t data);
 uint16_t spi_i2s_data_receive(uint32_t spi_periph);
 /* configure SPI bidirectional transfer direction */
 void spi_bidirectional_transfer_config(uint32_t spi_periph, uint32_t transfer_direction);
- 
-/* enable SPI and I2S interrupt */
-void spi_i2s_interrupt_enable(uint32_t spi_periph, uint8_t interrupt);
-/* disable SPI and I2S interrupt */
-void spi_i2s_interrupt_disable(uint32_t spi_periph, uint8_t interrupt);
-/* get SPI and I2S interrupt status */
-FlagStatus spi_i2s_interrupt_flag_get(uint32_t spi_periph, uint8_t interrupt);
-/* get SPI and I2S flag status */
-FlagStatus spi_i2s_flag_get(uint32_t spi_periph, uint32_t flag);
-/* clear SPI CRC error flag status */
-void spi_crc_error_clear(uint32_t spi_periph);
 
+/* SPI CRC functions */
 /* set SPI CRC polynomial */
 void spi_crc_polynomial_set(uint32_t spi_periph, uint16_t crc_poly);
 /* get SPI CRC polynomial */
@@ -296,6 +318,18 @@ void spi_crc_off(uint32_t spi_periph);
 void spi_crc_next(uint32_t spi_periph);
 /* get SPI CRC send value or receive value */
 uint16_t spi_crc_get(uint32_t spi_periph, uint8_t crc);
+
+/* flag and interrupt functions */
+/* enable SPI and I2S interrupt */
+void spi_i2s_interrupt_enable(uint32_t spi_periph, uint8_t interrupt);
+/* disable SPI and I2S interrupt */
+void spi_i2s_interrupt_disable(uint32_t spi_periph, uint8_t interrupt);
+/* get SPI and I2S interrupt status */
+FlagStatus spi_i2s_interrupt_flag_get(uint32_t spi_periph, uint8_t interrupt);
+/* get SPI and I2S flag status */
+FlagStatus spi_i2s_flag_get(uint32_t spi_periph, uint32_t flag);
+/* clear SPI CRC error flag status */
+void spi_crc_error_clear(uint32_t spi_periph);
 
 /* enable quad wire SPI */
 void qspi_enable(uint32_t spi_periph);

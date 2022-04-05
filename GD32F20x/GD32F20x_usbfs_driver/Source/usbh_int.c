@@ -1,13 +1,39 @@
 /*!
     \file  usbh_int.c
     \brief USB host mode interrupt handler file
+
+    \version 2015-07-15, V1.0.0, firmware for GD32F20x
+    \version 2017-06-05, V2.0.0, firmware for GD32F20x
+    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2015-07-15, V1.0.0, firmware for GD32F20x
-    2017-06-05, V2.0.0, firmware for GD32F20x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "usb_core.h"
@@ -34,7 +60,7 @@ static uint32_t usbh_intf_iso_incomplete_xfer (usb_core_handle_struct *pudev);
 uint32_t usbh_isr (usb_core_handle_struct *pudev)
 {
     uint32_t retval = 0U;
-    uint32_t int_flag = 0U;
+    __IO uint32_t int_flag = 0U;
 
     /* check if host mode */
     if (USB_CURRENT_MODE_GET() == HOST_MODE) {
@@ -497,42 +523,54 @@ static uint32_t usbh_intf_hc_in (usb_core_handle_struct *pudev, uint8_t channel_
 */
 static uint32_t usbh_intf_rxfifo_noempty (usb_core_handle_struct *pudev)
 {
-    uint32_t count = 0U;
-    __IO uint8_t channel_num = 0U;
-    __IO uint32_t rx_status = 0U;
-    uint32_t usbh_ch_ctl_reg = 0U;
-    usb_hostchannel_struct *puhc;
+    uint32_t count = 0;
+    __IO uint8_t  hc_num = 0;
+    __IO uint32_t hc_ctlr;
+    __IO uint32_t rx_status = 0;
 
-    /* disable the Rx status queue level interrupt */
+    /* Disable the Rx Status Queue Level interrupt */
     USB_GINTEN &= ~GINTF_RXFNEIF;
 
     rx_status = USB_GRSTATP;
-    channel_num = (uint8_t)(rx_status & GRSTATRP_CNUM);
-    puhc = &pudev->host.host_channel[channel_num];
+    hc_num = rx_status & GRSTATRP_CNUM;
 
-    switch ((rx_status & GRSTATRP_RPCKST) >> 17) {
+    switch ((rx_status & GRSTATRP_RPCKST) >> 17)
+    {
         case GRSTATR_RPCKST_IN:
             count = (rx_status & GRSTATRP_BCOUNT) >> 4;
 
-            /* read the data into the host buffer. */
-            if ((count > 0U) && (puhc->xfer_buff != (void *)0)) {
-                usb_fifo_read(puhc->xfer_buff, (uint16_t)count);
+            /* Read the data into the host buffer. */
+            if ((count > 0) && (pudev->host.host_channel[hc_num].xfer_buff != (void *)0))
+            {
+                usb_fifo_read(pudev->host.host_channel[hc_num].xfer_buff, count);
 
-                /* manage multiple Xfer */
-                puhc->xfer_buff += count;
-                puhc->xfer_count += count;
+                /* Manage multiple Xfer */
+                pudev->host.host_channel[hc_num].xfer_buff += count;
+                pudev->host.host_channel[hc_num].xfer_count += count;
 
-                if (USB_HCHxLEN((uint16_t)channel_num) & HCHLEN_PCNT) {
-                    /* re-activate the channel when more packets are expected */
-                    usbh_ch_ctl_reg = USB_HCHxCTL((uint16_t)channel_num);
-                    usbh_ch_ctl_reg |= HCHCTL_CEN;
-                    usbh_ch_ctl_reg &= ~HCHCTL_CDIS;
-                    USB_HCHxCTL((uint16_t)channel_num) = usbh_ch_ctl_reg;
+                pudev->host.transfer_count[hc_num] = pudev->host.host_channel[hc_num].xfer_count;
+
+                if (USB_HCHxLEN((uint16_t)hc_num) & HCHLEN_PCNT)
+                {
+                    hc_ctlr = USB_HCHxCTL((uint16_t)hc_num);
+
+                    /* Re-activate the channel when more packets are expected */
+                    hc_ctlr |= HCHCTL_CEN;
+                    hc_ctlr &= ~HCHCTL_CDIS;
+
+                    USB_HCHxCTL((uint16_t)hc_num) = hc_ctlr;
                 }
             }
             break;
         case GRSTATR_RPCKST_IN_XFER_COMP:
+            break;
         case GRSTATR_RPCKST_DATA_TOGGLE_ERR:
+            count = (rx_status & GRSTATRP_BCOUNT) >> 4;
+            while (count > 0) {
+                rx_status = USB_GRSTATP;
+                count--;
+            }
+            break;
         case GRSTATR_RPCKST_CH_HALTED:
         default:
             break;

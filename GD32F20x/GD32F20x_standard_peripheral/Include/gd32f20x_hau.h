@@ -1,13 +1,39 @@
 /*!
     \file  gd32f20x_hau.h
     \brief definitions for the HAU
+
+    \version 2015-07-15, V1.0.0, firmware for GD32F20x
+    \version 2017-06-05, V2.0.0, firmware for GD32F20x
+    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2015-07-15, V1.0.0, firmware for GD32F20x
-    2017-06-05, V2.0.0, firmware for GD32F20x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F20X_HAU_H
@@ -122,65 +148,62 @@ typedef struct
 #define HAU_INT_FLAG_CALCULATION_COMPLETE HAU_STAT_CINT                                  /*!< digest calculation is completed */
 
 /* function declarations */
+/* initialization functions */
 /* reset the HAU peripheral */
 void hau_deinit(void);
 /* initialize the HAU peripheral parameters */
 void hau_init(hau_init_parameter_struct* initpara);
-/* initialize the sturct hau_initpara */
+/* initialize the structure hau_initpara */
 void hau_init_parameter_init(hau_init_parameter_struct* initpara);
 /* reset the HAU processor core */
 void hau_reset(void);
-
 /* configure the number of valid bits in last word of the message */
 void hau_last_word_validbits_num_config(uint32_t valid_num);
 /* write data to the IN FIFO */
 void hau_data_write(uint32_t data);
 /* return the number of words already written into the IN FIFO */
 uint32_t hau_infifo_words_num_get(void);
-
 /* read the message digest result */
 void hau_digest_read(hau_digest_parameter_struct* digestpara);
 /* enable digest calculation */
 void hau_digest_calculation_enable(void);
-
-/* configure multiple or single DMA is used, and digest calculation at the end of a DMA transfer or not */
+/* configure single or multiple DMA is used, and digest calculation at the end of a DMA transfer or not */
 void hau_multiple_single_dma_config(uint32_t multi_single);
 /* enable the HAU DMA interface */
 void hau_dma_enable(void);
 /* disable the HAU DMA interface */
 void hau_dma_disable(void);
 
-/* enable the HAU interrupts */
-void hau_interrupt_enable(uint32_t interrupt);
-/* disable the HAU interrupts */
-void hau_interrupt_disable(uint32_t interrupt);
-/* get the HAU flag status */
-FlagStatus hau_flag_get(uint32_t flag);
-/* clear the HAU flag status */
-void hau_flag_clear(uint32_t flag);
-/* get the HAU interrupt flag status */
-FlagStatus hau_interrupt_flag_get(uint32_t interrupt);
-/* clear the HAU interrupt flag status */
-void hau_interrupt_flag_clear(uint32_t interrupt);
-
+/* calculate digest in HASH mode */
 /* calculate digest using SHA1 in HASH mode */
 ErrStatus hau_hash_sha_1(uint8_t *input, uint32_t in_length, uint8_t output[20]);
 /* calculate digest using SHA1 in HMAC mode */
 ErrStatus hau_hmac_sha_1(uint8_t *key, uint32_t keysize, uint8_t *input, uint32_t in_length, uint8_t output[20]);
-
 /* calculate digest using SHA224 in HASH mode */
 ErrStatus hau_hash_sha_224(uint8_t *input, uint32_t in_length, uint8_t output[28]);
 /* calculate digest using SHA224 in HMAC mode */
- ErrStatus hau_hmac_sha_224(uint8_t *key, uint32_t keysize, uint8_t *input, uint32_t in_length, uint8_t output[28]);
- 
+ErrStatus hau_hmac_sha_224(uint8_t *key, uint32_t keysize, uint8_t *input, uint32_t in_length, uint8_t output[28]);
 /* calculate digest using SHA256 in HASH mode */
 ErrStatus hau_hash_sha_256(uint8_t *input, uint32_t in_length, uint8_t output[32]);
 /* calculate digest using SHA256 in HMAC mode */
 ErrStatus hau_hmac_sha_256(uint8_t *key, uint32_t keysize, uint8_t *input, uint32_t in_length, uint8_t output[32]);
-
 /* calculate digest using MD5 in HASH mode */
 ErrStatus hau_hash_md5(uint8_t *input, uint32_t in_length, uint8_t output[16]);
 /* calculate digest using MD5 in HMAC mode */
 ErrStatus hau_hmac_md5(uint8_t *key, uint32_t keysize, uint8_t *input, uint32_t in_length, uint8_t output[16]);
+
+/* interrupt & flag functions */
+/* get the HAU flag status */
+FlagStatus hau_flag_get(uint32_t flag);
+/* clear the HAU flag status */
+void hau_flag_clear(uint32_t flag);
+/* enable the HAU interrupts */
+void hau_interrupt_enable(uint32_t interrupt);
+/* disable the HAU interrupts */
+void hau_interrupt_disable(uint32_t interrupt);
+/* get the HAU interrupt flag status */
+FlagStatus hau_interrupt_flag_get(uint32_t int_flag);
+/* clear the HAU interrupt flag status */
+void hau_interrupt_flag_clear(uint32_t int_flag);
 
 #endif /*GD32F20X_HAU_H */

@@ -1,13 +1,39 @@
 /*!
     \file  gd32f20x_rcu.c
     \brief RCU driver
+
+    \version 2015-07-15, V1.0.0, firmware for GD32F20x
+    \version 2017-06-05, V2.0.0, firmware for GD32F20x
+    \version 2018-10-31, V2.1.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2018, GigaDevice Semiconductor Inc.
 
-    2015-07-15, V1.0.0, firmware for GD32F20x
-    2017-06-05, V2.0.0, firmware for GD32F20x
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "gd32f20x_rcu.h"
@@ -450,10 +476,12 @@ void rcu_pll_config(uint32_t pll_src, uint32_t pll_mul)
 /*!
     \brief      configure the PREDV0 division factor and clock source
     \param[in]  predv0_source: PREDV0 input clock source selection
+                only one parameter can be selected which is shown as below:
       \arg        RCU_PREDV0SRC_HXTAL: HXTAL selected as PREDV0 input source clock
       \arg        RCU_PREDV0SRC_CKPLL1: CK_PLL1 selected as PREDV0 input source clock
     \param[in]  predv0_div: PREDV0 division factor
-      \arg        RCU_PREDV0_DIVx, x =1,2..16
+                only one parameter can be selected which is shown as below:
+      \arg        RCU_PREDV0_DIVx, x = 1..16
     \param[out] none
     \retval     none
 */
@@ -473,7 +501,8 @@ void rcu_predv0_config(uint32_t predv0_source, uint32_t predv0_div)
 /*!
     \brief      configure the PREDV1 division factor
     \param[in]  predv1_div: PREDV1 division factor
-      \arg        RCU_PREDV1_DIVx, x =1,2..16
+                only one parameter can be selected which is shown as below:
+      \arg        RCU_PREDV1_DIVx, x = 1..16
     \param[out] none
     \retval     none
 */
@@ -493,6 +522,7 @@ void rcu_predv1_config(uint32_t predv1_div)
 /*!
     \brief      configure the PLL1 clock 
     \param[in]  pll_mul: PLL clock multiplication factor
+                only one parameter can be selected which is shown as below:
       \arg        RCU_PLL1_MULx (x = 8..16, 20)
     \param[out] none
     \retval     none
@@ -506,6 +536,7 @@ void rcu_pll1_config(uint32_t pll_mul)
 /*!
     \brief      configure the PLL2 clock 
     \param[in]  pll_mul: PLL clock multiplication factor
+                only one parameter can be selected which is shown as below:
       \arg        RCU_PLL2_MULx (x = 8..16, 20)
     \param[out] none
     \retval     none
@@ -518,7 +549,8 @@ void rcu_pll2_config(uint32_t pll_mul)
 
 /*!
     \brief      configure the ADC prescaler factor
-    \param[in]  adc_div: ADC prescaler factor
+    \param[in]  adc_psc: ADC prescaler factor
+                only one parameter can be selected which is shown as below:
       \arg        RCU_CKADC_CKAPB2_DIV2: ADC prescaler select CK_APB2/2
       \arg        RCU_CKADC_CKAPB2_DIV4: ADC prescaler select CK_APB2/4
       \arg        RCU_CKADC_CKAPB2_DIV6: ADC prescaler select CK_APB2/6
@@ -659,7 +691,7 @@ void rcu_i2s2_clock_config(uint32_t i2s_clock_source)
       \arg        RCU_FLAG_WWDGTRST: window watchdog timer reset flag
       \arg        RCU_FLAG_LPRST: low-power reset flag
     \param[out] none
-    \retval     none
+    \retval     FlagStatus: SET or RESET
 */
 FlagStatus rcu_flag_get(rcu_flag_enum flag)
 {
@@ -1070,7 +1102,7 @@ void rcu_hxtal_clock_monitor_disable(void)
     \param[out] none
     \retval     none
 */
-void rcu_irc8m_adjust_value_set(uint32_t irc8m_adjval)
+void rcu_irc8m_adjust_value_set(uint8_t irc8m_adjval)
 {
     uint32_t reg;
     
