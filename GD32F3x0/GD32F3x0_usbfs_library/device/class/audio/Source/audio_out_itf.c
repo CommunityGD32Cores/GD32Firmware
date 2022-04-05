@@ -8,27 +8,27 @@
 /*
     Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -36,16 +36,15 @@ OF SUCH DAMAGE.
 #include "audio_out_itf.h"
 
 /* local function prototypes ('static') */
-static uint8_t init         (uint32_t audiofreq, uint32_t volume, uint32_t options);
-static uint8_t deinit       (uint32_t options);
-static uint8_t audio_cmd    (uint8_t* pbuf, uint32_t size, uint8_t cmd);
-static uint8_t volume_ctl   (uint8_t vol);
-static uint8_t mute_ctl     (uint8_t cmd);
-static uint8_t periodic_tc  (uint8_t cmd);
-static uint8_t get_state    (void);
+static uint8_t init(uint32_t audiofreq, uint32_t volume, uint32_t options);
+static uint8_t deinit(uint32_t options);
+static uint8_t audio_cmd(uint8_t *pbuf, uint32_t size, uint8_t cmd);
+static uint8_t volume_ctl(uint8_t vol);
+static uint8_t mute_ctl(uint8_t cmd);
+static uint8_t periodic_tc(uint8_t cmd);
+static uint8_t get_state(void);
 
-audio_fops_struct audio_out_fops = 
-{
+audio_fops_struct audio_out_fops = {
     init,
     deinit,
     audio_cmd,
@@ -65,14 +64,14 @@ static uint8_t audio_state = AUDIO_STATE_INACTIVE;
     \param[out] none
     \retval     AUDIO_OK if all operations succeed, AUDIO_FAIL else
 */
-static uint8_t init (uint32_t audio_freq, uint32_t volume, uint32_t options)
+static uint8_t init(uint32_t audio_freq, uint32_t volume, uint32_t options)
 {
     static uint32_t initialized = 0U;
 
     /* check if the low layer has already been initialized */
-    if (0U == initialized) {
+    if(0U == initialized) {
         /* call low layer function */
-        if (0U != eval_audio_init(OUTPUT_DEVICE_AUTO, (uint8_t)volume, audio_freq)) {
+        if(0U != eval_audio_init(OUTPUT_DEVICE_AUTO, (uint8_t)volume, audio_freq)) {
             audio_state = AUDIO_STATE_ERROR;
 
             return AUDIO_FAIL;
@@ -94,7 +93,7 @@ static uint8_t init (uint32_t audio_freq, uint32_t volume, uint32_t options)
     \param[out] none
     \retval     AUDIO_OK if all operations succeed, AUDIO_FAIL else
 */
-static uint8_t deinit (uint32_t options)
+static uint8_t deinit(uint32_t options)
 {
     /* update the audio state machine */
     audio_state = AUDIO_STATE_INACTIVE;
@@ -114,28 +113,28 @@ static uint8_t deinit (uint32_t options)
     \param[out] none
     \retval     AUDIO_OK if all operations succeed, AUDIO_FAIL else
 */
-static uint8_t audio_cmd (uint8_t* pbuf, uint32_t size, uint8_t cmd)
+static uint8_t audio_cmd(uint8_t *pbuf, uint32_t size, uint8_t cmd)
 {
     /* check the current state */
-    if ((AUDIO_STATE_INACTIVE == audio_state) || (AUDIO_STATE_ERROR == audio_state)) {
+    if((AUDIO_STATE_INACTIVE == audio_state) || (AUDIO_STATE_ERROR == audio_state)) {
         audio_state = AUDIO_STATE_ERROR;
 
         return AUDIO_FAIL;
     }
 
-    switch (cmd) {
+    switch(cmd) {
     /* process the play command */
     case AUDIO_CMD_PLAY:
         /* if current state is active or stopped */
-        if ((AUDIO_STATE_ACTIVE == audio_state) || \
-            (AUDIO_STATE_STOPPED == audio_state) || \
-            (AUDIO_STATE_PLAYING == audio_state)) {
+        if((AUDIO_STATE_ACTIVE == audio_state) || \
+                (AUDIO_STATE_STOPPED == audio_state) || \
+                (AUDIO_STATE_PLAYING == audio_state)) {
             audio_mal_play((uint32_t)pbuf, size);
             audio_state = AUDIO_STATE_PLAYING;
 
             return AUDIO_OK;
-        } else if (AUDIO_STATE_PAUSED == audio_state) {
-            if (eval_audio_pause_resume(AUDIO_RESUME, (uint32_t)pbuf, (size / 2U))) {
+        } else if(AUDIO_STATE_PAUSED == audio_state) {
+            if(eval_audio_pause_resume(AUDIO_RESUME, (uint32_t)pbuf, (size / 2U))) {
                 audio_state = AUDIO_STATE_ERROR;
 
                 return AUDIO_FAIL;
@@ -150,10 +149,10 @@ static uint8_t audio_cmd (uint8_t* pbuf, uint32_t size, uint8_t cmd)
 
     /* process the stop command */
     case AUDIO_CMD_STOP:
-        if (AUDIO_STATE_PLAYING != audio_state) {
+        if(AUDIO_STATE_PLAYING != audio_state) {
             /* unsupported command */
             return AUDIO_FAIL;
-        } else if (eval_audio_stop(CODEC_PDWN_SW)) {
+        } else if(eval_audio_stop(CODEC_PDWN_SW)) {
             audio_state = AUDIO_STATE_ERROR;
 
             return AUDIO_FAIL;
@@ -165,10 +164,10 @@ static uint8_t audio_cmd (uint8_t* pbuf, uint32_t size, uint8_t cmd)
 
     /* process the pause command */
     case AUDIO_CMD_PAUSE:
-        if (AUDIO_STATE_PLAYING != audio_state) {
+        if(AUDIO_STATE_PLAYING != audio_state) {
             /* unsupported command */
             return AUDIO_FAIL;
-        } else if (eval_audio_pause_resume(AUDIO_PAUSE, (uint32_t)pbuf, (size / 2U))) {
+        } else if(eval_audio_pause_resume(AUDIO_PAUSE, (uint32_t)pbuf, (size / 2U))) {
             audio_state = AUDIO_STATE_ERROR;
 
             return AUDIO_FAIL;
@@ -190,7 +189,7 @@ static uint8_t audio_cmd (uint8_t* pbuf, uint32_t size, uint8_t cmd)
     \param[out] none
     \retval     AUDIO_OK if all operations succeed, AUDIO_FAIL else
 */
-static uint8_t volume_ctl (uint8_t vol)
+static uint8_t volume_ctl(uint8_t vol)
 {
     return AUDIO_OK;
 }
@@ -201,7 +200,7 @@ static uint8_t volume_ctl (uint8_t vol)
     \param[out] none
     \retval     AUDIO_OK if all operations succeed, AUDIO_FAIL else
 */
-static uint8_t mute_ctl (uint8_t cmd)
+static uint8_t mute_ctl(uint8_t cmd)
 {
     return AUDIO_OK;
 }
@@ -212,7 +211,7 @@ static uint8_t mute_ctl (uint8_t cmd)
     \param[out] none
     \retval     AUDIO_OK if all operations succeed, AUDIO_FAIL else
 */
-static uint8_t periodic_tc (uint8_t cmd)
+static uint8_t periodic_tc(uint8_t cmd)
 {
     return AUDIO_OK;
 }
@@ -223,7 +222,7 @@ static uint8_t periodic_tc (uint8_t cmd)
     \param[out] none
     \retval     AUDIO_OK if all operations succeed, AUDIO_FAIL else
 */
-static uint8_t get_state (void)
+static uint8_t get_state(void)
 {
     return audio_state;
 }

@@ -8,27 +8,27 @@
 /*
     Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -46,18 +46,17 @@ extern struct {
     uint32_t base_addr;
 } prog;
 
-dfu_mal_prop* tMALTab[MAX_USED_MEMORY_MEDIA] = {
+dfu_mal_prop *tMALTab[MAX_USED_MEMORY_MEDIA] = {
     &DFU_Flash_cb
 };
 
 /* The list of memory interface string descriptor pointers. This list
    can be updated whenever a memory has to be added or removed */
-const uint8_t* USBD_DFU_StringDesc[MAX_USED_MEMORY_MEDIA] = 
-{
+const uint8_t *USBD_DFU_StringDesc[MAX_USED_MEMORY_MEDIA] = {
     (const uint8_t *)FLASH_IF_STRING
 };
 
-static uint8_t dfu_mal_checkaddr (uint32_t addr);
+static uint8_t dfu_mal_checkaddr(uint32_t addr);
 
 /*!
     \brief      initialize the memory media on the GD32
@@ -65,14 +64,14 @@ static uint8_t dfu_mal_checkaddr (uint32_t addr);
     \param[out] none
     \retval     MAL_OK
 */
-uint8_t dfu_mal_init (void)
+uint8_t dfu_mal_init(void)
 {
     uint32_t mem_index = 0U;
 
     /* initialize all supported memory medias */
-    for (mem_index = 0U; mem_index < MAX_USED_MEMORY_MEDIA; mem_index++) {
+    for(mem_index = 0U; mem_index < MAX_USED_MEMORY_MEDIA; mem_index++) {
         /* check if the memory media exists */
-        if (NULL != tMALTab[mem_index]->mal_init) {
+        if(NULL != tMALTab[mem_index]->mal_init) {
             tMALTab[mem_index]->mal_init();
         }
     }
@@ -86,14 +85,14 @@ uint8_t dfu_mal_init (void)
     \param[out] none
     \retval     MAL_OK
 */
-uint8_t dfu_mal_deinit (void)
+uint8_t dfu_mal_deinit(void)
 {
     uint32_t mem_index = 0U;
 
     /* deinitializes all supported memory medias */
-    for (mem_index = 0U; mem_index < MAX_USED_MEMORY_MEDIA; mem_index++) {
+    for(mem_index = 0U; mem_index < MAX_USED_MEMORY_MEDIA; mem_index++) {
         /* check if the memory media exists */
-        if (NULL != tMALTab[mem_index]->mal_deinit) {
+        if(NULL != tMALTab[mem_index]->mal_deinit) {
             tMALTab[mem_index]->mal_deinit();
         }
     }
@@ -107,18 +106,18 @@ uint8_t dfu_mal_deinit (void)
     \param[out] none
     \retval     MAL_OK
 */
-uint8_t dfu_mal_erase (uint32_t addr)
+uint8_t dfu_mal_erase(uint32_t addr)
 {
     uint32_t mem_index = dfu_mal_checkaddr(addr);
 
     /* check if the address is in protected area */
-    if (IS_PROTECTED_AREA(addr)) {
+    if(IS_PROTECTED_AREA(addr)) {
         return MAL_FAIL;
     }
 
-    if (mem_index < MAX_USED_MEMORY_MEDIA) {
+    if(mem_index < MAX_USED_MEMORY_MEDIA) {
         /* check if the operation is supported */
-        if (NULL != tMALTab[mem_index]->mal_erase) {
+        if(NULL != tMALTab[mem_index]->mal_erase) {
             return tMALTab[mem_index]->mal_erase(addr);
         } else {
             return MAL_FAIL;
@@ -136,18 +135,18 @@ uint8_t dfu_mal_erase (uint32_t addr)
     \param[out] none
     \retval     MAL_OK
 */
-uint8_t dfu_mal_write (uint8_t *buf, uint32_t addr, uint32_t len)
+uint8_t dfu_mal_write(uint8_t *buf, uint32_t addr, uint32_t len)
 {
     uint32_t mem_index = dfu_mal_checkaddr(addr);
 
     /* check if the address is in protected area */
-    if (IS_PROTECTED_AREA(addr)) {
+    if(IS_PROTECTED_AREA(addr)) {
         return MAL_FAIL;
     }
 
-    if (mem_index < MAX_USED_MEMORY_MEDIA) {
+    if(mem_index < MAX_USED_MEMORY_MEDIA) {
         /* check if the operation is supported */
-        if (NULL != tMALTab[mem_index]->mal_write) {
+        if(NULL != tMALTab[mem_index]->mal_write) {
             return tMALTab[mem_index]->mal_write(buf, addr, len);
         } else {
             return MAL_FAIL;
@@ -165,17 +164,17 @@ uint8_t dfu_mal_write (uint8_t *buf, uint32_t addr, uint32_t len)
     \param[out] none
     \retval     pointer to buffer
 */
-uint8_t* dfu_mal_read (uint8_t *buf, uint32_t addr, uint32_t len)
+uint8_t *dfu_mal_read(uint8_t *buf, uint32_t addr, uint32_t len)
 {
     uint32_t mem_index = 0U;
 
-    if (OB_RDPT != addr) {
+    if(OB_RDPT != addr) {
         mem_index = dfu_mal_checkaddr(addr);
     }
 
-    if (mem_index < MAX_USED_MEMORY_MEDIA) {
+    if(mem_index < MAX_USED_MEMORY_MEDIA) {
         /* check if the operation is supported */
-        if (NULL != tMALTab[mem_index]->mal_read) {
+        if(NULL != tMALTab[mem_index]->mal_read) {
             return tMALTab[mem_index]->mal_read(buf, addr, len);
         } else {
             return buf;
@@ -193,12 +192,12 @@ uint8_t* dfu_mal_read (uint8_t *buf, uint32_t addr, uint32_t len)
     \param[out] none
     \retval     MAL_OK if all operations are OK, MAL_FAIL else
 */
-uint8_t dfu_mal_getstatus (uint32_t addr, uint8_t cmd, uint8_t *buffer)
+uint8_t dfu_mal_getstatus(uint32_t addr, uint8_t cmd, uint8_t *buffer)
 {
     uint32_t mem_index = dfu_mal_checkaddr(addr);
 
-    if (mem_index < MAX_USED_MEMORY_MEDIA) {
-        if (cmd & 0x01U) {
+    if(mem_index < MAX_USED_MEMORY_MEDIA) {
+        if(cmd & 0x01U) {
             SET_POLLING_TIMEOUT(tMALTab[mem_index]->write_timeout);
         } else {
             SET_POLLING_TIMEOUT(tMALTab[mem_index]->erase_timeout);
@@ -216,14 +215,14 @@ uint8_t dfu_mal_getstatus (uint32_t addr, uint8_t cmd, uint8_t *buffer)
     \param[out] none
     \retval     index of the addressed memory
 */
-static uint8_t dfu_mal_checkaddr (uint32_t addr)
+static uint8_t dfu_mal_checkaddr(uint32_t addr)
 {
     uint8_t mem_index = 0U;
 
     /* check with all supported memories */
-    for (mem_index = 0U; mem_index < MAX_USED_MEMORY_MEDIA; mem_index++) {
+    for(mem_index = 0U; mem_index < MAX_USED_MEMORY_MEDIA; mem_index++) {
         /* if the check address is supported, return the memory index */
-        if (MAL_OK == tMALTab[mem_index]->mal_checkaddr(addr)) {
+        if(MAL_OK == tMALTab[mem_index]->mal_checkaddr(addr)) {
             return mem_index;
         }
     }

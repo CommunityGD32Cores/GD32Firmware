@@ -8,27 +8,27 @@
 /*
     Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -115,8 +115,7 @@ OF SUCH DAMAGE.
 #define AUDIO_IN_STREAMING_CTRL                      0x02U
 
 /* audio stream interface number */
-enum
-{
+enum {
 #ifdef USE_USB_AUDIO_MICPHONE
     MIC_INTERFACE_COUNT,
 #endif
@@ -131,8 +130,7 @@ enum
 
 #pragma pack(1)
 
-typedef struct
-{
+typedef struct {
     usb_desc_header header;           /*!< descriptor header, including type and size */
     uint8_t  bDescriptorSubtype;      /*!< header descriptor subtype */
     uint16_t bcdADC;                  /*!< audio device class specification release number in binary-coded decimal */
@@ -147,8 +145,7 @@ typedef struct
 #endif
 } usb_desc_AC_itf;
 
-typedef struct
-{
+typedef struct {
     usb_desc_header header;           /*!< descriptor header, including type and size */
     uint8_t  bDescriptorSubtype;      /*!< AS_GENERAL descriptor subtype */
     uint8_t  bTerminalLink;           /*!< the terminal ID */
@@ -156,8 +153,7 @@ typedef struct
     uint16_t wFormatTag;              /*!< the audio data format */
 } usb_desc_AS_itf;
 
-typedef struct
-{
+typedef struct {
     usb_desc_header header;           /*!< descriptor header, including type and size */
     uint8_t  bDescriptorSubtype;      /*!< INPUT_TERMINAL descriptor subtype. */
     uint8_t  bTerminalID;             /*!< constant uniquely identifying the terminal within the audio function */
@@ -169,8 +165,7 @@ typedef struct
     uint8_t  iTerminal;               /*!< index of a string descriptor */
 } usb_desc_input_terminal;
 
-typedef struct
-{
+typedef struct {
     usb_desc_header header;           /*!< descriptor header, including type and size */
     uint8_t  bDescriptorSubtype;      /*!< OUTPUT_TERMINAL descriptor subtype */
     uint8_t  bTerminalID;             /*!< constant uniquely identifying the terminal within the audio function */
@@ -180,8 +175,7 @@ typedef struct
     uint8_t  iTerminal;               /*!< index of a string descriptor */
 } usb_desc_output_terminal;
 
-typedef struct
-{
+typedef struct {
     usb_desc_header header;           /*!< descriptor header, including type and size */
     uint8_t  bDescriptorSubtype;      /*!< FEATURE_UNIT descriptor subtype */
     uint8_t  bUnitID;                 /*!< constant uniquely identifying the unit within the audio function */
@@ -192,8 +186,7 @@ typedef struct
     uint8_t  iFeature;                /*!< index of a string descriptor */
 } usb_desc_mono_feature_unit;
 
-typedef struct
-{
+typedef struct {
     usb_desc_header header;           /*!< descriptor header, including type and size */
     uint8_t  bDescriptorSubtype;      /*!< FEATURE_UNIT descriptor subtype */
     uint8_t  bUnitID;                 /*!< constant uniquely identifying the unit within the audio function */
@@ -205,8 +198,7 @@ typedef struct
     uint8_t  iFeature;                /*!< index of a string descriptor */
 } usb_desc_stereo_feature_unit;
 
-typedef struct
-{
+typedef struct {
     usb_desc_header header;           /*!< descriptor header, including type and size */
     uint8_t  bDescriptorSubtype;      /*!< FORMAT_TYPE descriptor subtype */
     uint8_t  bFormatType;             /*!< constant identifying the format type */
@@ -217,8 +209,7 @@ typedef struct
     uint8_t  bSamFreq[3];             /*!< sampling frequency ns in Hz for this isochronous data endpoint */
 } usb_desc_format_type;
 
-typedef struct
-{
+typedef struct {
     usb_desc_header header;           /*!< descriptor header, including type and size */
     uint8_t  bEndpointAddress;        /*!< the address of the endpoint */
     uint8_t  bmAttributes;            /*!< transfer type and synchronization type */
@@ -228,8 +219,7 @@ typedef struct
     uint8_t  bSynchAddress;           /*!< reset to 0 */
 } usb_desc_std_ep;
 
-typedef struct
-{
+typedef struct {
     usb_desc_header header;           /*!< descriptor header, including type and size */
     uint8_t  bDescriptorSubtype;      /*!< EP_GENERAL descriptor subtype */
     uint8_t  bmAttributes;            /*!< transfer type and synchronization type */
@@ -240,8 +230,7 @@ typedef struct
 #pragma pack()
 
 /* USB configuration descriptor structure */
-typedef struct
-{
+typedef struct {
     usb_desc_config             config;
     usb_desc_itf                std_itf;
     usb_desc_AC_itf             ac_itf;
@@ -277,12 +266,11 @@ typedef struct
 #endif
 } usb_desc_config_set;
 
-typedef struct
-{
+typedef struct {
     /* main buffer for audio data out transfers and its relative pointers */
     uint8_t  isoc_out_buff[TOTAL_OUT_BUF_SIZE * 2U];
-    uint8_t* isoc_out_wrptr;
-    uint8_t* isoc_out_rdptr;
+    uint8_t *isoc_out_wrptr;
+    uint8_t *isoc_out_rdptr;
 
     /* main buffer for audio control requests transfers and its relative variables */
     uint8_t  audioctl[64];

@@ -8,27 +8,27 @@
 /*
     Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -48,8 +48,7 @@ OF SUCH DAMAGE.
 #define USBH_DEV_ADDR_DEFAULT                           0U
 #define USBH_DEV_ADDR                                   1U
 
-typedef enum
-{
+typedef enum {
     USBH_OK = 0U,
     USBH_BUSY,
     USBH_FAIL,
@@ -60,8 +59,7 @@ typedef enum
 } usbh_status;
 
 /* USB host global operation state */
-typedef enum
-{
+typedef enum {
     HOST_DEFAULT = 0U,
     HOST_DETECT_DEV_SPEED,
     HOST_DEV_ATTACHED,
@@ -78,8 +76,7 @@ typedef enum
 } usb_host_state;
 
 /* USB host enumeration state */
-typedef enum
-{
+typedef enum {
     ENUM_DEFAULT = 0U,
     ENUM_GET_DEV_DESC,
     ENUM_SET_ADDR,
@@ -94,8 +91,7 @@ typedef enum
 } usbh_enum_state;
 
 /* USB host control transfer state */
-typedef enum 
-{
+typedef enum {
     CTL_IDLE = 0U,
     CTL_SETUP,
     CTL_SETUP_WAIT,
@@ -112,24 +108,21 @@ typedef enum
 } usbh_ctl_state;
 
 /* user action state */
-typedef enum
-{
+typedef enum {
     USBH_USER_NO_RESP = 0U,
     USBH_USER_RESP_OK = 1U,
 } usbh_user_status;
 
-typedef enum
-{
+typedef enum {
     USBH_PORT_EVENT = 1U,
     USBH_URB_EVENT,
     USBH_CONTROL_EVENT,
     USBH_CLASS_EVENT,
     USBH_STATE_CHANGED_EVENT,
-}usbh_os_event;
+} usbh_os_event;
 
 /* control transfer information */
-typedef struct _usbh_control
-{
+typedef struct _usbh_control {
     uint8_t               pipe_in_num;
     uint8_t               pipe_out_num;
     uint8_t               max_len;
@@ -144,22 +137,19 @@ typedef struct _usbh_control
 } usbh_control;
 
 /* USB interface descriptor set */
-typedef struct _usb_desc_itf_set
-{
+typedef struct _usb_desc_itf_set {
     usb_desc_itf itf_desc;
     usb_desc_ep  ep_desc[USBH_MAX_EP_NUM];
 } usb_desc_itf_set;
 
 /* USB configure descriptor set */
-typedef struct _usb_desc_cfg_set
-{
+typedef struct _usb_desc_cfg_set {
     usb_desc_config   cfg_desc;
     usb_desc_itf_set  itf_desc_set[USBH_MAX_INTERFACES_NUM][USBH_MAX_ALT_SETTING];
 } usb_desc_cfg_set;
 
 /* USB device property */
-typedef struct
-{
+typedef struct {
     uint8_t                   data[USBH_DATA_BUF_MAX_LEN]; /* if DMA is used, the data array must be located in the first position */
     uint8_t                   cur_itf;
     uint8_t                   addr;
@@ -177,49 +167,46 @@ typedef struct
 struct _usbh_host;
 
 /* device class callbacks */
-typedef struct
-{
+typedef struct {
     uint8_t       class_code;       /*!< USB class type */
 
-    usbh_status (*class_init)      (struct _usbh_host *phost);
-    void        (*class_deinit)    (struct _usbh_host *phost);
-    usbh_status (*class_requests)  (struct _usbh_host *phost);
-    usbh_status (*class_machine)   (struct _usbh_host *phost);
-    usbh_status (*class_sof)       (struct _usbh_host *puhost);
+    usbh_status(*class_init)(struct _usbh_host *phost);
+    void (*class_deinit)(struct _usbh_host *phost);
+    usbh_status(*class_requests)(struct _usbh_host *phost);
+    usbh_status(*class_machine)(struct _usbh_host *phost);
+    usbh_status(*class_sof)(struct _usbh_host *puhost);
 
     void         *class_data;
 } usbh_class;
 
 /* user callbacks */
-typedef struct
-{
-    void (*dev_init)                    (void);
-    void (*dev_deinit)                  (void);
-    void (*dev_attach)                  (void);
-    void (*dev_reset)                   (void);
-    void (*dev_detach)                  (void);
-    void (*dev_over_currented)          (void);
-    void (*dev_speed_detected)          (uint32_t dev_speed);
-    void (*dev_devdesc_assigned)        (void *dev_desc);
-    void (*dev_address_set)             (void);
+typedef struct {
+    void (*dev_init)(void);
+    void (*dev_deinit)(void);
+    void (*dev_attach)(void);
+    void (*dev_reset)(void);
+    void (*dev_detach)(void);
+    void (*dev_over_currented)(void);
+    void (*dev_speed_detected)(uint32_t dev_speed);
+    void (*dev_devdesc_assigned)(void *dev_desc);
+    void (*dev_address_set)(void);
 
-    void (*dev_cfgdesc_assigned)        (usb_desc_config *cfg_desc, 
-                                         usb_desc_itf *itf_desc,
-                                         usb_desc_ep *ep_desc);
+    void (*dev_cfgdesc_assigned)(usb_desc_config *cfg_desc,
+                                 usb_desc_itf *itf_desc,
+                                 usb_desc_ep *ep_desc);
 
-    void (*dev_mfc_str)                 (void *mfc_str);
-    void (*dev_prod_str)                (void *prod_str);
-    void (*dev_seral_str)               (void *serial_str);
-    void (*dev_enumerated)              (void);
-    usbh_user_status (*dev_user_input)  (void);
-    int  (*dev_user_app)                (void);
-    void (*dev_not_supported)           (void);
-    void (*dev_error)                   (void);
+    void (*dev_mfc_str)(void *mfc_str);
+    void (*dev_prod_str)(void *prod_str);
+    void (*dev_seral_str)(void *serial_str);
+    void (*dev_enumerated)(void);
+    usbh_user_status(*dev_user_input)(void);
+    int (*dev_user_app)(void);
+    void (*dev_not_supported)(void);
+    void (*dev_error)(void);
 } usbh_user_cb;
 
 /* host information */
-typedef struct _usbh_host
-{
+typedef struct _usbh_host {
     usb_host_state                      cur_state;                          /*!< host state machine value */
     usb_host_state                      backup_state;                       /*!< backup of previous state machine value */
     usbh_enum_state                     enum_state;                         /*!< enumeration state machine */
@@ -233,6 +220,12 @@ typedef struct _usbh_host
     uint8_t                              class_num;                         /*!< USB class number */
 
     void                                *data;                              /*!< used for... */
+
+#if USB_LOW_POWER
+    uint8_t                             suspend_flag;                       /*!< host suspend flag */
+    uint8_t                             dev_supp_remote_wkup;               /*!< record device remote wakeup function */
+    uint8_t                             wakeup_mode;                        /*!< record wakeup mode */
+#endif /* USB_LOW_POWER*/
 } usbh_host;
 
 /*!
@@ -242,7 +235,7 @@ typedef struct _usbh_host
     \param[out] none
     \retval     none
 */
-static inline usb_urb_state usbh_urbstate_get (usb_core_driver *pudev, uint8_t pp_num)
+static inline usb_urb_state usbh_urbstate_get(usb_core_driver *pudev, uint8_t pp_num)
 {
     return pudev->host.pipe[pp_num].urb_state;
 }
@@ -254,21 +247,21 @@ static inline usb_urb_state usbh_urbstate_get (usb_core_driver *pudev, uint8_t p
     \param[out] none
     \retval     none
 */
-static inline uint32_t usbh_xfercount_get (usb_core_driver *pudev, uint8_t pp_num)
+static inline uint32_t usbh_xfercount_get(usb_core_driver *pudev, uint8_t pp_num)
 {
     return pudev->host.backup_xfercount[pp_num];
 }
 
 /* function declarations */
 /* USB host stack initializations */
-void usbh_init (usbh_host *puhost, usbh_user_cb *user_cb);
+void usbh_init(usbh_host *puhost, usbh_user_cb *user_cb);
 /* USB host register device class */
-usbh_status usbh_class_register (usbh_host *puhost, usbh_class *puclass);
+usbh_status usbh_class_register(usbh_host *puhost, usbh_class *puclass);
 /* de-initialize USB host */
-usbh_status usbh_deinit (usbh_host *puhost);
+usbh_status usbh_deinit(usbh_host *puhost);
 /* USB host core main state machine process */
-void usbh_core_task (usbh_host *puhost);
+void usbh_core_task(usbh_host *puhost);
 /* handle the error on USB host side */
-void usbh_error_handler (usbh_host *puhost, usbh_status err_type);
+void usbh_error_handler(usbh_host *puhost, usbh_status err_type);
 
 #endif /* __USBH_CORE_H */

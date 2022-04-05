@@ -5,32 +5,33 @@
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
     \version 2020-09-30, V2.1.0, firmware for GD32F3x0
+    \version 2022-01-06, V2.2.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -112,8 +113,7 @@ OF SUCH DAMAGE.
 
 /* constants definitions */
 /* DMA channel select */
-typedef enum 
-{
+typedef enum {
     DMA_CH0 = 0,                          /*!< DMA Channel0 */
     DMA_CH1,                              /*!< DMA Channel1 */
     DMA_CH2,                              /*!< DMA Channel2 */
@@ -124,8 +124,7 @@ typedef enum
 } dma_channel_enum;
 
 /* DMA initialize struct */
-typedef struct
-{
+typedef struct {
     uint32_t periph_addr;                 /*!< peripheral base address */
     uint32_t periph_width;                /*!< transfer data size of peripheral */
     uint8_t periph_inc;                   /*!< peripheral increasing mode */
@@ -217,9 +216,9 @@ typedef struct
 /* deinitialize DMA a channel registers */
 void dma_deinit(dma_channel_enum channelx);
 /* initialize the parameters of DMA struct with the default values */
-void dma_struct_para_init(dma_parameter_struct* init_struct);
+void dma_struct_para_init(dma_parameter_struct *init_struct);
 /* initialize DMA channel */
-void dma_init(dma_channel_enum channelx, dma_parameter_struct* init_struct);
+void dma_init(dma_channel_enum channelx, dma_parameter_struct *init_struct);
 /* enable DMA circulation mode */
 void dma_circulation_enable(dma_channel_enum channelx);
 /* disable DMA circulation mode */
@@ -244,9 +243,9 @@ uint32_t dma_transfer_number_get(dma_channel_enum channelx);
 /* configure priority level of DMA channel */
 void dma_priority_config(dma_channel_enum channelx, uint32_t priority);
 /* configure transfer data size of memory */
-void dma_memory_width_config (dma_channel_enum channelx, uint32_t mwidth);
+void dma_memory_width_config(dma_channel_enum channelx, uint32_t mwidth);
 /* configure transfer data size of peripheral */
-void dma_periph_width_config (dma_channel_enum channelx, uint32_t pwidth);
+void dma_periph_width_config(dma_channel_enum channelx, uint32_t pwidth);
 /* enable next address increasement algorithm of memory */
 void dma_memory_increase_enable(dma_channel_enum channelx);
 /* disable next address increasement algorithm of memory */
@@ -262,13 +261,13 @@ void dma_transfer_direction_config(dma_channel_enum channelx, uint32_t direction
 FlagStatus dma_flag_get(dma_channel_enum channelx, uint32_t flag);
 /* clear DMA a channel flag */
 void dma_flag_clear(dma_channel_enum channelx, uint32_t flag);
-/* check DMA flag and interrupt enable bit is set or not */
-FlagStatus dma_interrupt_flag_get(dma_channel_enum channelx, uint32_t flag);
-/* clear DMA a channel flag */
-void dma_interrupt_flag_clear(dma_channel_enum channelx, uint32_t flag);
 /* enable DMA interrupt */
 void dma_interrupt_enable(dma_channel_enum channelx, uint32_t source);
 /* disable DMA interrupt */
 void dma_interrupt_disable(dma_channel_enum channelx, uint32_t source);
+/* check DMA flag and interrupt enable bit is set or not */
+FlagStatus dma_interrupt_flag_get(dma_channel_enum channelx, uint32_t flag);
+/* clear DMA a channel flag */
+void dma_interrupt_flag_clear(dma_channel_enum channelx, uint32_t flag);
 
 #endif /* GD32F3X0_DMA_H */

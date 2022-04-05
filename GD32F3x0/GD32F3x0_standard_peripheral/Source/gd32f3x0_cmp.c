@@ -5,39 +5,41 @@
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
     \version 2020-09-30, V2.1.0, firmware for GD32F3x0
+    \version 2021-05-19, V2.1.1, firmware for GD32F3x0
+    \version 2022-01-06, V2.2.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
 #include "gd32f3x0_cmp.h"
 
 /*!
-    \brief      deinitialize comparator 
+    \brief      deinitialize comparator
     \param[in]  none
     \param[out] none
     \retval     none
@@ -48,7 +50,7 @@ void cmp_deinit(void)
 }
 
 /*!
-    \brief      initialize comparator mode 
+    \brief      initialize comparator mode
     \param[in]  cmp_periph
       \arg        CMP0: comparator 0
       \arg        CMP1: comparator 1
@@ -57,7 +59,7 @@ void cmp_deinit(void)
       \arg        CMP_MIDDLESPEED: medium speed mode
       \arg        CMP_LOWSPEED: low speed mode
       \arg        CMP_VERYLOWSPEED: very-low speed mode
-    \param[in]  inverting_input 
+    \param[in]  inverting_input
       \arg        CMP_1_4VREFINT: VREFINT *1/4 input
       \arg        CMP_1_2VREFINT: VREFINT *1/2 input
       \arg        CMP_3_4VREFINT: VREFINT *3/4 input
@@ -73,19 +75,20 @@ void cmp_deinit(void)
     \param[out] none
     \retval     none
 */
-void cmp_mode_init(uint32_t cmp_periph, operating_mode_enum operating_mode, inverting_input_enum inverting_input, cmp_hysteresis_enum output_hysteresis)
+void cmp_mode_init(uint32_t cmp_periph, operating_mode_enum operating_mode, inverting_input_enum inverting_input,
+                   cmp_hysteresis_enum output_hysteresis)
 {
     uint32_t CMPx_CS = 0;
-    if(CMP0 == cmp_periph){
+    if(CMP0 == cmp_periph) {
         /* initialize comparator 0 mode */
         CMPx_CS = CMP_CS;
-        CMPx_CS &= ~(uint32_t)(CMP_CS_CMP0M | CMP_CS_CMP0MSEL | CMP_CS_CMP0HST ); 
+        CMPx_CS &= ~(uint32_t)(CMP_CS_CMP0M | CMP_CS_CMP0MSEL | CMP_CS_CMP0HST);
         CMPx_CS |= CS_CMP0M(operating_mode) | CS_CMP0MSEL(inverting_input) | CS_CMP0HST(output_hysteresis);
         CMP_CS = CMPx_CS;
-    }else{
+    } else {
         /* initialize comparator 1 mode */
         CMPx_CS = CMP_CS;
-        CMPx_CS &= ~(uint32_t)(CMP_CS_CMP1M | CMP_CS_CMP1MSEL | CMP_CS_CMP1HST );
+        CMPx_CS &= ~(uint32_t)(CMP_CS_CMP1M | CMP_CS_CMP1MSEL | CMP_CS_CMP1HST);
         CMPx_CS |= CS_CMP1M(operating_mode) | CS_CMP1MSEL(inverting_input) | CS_CMP1HST(output_hysteresis);
         CMP_CS = CMPx_CS;
     }
@@ -96,16 +99,16 @@ void cmp_mode_init(uint32_t cmp_periph, operating_mode_enum operating_mode, inve
     \param[in]  cmp_periph
       \arg        CMP0: comparator 0
       \arg        CMP1: comparator 1
-    \param[in]  output_slection 
+    \param[in]  output_slection
       \arg        CMP_OUTPUT_NONE: output no selection
       \arg        CMP_OUTPUT_TIMER0BKIN: TIMER 0 break input
-      \arg        CMP_OUTPUT_TIMER0IC0: TIMER 0 channel0 input capture 
+      \arg        CMP_OUTPUT_TIMER0IC0: TIMER 0 channel0 input capture
       \arg        CMP_OUTPUT_TIMER0OCPRECLR: TIMER 0 OCPRE_CLR input
       \arg        CMP_OUTPUT_TIMER1IC3: TIMER 1 channel3 input capture
       \arg        CMP_OUTPUT_TIMER1OCPRECLR: TIMER 1 OCPRE_CLR input
       \arg        CMP_OUTPUT_TIMER2IC0: TIMER 2 channel0 input capture
       \arg        CMP_OUTPUT_TIMER2OCPRECLR: TIMER 2 OCPRE_CLR input
-    \param[in]  output_polarity 
+    \param[in]  output_polarity
       \arg        CMP_OUTPUT_POLARITY_INVERTED: output is inverted
       \arg        CMP_OUTPUT_POLARITY_NOINVERTED: output is not inverted
     \param[out] none
@@ -115,26 +118,26 @@ void cmp_output_init(uint32_t cmp_periph, cmp_output_enum output_slection, uint3
 {
     uint32_t CMPx_CS = 0;
     /* initialize comparator 0 output */
-    if(CMP0 == cmp_periph){
+    if(CMP0 == cmp_periph) {
         CMPx_CS = CMP_CS;
         CMPx_CS &= ~(uint32_t)CMP_CS_CMP0OSEL;
         CMPx_CS |= CS_CMP0OSEL(output_slection);
         /* output polarity */
-        if(CMP_OUTPUT_POLARITY_INVERTED == output_polarity){
+        if(CMP_OUTPUT_POLARITY_INVERTED == output_polarity) {
             CMPx_CS |= CMP_CS_CMP0PL;
-        }else{ 
+        } else {
             CMPx_CS &= ~CMP_CS_CMP0PL;
         }
         CMP_CS = CMPx_CS;
-    }else if(CMP1 == cmp_periph){
+    } else if(CMP1 == cmp_periph) {
         /* initialize comparator 1 output */
         CMPx_CS = CMP_CS;
         CMPx_CS &= ~(uint32_t)CMP_CS_CMP1OSEL;
         CMPx_CS |= CS_CMP1OSEL(output_slection);
         /* output polarity */
-        if(CMP_OUTPUT_POLARITY_INVERTED == output_polarity){
+        if(CMP_OUTPUT_POLARITY_INVERTED == output_polarity) {
             CMPx_CS |= CMP_CS_CMP1PL;
-        }else{ 
+        } else {
             CMPx_CS &= ~CMP_CS_CMP1PL;
         }
         CMP_CS = CMPx_CS;
@@ -142,7 +145,7 @@ void cmp_output_init(uint32_t cmp_periph, cmp_output_enum output_slection, uint3
 }
 
 /*!
-    \brief      enable comparator 
+    \brief      enable comparator
     \param[in]  cmp_periph
       \arg        CMP0: comparator 0
       \arg        CMP1: comparator 1
@@ -151,15 +154,15 @@ void cmp_output_init(uint32_t cmp_periph, cmp_output_enum output_slection, uint3
 */
 void cmp_enable(uint32_t cmp_periph)
 {
-    if(CMP0 == cmp_periph){
+    if(CMP0 == cmp_periph) {
         CMP_CS |= CMP_CS_CMP0EN;
-    }else{
+    } else {
         CMP_CS |= CMP_CS_CMP1EN;
     }
 }
 
 /*!
-    \brief      disable comparator 
+    \brief      disable comparator
     \param[in]  cmp_periph
       \arg        CMP0: comparator 0
       \arg        CMP1: comparator 1
@@ -168,9 +171,9 @@ void cmp_enable(uint32_t cmp_periph)
 */
 void cmp_disable(uint32_t cmp_periph)
 {
-    if(CMP0 == cmp_periph){
+    if(CMP0 == cmp_periph) {
         CMP_CS &= ~CMP_CS_CMP0EN;
-    }else{
+    } else {
         CMP_CS &= ~CMP_CS_CMP1EN;
     }
 }
@@ -229,10 +232,10 @@ void cmp_window_disable(void)
 */
 void cmp_lock_enable(uint32_t cmp_periph)
 {
-    if(CMP0 == cmp_periph){
+    if(CMP0 == cmp_periph) {
         /* lock CMP0 */
         CMP_CS |= CMP_CS_CMP0LK;
-    }else{
+    } else {
         /* lock CMP1 */
         CMP_CS |= CMP_CS_CMP1LK;
     }
@@ -248,18 +251,18 @@ void cmp_lock_enable(uint32_t cmp_periph)
 */
 uint32_t cmp_output_level_get(uint32_t cmp_periph)
 {
-    if(CMP0 == cmp_periph){
+    if(CMP0 == cmp_periph) {
         /* get output level of CMP0 */
-        if(CMP_CS & CMP_CS_CMP0O){
+        if(CMP_CS & CMP_CS_CMP0O) {
             return CMP_OUTPUTLEVEL_HIGH;
-        }else{
+        } else {
             return CMP_OUTPUTLEVEL_LOW;
         }
-    }else{
+    } else {
         /* get output level of CMP1 */
-        if(CMP_CS & CMP_CS_CMP1O){
+        if(CMP_CS & CMP_CS_CMP1O) {
             return CMP_OUTPUTLEVEL_HIGH;
-        }else{
+        } else {
             return CMP_OUTPUTLEVEL_LOW;
         }
     }

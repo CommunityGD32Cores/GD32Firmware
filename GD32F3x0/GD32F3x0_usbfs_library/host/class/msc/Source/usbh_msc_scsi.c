@@ -8,27 +8,27 @@
 /*
     Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -45,12 +45,12 @@ OF SUCH DAMAGE.
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_msc_scsi_inquiry (usbh_host *puhost, uint8_t lun, scsi_std_inquiry_data *inquiry)
+usbh_status usbh_msc_scsi_inquiry(usbh_host *puhost, uint8_t lun, scsi_std_inquiry_data *inquiry)
 {
     usbh_status error = USBH_FAIL;
     usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
 
-    switch (msc->bot.cmd_state) {
+    switch(msc->bot.cmd_state) {
     case BOT_CMD_SEND:
         /* prepare the cbw and relevant field*/
         msc->bot.cbw.field.dCBWDataTransferLength = STANDARD_INQUIRY_DATA_LEN;
@@ -72,22 +72,22 @@ usbh_status usbh_msc_scsi_inquiry (usbh_host *puhost, uint8_t lun, scsi_std_inqu
     case BOT_CMD_WAIT:
         error = usbh_msc_bot_process(puhost, lun);
 
-        if (USBH_OK == error) {
+        if(USBH_OK == error) {
             memset(inquiry, 0U, sizeof(scsi_std_inquiry_data));
 
             /* assign inquiry data */
             inquiry->device_type = msc->bot.pbuf[0] & 0x1FU;
             inquiry->peripheral_qualifier = msc->bot.pbuf[0] >> 5U;
 
-            if (0x80U == ((uint32_t)msc->bot.pbuf[1] & 0x80U)) {
+            if(0x80U == ((uint32_t)msc->bot.pbuf[1] & 0x80U)) {
                 inquiry->removable_media = 1U;
             } else {
                 inquiry->removable_media = 0U;
             }
 
-            memcpy (inquiry->vendor_id, &msc->bot.pbuf[8], 8U);
-            memcpy (inquiry->product_id, &msc->bot.pbuf[16], 16U);
-            memcpy (inquiry->revision_id, &msc->bot.pbuf[32], 4U);
+            memcpy(inquiry->vendor_id, &msc->bot.pbuf[8], 8U);
+            memcpy(inquiry->product_id, &msc->bot.pbuf[16], 16U);
+            memcpy(inquiry->revision_id, &msc->bot.pbuf[32], 4U);
         }
         break;
 
@@ -105,14 +105,14 @@ usbh_status usbh_msc_scsi_inquiry (usbh_host *puhost, uint8_t lun, scsi_std_inqu
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_msc_test_unitready (usbh_host *puhost, uint8_t lun)
+usbh_status usbh_msc_test_unitready(usbh_host *puhost, uint8_t lun)
 {
     usbh_status status = USBH_FAIL;
     usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
 
 
-    switch (msc->bot.cmd_state) {
-    case BOT_CMD_SEND:  
+    switch(msc->bot.cmd_state) {
+    case BOT_CMD_SEND:
         /* prepare the CBW and relevant field */
         msc->bot.cbw.field.dCBWDataTransferLength = CBW_LENGTH_TEST_UNIT_READY;
         msc->bot.cbw.field.bmCBWFlags = USB_TRX_OUT;
@@ -120,7 +120,7 @@ usbh_status usbh_msc_test_unitready (usbh_host *puhost, uint8_t lun)
 
         memset(msc->bot.cbw.field.CBWCB, 0U, CBW_CB_LENGTH);
 
-        msc->bot.cbw.field.CBWCB[0] = SCSI_TEST_UNIT_READY; 
+        msc->bot.cbw.field.CBWCB[0] = SCSI_TEST_UNIT_READY;
         msc->bot.state = BOT_SEND_CBW;
         msc->bot.cmd_state = BOT_CMD_WAIT;
 
@@ -146,12 +146,12 @@ usbh_status usbh_msc_test_unitready (usbh_host *puhost, uint8_t lun)
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_msc_read_capacity10 (usbh_host *puhost, uint8_t lun, scsi_capacity *capacity)
+usbh_status usbh_msc_read_capacity10(usbh_host *puhost, uint8_t lun, scsi_capacity *capacity)
 {
     usbh_status status = USBH_FAIL;
     usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
 
-    switch (msc->bot.cmd_state) {
+    switch(msc->bot.cmd_state) {
     case BOT_CMD_SEND:
         /* prepare the CBW and relevant field */
         msc->bot.cbw.field.dCBWDataTransferLength = READ_CAPACITY10_DATA_LEN;
@@ -171,7 +171,7 @@ usbh_status usbh_msc_read_capacity10 (usbh_host *puhost, uint8_t lun, scsi_capac
     case BOT_CMD_WAIT:
         status = usbh_msc_bot_process(puhost, lun);
 
-        if (USBH_OK == status) {
+        if(USBH_OK == status) {
             capacity->block_nbr = msc->bot.pbuf[3] | \
                                   ((uint32_t)msc->bot.pbuf[2] << 8U) | \
                                   ((uint32_t)msc->bot.pbuf[1] << 16U) | \
@@ -195,12 +195,12 @@ usbh_status usbh_msc_read_capacity10 (usbh_host *puhost, uint8_t lun, scsi_capac
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_msc_mode_sense6 (usbh_host *puhost, uint8_t lun)
+usbh_status usbh_msc_mode_sense6(usbh_host *puhost, uint8_t lun)
 {
     usbh_status status = USBH_FAIL;
     usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
 
-    switch (msc->bot.cmd_state) {
+    switch(msc->bot.cmd_state) {
     case BOT_CMD_SEND:
         /* prepare the CBW and relevant field */
         msc->bot.cbw.field.dCBWDataTransferLength = XFER_LEN_MODE_SENSE6;
@@ -209,7 +209,7 @@ usbh_status usbh_msc_mode_sense6 (usbh_host *puhost, uint8_t lun)
 
         memset(msc->bot.cbw.field.CBWCB, 0U, CBW_CB_LENGTH);
 
-        msc->bot.cbw.field.CBWCB[0] = SCSI_MODE_SENSE6; 
+        msc->bot.cbw.field.CBWCB[0] = SCSI_MODE_SENSE6;
         msc->bot.cbw.field.CBWCB[2] = MODE_SENSE_PAGE_CONTROL_FIELD | MODE_SENSE_PAGE_CODE;
         msc->bot.cbw.field.CBWCB[4] = XFER_LEN_MODE_SENSE6;
         msc->bot.state = BOT_SEND_CBW;
@@ -222,8 +222,8 @@ usbh_status usbh_msc_mode_sense6 (usbh_host *puhost, uint8_t lun)
     case BOT_CMD_WAIT:
         status = usbh_msc_bot_process(puhost, lun);
 
-        if (USBH_OK == status) {
-            if (msc->bot.data[2] & MASK_MODE_SENSE_WRITE_PROTECT) {
+        if(USBH_OK == status) {
+            if(msc->bot.data[2] & MASK_MODE_SENSE_WRITE_PROTECT) {
 
             } else {
 
@@ -246,12 +246,12 @@ usbh_status usbh_msc_mode_sense6 (usbh_host *puhost, uint8_t lun)
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_msc_request_sense (usbh_host *puhost, uint8_t lun, msc_scsi_sense *sense_data)
+usbh_status usbh_msc_request_sense(usbh_host *puhost, uint8_t lun, msc_scsi_sense *sense_data)
 {
     usbh_status status = USBH_FAIL;
     usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
 
-    switch (msc->bot.cmd_state) {
+    switch(msc->bot.cmd_state) {
     case BOT_CMD_SEND:
         /* prepare the cbw and relevant field */
         msc->bot.cbw.field.dCBWDataTransferLength = ALLOCATION_LENGTH_REQUEST_SENSE;
@@ -260,7 +260,7 @@ usbh_status usbh_msc_request_sense (usbh_host *puhost, uint8_t lun, msc_scsi_sen
 
         memset(msc->bot.cbw.field.CBWCB, 0U, CBW_CB_LENGTH);
 
-        msc->bot.cbw.field.CBWCB[0] = SCSI_REQUEST_SENSE; 
+        msc->bot.cbw.field.CBWCB[0] = SCSI_REQUEST_SENSE;
         msc->bot.cbw.field.CBWCB[1] = (lun << 5U);
         msc->bot.cbw.field.CBWCB[4] = ALLOCATION_LENGTH_REQUEST_SENSE;
 
@@ -274,7 +274,7 @@ usbh_status usbh_msc_request_sense (usbh_host *puhost, uint8_t lun, msc_scsi_sen
     case BOT_CMD_WAIT:
         status = usbh_msc_bot_process(puhost, lun);
 
-        if (status == USBH_OK) {
+        if(status == USBH_OK) {
             /* get sense data */
             sense_data->SenseKey = msc->bot.pbuf[2] & 0x0FU;
             sense_data->ASC = msc->bot.pbuf[12];
@@ -299,12 +299,12 @@ usbh_status usbh_msc_request_sense (usbh_host *puhost, uint8_t lun, msc_scsi_sen
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_msc_write10 (usbh_host *puhost, uint8_t lun, uint8_t *data_buf, uint32_t addr, uint32_t sector_num)
+usbh_status usbh_msc_write10(usbh_host *puhost, uint8_t lun, uint8_t *data_buf, uint32_t addr, uint32_t sector_num)
 {
     usbh_status status = USBH_FAIL;
     usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
 
-    switch (msc->bot.cmd_state) {
+    switch(msc->bot.cmd_state) {
     case BOT_CMD_SEND:
         msc->bot.cbw.field.dCBWDataTransferLength = sector_num * msc->unit[lun].capacity.block_size;
         msc->bot.cbw.field.bmCBWFlags = USB_TRX_OUT;
@@ -312,13 +312,13 @@ usbh_status usbh_msc_write10 (usbh_host *puhost, uint8_t lun, uint8_t *data_buf,
 
         memset(msc->bot.cbw.field.CBWCB, 0U, CBW_CB_LENGTH);
 
-        msc->bot.cbw.field.CBWCB[0] = SCSI_WRITE10; 
+        msc->bot.cbw.field.CBWCB[0] = SCSI_WRITE10;
 
         /* logical block address */
-        msc->bot.cbw.field.CBWCB[2] = (((uint8_t*)&addr)[3]);
-        msc->bot.cbw.field.CBWCB[3] = (((uint8_t*)&addr)[2]);
-        msc->bot.cbw.field.CBWCB[4] = (((uint8_t*)&addr)[1]);
-        msc->bot.cbw.field.CBWCB[5] = (((uint8_t*)&addr)[0]);
+        msc->bot.cbw.field.CBWCB[2] = (((uint8_t *)&addr)[3]);
+        msc->bot.cbw.field.CBWCB[3] = (((uint8_t *)&addr)[2]);
+        msc->bot.cbw.field.CBWCB[4] = (((uint8_t *)&addr)[1]);
+        msc->bot.cbw.field.CBWCB[5] = (((uint8_t *)&addr)[0]);
 
         /* transfer length */
         msc->bot.cbw.field.CBWCB[7] = (((uint8_t *)&sector_num)[1]);
@@ -352,12 +352,12 @@ usbh_status usbh_msc_write10 (usbh_host *puhost, uint8_t lun, uint8_t *data_buf,
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_msc_read10 (usbh_host *puhost, uint8_t lun, uint8_t *data_buf, uint32_t addr, uint32_t sector_num)
+usbh_status usbh_msc_read10(usbh_host *puhost, uint8_t lun, uint8_t *data_buf, uint32_t addr, uint32_t sector_num)
 {
     usbh_status status = USBH_FAIL;
     usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
 
-    switch (msc->bot.cmd_state) {
+    switch(msc->bot.cmd_state) {
     case BOT_CMD_SEND:
         /* prepare the CBW and relevant field */
         msc->bot.cbw.field.dCBWDataTransferLength = sector_num * msc->unit[lun].capacity.block_size;
@@ -366,13 +366,13 @@ usbh_status usbh_msc_read10 (usbh_host *puhost, uint8_t lun, uint8_t *data_buf, 
 
         memset(msc->bot.cbw.field.CBWCB, 0U, CBW_CB_LENGTH);
 
-        msc->bot.cbw.field.CBWCB[0] = SCSI_READ10; 
+        msc->bot.cbw.field.CBWCB[0] = SCSI_READ10;
 
         /* logical block address */
-        msc->bot.cbw.field.CBWCB[2] = (((uint8_t*)&addr)[3]);
-        msc->bot.cbw.field.CBWCB[3] = (((uint8_t*)&addr)[2]);
-        msc->bot.cbw.field.CBWCB[4] = (((uint8_t*)&addr)[1]);
-        msc->bot.cbw.field.CBWCB[5] = (((uint8_t*)&addr)[0]);
+        msc->bot.cbw.field.CBWCB[2] = (((uint8_t *)&addr)[3]);
+        msc->bot.cbw.field.CBWCB[3] = (((uint8_t *)&addr)[2]);
+        msc->bot.cbw.field.CBWCB[4] = (((uint8_t *)&addr)[1]);
+        msc->bot.cbw.field.CBWCB[5] = (((uint8_t *)&addr)[0]);
 
         /* transfer length */
         msc->bot.cbw.field.CBWCB[7] = (((uint8_t *)&sector_num)[1]);

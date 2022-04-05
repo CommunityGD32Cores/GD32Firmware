@@ -1,36 +1,37 @@
 /*!
     \file    gd32f3x0_tsi.c
     \brief   TSI driver
-    
+
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
     \version 2020-09-30, V2.1.0, firmware for GD32F3x0
+    \version 2022-01-06, V2.2.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -40,7 +41,7 @@ OF SUCH DAMAGE.
     \brief      reset TSI peripheral
     \param[in]  none
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void tsi_deinit(void)
 {
@@ -86,7 +87,7 @@ void tsi_deinit(void)
     \param[out] none
     \retval     none
 */
-void tsi_init(uint32_t prescaler,uint32_t charge_duration,uint32_t transfer_duration,uint32_t max_number)
+void tsi_init(uint32_t prescaler, uint32_t charge_duration, uint32_t transfer_duration, uint32_t max_number)
 {
     uint32_t ctl0,ctl1;
     if(RESET == (TSI_CTL0 & TSI_CTL0_TSIS)){
@@ -94,10 +95,10 @@ void tsi_init(uint32_t prescaler,uint32_t charge_duration,uint32_t transfer_dura
             /* config TSI_CTL0 */
             ctl0 = TSI_CTL0;
             /*configure TSI clock division factor,charge state duration time,charge transfer state duration time */
-            ctl0 &= ~(TSI_CTL0_CTCDIV|TSI_CTL0_CTDT|TSI_CTL0_CDT|TSI_CTL0_MCN);
-            ctl0 |= ((prescaler<<12U)|charge_duration|transfer_duration|max_number);
+            ctl0 &= ~(TSI_CTL0_CTCDIV | TSI_CTL0_CTDT | TSI_CTL0_CDT | TSI_CTL0_MCN);
+            ctl0 |= ((prescaler << 12U) | charge_duration | transfer_duration | max_number);
             TSI_CTL0 = ctl0;
-       
+
             /* config TSI_CTL1 */
             ctl1 = TSI_CTL1;
             ctl1 &= ~TSI_CTL1_CTCDIV;
@@ -107,10 +108,10 @@ void tsi_init(uint32_t prescaler,uint32_t charge_duration,uint32_t transfer_dura
             ctl0 = TSI_CTL0;
             prescaler &= ~0x08U;
             /*configure TSI clock division factor,charge state duration time,charge transfer state duration time */
-            ctl0 &= ~(TSI_CTL0_CTCDIV|TSI_CTL0_CTDT|TSI_CTL0_CDT|TSI_CTL0_MCN);
-            ctl0 |= ((prescaler<<12U)|charge_duration|transfer_duration|max_number);
+            ctl0 &= ~(TSI_CTL0_CTCDIV | TSI_CTL0_CTDT | TSI_CTL0_CDT | TSI_CTL0_MCN);
+            ctl0 |= ((prescaler << 12U) | charge_duration | transfer_duration | max_number);
             TSI_CTL0 = ctl0;
-       
+
             /* config TSI_CTL1 */
             ctl1 = TSI_CTL1;
             ctl1 |= TSI_CTL1_CTCDIV;
@@ -120,10 +121,10 @@ void tsi_init(uint32_t prescaler,uint32_t charge_duration,uint32_t transfer_dura
 }
 
 /*!
-    \brief      enable TSI module 
+    \brief      enable TSI module
     \param[in]  none
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void tsi_enable(void)
 {
@@ -131,10 +132,10 @@ void tsi_enable(void)
 }
 
 /*!
-    \brief      disable TSI module 
+    \brief      disable TSI module
     \param[in]  none
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void tsi_disable(void)
 {
@@ -142,12 +143,12 @@ void tsi_disable(void)
 }
 
 /*!
-    \brief      enable sample pin 
+    \brief      enable sample pin
     \param[in]  sample: sample pin
                 one or more parameters can be selected which are shown as below:
-      \arg        TSI_SAMPCFG_GxPy( x=0..5,y=0..3):pin y of group x is sample pin     
+      \arg        TSI_SAMPCFG_GxPy( x=0..5,y=0..3):pin y of group x is sample pin
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void tsi_sample_pin_enable(uint32_t sample)
 {
@@ -157,27 +158,27 @@ void tsi_sample_pin_enable(uint32_t sample)
 }
 
 /*!
-    \brief      disable sample pin 
+    \brief      disable sample pin
     \param[in]  sample: sample pin
                 one or more parameters can be selected which are shown as below:
-      \arg        TSI_SAMPCFG_GxPy( x=0..5,y=0..3): pin y of group x is sample pin     
+      \arg        TSI_SAMPCFG_GxPy( x=0..5,y=0..3): pin y of group x is sample pin
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void tsi_sample_pin_disable(uint32_t sample)
 { 
     if(RESET == (TSI_CTL0 & TSI_CTL0_TSIS)){
-        TSI_SAMPCFG &=  ~sample;
+        TSI_SAMPCFG &= ~sample;
     }
 }
 
 /*!
-    \brief      enable channel pin 
+    \brief      enable channel pin
     \param[in]  channel: channel pin
                 one or more parameters can be selected which are shown as below:
       \arg        TSI_CHCFG_GxPy( x=0..5,y=0..3): pin y of group x
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void tsi_channel_pin_enable(uint32_t channel)
 {
@@ -185,12 +186,12 @@ void tsi_channel_pin_enable(uint32_t channel)
 }
 
 /*!
-    \brief      disable channel pin 
+    \brief      disable channel pin
     \param[in]  channel: channel pin
                 one or more parameters can be selected which are shown as below:
       \arg        TSI_CHCFG_GxPy( x=0..5,y=0..3): pin y of group x
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void tsi_channel_pin_disable(uint32_t channel)
 {
@@ -198,12 +199,12 @@ void tsi_channel_pin_disable(uint32_t channel)
 }
 
 /*!
-    \brief      configure TSI triggering by software 
+    \brief      configure TSI triggering by software
     \param[in]  none
     \param[out] none
-    \retval     none 
+    \retval     none
 */
-void tsi_sofeware_mode_config(void)
+void tsi_software_mode_config(void)
 {
     if(RESET == (TSI_CTL0 & TSI_CTL0_TSIS)){
         TSI_CTL0 &= ~TSI_CTL0_TRGMOD;
@@ -214,7 +215,7 @@ void tsi_sofeware_mode_config(void)
     \brief      start a charge-transfer sequence when TSI is in software trigger mode
     \param[in]  none
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void tsi_software_start(void)
 {
@@ -225,7 +226,7 @@ void tsi_software_start(void)
     \brief      stop a charge-transfer sequence when TSI is in software trigger mode
     \param[in]  none
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void tsi_software_stop(void)
 {
@@ -233,13 +234,13 @@ void tsi_software_stop(void)
 }
 
 /*!
-    \brief      configure TSI triggering by hardware   
+    \brief      configure TSI triggering by hardware
     \param[in]  trigger_edge: the edge type in hardware trigger mode
                 only one parameter can be selected which is shown as below:
       \arg        TSI_FALLING_TRIGGER: falling edge trigger TSI charge transfer sequence
       \arg        TSI_RISING_TRIGGER:  rising edge trigger TSI charge transfer sequence
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void tsi_hardware_mode_config(uint8_t trigger_edge)
 {
@@ -252,14 +253,14 @@ void tsi_hardware_mode_config(uint8_t trigger_edge)
         }else{
             TSI_CTL0 |= TSI_CTL0_EGSEL;
         }
-    }    
+    }
 }
 
 /*!
-    \brief      configure TSI pin mode when charge-transfer sequence is IDLE 
+    \brief      configure TSI pin mode when charge-transfer sequence is IDLE
     \param[in]  pin_mode: pin mode when charge-transfer sequence is IDLE
                 only one parameter can be selected which is shown as below:
-      \arg        TSI_OUTPUT_LOW:     TSI pin will output low when IDLE 
+      \arg        TSI_OUTPUT_LOW:     TSI pin will output low when IDLE
       \arg        TSI_INPUT_FLOATING: TSI pin will keep input_floating when IDLE
     \param[out] none
     \retval     none
@@ -276,7 +277,7 @@ void tsi_pin_mode_config(uint8_t pin_mode)
 }
 
 /*!
-    \brief      configure extend charge state 
+    \brief      configure extend charge state
     \param[in]  extend: enable or disable extend charge state
                 only one parameter can be selected which is shown as below:
       \arg        ENABLE:  enable extend charge state
@@ -293,11 +294,12 @@ void tsi_pin_mode_config(uint8_t pin_mode)
       \arg        TSI_EXTEND_DIV8: fECCLK = fHCLK/8
     \param[in]  max_duration: value range 1...128,extend charge state maximum duration time is 1*tECCLK~128*tECCLK
     \param[out] none
-    \retval     none 
+    \retval     none
 */
-void tsi_extend_charge_config(ControlStatus extend,uint8_t prescaler,uint32_t max_duration)
+void tsi_extend_charge_config(ControlStatus extend, uint8_t prescaler, uint32_t max_duration)
 {
     uint32_t ctl0,ctl1;
+
     if(RESET == (TSI_CTL0 & TSI_CTL0_TSIS)){
         if(DISABLE == extend){
             /*disable extend charge state*/
@@ -307,12 +309,12 @@ void tsi_extend_charge_config(ControlStatus extend,uint8_t prescaler,uint32_t ma
                 /*configure extend charge state maximum duration time*/
                 ctl0 = TSI_CTL0;
                 ctl0 &= ~TSI_CTL0_ECDT;
-                ctl0 |= TSI_EXTENDMAX((max_duration-1U));
+                ctl0 |= TSI_EXTENDMAX((max_duration - 1U));
                 TSI_CTL0 = ctl0;
                 /*configure ECCLK clock division factor*/
                 ctl0 = TSI_CTL0;
                 ctl0 &= ~TSI_CTL0_ECDIV;
-                ctl0 |= (uint32_t)prescaler<<15U;
+                ctl0 |= (uint32_t)prescaler << 15U;
                 TSI_CTL0 = ctl0;
                 /*enable extend charge state*/
                 TSI_CTL0 |= TSI_CTL0_ECEN;
@@ -320,16 +322,16 @@ void tsi_extend_charge_config(ControlStatus extend,uint8_t prescaler,uint32_t ma
                 /*configure extend charge state maximum duration time*/
                 ctl0 = TSI_CTL0;
                 ctl0 &= ~TSI_CTL0_ECDT;
-                ctl0 |= TSI_EXTENDMAX((max_duration-1U));
+                ctl0 |= TSI_EXTENDMAX((max_duration - 1U));
                 TSI_CTL0 = ctl0;
                 /*configure ECCLK clock division factor*/
                 ctl0 = TSI_CTL0;
                 ctl0 &= ~TSI_CTL0_ECDIV;
-                ctl0 |= (prescaler & 0x01U)<<15U;
+                ctl0 |= (prescaler & 0x01U) << 15U;
                 TSI_CTL0 = ctl0;
                 ctl1 = TSI_CTL1;
                 ctl1 &= ~TSI_CTL1_ECDIV;
-                ctl1 |= (prescaler & 0x06U)<<28U;
+                ctl1 |= (prescaler & 0x06U) << 28U;
                 TSI_CTL1 = ctl1;
                 /*enable extend charge state*/
                 TSI_CTL0 |= TSI_CTL0_ECEN;
@@ -339,7 +341,7 @@ void tsi_extend_charge_config(ControlStatus extend,uint8_t prescaler,uint32_t ma
 }
 
 /*!
-    \brief      configure charge plus and transfer plus 
+    \brief      configure charge plus and transfer plus
     \param[in]  prescaler: CTCLK clock division factor
                 only one parameter can be selected which is shown as below:
       \arg        TSI_CTCDIV_DIV1:   fCTCLK = fHCLK
@@ -367,18 +369,19 @@ void tsi_extend_charge_config(ControlStatus extend,uint8_t prescaler,uint32_t ma
     \param[out] none
     \retval     none
 */
-void tsi_plus_config(uint32_t prescaler,uint32_t charge_duration,uint32_t transfer_duration)
+void tsi_plus_config(uint32_t prescaler, uint32_t charge_duration, uint32_t transfer_duration)
 {
     uint32_t ctl0,ctl1;
+
     if(RESET == (TSI_CTL0 & TSI_CTL0_TSIS)){
         if(TSI_CTCDIV_DIV256 > prescaler){
             /* config TSI_CTL0 */
             ctl0 = TSI_CTL0;
             /*configure TSI clock division factor,charge state duration time,charge transfer state duration time */
-            ctl0 &= ~(TSI_CTL0_CTCDIV|TSI_CTL0_CTDT|TSI_CTL0_CDT);
-            ctl0 |= ((prescaler<<12U)|charge_duration|transfer_duration);
+            ctl0 &= ~(TSI_CTL0_CTCDIV | TSI_CTL0_CTDT | TSI_CTL0_CDT);
+            ctl0 |= ((prescaler << 12U) | charge_duration | transfer_duration);
             TSI_CTL0 = ctl0;
-       
+
             /* config TSI_CTL1 */
             ctl1 = TSI_CTL1;
             ctl1 &= ~TSI_CTL1_CTCDIV;
@@ -388,10 +391,10 @@ void tsi_plus_config(uint32_t prescaler,uint32_t charge_duration,uint32_t transf
             ctl0 = TSI_CTL0;
             prescaler &= ~0x08U;
             /*configure TSI clock division factor,charge state duration time,charge transfer state duration time */
-            ctl0 &= ~(TSI_CTL0_CTCDIV|TSI_CTL0_CTDT|TSI_CTL0_CDT);
-            ctl0 |= ((prescaler<<12U)|charge_duration|transfer_duration);
+            ctl0 &= ~(TSI_CTL0_CTCDIV | TSI_CTL0_CTDT | TSI_CTL0_CDT);
+            ctl0 |= ((prescaler << 12U) | charge_duration | transfer_duration);
             TSI_CTL0 = ctl0;
-       
+
             /* config TSI_CTL2 */
             ctl1 = TSI_CTL1;
             ctl1 |= TSI_CTL1_CTCDIV;
@@ -401,7 +404,7 @@ void tsi_plus_config(uint32_t prescaler,uint32_t charge_duration,uint32_t transf
 }
 
 /*!
-    \brief      configure the max cycle number of a charge-transfer sequence 
+    \brief      configure the max cycle number of a charge-transfer sequence
     \param[in]  max_number: max cycle number
                 only one parameter can be selected which is shown as below:
       \arg        TSI_MAXNUM255:   the max cycle number of a sequence is 255
@@ -412,7 +415,7 @@ void tsi_plus_config(uint32_t prescaler,uint32_t charge_duration,uint32_t transf
       \arg        TSI_MAXNUM8191:  the max cycle number of a sequence is 8191
       \arg        TSI_MAXNUM16383: the max cycle number of a sequence is 16383
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void tsi_max_number_config(uint32_t max_number)
 {
@@ -428,11 +431,11 @@ void tsi_max_number_config(uint32_t max_number)
 
 /*!
     \brief      switch on hysteresis pin
-    \param[in]  group_pin: select pin which will be switched on hysteresis  
+    \param[in]  group_pin: select pin which will be switched on hysteresis
                 one or more parameters can be selected which are shown as below:
       \arg        TSI_PHM_GxPy(x=0..5,y=0..3): pin y of group x switch on hysteresis
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void tsi_hysteresis_on(uint32_t group_pin)
 {
@@ -441,11 +444,11 @@ void tsi_hysteresis_on(uint32_t group_pin)
 
 /*!
     \brief      switch off hysteresis pin
-    \param[in]  group_pin: select pin which will be switched off hysteresis 
+    \param[in]  group_pin: select pin which will be switched off hysteresis
                 one or more parameters can be selected which are shown as below:
       \arg        TSI_PHM_GxPy(x=0..5,y=0..3): pin y of group x switch off hysteresis
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void tsi_hysteresis_off(uint32_t group_pin)
 {
@@ -453,12 +456,12 @@ void tsi_hysteresis_off(uint32_t group_pin)
 }
 
 /*!
-    \brief      switch on analog pin 
+    \brief      switch on analog pin
     \param[in]  group_pin: select pin which will be switched on analog
                 one or more parameters can be selected which are shown as below:
       \arg        TSI_ASW_GxPy(x=0..5,y=0..3):pin y of group x switch on analog
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void tsi_analog_on(uint32_t group_pin)
 {
@@ -466,12 +469,12 @@ void tsi_analog_on(uint32_t group_pin)
 }
 
 /*!
-    \brief      switch off analog pin 
+    \brief      switch off analog pin
     \param[in]  group_pin: select pin which will be switched off analog
                 one or more parameters can be selected which are shown as below:
       \arg        TSI_ASW_GxPy(x=0..5,y=0..3):pin y of group x switch off analog
     \param[out] none
-    \retval     none 
+    \retval     none
 */
 void tsi_analog_off(uint32_t group_pin)
 {
@@ -479,66 +482,114 @@ void tsi_analog_off(uint32_t group_pin)
 }
 
 /*!
-    \brief      enable TSI interrupt 
-    \param[in]  source: select interrupt which will be enabled
-                only one parameter can be selected which is shown as below:
-      \arg        TSI_INT_CCTCF: charge-transfer complete flag interrupt enable
-      \arg        TSI_INT_MNERR:  max cycle number error interrupt enable
-    \param[out] none
-    \retval     none 
-*/
-void tsi_interrupt_enable(uint32_t source)
-{
-    TSI_INTEN |= source;
-}
-
-/*!
-    \brief      disable TSI interrupt 
-    \param[in]  source: select interrupt which will be disabled
-                only one parameter can be selected which is shown as below:
-      \arg        TSI_INT_CCTCF: charge-transfer complete flag interrupt disable
-      \arg        TSI_INT_MNERR: max cycle number error interrupt disable
-    \param[out] none
-    \retval     none 
-*/
-void tsi_interrupt_disable(uint32_t source)
-{
-    TSI_INTEN &= ~source;
-}
-
-/*!
-    \brief      clear TSI interrupt flag
-    \param[in]  flag: select flag which will be cleared
-                only one parameter can be selected which is shown as below:
-      \arg        TSI_INT_FLAG_CTCF: clear charge-transfer complete flag
-      \arg        TSI_INT_FLAG_MNERR: clear max cycle number error
+    \brief      enbale group
+    \param[in]  group: select group to be enabled
+                one or more parameters can be selected which are shown as below:
+      \arg        TSI_GCTL_GEx(x=0..5): the x group will be enabled
     \param[out] none
     \retval     none
 */
-void tsi_interrupt_flag_clear(uint32_t flag)
+void tsi_group_enable(uint32_t group)
 {
-    TSI_INTC |= flag;
+    TSI_GCTL |= group;
 }
 
 /*!
-    \brief      get TSI interrupt flag  
-    \param[in]  flag:
-                only one parameter can be selected which is shown as below:
-      \arg        TSI_INT_FLAG_CTCF: charge-transfer complete flag
-      \arg        TSI_INT_FLAG_MNERR: max Cycle Number Error
+    \brief      disbale group
+    \param[in]  group: select group to be disabled
+                one or more parameters can be selected which are shown as below:
+      \arg        TSI_GCTL_GEx(x=0..5):the x group will be disabled
     \param[out] none
-    \retval     FlagStatus:SET or RESET
+    \retval     none
 */
-FlagStatus tsi_interrupt_flag_get(uint32_t flag)
+void tsi_group_disable(uint32_t group)
 {
-    uint32_t interrupt_enable = 0U,interrupt_flag = 0U;
-    interrupt_flag = (TSI_INTF & flag);
-    interrupt_enable = (TSI_INTEN & flag);
-    if(interrupt_flag && interrupt_enable){
-        return SET;
+    TSI_GCTL &= ~group;
+}
+
+/*!
+    \brief      get group complete status
+    \param[in]  group: select group
+                only one parameter can be selected which is shown as below:
+      \arg        TSI_GCTL_GCx(x=0..5): get the complete status of group x
+    \param[out] none
+    \retval     FlagStatus: group complete status,SET or RESET
+*/
+FlagStatus tsi_group_status_get(uint32_t group)
+{
+    FlagStatus flag_status;
+    if(TSI_GCTL & group){
+        flag_status = SET;
     }else{
-        return RESET;
+        flag_status = RESET;
     }
+    return flag_status;
+}
+
+/*!
+    \brief      get the cycle number for group0 as soon as a charge-transfer sequence completes
+    \param[in]  none
+    \param[out] none
+    \retval     group0 cycle number
+*/
+uint16_t tsi_group0_cycle_get(void)
+{
+    return (uint16_t)TSI_G0CYCN;
+}
+
+/*!
+    \brief      get the cycle number for group1 as soon as a charge-transfer sequence completes
+    \param[in]  none
+    \param[out] none
+    \retval     group1 cycle number
+*/
+uint16_t tsi_group1_cycle_get(void)
+{
+    return (uint16_t)TSI_G1CYCN;
+}
+
+/*!
+    \brief      get the cycle number for group2 as soon as a charge-transfer sequence completes
+    \param[in]  none
+    \param[out] none
+    \retval     group2 cycle number
+*/
+uint16_t tsi_group2_cycle_get(void)
+{
+    return (uint16_t)TSI_G2CYCN;
+}
+
+/*!
+    \brief      get the cycle number for group3 as soon as a charge-transfer sequence completes
+    \param[in]  none
+    \param[out] none
+    \retval     group3 cycle number
+*/
+uint16_t tsi_group3_cycle_get(void)
+{
+    return (uint16_t)TSI_G3CYCN;
+}
+
+/*!
+    \brief      get the cycle number for group4 as soon as a charge-transfer sequence completes
+    \param[in]  none
+    \param[out] none
+    \retval     group4 cycle number
+*/
+uint16_t tsi_group4_cycle_get(void)
+{
+    return (uint16_t)TSI_G4CYCN;
+}
+
+/*!
+    \brief      get the cycle number for group5 as soon as a charge-transfer sequence completes
+    \param[in]  none
+    \param[out] none
+    \retval     group5 cycle number
+*/
+uint16_t tsi_group5_cycle_get(void)
+{
+    return (uint16_t)TSI_G5CYCN;
 }
 
 /*!
@@ -576,112 +627,64 @@ FlagStatus tsi_flag_get(uint32_t flag)
 }
 
 /*!
-    \brief      enbale group 
-    \param[in]  group: select group to be enabled 
-                one or more parameters can be selected which are shown as below:
-      \arg        TSI_GCTL_GEx(x=0..5): the x group will be enabled 
-    \param[out] none
-    \retval     none 
-*/
-void tsi_group_enable(uint32_t group)
-{
-    TSI_GCTL |= group;
-}
-
-/*!
-    \brief      disbale group 
-    \param[in]  group: select group to be disabled 
-                one or more parameters can be selected which are shown as below:
-      \arg        TSI_GCTL_GEx(x=0..5):the x group will be disabled 
-    \param[out] none
-    \retval     none 
-*/
-void tsi_group_disable(uint32_t group)
-{
-    TSI_GCTL &= ~group;
-}
-
-/*!
-    \brief      get group complete status
-    \param[in]  group: select group 
+    \brief      enable TSI interrupt
+    \param[in]  source: select interrupt which will be enabled
                 only one parameter can be selected which is shown as below:
-      \arg        TSI_GCTL_GCx(x=0..5): get the complete status of group x
+      \arg        TSI_INT_CCTCF: charge-transfer complete flag interrupt enable
+      \arg        TSI_INT_MNERR:  max cycle number error interrupt enable
     \param[out] none
-    \retval     FlagStatus: group complete status,SET or RESET
+    \retval     none
 */
-FlagStatus tsi_group_status_get(uint32_t group)
+void tsi_interrupt_enable(uint32_t source)
 {
-    FlagStatus flag_status;
-    if(TSI_GCTL & group){
-        flag_status = SET;
+    TSI_INTEN |= source;
+}
+
+/*!
+    \brief      disable TSI interrupt
+    \param[in]  source: select interrupt which will be disabled
+                only one parameter can be selected which is shown as below:
+      \arg        TSI_INT_CCTCF: charge-transfer complete flag interrupt disable
+      \arg        TSI_INT_MNERR: max cycle number error interrupt disable
+    \param[out] none
+    \retval     none
+*/
+void tsi_interrupt_disable(uint32_t source)
+{
+    TSI_INTEN &= ~source;
+}
+
+/*!
+    \brief      clear TSI interrupt flag
+    \param[in]  flag: select flag which will be cleared
+                only one parameter can be selected which is shown as below:
+      \arg        TSI_INT_FLAG_CTCF: clear charge-transfer complete flag
+      \arg        TSI_INT_FLAG_MNERR: clear max cycle number error
+    \param[out] none
+    \retval     none
+*/
+void tsi_interrupt_flag_clear(uint32_t flag)
+{
+    TSI_INTC |= flag;
+}
+
+/*!
+    \brief      get TSI interrupt flag
+    \param[in]  flag:
+                only one parameter can be selected which is shown as below:
+      \arg        TSI_INT_FLAG_CTCF: charge-transfer complete flag
+      \arg        TSI_INT_FLAG_MNERR: max Cycle Number Error
+    \param[out] none
+    \retval     FlagStatus:SET or RESET
+*/
+FlagStatus tsi_interrupt_flag_get(uint32_t flag)
+{
+    uint32_t interrupt_enable = 0U,interrupt_flag = 0U;
+    interrupt_flag = (TSI_INTF & flag);
+    interrupt_enable = (TSI_INTEN & flag);
+    if(interrupt_flag && interrupt_enable){
+        return SET;
     }else{
-        flag_status = RESET;
+        return RESET;
     }
-    return flag_status;
-}
-
-/*!
-    \brief      get the cycle number for group0 as soon as a charge-transfer sequence completes  
-    \param[in]  none
-    \param[out] none
-    \retval     group0 cycle number  
-*/
-uint16_t tsi_group0_cycle_get(void)
-{
-    return (uint16_t)TSI_G0CYCN;
-}
-
-/*!
-    \brief      get the cycle number for group1 as soon as a charge-transfer sequence completes  
-    \param[in]  none
-    \param[out] none
-    \retval     group1 cycle number  
-*/
-uint16_t tsi_group1_cycle_get(void)
-{
-    return (uint16_t)TSI_G1CYCN;
-}
-
-/*!
-    \brief      get the cycle number for group2 as soon as a charge-transfer sequence completes  
-    \param[in]  none
-    \param[out] none
-    \retval     group2 cycle number  
-*/
-uint16_t tsi_group2_cycle_get(void)
-{
-    return (uint16_t)TSI_G2CYCN;
-}
-
-/*!
-    \brief      get the cycle number for group3 as soon as a charge-transfer sequence completes  
-    \param[in]  none
-    \param[out] none
-    \retval     group3 cycle number  
-*/
-uint16_t tsi_group3_cycle_get(void)
-{
-    return (uint16_t)TSI_G3CYCN;
-}
-
-/*!
-    \brief      get the cycle number for group4 as soon as a charge-transfer sequence completes  
-    \param[in]  none
-    \param[out] none
-    \retval     group4 cycle number  
-*/
-uint16_t tsi_group4_cycle_get(void)
-{
-    return (uint16_t)TSI_G4CYCN;
-}
-
-/*!
-    \brief      get the cycle number for group5 as soon as a charge-transfer sequence completes  
-    \param[in]  none
-    \param[out] none
-    \retval     group5 cycle number  
-*/
-uint16_t tsi_group5_cycle_get(void)
-{
-    return (uint16_t)TSI_G5CYCN;
 }

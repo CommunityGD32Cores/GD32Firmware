@@ -1,36 +1,37 @@
 /*!
     \file    gd32f3x0_fmc.h
     \brief   definitions for the FMC
-    
+
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
     \version 2020-09-30, V2.1.0, firmware for GD32F3x0
+    \version 2022-01-06, V2.2.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -53,13 +54,13 @@ OF SUCH DAMAGE.
 #define FMC_ADDR                REG32(FMC + 0x00000014U)    /*!< FMC address register */
 #define FMC_OBSTAT              REG32(FMC + 0x0000001CU)    /*!< FMC option bytes status register */
 #define FMC_WP                  REG32(FMC + 0x00000020U)    /*!< FMC write protection register */
-#define FMC_WSEN                REG32(FMC + 0x000000FCU)    /*!< FMC wait state enable register  */
+#define FMC_WSEN                REG32(FMC + 0x000000FCU)    /*!< FMC wait state enable register */
 #define FMC_PID                 REG32(FMC + 0x00000100U)    /*!< FMC product ID register */
 
 #define OB_SPC                  REG16(OB + 0x00000000U)     /*!< option byte security protection value */
-#define OB_USER                 REG16(OB + 0x00000002U)     /*!< option byte user value*/
-#define OB_DATA0                REG16(OB + 0x00000004U)     /*!< option byte data bit[7:0] value*/
-#define OB_DATA1                REG16(OB + 0x00000006U)     /*!< option byte data bit[15:8] value*/
+#define OB_USER                 REG16(OB + 0x00000002U)     /*!< option byte user value */
+#define OB_DATA0                REG16(OB + 0x00000004U)     /*!< option byte data bit[7:0] value */
+#define OB_DATA1                REG16(OB + 0x00000006U)     /*!< option byte data bit[15:8] value */
 #define OB_WP0                  REG16(OB + 0x00000008U)     /*!< option byte write protection 0 */
 #define OB_WP1                  REG16(OB + 0x0000000AU)     /*!< option byte write protection 1 */
 
@@ -111,26 +112,24 @@ OF SUCH DAMAGE.
 
 /* constants definitions */
 /* fmc state */
-typedef enum
-{
+typedef enum {
     FMC_READY,                                              /*!< the operation has been completed */
     FMC_BUSY,                                               /*!< the operation is in progress */
     FMC_PGERR,                                              /*!< program error */
     FMC_WPERR,                                              /*!< erase/program protection error */
     FMC_TOERR,                                              /*!< timeout error */
     FMC_OB_HSPC                                             /*!< option byte security protection code high */
-}fmc_state_enum;
+} fmc_state_enum;
 
 /* option byte parameter */
-typedef struct 
-{
+typedef struct {
     uint8_t spc;                                            /*!< option byte parameter spc */
     uint8_t user;                                           /*!< option byte parameter user */
     uint8_t data0;                                          /*!< option byte parameter data0 */
     uint8_t data1;                                          /*!< option byte parameter data1 */
     uint8_t wp0;                                            /*!< option byte parameter wp0 */
     uint8_t wp1;                                            /*!< option byte parameter wp1 */
-}ob_parm_struct;
+} ob_parm_struct;
 
 /* unlock key */
 #define UNLOCK_KEY0             ((uint32_t)0x45670123U)     /*!< unlock key 0 */
@@ -254,6 +253,6 @@ fmc_state_enum fmc_ready_wait(uint32_t timeout);
 /* get current option byte value */
 void ob_parm_get(ob_parm_struct *ob_parm);
 /* modify the target option byte depending on the original value */
-void ob_value_modify(uint32_t address, uint16_t value,ob_parm_struct *ob_parm);
+void ob_value_modify(uint32_t address, uint16_t value, ob_parm_struct *ob_parm);
 
 #endif /* GD32F3X0_FMC_H */

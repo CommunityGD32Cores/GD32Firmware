@@ -5,32 +5,33 @@
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
     \version 2020-09-30, V2.1.0, firmware for GD32F3x0
+    \version 2022-01-06, V2.2.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -40,267 +41,263 @@ OF SUCH DAMAGE.
 #include "gd32f3x0.h"
 
 /* TIMERx(x=0,1,2,5,13..16) definitions */
-#define TIMER0                           (TIMER_BASE + 0x00012C00U)
-#define TIMER1                           (TIMER_BASE + 0x00000000U)
-#define TIMER2                           (TIMER_BASE + 0x00000400U)
-#ifdef GD32F350
-#define TIMER5                           (TIMER_BASE + 0x00001000U)
-#endif
-#define TIMER13                          (TIMER_BASE + 0x00002000U)
-#define TIMER14                          (TIMER_BASE + 0x00014000U)
-#define TIMER15                          (TIMER_BASE + 0x00014400U)
-#define TIMER16                          (TIMER_BASE + 0x00014800U)
+#define TIMER0                           (TIMER_BASE + 0x00012C00U)                 /*!< TIMER0 base address */
+#define TIMER1                           (TIMER_BASE + 0x00000000U)                 /*!< TIMER1 base address */
+#define TIMER2                           (TIMER_BASE + 0x00000400U)                 /*!< TIMER2 base address */
+#ifdef GD32F350                                                                    
+#define TIMER5                           (TIMER_BASE + 0x00001000U)                 /*!< TIMER5 base address */
+#endif                                                                           
+#define TIMER13                          (TIMER_BASE + 0x00002000U)                 /*!< TIMER13 base address */
+#define TIMER14                          (TIMER_BASE + 0x00014000U)                 /*!< TIMER14 base address */
+#define TIMER15                          (TIMER_BASE + 0x00014400U)                 /*!< TIMER15 base address */
+#define TIMER16                          (TIMER_BASE + 0x00014800U)                 /*!< TIMER16 base address */
 
 /* registers definitions */
-#define TIMER_CTL0(timerx)               REG32((timerx) + 0x00000000U)         /*!< TIMER control register 0 */
-#define TIMER_CTL1(timerx)               REG32((timerx) + 0x00000004U)         /*!< TIMER control register 1 */
-#define TIMER_SMCFG(timerx)              REG32((timerx) + 0x00000008U)         /*!< TIMER slave mode configuration register */
-#define TIMER_DMAINTEN(timerx)           REG32((timerx) + 0x0000000CU)         /*!< TIMER DMA and interrupt enable register */
-#define TIMER_INTF(timerx)               REG32((timerx) + 0x00000010U)         /*!< TIMER interrupt flag register */
-#define TIMER_SWEVG(timerx)              REG32((timerx) + 0x00000014U)         /*!< TIMER software event generation register */
-#define TIMER_CHCTL0(timerx)             REG32((timerx) + 0x00000018U)         /*!< TIMER channel control register 0 */
-#define TIMER_CHCTL1(timerx)             REG32((timerx) + 0x0000001CU)         /*!< TIMER channel control register 1 */
-#define TIMER_CHCTL2(timerx)             REG32((timerx) + 0x00000020U)         /*!< TIMER channel control register 2 */
-#define TIMER_CNT(timerx)                REG32((timerx) + 0x00000024U)         /*!< TIMER counter register */
-#define TIMER_PSC(timerx)                REG32((timerx) + 0x00000028U)         /*!< TIMER prescaler register */
-#define TIMER_CAR(timerx)                REG32((timerx) + 0x0000002CU)         /*!< TIMER counter auto reload register */
-#define TIMER_CREP(timerx)               REG32((timerx) + 0x00000030U)         /*!< TIMER counter repetition register */
-#define TIMER_CH0CV(timerx)              REG32((timerx) + 0x00000034U)         /*!< TIMER channel 0 capture/compare value register */
-#define TIMER_CH1CV(timerx)              REG32((timerx) + 0x00000038U)         /*!< TIMER channel 1 capture/compare value register */
-#define TIMER_CH2CV(timerx)              REG32((timerx) + 0x0000003CU)         /*!< TIMER channel 2 capture/compare value register */
-#define TIMER_CH3CV(timerx)              REG32((timerx) + 0x00000040U)         /*!< TIMER channel 3 capture/compare value register */
-#define TIMER_CCHP(timerx)               REG32((timerx) + 0x00000044U)         /*!< TIMER complementary channel protection register */
-#define TIMER_DMACFG(timerx)             REG32((timerx) + 0x00000048U)         /*!< TIMER DMA configuration register */
-#define TIMER_DMATB(timerx)              REG32((timerx) + 0x0000004CU)         /*!< TIMER DMA transfer buffer register */
-#define TIMER_IRMP(timerx)               REG32((timerx) + 0x00000050U)         /*!< TIMER channel input remap register */
-#define TIMER_CFG(timerx)                REG32((timerx) + 0x000000FCU)         /*!< TIMER configuration register */
-
-/* bits definitions */
-/* TIMER_CTL0 */
-#define TIMER_CTL0_CEN                   BIT(0)              /*!< TIMER counter enable */
-#define TIMER_CTL0_UPDIS                 BIT(1)              /*!< update disable */
-#define TIMER_CTL0_UPS                   BIT(2)              /*!< update source */
-#define TIMER_CTL0_SPM                   BIT(3)              /*!< single pulse mode */
-#define TIMER_CTL0_DIR                   BIT(4)              /*!< timer counter direction */
-#define TIMER_CTL0_CAM                   BITS(5,6)           /*!< center-aligned mode selection */
-#define TIMER_CTL0_ARSE                  BIT(7)              /*!< auto-reload shadow enable */
-#define TIMER_CTL0_CKDIV                 BITS(8,9)           /*!< clock division */
-
-/* TIMER_CTL1 */
-#define TIMER_CTL1_CCSE                  BIT(0)              /*!< commutation control shadow enable */
-#define TIMER_CTL1_CCUC                  BIT(2)              /*!< commutation control shadow register update control */
-#define TIMER_CTL1_DMAS                  BIT(3)              /*!< DMA request source selection */
-#define TIMER_CTL1_MMC                   BITS(4,6)           /*!< master mode control */
-#define TIMER_CTL1_TI0S                  BIT(7)              /*!< channel 0 trigger input selection(hall mode selection) */
-#define TIMER_CTL1_ISO0                  BIT(8)              /*!< idle state of channel 0 output */
-#define TIMER_CTL1_ISO0N                 BIT(9)              /*!< idle state of channel 0 complementary output */
-#define TIMER_CTL1_ISO1                  BIT(10)             /*!< idle state of channel 1 output */
-#define TIMER_CTL1_ISO1N                 BIT(11)             /*!< idle state of channel 1 complementary output */
-#define TIMER_CTL1_ISO2                  BIT(12)             /*!< idle state of channel 2 output */
-#define TIMER_CTL1_ISO2N                 BIT(13)             /*!< idle state of channel 2 complementary output */
-#define TIMER_CTL1_ISO3                  BIT(14)             /*!< idle state of channel 3 output */
-
-/* TIMER_SMCFG */
-#define TIMER_SMCFG_SMC                  BITS(0,2)           /*!< slave mode control */
-#define TIMER_SMCFG_OCRC                 BIT(3)              /*!< OCPRE clear source selection */
-#define TIMER_SMCFG_TRGS                 BITS(4,6)           /*!< trigger selection */
-#define TIMER_SMCFG_MSM                  BIT(7)              /*!< master-slave mode */
-#define TIMER_SMCFG_ETFC                 BITS(8,11)          /*!< external trigger filter control */
-#define TIMER_SMCFG_ETPSC                BITS(12,13)         /*!< external trigger prescaler */
-#define TIMER_SMCFG_SMC1                 BIT(14)             /*!< part of SMC for enable external clock mode 1 */
-#define TIMER_SMCFG_ETP                  BIT(15)             /*!< external trigger polarity */
- 
-/* TIMER_DMAINTEN */
-#define TIMER_DMAINTEN_UPIE              BIT(0)              /*!< update interrupt enable */
-#define TIMER_DMAINTEN_CH0IE             BIT(1)              /*!< channel 0 capture/compare interrupt enable */
-#define TIMER_DMAINTEN_CH1IE             BIT(2)              /*!< channel 1 capture/compare interrupt enable */
-#define TIMER_DMAINTEN_CH2IE             BIT(3)              /*!< channel 2 capture/compare interrupt enable */
-#define TIMER_DMAINTEN_CH3IE             BIT(4)              /*!< channel 3 capture/compare interrupt enable */
-#define TIMER_DMAINTEN_CMTIE             BIT(5)              /*!< commutation interrupt request enable */
-#define TIMER_DMAINTEN_TRGIE             BIT(6)              /*!< trigger interrupt enable */
-#define TIMER_DMAINTEN_BRKIE             BIT(7)              /*!< break interrupt enable */
-#define TIMER_DMAINTEN_UPDEN             BIT(8)              /*!< update DMA request enable */
-#define TIMER_DMAINTEN_CH0DEN            BIT(9)              /*!< channel 0 DMA request enable */
-#define TIMER_DMAINTEN_CH1DEN            BIT(10)             /*!< channel 1 DMA request enable */
-#define TIMER_DMAINTEN_CH2DEN            BIT(11)             /*!< channel 2 DMA request enable */
-#define TIMER_DMAINTEN_CH3DEN            BIT(12)             /*!< channel 3 DMA request enable */
-#define TIMER_DMAINTEN_CMTDEN            BIT(13)             /*!< commutation DMA request enable */
-#define TIMER_DMAINTEN_TRGDEN            BIT(14)             /*!< trigger DMA request enable */
-
-/* TIMER_INTF */
-#define TIMER_INTF_UPIF                  BIT(0)              /*!< update interrupt flag */
-#define TIMER_INTF_CH0IF                 BIT(1)              /*!< channel 0 capture/compare interrupt flag */
-#define TIMER_INTF_CH1IF                 BIT(2)              /*!< channel 1 capture/compare interrupt flag */
-#define TIMER_INTF_CH2IF                 BIT(3)              /*!< channel 2 capture/compare interrupt flag */
-#define TIMER_INTF_CH3IF                 BIT(4)              /*!< channel 3 capture/compare interrupt flag */
-#define TIMER_INTF_CMTIF                 BIT(5)              /*!< channel commutation interrupt flag */
-#define TIMER_INTF_TRGIF                 BIT(6)              /*!< trigger interrupt flag */
-#define TIMER_INTF_BRKIF                 BIT(7)              /*!< break interrupt flag */
-#define TIMER_INTF_CH0OF                 BIT(9)              /*!< channel 0 overcapture flag */
-#define TIMER_INTF_CH1OF                 BIT(10)             /*!< channel 1 overcapture flag */
-#define TIMER_INTF_CH2OF                 BIT(11)             /*!< channel 2 overcapture flag */
-#define TIMER_INTF_CH3OF                 BIT(12)             /*!< channel 3 overcapture flag */
-
-/* TIMER_SWEVG */
-#define TIMER_SWEVG_UPG                  BIT(0)              /*!< update event generate */
-#define TIMER_SWEVG_CH0G                 BIT(1)              /*!< channel 0 capture or compare event generation */
-#define TIMER_SWEVG_CH1G                 BIT(2)              /*!< channel 1 capture or compare event generation */
-#define TIMER_SWEVG_CH2G                 BIT(3)              /*!< channel 2 capture or compare event generation */
-#define TIMER_SWEVG_CH3G                 BIT(4)              /*!< channel 3 capture or compare event generation */
-#define TIMER_SWEVG_CMTG                 BIT(5)              /*!< channel commutation event generation */
-#define TIMER_SWEVG_TRGG                 BIT(6)              /*!< trigger event generation */
-#define TIMER_SWEVG_BRKG                 BIT(7)              /*!< break event generation */
-
-/* TIMER_CHCTL0 */
-/* output compare mode */
-#define TIMER_CHCTL0_CH0MS               BITS(0,1)           /*!< channel 0 mode selection */
-#define TIMER_CHCTL0_CH0COMFEN           BIT(2)              /*!< channel 0 output compare fast enable */
-#define TIMER_CHCTL0_CH0COMSEN           BIT(3)              /*!< channel 0 output compare shadow enable */
-#define TIMER_CHCTL0_CH0COMCTL           BITS(4,6)           /*!< channel 0 output compare mode */
-#define TIMER_CHCTL0_CH0COMCEN           BIT(7)              /*!< channel 0 output compare clear enable */
-#define TIMER_CHCTL0_CH1MS               BITS(8,9)           /*!< channel 1 mode selection */
-#define TIMER_CHCTL0_CH1COMFEN           BIT(10)             /*!< channel 1 output compare fast enable */
-#define TIMER_CHCTL0_CH1COMSEN           BIT(11)             /*!< channel 1 output compare shadow enable */
-#define TIMER_CHCTL0_CH1COMCTL           BITS(12,14)         /*!< channel 1 output compare mode */
-#define TIMER_CHCTL0_CH1COMCEN           BIT(15)             /*!< channel 1 output compare clear enable */
-/* input capture mode */
-#define TIMER_CHCTL0_CH0CAPPSC           BITS(2,3)           /*!< channel 0 input capture prescaler */
-#define TIMER_CHCTL0_CH0CAPFLT           BITS(4,7)           /*!< channel 0 input capture filter control */
-#define TIMER_CHCTL0_CH1CAPPSC           BITS(10,11)         /*!< channel 1 input capture prescaler */
-#define TIMER_CHCTL0_CH1CAPFLT           BITS(12,15)         /*!< channel 1 input capture filter control */
-
-/* TIMER_CHCTL1 */
-/* output compare mode */
-#define TIMER_CHCTL1_CH2MS               BITS(0,1)           /*!< channel 2 mode selection */
-#define TIMER_CHCTL1_CH2COMFEN           BIT(2)              /*!< channel 2 output compare fast enable */
-#define TIMER_CHCTL1_CH2COMSEN           BIT(3)              /*!< channel 2 output compare shadow enable */
-#define TIMER_CHCTL1_CH2COMCTL           BITS(4,6)           /*!< channel 2 output compare mode */
-#define TIMER_CHCTL1_CH2COMCEN           BIT(7)              /*!< channel 2 output compare clear enable */
-#define TIMER_CHCTL1_CH3MS               BITS(8,9)           /*!< channel 3 mode selection */
-#define TIMER_CHCTL1_CH3COMFEN           BIT(10)             /*!< channel 3 output compare fast enable */
-#define TIMER_CHCTL1_CH3COMSEN           BIT(11)             /*!< channel 3 output compare shadow enable */
-#define TIMER_CHCTL1_CH3COMCTL           BITS(12,14)         /*!< channel 3 output compare mode */
-#define TIMER_CHCTL1_CH3COMCEN           BIT(15)             /*!< channel 3 output compare clear enable */
-/* input capture mode */
-#define TIMER_CHCTL1_CH2CAPPSC           BITS(2,3)           /*!< channel 2 input capture prescaler */
-#define TIMER_CHCTL1_CH2CAPFLT           BITS(4,7)           /*!< channel 2 input capture filter control */
-#define TIMER_CHCTL1_CH3CAPPSC           BITS(10,11)         /*!< channel 3 input capture prescaler */
-#define TIMER_CHCTL1_CH3CAPFLT           BITS(12,15)         /*!< channel 3 input capture filter control */
-
-/* TIMER_CHCTL2 */
-#define TIMER_CHCTL2_CH0EN               BIT(0)              /*!< channel 0 capture/compare function enable */
-#define TIMER_CHCTL2_CH0P                BIT(1)              /*!< channel 0 capture/compare function polarity */
-#define TIMER_CHCTL2_CH0NEN              BIT(2)              /*!< channel 0 complementary output enable */
-#define TIMER_CHCTL2_CH0NP               BIT(3)              /*!< channel 0 complementary output polarity */
-#define TIMER_CHCTL2_CH1EN               BIT(4)              /*!< channel 1 capture/compare function enable  */
-#define TIMER_CHCTL2_CH1P                BIT(5)              /*!< channel 1 capture/compare function polarity */
-#define TIMER_CHCTL2_CH1NEN              BIT(6)              /*!< channel 1 complementary output enable */
-#define TIMER_CHCTL2_CH1NP               BIT(7)              /*!< channel 1 complementary output polarity */
-#define TIMER_CHCTL2_CH2EN               BIT(8)              /*!< channel 2 capture/compare function enable  */
-#define TIMER_CHCTL2_CH2P                BIT(9)              /*!< channel 2 capture/compare function polarity */
-#define TIMER_CHCTL2_CH2NEN              BIT(10)             /*!< channel 2 complementary output enable */
-#define TIMER_CHCTL2_CH2NP               BIT(11)             /*!< channel 2 complementary output polarity */
-#define TIMER_CHCTL2_CH3EN               BIT(12)             /*!< channel 3 capture/compare function enable  */
-#define TIMER_CHCTL2_CH3P                BIT(13)             /*!< channel 3 capture/compare function polarity */
-#define TIMER_CHCTL2_CH3NP               BIT(15)             /*!< channel 3 complementary output polarity */
-
-/* TIMER_CNT */
-#define TIMER_CNT_CNT16                  BITS(0,15)          /*!< 16 bit timer counter */
-#define TIMER_CNT_CNT32                  BITS(0,31)          /*!< 32 bit(TIMER1) timer counter */
-
-/* TIMER_PSC */
-#define TIMER_PSC_PSC                    BITS(0,15)          /*!< prescaler value of the counter clock */
-
-/* TIMER_CAR */
-#define TIMER_CAR_CARL16                 BITS(0,15)          /*!< 16 bit counter auto reload value */
-#define TIMER_CAR_CARL32                 BITS(0,31)          /*!< 32 bit(TIMER1) counter auto reload value */
-
-/* TIMER_CREP */
-#define TIMER_CREP_CREP                  BITS(0,7)           /*!< counter repetition value */
-
-/* TIMER_CH0CV */
-#define TIMER_CH0CV_CH0VAL16             BITS(0,15)          /*!< 16 bit capture/compare value of channel 0 */
-#define TIMER_CH0CV_CH0VAL32             BITS(0,31)          /*!< 32 bit(TIMER1) capture/compare value of channel 0 */
-
-/* TIMER_CH1CV */
-#define TIMER_CH1CV_CH1VAL16             BITS(0,15)          /*!< 16 bit capture/compare value of channel 1 */
-#define TIMER_CH1CV_CH1VAL32             BITS(0,31)          /*!< 32 bit(TIMER1) capture/compare value of channel 1 */
-
-/* TIMER_CH2CV */
-#define TIMER_CH2CV_CH2VAL16             BITS(0,15)          /*!< 16 bit capture/compare value of channel 2 */
-#define TIMER_CH2CV_CH2VAL32             BITS(0,31)          /*!< 32 bit(TIMER1) capture/compare value of channel 2 */
-
-/* TIMER_CH3CV */
-#define TIMER_CH3CV_CH3VAL16             BITS(0,15)          /*!< 16 bit capture/compare value of channel 3 */
-#define TIMER_CH3CV_CH3VAL32             BITS(0,31)          /*!< 32 bit(TIMER1) capture/compare value of channel 3 */
-
-/* TIMER_CCHP */
-#define TIMER_CCHP_DTCFG                 BITS(0,7)           /*!< dead time configure */
-#define TIMER_CCHP_PROT                  BITS(8,9)           /*!< complementary register protect control */
-#define TIMER_CCHP_IOS                   BIT(10)             /*!< idle mode off-state configure */
-#define TIMER_CCHP_ROS                   BIT(11)             /*!< run mode off-state configure */
-#define TIMER_CCHP_BRKEN                 BIT(12)             /*!< break enable */
-#define TIMER_CCHP_BRKP                  BIT(13)             /*!< break polarity */
-#define TIMER_CCHP_OAEN                  BIT(14)             /*!< output automatic enable */
-#define TIMER_CCHP_POEN                  BIT(15)             /*!< primary output enable */
-
-/* TIMER_DMACFG */
-#define TIMER_DMACFG_DMATA               BITS(0,4)           /*!< DMA transfer access start address */
-#define TIMER_DMACFG_DMATC               BITS(8,12)          /*!< DMA transfer count */
-
-/* TIMER_DMATB */
-#define TIMER_DMATB_DMATB                BITS(0,15)          /*!< DMA transfer buffer address */
-
-/* TIMER_IRMP */
-#define TIMER13_IRMP_CI0_RMP             BITS(0,1)           /*!< TIMER13 channel 0 input remap */
-
-/* TIMER_CFG */
-#define TIMER_CFG_OUTSEL                 BIT(0)              /*!< the output value selection */
-#define TIMER_CFG_CHVSEL                 BIT(1)              /*!< write CHxVAL register selection */
-
-/* constants definitions */
-/* TIMER init parameter struct definitions*/
-typedef struct
-{ 
-    uint16_t prescaler;                         /*!< prescaler value */
-    uint16_t alignedmode;                       /*!< aligned mode */
-    uint16_t counterdirection;                  /*!< counter direction */
-    uint16_t clockdivision;                     /*!< clock division value */
-    uint32_t period;                            /*!< period value */
-    uint8_t  repetitioncounter;                 /*!< the counter repetition value */
-}timer_parameter_struct;
-
-/* break parameter struct definitions*/
-typedef struct
-{ 
-    uint32_t runoffstate;                       /*!< run mode off-state */
-    uint32_t ideloffstate;                      /*!< idle mode off-state */
-    uint16_t deadtime;                          /*!< dead time */
-    uint16_t breakpolarity;                     /*!< break polarity */
-    uint32_t outputautostate;                   /*!< output automatic enable */
-    uint32_t protectmode;                       /*!< complementary register protect control */
-    uint32_t breakstate;                        /*!< break enable */
-}timer_break_parameter_struct;
-
-/* channel output parameter struct definitions */
-typedef struct
-{ 
-    uint32_t outputstate;                       /*!< channel output state */
-    uint16_t outputnstate;                      /*!< channel complementary output state */
-    uint16_t ocpolarity;                        /*!< channel output polarity */
-    uint16_t ocnpolarity;                       /*!< channel complementary output polarity */
-    uint16_t ocidlestate;                       /*!< idle state of channel output */
-    uint16_t ocnidlestate;                      /*!< idle state of channel complementary output */
-}timer_oc_parameter_struct;
-
-/* channel input parameter struct definitions */
-typedef struct
-{ 
-    uint16_t icpolarity;                        /*!< channel input polarity */
-    uint16_t icselection;                       /*!< channel input mode selection */
-    uint16_t icprescaler;                       /*!< channel input capture prescaler */
-    uint16_t icfilter;                          /*!< channel input capture filter control */
-}timer_ic_parameter_struct;
+#define TIMER_CTL0(timerx)               REG32((timerx) + 0x00000000U)              /*!< TIMER control register 0 */
+#define TIMER_CTL1(timerx)               REG32((timerx) + 0x00000004U)              /*!< TIMER control register 1 */
+#define TIMER_SMCFG(timerx)              REG32((timerx) + 0x00000008U)              /*!< TIMER slave mode configuration register */
+#define TIMER_DMAINTEN(timerx)           REG32((timerx) + 0x0000000CU)              /*!< TIMER DMA and interrupt enable register */
+#define TIMER_INTF(timerx)               REG32((timerx) + 0x00000010U)              /*!< TIMER interrupt flag register */
+#define TIMER_SWEVG(timerx)              REG32((timerx) + 0x00000014U)              /*!< TIMER software event generation register */
+#define TIMER_CHCTL0(timerx)             REG32((timerx) + 0x00000018U)              /*!< TIMER channel control register 0 */
+#define TIMER_CHCTL1(timerx)             REG32((timerx) + 0x0000001CU)              /*!< TIMER channel control register 1 */
+#define TIMER_CHCTL2(timerx)             REG32((timerx) + 0x00000020U)              /*!< TIMER channel control register 2 */
+#define TIMER_CNT(timerx)                REG32((timerx) + 0x00000024U)              /*!< TIMER counter register */
+#define TIMER_PSC(timerx)                REG32((timerx) + 0x00000028U)              /*!< TIMER prescaler register */
+#define TIMER_CAR(timerx)                REG32((timerx) + 0x0000002CU)              /*!< TIMER counter auto reload register */
+#define TIMER_CREP(timerx)               REG32((timerx) + 0x00000030U)              /*!< TIMER counter repetition register */
+#define TIMER_CH0CV(timerx)              REG32((timerx) + 0x00000034U)              /*!< TIMER channel 0 capture/compare value register */
+#define TIMER_CH1CV(timerx)              REG32((timerx) + 0x00000038U)              /*!< TIMER channel 1 capture/compare value register */
+#define TIMER_CH2CV(timerx)              REG32((timerx) + 0x0000003CU)              /*!< TIMER channel 2 capture/compare value register */
+#define TIMER_CH3CV(timerx)              REG32((timerx) + 0x00000040U)              /*!< TIMER channel 3 capture/compare value register */
+#define TIMER_CCHP(timerx)               REG32((timerx) + 0x00000044U)              /*!< TIMER complementary channel protection register */
+#define TIMER_DMACFG(timerx)             REG32((timerx) + 0x00000048U)              /*!< TIMER DMA configuration register */
+#define TIMER_DMATB(timerx)              REG32((timerx) + 0x0000004CU)              /*!< TIMER DMA transfer buffer register */
+#define TIMER_IRMP(timerx)               REG32((timerx) + 0x00000050U)              /*!< TIMER channel input remap register */
+#define TIMER_CFG(timerx)                REG32((timerx) + 0x000000FCU)              /*!< TIMER configuration register */
+                                                                                    
+/* bits definitions */                                                              
+/* TIMER_CTL0 */                                                                    
+#define TIMER_CTL0_CEN                   BIT(0)                                     /*!< TIMER counter enable */
+#define TIMER_CTL0_UPDIS                 BIT(1)                                     /*!< update disable */
+#define TIMER_CTL0_UPS                   BIT(2)                                     /*!< update source */
+#define TIMER_CTL0_SPM                   BIT(3)                                     /*!< single pulse mode */
+#define TIMER_CTL0_DIR                   BIT(4)                                     /*!< timer counter direction */
+#define TIMER_CTL0_CAM                   BITS(5,6)                                  /*!< center-aligned mode selection */
+#define TIMER_CTL0_ARSE                  BIT(7)                                     /*!< auto-reload shadow enable */
+#define TIMER_CTL0_CKDIV                 BITS(8,9)                                  /*!< clock division */
+                                                                                    
+/* TIMER_CTL1 */                                                                    
+#define TIMER_CTL1_CCSE                  BIT(0)                                     /*!< commutation control shadow enable */
+#define TIMER_CTL1_CCUC                  BIT(2)                                     /*!< commutation control shadow register update control */
+#define TIMER_CTL1_DMAS                  BIT(3)                                     /*!< DMA request source selection */
+#define TIMER_CTL1_MMC                   BITS(4,6)                                  /*!< master mode control */
+#define TIMER_CTL1_TI0S                  BIT(7)                                     /*!< channel 0 trigger input selection(hall mode selection) */
+#define TIMER_CTL1_ISO0                  BIT(8)                                     /*!< idle state of channel 0 output */
+#define TIMER_CTL1_ISO0N                 BIT(9)                                     /*!< idle state of channel 0 complementary output */
+#define TIMER_CTL1_ISO1                  BIT(10)                                    /*!< idle state of channel 1 output */
+#define TIMER_CTL1_ISO1N                 BIT(11)                                    /*!< idle state of channel 1 complementary output */
+#define TIMER_CTL1_ISO2                  BIT(12)                                    /*!< idle state of channel 2 output */
+#define TIMER_CTL1_ISO2N                 BIT(13)                                    /*!< idle state of channel 2 complementary output */
+#define TIMER_CTL1_ISO3                  BIT(14)                                    /*!< idle state of channel 3 output */
+                                                                                    
+/* TIMER_SMCFG */                                                                   
+#define TIMER_SMCFG_SMC                  BITS(0,2)                                  /*!< slave mode control */
+#define TIMER_SMCFG_OCRC                 BIT(3)                                     /*!< OCPRE clear source selection */
+#define TIMER_SMCFG_TRGS                 BITS(4,6)                                  /*!< trigger selection */
+#define TIMER_SMCFG_MSM                  BIT(7)                                     /*!< master-slave mode */
+#define TIMER_SMCFG_ETFC                 BITS(8,11)                                 /*!< external trigger filter control */
+#define TIMER_SMCFG_ETPSC                BITS(12,13)                                /*!< external trigger prescaler */
+#define TIMER_SMCFG_SMC1                 BIT(14)                                    /*!< part of SMC for enable external clock mode 1 */
+#define TIMER_SMCFG_ETP                  BIT(15)                                    /*!< external trigger polarity */
+                                                                                    
+/* TIMER_DMAINTEN */                                                                
+#define TIMER_DMAINTEN_UPIE              BIT(0)                                     /*!< update interrupt enable */
+#define TIMER_DMAINTEN_CH0IE             BIT(1)                                     /*!< channel 0 capture/compare interrupt enable */
+#define TIMER_DMAINTEN_CH1IE             BIT(2)                                     /*!< channel 1 capture/compare interrupt enable */
+#define TIMER_DMAINTEN_CH2IE             BIT(3)                                     /*!< channel 2 capture/compare interrupt enable */
+#define TIMER_DMAINTEN_CH3IE             BIT(4)                                     /*!< channel 3 capture/compare interrupt enable */
+#define TIMER_DMAINTEN_CMTIE             BIT(5)                                     /*!< commutation interrupt request enable */
+#define TIMER_DMAINTEN_TRGIE             BIT(6)                                     /*!< trigger interrupt enable */
+#define TIMER_DMAINTEN_BRKIE             BIT(7)                                     /*!< break interrupt enable */
+#define TIMER_DMAINTEN_UPDEN             BIT(8)                                     /*!< update DMA request enable */
+#define TIMER_DMAINTEN_CH0DEN            BIT(9)                                     /*!< channel 0 DMA request enable */
+#define TIMER_DMAINTEN_CH1DEN            BIT(10)                                    /*!< channel 1 DMA request enable */
+#define TIMER_DMAINTEN_CH2DEN            BIT(11)                                    /*!< channel 2 DMA request enable */
+#define TIMER_DMAINTEN_CH3DEN            BIT(12)                                    /*!< channel 3 DMA request enable */
+#define TIMER_DMAINTEN_CMTDEN            BIT(13)                                    /*!< commutation DMA request enable */
+#define TIMER_DMAINTEN_TRGDEN            BIT(14)                                    /*!< trigger DMA request enable */
+                                                                                    
+/* TIMER_INTF */                                                                    
+#define TIMER_INTF_UPIF                  BIT(0)                                     /*!< update interrupt flag */
+#define TIMER_INTF_CH0IF                 BIT(1)                                     /*!< channel 0 capture/compare interrupt flag */
+#define TIMER_INTF_CH1IF                 BIT(2)                                     /*!< channel 1 capture/compare interrupt flag */
+#define TIMER_INTF_CH2IF                 BIT(3)                                     /*!< channel 2 capture/compare interrupt flag */
+#define TIMER_INTF_CH3IF                 BIT(4)                                     /*!< channel 3 capture/compare interrupt flag */
+#define TIMER_INTF_CMTIF                 BIT(5)                                     /*!< channel commutation interrupt flag */
+#define TIMER_INTF_TRGIF                 BIT(6)                                     /*!< trigger interrupt flag */
+#define TIMER_INTF_BRKIF                 BIT(7)                                     /*!< break interrupt flag */
+#define TIMER_INTF_CH0OF                 BIT(9)                                     /*!< channel 0 overcapture flag */
+#define TIMER_INTF_CH1OF                 BIT(10)                                    /*!< channel 1 overcapture flag */
+#define TIMER_INTF_CH2OF                 BIT(11)                                    /*!< channel 2 overcapture flag */
+#define TIMER_INTF_CH3OF                 BIT(12)                                    /*!< channel 3 overcapture flag */
+                                                                                    
+/* TIMER_SWEVG */                                                                   
+#define TIMER_SWEVG_UPG                  BIT(0)                                     /*!< update event generate */
+#define TIMER_SWEVG_CH0G                 BIT(1)                                     /*!< channel 0 capture or compare event generation */
+#define TIMER_SWEVG_CH1G                 BIT(2)                                     /*!< channel 1 capture or compare event generation */
+#define TIMER_SWEVG_CH2G                 BIT(3)                                     /*!< channel 2 capture or compare event generation */
+#define TIMER_SWEVG_CH3G                 BIT(4)                                     /*!< channel 3 capture or compare event generation */
+#define TIMER_SWEVG_CMTG                 BIT(5)                                     /*!< channel commutation event generation */
+#define TIMER_SWEVG_TRGG                 BIT(6)                                     /*!< trigger event generation */
+#define TIMER_SWEVG_BRKG                 BIT(7)                                     /*!< break event generation */
+                                                                                    
+/* TIMER_CHCTL0 */                                                                  
+/* output compare mode */                                                           
+#define TIMER_CHCTL0_CH0MS               BITS(0,1)                                  /*!< channel 0 mode selection */
+#define TIMER_CHCTL0_CH0COMFEN           BIT(2)                                     /*!< channel 0 output compare fast enable */
+#define TIMER_CHCTL0_CH0COMSEN           BIT(3)                                     /*!< channel 0 output compare shadow enable */
+#define TIMER_CHCTL0_CH0COMCTL           BITS(4,6)                                  /*!< channel 0 output compare mode */
+#define TIMER_CHCTL0_CH0COMCEN           BIT(7)                                     /*!< channel 0 output compare clear enable */
+#define TIMER_CHCTL0_CH1MS               BITS(8,9)                                  /*!< channel 1 mode selection */
+#define TIMER_CHCTL0_CH1COMFEN           BIT(10)                                    /*!< channel 1 output compare fast enable */
+#define TIMER_CHCTL0_CH1COMSEN           BIT(11)                                    /*!< channel 1 output compare shadow enable */
+#define TIMER_CHCTL0_CH1COMCTL           BITS(12,14)                                /*!< channel 1 output compare mode */
+#define TIMER_CHCTL0_CH1COMCEN           BIT(15)                                    /*!< channel 1 output compare clear enable */
+/* input capture mode */                                                            
+#define TIMER_CHCTL0_CH0CAPPSC           BITS(2,3)                                  /*!< channel 0 input capture prescaler */
+#define TIMER_CHCTL0_CH0CAPFLT           BITS(4,7)                                  /*!< channel 0 input capture filter control */
+#define TIMER_CHCTL0_CH1CAPPSC           BITS(10,11)                                /*!< channel 1 input capture prescaler */
+#define TIMER_CHCTL0_CH1CAPFLT           BITS(12,15)                                /*!< channel 1 input capture filter control */
+                                                                                    
+/* TIMER_CHCTL1 */                                                                  
+/* output compare mode */                                                           
+#define TIMER_CHCTL1_CH2MS               BITS(0,1)                                  /*!< channel 2 mode selection */
+#define TIMER_CHCTL1_CH2COMFEN           BIT(2)                                     /*!< channel 2 output compare fast enable */
+#define TIMER_CHCTL1_CH2COMSEN           BIT(3)                                     /*!< channel 2 output compare shadow enable */
+#define TIMER_CHCTL1_CH2COMCTL           BITS(4,6)                                  /*!< channel 2 output compare mode */
+#define TIMER_CHCTL1_CH2COMCEN           BIT(7)                                     /*!< channel 2 output compare clear enable */
+#define TIMER_CHCTL1_CH3MS               BITS(8,9)                                  /*!< channel 3 mode selection */
+#define TIMER_CHCTL1_CH3COMFEN           BIT(10)                                    /*!< channel 3 output compare fast enable */
+#define TIMER_CHCTL1_CH3COMSEN           BIT(11)                                    /*!< channel 3 output compare shadow enable */
+#define TIMER_CHCTL1_CH3COMCTL           BITS(12,14)                                /*!< channel 3 output compare mode */
+#define TIMER_CHCTL1_CH3COMCEN           BIT(15)                                    /*!< channel 3 output compare clear enable */
+/* input capture mode */                                                            
+#define TIMER_CHCTL1_CH2CAPPSC           BITS(2,3)                                  /*!< channel 2 input capture prescaler */
+#define TIMER_CHCTL1_CH2CAPFLT           BITS(4,7)                                  /*!< channel 2 input capture filter control */
+#define TIMER_CHCTL1_CH3CAPPSC           BITS(10,11)                                /*!< channel 3 input capture prescaler */
+#define TIMER_CHCTL1_CH3CAPFLT           BITS(12,15)                                /*!< channel 3 input capture filter control */
+                                                                                    
+/* TIMER_CHCTL2 */                                                                  
+#define TIMER_CHCTL2_CH0EN               BIT(0)                                     /*!< channel 0 capture/compare function enable */
+#define TIMER_CHCTL2_CH0P                BIT(1)                                     /*!< channel 0 capture/compare function polarity */
+#define TIMER_CHCTL2_CH0NEN              BIT(2)                                     /*!< channel 0 complementary output enable */
+#define TIMER_CHCTL2_CH0NP               BIT(3)                                     /*!< channel 0 complementary output polarity */
+#define TIMER_CHCTL2_CH1EN               BIT(4)                                     /*!< channel 1 capture/compare function enable  */
+#define TIMER_CHCTL2_CH1P                BIT(5)                                     /*!< channel 1 capture/compare function polarity */
+#define TIMER_CHCTL2_CH1NEN              BIT(6)                                     /*!< channel 1 complementary output enable */
+#define TIMER_CHCTL2_CH1NP               BIT(7)                                     /*!< channel 1 complementary output polarity */
+#define TIMER_CHCTL2_CH2EN               BIT(8)                                     /*!< channel 2 capture/compare function enable  */
+#define TIMER_CHCTL2_CH2P                BIT(9)                                     /*!< channel 2 capture/compare function polarity */
+#define TIMER_CHCTL2_CH2NEN              BIT(10)                                    /*!< channel 2 complementary output enable */
+#define TIMER_CHCTL2_CH2NP               BIT(11)                                    /*!< channel 2 complementary output polarity */
+#define TIMER_CHCTL2_CH3EN               BIT(12)                                    /*!< channel 3 capture/compare function enable  */
+#define TIMER_CHCTL2_CH3P                BIT(13)                                    /*!< channel 3 capture/compare function polarity */
+#define TIMER_CHCTL2_CH3NP               BIT(15)                                    /*!< channel 3 complementary output polarity */
+                                                                                    
+/* TIMER_CNT */                                                                     
+#define TIMER_CNT_CNT16                  BITS(0,15)                                 /*!< 16 bit timer counter */
+#define TIMER_CNT_CNT32                  BITS(0,31)                                 /*!< 32 bit(TIMER1) timer counter */
+                                                                                    
+/* TIMER_PSC */                                                                     
+#define TIMER_PSC_PSC                    BITS(0,15)                                 /*!< prescaler value of the counter clock */
+                                                                                    
+/* TIMER_CAR */                                                                     
+#define TIMER_CAR_CARL16                 BITS(0,15)                                 /*!< 16 bit counter auto reload value */
+#define TIMER_CAR_CARL32                 BITS(0,31)                                 /*!< 32 bit(TIMER1) counter auto reload value */
+                                                                                    
+/* TIMER_CREP */                                                                    
+#define TIMER_CREP_CREP                  BITS(0,7)                                  /*!< counter repetition value */
+                                                                                    
+/* TIMER_CH0CV */                                                                   
+#define TIMER_CH0CV_CH0VAL16             BITS(0,15)                                 /*!< 16 bit capture/compare value of channel 0 */
+#define TIMER_CH0CV_CH0VAL32             BITS(0,31)                                 /*!< 32 bit(TIMER1) capture/compare value of channel 0 */
+                                                                                    
+/* TIMER_CH1CV */                                                                   
+#define TIMER_CH1CV_CH1VAL16             BITS(0,15)                                 /*!< 16 bit capture/compare value of channel 1 */
+#define TIMER_CH1CV_CH1VAL32             BITS(0,31)                                 /*!< 32 bit(TIMER1) capture/compare value of channel 1 */
+                                                                                    
+/* TIMER_CH2CV */                                                                   
+#define TIMER_CH2CV_CH2VAL16             BITS(0,15)                                 /*!< 16 bit capture/compare value of channel 2 */
+#define TIMER_CH2CV_CH2VAL32             BITS(0,31)                                 /*!< 32 bit(TIMER1) capture/compare value of channel 2 */
+                                                                                    
+/* TIMER_CH3CV */                                                                   
+#define TIMER_CH3CV_CH3VAL16             BITS(0,15)                                 /*!< 16 bit capture/compare value of channel 3 */
+#define TIMER_CH3CV_CH3VAL32             BITS(0,31)                                 /*!< 32 bit(TIMER1) capture/compare value of channel 3 */
+                                                                                    
+/* TIMER_CCHP */                                                                    
+#define TIMER_CCHP_DTCFG                 BITS(0,7)                                  /*!< dead time configure */
+#define TIMER_CCHP_PROT                  BITS(8,9)                                  /*!< complementary register protect control */
+#define TIMER_CCHP_IOS                   BIT(10)                                    /*!< idle mode off-state configure */
+#define TIMER_CCHP_ROS                   BIT(11)                                    /*!< run mode off-state configure */
+#define TIMER_CCHP_BRKEN                 BIT(12)                                    /*!< break enable */
+#define TIMER_CCHP_BRKP                  BIT(13)                                    /*!< break polarity */
+#define TIMER_CCHP_OAEN                  BIT(14)                                    /*!< output automatic enable */
+#define TIMER_CCHP_POEN                  BIT(15)                                    /*!< primary output enable */
+                                                                                    
+/* TIMER_DMACFG */                                                                  
+#define TIMER_DMACFG_DMATA               BITS(0,4)                                  /*!< DMA transfer access start address */
+#define TIMER_DMACFG_DMATC               BITS(8,12)                                 /*!< DMA transfer count */
+                                                                                    
+/* TIMER_DMATB */                                                                   
+#define TIMER_DMATB_DMATB                BITS(0,15)                                 /*!< DMA transfer buffer address */
+                                                                                    
+/* TIMER_IRMP */                                                                    
+#define TIMER13_IRMP_CI0_RMP             BITS(0,1)                                  /*!< TIMER13 channel 0 input remap */
+                                                                                    
+/* TIMER_CFG */                                                                     
+#define TIMER_CFG_OUTSEL                 BIT(0)                                     /*!< the output value selection */
+#define TIMER_CFG_CHVSEL                 BIT(1)                                     /*!< write CHxVAL register selection */
+                                                                                    
+/* constants definitions */                                                         
+/* TIMER init parameter struct definitions*/                                        
+typedef struct {                                                                    
+    uint16_t prescaler;                                                             /*!< prescaler value */
+    uint16_t alignedmode;                                                           /*!< aligned mode */
+    uint16_t counterdirection;                                                      /*!< counter direction */
+    uint16_t clockdivision;                                                         /*!< clock division value */
+    uint32_t period;                                                                /*!< period value */
+    uint8_t  repetitioncounter;                                                     /*!< the counter repetition value */
+} timer_parameter_struct;                                                           
+                                                                                    
+/* break parameter struct definitions*/                                             
+typedef struct {                                                                    
+    uint32_t runoffstate;                                                           /*!< run mode off-state */
+    uint32_t ideloffstate;                                                          /*!< idle mode off-state */
+    uint16_t deadtime;                                                              /*!< dead time */
+    uint16_t breakpolarity;                                                         /*!< break polarity */
+    uint32_t outputautostate;                                                       /*!< output automatic enable */
+    uint32_t protectmode;                                                           /*!< complementary register protect control */
+    uint32_t breakstate;                                                            /*!< break enable */
+} timer_break_parameter_struct;                                                     
+                                                                                    
+/* channel output parameter struct definitions */                                   
+typedef struct {                                                                    
+    uint32_t outputstate;                                                           /*!< channel output state */
+    uint16_t outputnstate;                                                          /*!< channel complementary output state */
+    uint16_t ocpolarity;                                                            /*!< channel output polarity */
+    uint16_t ocnpolarity;                                                           /*!< channel complementary output polarity */
+    uint16_t ocidlestate;                                                           /*!< idle state of channel output */
+    uint16_t ocnidlestate;                                                          /*!< idle state of channel complementary output */
+} timer_oc_parameter_struct;                                                        
+                                                                                    
+/* channel input parameter struct definitions */                                    
+typedef struct {                                                                    
+    uint16_t icpolarity;                                                            /*!< channel input polarity */
+    uint16_t icselection;                                                           /*!< channel input mode selection */
+    uint16_t icprescaler;                                                           /*!< channel input capture prescaler */
+    uint16_t icfilter;                                                              /*!< channel input capture filter control */
+} timer_ic_parameter_struct;
 
 /* TIMER interrupt enable or disable */
 #define TIMER_INT_UP                        TIMER_DMAINTEN_UPIE                     /*!< update interrupt */
@@ -345,7 +342,7 @@ typedef struct
 #define TIMER_DMA_CMTD                      ((uint16_t)TIMER_DMAINTEN_CMTDEN)       /*!< commutation DMA request enable */
 #define TIMER_DMA_TRGD                      ((uint16_t)TIMER_DMAINTEN_TRGDEN)       /*!< trigger DMA enable */
 
-/* channel DMA request source selection */ 
+/* channel DMA request source selection */
 #define TIMER_DMAREQUEST_UPDATEEVENT        ((uint8_t)0x00U)                        /*!< DMA request of channel y is sent when update event occurs */
 #define TIMER_DMAREQUEST_CHANNELEVENT       ((uint8_t)0x01U)                        /*!< DMA request of channel y is sent when channel y event occurs */
 
@@ -436,7 +433,7 @@ typedef struct
 #define TIMER_ROS_STATE_ENABLE              ((uint32_t)0x00000800U)                 /*!< when POEN bit is set, the channel output signals (CHx_O/CHx_ON) are enabled, with relationship to CHxEN/CHxNEN bits */
 #define TIMER_ROS_STATE_DISABLE             ((uint32_t)0x00000000U)                 /*!< when POEN bit is set, the channel output signals (CHx_O/CHx_ON) are disabled */
 
-/* idle mode off-state configure */                                                 
+/* idle mode off-state configure */
 #define TIMER_IOS_STATE_ENABLE              ((uint16_t)0x0400U)                     /*!< when POEN bit is reset, he channel output signals (CHx_O/CHx_ON) are enabled, with relationship to CHxEN/CHxNEN bits */
 #define TIMER_IOS_STATE_DISABLE             ((uint16_t)0x0000U)                     /*!< when POEN bit is reset, the channel output signals (CHx_O/CHx_ON) are disabled */
 
@@ -481,11 +478,11 @@ typedef struct
 #define TIMER_OCN_POLARITY_HIGH             ((uint16_t)0x0000U)                     /*!< channel complementary output polarity is high */
 #define TIMER_OCN_POLARITY_LOW              ((uint16_t)0x0008U)                     /*!< channel complementary output polarity is low */
 
-/* idle state of channel output */ 
+/* idle state of channel output */
 #define TIMER_OC_IDLE_STATE_HIGH            ((uint16_t)0x0100)                      /*!< idle state of channel output is high */
 #define TIMER_OC_IDLE_STATE_LOW             ((uint16_t)0x0000)                      /*!< idle state of channel output is low */
 
-/* idle state of channel complementary output */ 
+/* idle state of channel complementary output */
 #define TIMER_OCN_IDLE_STATE_HIGH           ((uint16_t)0x0200U)                     /*!< idle state of channel complementary output is high */
 #define TIMER_OCN_IDLE_STATE_LOW            ((uint16_t)0x0000U)                     /*!< idle state of channel complementary output is low */
 
@@ -511,7 +508,7 @@ typedef struct
 #define TIMER_OC_CLEAR_ENABLE               ((uint16_t)0x0080U)                     /*!< channel output clear function enable */
 #define TIMER_OC_CLEAR_DISABLE              ((uint16_t)0x0000U)                     /*!< channel output clear function disable */
 
-/* channel control shadow register update control */ 
+/* channel control shadow register update control */
 #define TIMER_UPDATECTL_CCU                 ((uint8_t)0x00U)                        /*!< the shadow registers update by when CMTG bit is set */
 #define TIMER_UPDATECTL_CCUTRI              ((uint8_t)0x01U)                        /*!< the shadow registers update by when CMTG bit is set or an rising edge of TRGI occurs */
 
@@ -554,7 +551,7 @@ typedef struct
 #define TIMER_TRI_OUT_SRC_O3CPRE            CTL1_MMC(7)                             /*!< O3CPRE as trigger output */
 
 /* slave mode control */
-#define SMCFG_SMC(regval)                   (BITS(0, 2) & ((uint32_t)(regval) << 0U)) 
+#define SMCFG_SMC(regval)                   (BITS(0, 2) & ((uint32_t)(regval) << 0U))
 #define TIMER_SLAVE_MODE_DISABLE            SMCFG_SMC(0)                            /*!< slave mode disable */
 #define TIMER_ENCODER_MODE0                 SMCFG_SMC(1)                            /*!< encoder mode 0 */
 #define TIMER_ENCODER_MODE1                 SMCFG_SMC(2)                            /*!< encoder mode 1 */
@@ -564,11 +561,11 @@ typedef struct
 #define TIMER_SLAVE_MODE_EVENT              SMCFG_SMC(6)                            /*!< event mode */
 #define TIMER_SLAVE_MODE_EXTERNAL0          SMCFG_SMC(7)                            /*!< external clock mode 0 */
 
-/* OCPRE clear source selection */                                                  
+/* OCPRE clear source selection */
 #define TIMER_OCPRE_CLEAR_SOURCE_CLR        ((uint8_t)0x00U)                        /*!< OCPRE_CLR_INT is connected to the OCPRE_CLR input */
 #define TIMER_OCPRE_CLEAR_SOURCE_ETIF       ((uint8_t)0x01U)                        /*!< OCPRE_CLR_INT is connected to ETIF */
 
-/* master slave mode selection */ 
+/* master slave mode selection */
 #define TIMER_MASTER_SLAVE_MODE_ENABLE      ((uint8_t)0x00U)                        /*!< master slave mode enable */
 #define TIMER_MASTER_SLAVE_MODE_DISABLE     ((uint8_t)0x01U)                        /*!< master slave mode disable */
 
@@ -583,7 +580,7 @@ typedef struct
 #define TIMER_ETP_FALLING                   TIMER_SMCFG_ETP                         /*!< active low or falling edge active */
 #define TIMER_ETP_RISING                    ((uint32_t)0x00000000U)                 /*!< active high or rising edge active */
 
-/* channel 0 trigger input selection */ 
+/* channel 0 trigger input selection */
 #define TIMER_HALLINTERFACE_ENABLE          ((uint8_t)0x00U)                        /*!< TIMER hall sensor mode enable */
 #define TIMER_HALLINTERFACE_DISABLE         ((uint8_t)0x01U)                        /*!< TIMER hall sensor mode disable */
 
@@ -596,7 +593,7 @@ typedef struct
 #define TIMER_OUTSEL_ENABLE                 ((uint16_t)0x0001U)                     /*!< output value selection enable */
 
 /* timer13 channel 0 input remap */
-#define TIMER13_IRMP(regval)                (BITS(0, 1) & ((uint32_t)(regval) << 0U))       
+#define TIMER13_IRMP(regval)                (BITS(0, 1) & ((uint32_t)(regval) << 0U))
 #define TIMER13_CI0_RMP_GPIO                TIMER13_IRMP(0)                         /*!< timer13 channel 0 input is connected to GPIO(TIMER13_CH0) */
 #define TIMER13_CI0_RMP_RTCCLK              TIMER13_IRMP(1)                         /*!< timer13 channel 0 input is connected to the RTCCLK */
 #define TIMER13_CI0_RMP_HXTAL_DIV32         TIMER13_IRMP(2)                         /*!< timer13 channel 0 input is connected to HXTAL/32 clock */
@@ -607,9 +604,9 @@ typedef struct
 /* deinit a TIMER */
 void timer_deinit(uint32_t timer_periph);
 /* initialize TIMER init parameter struct */
-void timer_struct_para_init(timer_parameter_struct* initpara);
+void timer_struct_para_init(timer_parameter_struct *initpara);
 /* initialize TIMER counter */
-void timer_init(uint32_t timer_periph, timer_parameter_struct* initpara);
+void timer_init(uint32_t timer_periph, timer_parameter_struct *initpara);
 /* enable a TIMER */
 void timer_enable(uint32_t timer_periph);
 /* disable a TIMER */
@@ -635,7 +632,7 @@ void timer_repetition_value_config(uint32_t timer_periph, uint16_t repetition);
 /* configure TIMER autoreload register value */
 void timer_autoreload_value_config(uint32_t timer_periph, uint32_t autoreload);
 /* configure TIMER counter register value */
-void timer_counter_value_config(uint32_t timer_periph , uint32_t counter);
+void timer_counter_value_config(uint32_t timer_periph, uint32_t counter);
 /* read TIMER counter value */
 uint32_t timer_counter_read(uint32_t timer_periph);
 /* read TIMER prescaler value */
@@ -648,6 +645,10 @@ void timer_update_source_config(uint32_t timer_periph, uint8_t update);
 void timer_ocpre_clear_source_config(uint32_t timer_periph, uint8_t ocpreclear);
 
 /* TIMER interrupt and flag*/
+/* get TIMER flags */
+FlagStatus timer_flag_get(uint32_t timer_periph, uint32_t flag);
+/* clear TIMER flags */
+void timer_flag_clear(uint32_t timer_periph, uint32_t flag);
 /* enable the TIMER interrupt */
 void timer_interrupt_enable(uint32_t timer_periph, uint32_t interrupt);
 /* disable the TIMER interrupt */
@@ -656,10 +657,6 @@ void timer_interrupt_disable(uint32_t timer_periph, uint32_t interrupt);
 FlagStatus timer_interrupt_flag_get(uint32_t timer_periph, uint32_t interrupt);
 /* clear TIMER interrupt flag */
 void timer_interrupt_flag_clear(uint32_t timer_periph, uint32_t interrupt);
-/* get TIMER flags */
-FlagStatus timer_flag_get(uint32_t timer_periph, uint32_t flag);
-/* clear TIMER flags */
-void timer_flag_clear(uint32_t timer_periph, uint32_t flag);
 
 /* TIMER DMA and event*/
 /* enable the TIMER DMA */
@@ -669,15 +666,15 @@ void timer_dma_disable(uint32_t timer_periph, uint16_t dma);
 /* channel DMA request source selection */
 void timer_channel_dma_request_source_select(uint32_t timer_periph, uint8_t dma_request);
 /* configure the TIMER DMA transfer */
-void timer_dma_transfer_config(uint32_t timer_periph,uint32_t dma_baseaddr, uint32_t dma_lenth);
+void timer_dma_transfer_config(uint32_t timer_periph, uint32_t dma_baseaddr, uint32_t dma_lenth);
 /* software generate events */
 void timer_event_software_generate(uint32_t timer_periph, uint16_t event);
 
 /* TIMER channel complementary protection */
 /* initialize TIMER break parameter struct */
-void timer_break_struct_para_init(timer_break_parameter_struct* breakpara);
+void timer_break_struct_para_init(timer_break_parameter_struct *breakpara);
 /* configure TIMER break function */
-void timer_break_config(uint32_t timer_periph, timer_break_parameter_struct* breakpara);
+void timer_break_config(uint32_t timer_periph, timer_break_parameter_struct *breakpara);
 /* enable TIMER break function */
 void timer_break_enable(uint32_t timer_periph);
 /* disable TIMER break function */
@@ -695,11 +692,11 @@ void timer_channel_control_shadow_update_config(uint32_t timer_periph, uint8_t c
 
 /* TIMER channel output */
 /* initialize TIMER channel output parameter struct */
-void timer_channel_output_struct_para_init(timer_oc_parameter_struct* ocpara);
+void timer_channel_output_struct_para_init(timer_oc_parameter_struct *ocpara);
 /* configure TIMER channel output function */
-void timer_channel_output_config(uint32_t timer_periph,uint16_t channel, timer_oc_parameter_struct* ocpara);
+void timer_channel_output_config(uint32_t timer_periph, uint16_t channel, timer_oc_parameter_struct *ocpara);
 /* configure TIMER channel output compare mode */
-void timer_channel_output_mode_config(uint32_t timer_periph, uint16_t channel,uint16_t ocmode);
+void timer_channel_output_mode_config(uint32_t timer_periph, uint16_t channel, uint16_t ocmode);
 /* configure TIMER channel output pulse value */
 void timer_channel_output_pulse_value_config(uint32_t timer_periph, uint16_t channel, uint32_t pulse);
 /* configure TIMER channel output shadow function */
@@ -707,7 +704,7 @@ void timer_channel_output_shadow_config(uint32_t timer_periph, uint16_t channel,
 /* configure TIMER channel output fast function */
 void timer_channel_output_fast_config(uint32_t timer_periph, uint16_t channel, uint16_t ocfast);
 /* configure TIMER channel output clear function */
-void timer_channel_output_clear_config(uint32_t timer_periph,uint16_t channel,uint16_t occlear);
+void timer_channel_output_clear_config(uint32_t timer_periph, uint16_t channel, uint16_t occlear);
 /* configure TIMER channel output polarity */
 void timer_channel_output_polarity_config(uint32_t timer_periph, uint16_t channel, uint16_t ocpolarity);
 /* configure TIMER channel complementary output polarity */
@@ -719,15 +716,15 @@ void timer_channel_complementary_output_state_config(uint32_t timer_periph, uint
 
 /* TIMER channel input */
 /* initialize TIMER channel input parameter struct */
-void timer_channel_input_struct_para_init(timer_ic_parameter_struct* icpara);
+void timer_channel_input_struct_para_init(timer_ic_parameter_struct *icpara);
 /* configure TIMER input capture parameter */
-void timer_input_capture_config(uint32_t timer_periph, uint16_t channel, timer_ic_parameter_struct* icpara);
+void timer_input_capture_config(uint32_t timer_periph, uint16_t channel, timer_ic_parameter_struct *icpara);
 /* configure TIMER channel input capture prescaler value */
 void timer_channel_input_capture_prescaler_config(uint32_t timer_periph, uint16_t channel, uint16_t prescaler);
 /* read TIMER channel capture compare register value */
 uint32_t timer_channel_capture_value_register_read(uint32_t timer_periph, uint16_t channel);
 /* configure TIMER input pwm capture function */
-void timer_input_pwm_capture_config(uint32_t timer_periph, uint16_t channel, timer_ic_parameter_struct* icpwm);
+void timer_input_pwm_capture_config(uint32_t timer_periph, uint16_t channel, timer_ic_parameter_struct *icpwm);
 /* configure TIMER hall sensor mode */
 void timer_hall_mode_config(uint32_t timer_periph, uint8_t hallmode);
 
@@ -737,7 +734,7 @@ void timer_input_trigger_source_select(uint32_t timer_periph, uint32_t intrigger
 /* select TIMER master mode output trigger source */
 void timer_master_output_trigger_source_select(uint32_t timer_periph, uint32_t outrigger);
 /* select TIMER slave mode */
-void timer_slave_mode_select(uint32_t timer_periph,uint32_t slavemode);
+void timer_slave_mode_select(uint32_t timer_periph, uint32_t slavemode);
 /* configure TIMER master slave mode */
 void timer_master_slave_mode_config(uint32_t timer_periph, uint8_t masterslave);
 /* configure TIMER external trigger input */
@@ -749,7 +746,7 @@ void timer_internal_clock_config(uint32_t timer_periph);
 /* configure TIMER the internal trigger as external clock input */
 void timer_internal_trigger_as_external_clock_config(uint32_t timer_periph, uint32_t intrigger);
 /* configure TIMER the external trigger as external clock input */
-void timer_external_trigger_as_external_clock_config(uint32_t timer_periph, uint32_t extrigger, uint16_t extpolarity,uint32_t extfilter);
+void timer_external_trigger_as_external_clock_config(uint32_t timer_periph, uint32_t extrigger, uint16_t extpolarity, uint32_t extfilter);
 /* configure TIMER the external clock mode 0 */
 void timer_external_clock_mode0_config(uint32_t timer_periph, uint32_t extprescaler, uint32_t extpolarity, uint32_t extfilter);
 /* configure TIMER the external clock mode 1 */
@@ -757,7 +754,7 @@ void timer_external_clock_mode1_config(uint32_t timer_periph, uint32_t extpresca
 /* disable TIMER the external clock mode 1 */
 void timer_external_clock_mode1_disable(uint32_t timer_periph);
 /* configure TIMER channel remap function */
-void timer_channel_remap_config(uint32_t timer_periph,uint32_t remap);
+void timer_channel_remap_config(uint32_t timer_periph, uint32_t remap);
 
 /* TIMER configure */
 /* configure TIMER write CHxVAL register selection */

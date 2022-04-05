@@ -8,27 +8,27 @@
 /*
     Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -41,15 +41,14 @@ OF SUCH DAMAGE.
 #include <string.h>
 
 /* local function prototypes ('static') */
-static void usbh_msc_itf_deinit         (usbh_host *puhost);
-static usbh_status usbh_msc_itf_init    (usbh_host *puhost);
-static usbh_status usbh_msc_req         (usbh_host *puhost);
-static usbh_status usbh_msc_handle      (usbh_host *puhost);
-static usbh_status usbh_msc_maxlun_get  (usbh_host *puhost, uint8_t *maxlun);
+static void usbh_msc_itf_deinit(usbh_host *puhost);
+static usbh_status usbh_msc_itf_init(usbh_host *puhost);
+static usbh_status usbh_msc_req(usbh_host *puhost);
+static usbh_status usbh_msc_handle(usbh_host *puhost);
+static usbh_status usbh_msc_maxlun_get(usbh_host *puhost, uint8_t *maxlun);
 static usbh_status usbh_msc_rdwr_process(usbh_host *puhost, uint8_t lun);
 
-usbh_class usbh_msc = 
-{
+usbh_class usbh_msc = {
     USB_CLASS_MSC,
     usbh_msc_itf_init,
     usbh_msc_itf_deinit,
@@ -63,28 +62,28 @@ usbh_class usbh_msc =
     \param[out] none
     \retval     operation status
 */
-static usbh_status usbh_msc_itf_init (usbh_host *puhost)
+static usbh_status usbh_msc_itf_init(usbh_host *puhost)
 {
     usbh_status status = USBH_OK;
 
     uint8_t interface = usbh_interface_find(&puhost->dev_prop, MSC_CLASS, USB_MSC_SUBCLASS_SCSI, MSC_PROTOCOL);
 
-    if (0xFFU == interface) {
+    if(0xFFU == interface) {
         puhost->usr_cb->dev_not_supported();
 
         status = USBH_FAIL;
     } else {
         static usbh_msc_handler msc_handler;
 
-        memset((void*)&msc_handler, 0, sizeof(usbh_msc_handler));
-    
+        memset((void *)&msc_handler, 0, sizeof(usbh_msc_handler));
+
         puhost->active_class->class_data = (void *)&msc_handler;
 
         usbh_interface_select(&puhost->dev_prop, interface);
 
         usb_desc_ep *ep_desc = &puhost->dev_prop.cfg_desc_set.itf_desc_set[interface][0].ep_desc[0];
 
-        if (ep_desc->bEndpointAddress & 0x80) {
+        if(ep_desc->bEndpointAddress & 0x80) {
             msc_handler.ep_in = ep_desc->bEndpointAddress;
             msc_handler.ep_size_in = ep_desc->wMaxPacketSize;
         } else {
@@ -94,7 +93,7 @@ static usbh_status usbh_msc_itf_init (usbh_host *puhost)
 
         ep_desc = &puhost->dev_prop.cfg_desc_set.itf_desc_set[interface][0].ep_desc[1];
 
-        if (ep_desc->bEndpointAddress & 0x80) {
+        if(ep_desc->bEndpointAddress & 0x80) {
             msc_handler.ep_in = ep_desc->bEndpointAddress;
             msc_handler.ep_size_in = ep_desc->wMaxPacketSize;
         } else {
@@ -111,20 +110,20 @@ static usbh_status usbh_msc_itf_init (usbh_host *puhost)
         usbh_msc_bot_init(puhost);
 
         /* open the new channels */
-        usbh_pipe_create (puhost->data,
-                          &puhost->dev_prop,
-                          msc_handler.pipe_out,
-                          USB_EPTYPE_BULK,
-                          msc_handler.ep_size_out);
+        usbh_pipe_create(puhost->data,
+                         &puhost->dev_prop,
+                         msc_handler.pipe_out,
+                         USB_EPTYPE_BULK,
+                         msc_handler.ep_size_out);
 
-        usbh_pipe_create (puhost->data,
-                          &puhost->dev_prop,
-                          msc_handler.pipe_in,
-                          USB_EPTYPE_BULK,
-                          msc_handler.ep_size_in);
+        usbh_pipe_create(puhost->data,
+                         &puhost->dev_prop,
+                         msc_handler.pipe_in,
+                         USB_EPTYPE_BULK,
+                         msc_handler.ep_size_in);
 
-        usbh_pipe_toggle_set (puhost->data, msc_handler.pipe_out, 0U);
-        usbh_pipe_toggle_set (puhost->data, msc_handler.pipe_in, 0U);
+        usbh_pipe_toggle_set(puhost->data, msc_handler.pipe_out, 0U);
+        usbh_pipe_toggle_set(puhost->data, msc_handler.pipe_in, 0U);
     }
 
     return status;
@@ -136,20 +135,20 @@ static usbh_status usbh_msc_itf_init (usbh_host *puhost)
     \param[out] none
     \retval     operation status
 */
-void usbh_msc_itf_deinit (usbh_host *puhost)
+void usbh_msc_itf_deinit(usbh_host *puhost)
 {
     usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
 
-    if (msc->pipe_out) {
-        usb_pipe_halt (puhost->data, msc->pipe_out);
-        usbh_pipe_free (puhost->data, msc->pipe_out);
+    if(msc->pipe_out) {
+        usb_pipe_halt(puhost->data, msc->pipe_out);
+        usbh_pipe_free(puhost->data, msc->pipe_out);
 
         msc->pipe_out = 0U;
     }
 
-    if (msc->pipe_in) {
-        usb_pipe_halt (puhost->data, msc->pipe_in);
-        usbh_pipe_free (puhost->data, msc->pipe_in);
+    if(msc->pipe_in) {
+        usb_pipe_halt(puhost->data, msc->pipe_in);
+        usbh_pipe_free(puhost->data, msc->pipe_in);
 
         msc->pipe_in = 0U;
     }
@@ -161,26 +160,26 @@ void usbh_msc_itf_deinit (usbh_host *puhost)
     \param[out] none
     \retval     operation status
 */
-static usbh_status usbh_msc_req (usbh_host *puhost)
+static usbh_status usbh_msc_req(usbh_host *puhost)
 {
     usbh_status status = USBH_BUSY;
     usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
 
-    switch (msc->req_state) {
+    switch(msc->req_state) {
     case MSC_REQ_IDLE:
     case MSC_REQ_GET_MAX_LUN:
         /* issue Get_MaxLun request */
-        status = usbh_msc_maxlun_get (puhost, (uint8_t *)&msc->max_lun);
+        status = usbh_msc_maxlun_get(puhost, (uint8_t *)&msc->max_lun);
 
-        if (USBH_OK == status) {
+        if(USBH_OK == status) {
             msc->max_lun = ((uint8_t)msc->max_lun > MSC_MAX_SUPPORTED_LUN) ? MSC_MAX_SUPPORTED_LUN : (uint8_t)msc->max_lun + 1U;
 
-            for (uint8_t i = 0U; i < msc->max_lun; i++) {
+            for(uint8_t i = 0U; i < msc->max_lun; i++) {
                 msc->unit[i].prev_ready_state = USBH_FAIL;
                 msc->unit[i].state_changed = 0U;
             }
         } else {
-            if (USBH_NOT_SUPPORTED == status) {
+            if(USBH_NOT_SUPPORTED == status) {
                 msc->max_lun = 0U;
                 status = USBH_OK;
             }
@@ -189,7 +188,7 @@ static usbh_status usbh_msc_req (usbh_host *puhost)
 
     case MSC_REQ_ERROR:
         /* issue clear feature request */
-        if (USBH_OK == usbh_clrfeature(puhost, 0x00U, puhost->control.pipe_out_num)) {
+        if(USBH_OK == usbh_clrfeature(puhost, 0x00U, puhost->control.pipe_out_num)) {
             msc->req_state = msc->prev_req_state;
         }
         break;
@@ -198,7 +197,7 @@ static usbh_status usbh_msc_req (usbh_host *puhost)
         break;
     }
 
-    return status; 
+    return status;
 }
 
 /*!
@@ -207,7 +206,7 @@ static usbh_status usbh_msc_req (usbh_host *puhost)
     \param[out] none
     \retval     operation status
 */
-static usbh_status usbh_msc_handle (usbh_host *puhost)
+static usbh_status usbh_msc_handle(usbh_host *puhost)
 {
     usbh_status status = USBH_BUSY;
     uint8_t scsi_status = USBH_BUSY;
@@ -215,12 +214,12 @@ static usbh_status usbh_msc_handle (usbh_host *puhost)
     usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
 
 
-    switch (msc->state) {
+    switch(msc->state) {
     case MSC_INIT:
-        if (msc->cur_lun < msc->max_lun) {
+        if(msc->cur_lun < msc->max_lun) {
             msc->unit[msc->cur_lun].error = MSC_NOT_READY;
 
-            switch (msc->unit[msc->cur_lun].state) {
+            switch(msc->unit[msc->cur_lun].state) {
             case MSC_INIT:
                 msc->unit[msc->cur_lun].state = MSC_READ_INQUIRY;
                 msc->timer = puhost->control.timer;
@@ -229,12 +228,12 @@ static usbh_status usbh_msc_handle (usbh_host *puhost)
             case MSC_READ_INQUIRY:
                 scsi_status = usbh_msc_scsi_inquiry(puhost, msc->cur_lun, &msc->unit[msc->cur_lun].inquiry);
 
-                if (USBH_OK == scsi_status) {
+                if(USBH_OK == scsi_status) {
                     msc->unit[msc->cur_lun].state = MSC_TEST_UNIT_READY;
-                } else if (scsi_status == USBH_FAIL) {
+                } else if(scsi_status == USBH_FAIL) {
                     msc->unit[msc->cur_lun].state = MSC_REQUEST_SENSE;
                 } else {
-                    if (scsi_status == USBH_UNRECOVERED_ERROR) {
+                    if(scsi_status == USBH_UNRECOVERED_ERROR) {
                         msc->unit[msc->cur_lun].state = MSC_IDLE;
                         msc->unit[msc->cur_lun].error = MSC_ERROR;
                     }
@@ -242,11 +241,11 @@ static usbh_status usbh_msc_handle (usbh_host *puhost)
                 break;
 
             case MSC_TEST_UNIT_READY:
-                /* issue SCSI command TestUnitReady */ 
+                /* issue SCSI command TestUnitReady */
                 ready_status = usbh_msc_test_unitready(puhost, msc->cur_lun);
 
-                if (USBH_OK == ready_status) {
-                    if (USBH_OK != msc->unit[msc->cur_lun].prev_ready_state) {
+                if(USBH_OK == ready_status) {
+                    if(USBH_OK != msc->unit[msc->cur_lun].prev_ready_state) {
                         msc->unit[msc->cur_lun].state_changed = 1U;
                     } else {
                         msc->unit[msc->cur_lun].state_changed = 0U;
@@ -255,8 +254,8 @@ static usbh_status usbh_msc_handle (usbh_host *puhost)
                     msc->unit[msc->cur_lun].state = MSC_READ_CAPACITY10;
                     msc->unit[msc->cur_lun].error = MSC_OK;
                     msc->unit[msc->cur_lun].prev_ready_state = USBH_OK;
-                } else if (USBH_FAIL == ready_status) {
-                    if (USBH_FAIL != msc->unit[msc->cur_lun].prev_ready_state) {
+                } else if(USBH_FAIL == ready_status) {
+                    if(USBH_FAIL != msc->unit[msc->cur_lun].prev_ready_state) {
                         msc->unit[msc->cur_lun].state_changed = 1U;
                     } else {
                         msc->unit[msc->cur_lun].state_changed = 0U;
@@ -266,7 +265,7 @@ static usbh_status usbh_msc_handle (usbh_host *puhost)
                     msc->unit[msc->cur_lun].error = MSC_NOT_READY;
                     msc->unit[msc->cur_lun].prev_ready_state = USBH_FAIL;
                 } else {
-                    if (USBH_UNRECOVERED_ERROR == ready_status) {
+                    if(USBH_UNRECOVERED_ERROR == ready_status) {
                         msc->unit[msc->cur_lun].state = MSC_IDLE;
                         msc->unit[msc->cur_lun].error = MSC_ERROR;
                     }
@@ -277,16 +276,16 @@ static usbh_status usbh_msc_handle (usbh_host *puhost)
                 /* issue READ_CAPACITY10 SCSI command */
                 scsi_status = usbh_msc_read_capacity10(puhost, msc->cur_lun, &msc->unit[msc->cur_lun].capacity);
 
-                if (USBH_OK == scsi_status) {
-                    if (1U == msc->unit[msc->cur_lun].state_changed) {
+                if(USBH_OK == scsi_status) {
+                    if(1U == msc->unit[msc->cur_lun].state_changed) {
                     }
                     msc->unit[msc->cur_lun].state = MSC_IDLE;
                     msc->unit[msc->cur_lun].error = MSC_OK;
                     msc->cur_lun ++;
-                } else if (USBH_FAIL == scsi_status) {
+                } else if(USBH_FAIL == scsi_status) {
                     msc->unit[msc->cur_lun].state = MSC_REQUEST_SENSE;
                 } else {
-                    if (USBH_UNRECOVERED_ERROR == scsi_status) {
+                    if(USBH_UNRECOVERED_ERROR == scsi_status) {
                         msc->unit[msc->cur_lun].state = MSC_IDLE;
                         msc->unit[msc->cur_lun].error = MSC_ERROR;
                     }
@@ -295,11 +294,11 @@ static usbh_status usbh_msc_handle (usbh_host *puhost)
 
             case MSC_REQUEST_SENSE:
                 /* issue RequestSense SCSI command for recovering error code */
-                scsi_status = usbh_msc_request_sense (puhost, msc->cur_lun, &msc->unit[msc->cur_lun].sense);
-                if (USBH_OK == scsi_status) {
-                    if ((msc->unit[msc->cur_lun].sense.SenseKey == UNIT_ATTENTION) || (msc->unit[msc->cur_lun].sense.SenseKey == NOT_READY)) {
-                        if (((puhost->control.timer > msc->timer) && ((puhost->control.timer - msc->timer) < 10000U)) \
-                              || ((puhost->control.timer < msc->timer) && ((puhost->control.timer + 0x3FFFU - msc->timer) < 10000U))) {
+                scsi_status = usbh_msc_request_sense(puhost, msc->cur_lun, &msc->unit[msc->cur_lun].sense);
+                if(USBH_OK == scsi_status) {
+                    if((msc->unit[msc->cur_lun].sense.SenseKey == UNIT_ATTENTION) || (msc->unit[msc->cur_lun].sense.SenseKey == NOT_READY)) {
+                        if(((puhost->control.timer > msc->timer) && ((puhost->control.timer - msc->timer) < 10000U)) \
+                                || ((puhost->control.timer < msc->timer) && ((puhost->control.timer + 0x3FFFU - msc->timer) < 10000U))) {
                             msc->unit[msc->cur_lun].state = MSC_TEST_UNIT_READY;
                             break;
                         }
@@ -307,10 +306,10 @@ static usbh_status usbh_msc_handle (usbh_host *puhost)
 
                     msc->unit[msc->cur_lun].state = MSC_IDLE;
                     msc->cur_lun++;
-                } else if (USBH_FAIL == scsi_status) {
+                } else if(USBH_FAIL == scsi_status) {
                     msc->unit[msc->cur_lun].state = MSC_UNRECOVERED_ERROR;
                 } else {
-                    if (MSC_UNRECOVERED_ERROR == scsi_status) {
+                    if(MSC_UNRECOVERED_ERROR == scsi_status) {
                         msc->unit[msc->cur_lun].state = MSC_IDLE;
                         msc->unit[msc->cur_lun].error = MSC_ERROR;
                     }
@@ -349,11 +348,11 @@ static usbh_status usbh_msc_handle (usbh_host *puhost)
     \param[out] none
     \retval     operation status
 */
-static usbh_status usbh_msc_maxlun_get (usbh_host *puhost, uint8_t *maxlun)
+static usbh_status usbh_msc_maxlun_get(usbh_host *puhost, uint8_t *maxlun)
 {
     usbh_status status = USBH_BUSY;
 
-    if (puhost->control.ctl_state == CTL_IDLE) {
+    if(puhost->control.ctl_state == CTL_IDLE) {
         puhost->control.setup.req = (usb_req) {
             .bmRequestType = USB_TRX_IN | USB_REQTYPE_CLASS | USB_RECPTYPE_ITF,
             .bRequest      = BBB_GET_MAX_LUN,
@@ -362,10 +361,10 @@ static usbh_status usbh_msc_maxlun_get (usbh_host *puhost, uint8_t *maxlun)
             .wLength       = 1U
         };
 
-        usbh_ctlstate_config (puhost, maxlun, 1U);
-    } 
+        usbh_ctlstate_config(puhost, maxlun, 1U);
+    }
 
-    status = usbh_ctl_handler (puhost);
+    status = usbh_ctl_handler(puhost);
 
     return status;
 }
@@ -384,17 +383,17 @@ static usbh_status usbh_msc_rdwr_process(usbh_host *puhost, uint8_t lun)
     usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
 
     /* switch msc req state machine */
-    switch (msc->unit[lun].state) {
+    switch(msc->unit[lun].state) {
     case MSC_READ:
         scsi_status = usbh_msc_read10(puhost, lun,  NULL, 0U, 0U);
 
-        if (USBH_OK == scsi_status) {
+        if(USBH_OK == scsi_status) {
             msc->unit[lun].state = MSC_IDLE;
             error = USBH_OK;
-        } else if (USBH_FAIL == scsi_status) {
+        } else if(USBH_FAIL == scsi_status) {
             msc->unit[lun].state = MSC_REQUEST_SENSE;
         } else {
-            if (USBH_UNRECOVERED_ERROR == scsi_status) {
+            if(USBH_UNRECOVERED_ERROR == scsi_status) {
                 msc->unit[lun].state = MSC_UNRECOVERED_ERROR;
                 error = USBH_FAIL;
             }
@@ -404,13 +403,13 @@ static usbh_status usbh_msc_rdwr_process(usbh_host *puhost, uint8_t lun)
     case MSC_WRITE:
         scsi_status = usbh_msc_write10(puhost, lun, NULL, 0U, 0U);
 
-        if (USBH_OK == scsi_status) {
+        if(USBH_OK == scsi_status) {
             msc->unit[lun].state = MSC_IDLE;
             error = USBH_OK;
         } else if(USBH_FAIL == scsi_status) {
             msc->unit[lun].state = MSC_REQUEST_SENSE;
         } else {
-            if (USBH_UNRECOVERED_ERROR == scsi_status) {
+            if(USBH_UNRECOVERED_ERROR == scsi_status) {
                 msc->unit[lun].state = MSC_UNRECOVERED_ERROR;
                 error = USBH_FAIL;
             }
@@ -418,18 +417,18 @@ static usbh_status usbh_msc_rdwr_process(usbh_host *puhost, uint8_t lun)
         break;
 
     case MSC_REQUEST_SENSE:
-        scsi_status = usbh_msc_request_sense (puhost, lun, &msc->unit[lun].sense);
+        scsi_status = usbh_msc_request_sense(puhost, lun, &msc->unit[lun].sense);
 
-        if (USBH_OK == scsi_status) {
+        if(USBH_OK == scsi_status) {
             msc->unit[lun].state = MSC_IDLE;
             msc->unit[lun].error = MSC_ERROR;
 
             error = USBH_FAIL;
         }
-    
-        if (USBH_FAIL == scsi_status) {
+
+        if(USBH_FAIL == scsi_status) {
         } else {
-            if (USBH_UNRECOVERED_ERROR == scsi_status) {
+            if(USBH_UNRECOVERED_ERROR == scsi_status) {
                 msc->unit[lun].state = MSC_UNRECOVERED_ERROR;
                 error = USBH_FAIL;
             }
@@ -451,11 +450,11 @@ static usbh_status usbh_msc_rdwr_process(usbh_host *puhost, uint8_t lun)
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_msc_lun_info_get (usbh_host *puhost, uint8_t lun, msc_lun *info)
+usbh_status usbh_msc_lun_info_get(usbh_host *puhost, uint8_t lun, msc_lun *info)
 {
     usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
 
-    if (HOST_CLASS_HANDLER == puhost->cur_state) {
+    if(HOST_CLASS_HANDLER == puhost->cur_state) {
         memcpy(info, &msc->unit[lun], sizeof(msc_lun));
 
         return USBH_OK;
@@ -474,19 +473,19 @@ usbh_status usbh_msc_lun_info_get (usbh_host *puhost, uint8_t lun, msc_lun *info
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_msc_read (usbh_host *puhost,
-                           uint8_t lun,
-                           uint32_t address,
-                           uint8_t *pbuf,
-                           uint32_t length)
+usbh_status usbh_msc_read(usbh_host *puhost,
+                          uint8_t lun,
+                          uint32_t address,
+                          uint8_t *pbuf,
+                          uint32_t length)
 {
     uint32_t timeout = 0U;
     usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
     usb_core_driver *pudev = (usb_core_driver *)puhost->data;
 
-    if ((0U == pudev->host.connect_status) || 
-        (HOST_CLASS_HANDLER != puhost->cur_state) || 
-        (MSC_IDLE != msc->unit[lun].state)) {
+    if((0U == pudev->host.connect_status) ||
+            (HOST_CLASS_HANDLER != puhost->cur_state) ||
+            (MSC_IDLE != msc->unit[lun].state)) {
         return USBH_FAIL;
     }
 
@@ -498,10 +497,10 @@ usbh_status usbh_msc_read (usbh_host *puhost,
 
     timeout = puhost->control.timer;
 
-    while (USBH_BUSY == usbh_msc_rdwr_process(puhost, lun)) {
-        if (((puhost->control.timer > timeout) && ((puhost->control.timer - timeout) > (1000U * length))) \
-              || ((puhost->control.timer < timeout) && ((puhost->control.timer + 0x3FFFU - timeout) > (1000U * length))) \
-              || (0U == pudev->host.connect_status)) {
+    while(USBH_BUSY == usbh_msc_rdwr_process(puhost, lun)) {
+        if(((puhost->control.timer > timeout) && ((puhost->control.timer - timeout) > (1000U * length))) \
+                || ((puhost->control.timer < timeout) && ((puhost->control.timer + 0x3FFFU - timeout) > (1000U * length))) \
+                || (0U == pudev->host.connect_status)) {
             msc->state = MSC_IDLE;
             return USBH_FAIL;
         }
@@ -522,19 +521,19 @@ usbh_status usbh_msc_read (usbh_host *puhost,
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_msc_write (usbh_host *puhost,
-                            uint8_t lun,
-                            uint32_t address,
-                            uint8_t *pbuf,
-                            uint32_t length)
+usbh_status usbh_msc_write(usbh_host *puhost,
+                           uint8_t lun,
+                           uint32_t address,
+                           uint8_t *pbuf,
+                           uint32_t length)
 {
     uint32_t timeout = 0U;
     usb_core_driver *pudev = (usb_core_driver *)puhost->data;
     usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
 
-    if ((0U == pudev->host.connect_status) || 
-        (HOST_CLASS_HANDLER != puhost->cur_state) || 
-        (MSC_IDLE != msc->unit[lun].state)) {
+    if((0U == pudev->host.connect_status) ||
+            (HOST_CLASS_HANDLER != puhost->cur_state) ||
+            (MSC_IDLE != msc->unit[lun].state)) {
         return USBH_FAIL;
     }
 
@@ -546,10 +545,10 @@ usbh_status usbh_msc_write (usbh_host *puhost,
 
     timeout = puhost->control.timer;
 
-    while (USBH_BUSY == usbh_msc_rdwr_process(puhost, lun)) {
-        if (((puhost->control.timer > timeout) && ((puhost->control.timer - timeout) > (1000U * length))) \
-              || ((puhost->control.timer < timeout) && ((puhost->control.timer + 0x3FFFU - timeout) > (1000U * length))) \
-              || (0U == pudev->host.connect_status)) {
+    while(USBH_BUSY == usbh_msc_rdwr_process(puhost, lun)) {
+        if(((puhost->control.timer > timeout) && ((puhost->control.timer - timeout) > (1000U * length))) \
+                || ((puhost->control.timer < timeout) && ((puhost->control.timer + 0x3FFFU - timeout) > (1000U * length))) \
+                || (0U == pudev->host.connect_status)) {
             msc->state = MSC_IDLE;
             return USBH_FAIL;
         }

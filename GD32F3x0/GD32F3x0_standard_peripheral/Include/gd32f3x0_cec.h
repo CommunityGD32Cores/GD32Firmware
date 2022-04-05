@@ -1,36 +1,37 @@
 /*!
     \file    gd32f3x0_cec.h
     \brief   definitions for the CEC
-    
+
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
     \version 2020-09-30, V2.1.0, firmware for GD32F3x0
+    \version 2022-01-06, V2.2.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -144,8 +145,8 @@ OF SUCH DAMAGE.
 #define CEC_BROADCAST_ERROR_BIT_OFF        CEC_CFG_BCNG               /*!< do not generate Error-bit in broadcast */
 #define CEC_LONG_PERIOD_ERROR_BIT_OFF      ((uint32_t)0x00000000U)    /*!< generate Error-bit on long bit period error */
 #define CEC_LONG_PERIOD_ERROR_BIT_ON       CEC_CFG_BPLEG              /*!< do not generate Error-bit on long bit period error */
-#define CEC_RISING_PERIOD_ERROR_BIT_OFF    ((uint32_t)0x00000000U)    /*!< generate Error-bit on bit rising error */ 
-#define CEC_RISING_PERIOD_ERROR_BIT_ON     CEC_CFG_BREG               /*!< do not generate Error-bit on bit rising error */ 
+#define CEC_RISING_PERIOD_ERROR_BIT_OFF    ((uint32_t)0x00000000U)    /*!< generate Error-bit on bit rising error */
+#define CEC_RISING_PERIOD_ERROR_BIT_ON     CEC_CFG_BREG               /*!< do not generate Error-bit on bit rising error */
 
 /* whether stop receive message when detected bit rising error */
 #define CEC_STOP_RISING_ERROR_BIT_ON       ((uint32_t)0x00000000U)    /*!< stop reception when detected bit rising error */
@@ -219,7 +220,7 @@ void cec_listen_mode_disable(void);
 /* configure and clear own address */
 void cec_own_address_config(uint32_t address);
 /* configure signal free time and the signal free time counter start option */
-void cec_sft_config(uint32_t sftmopt,uint32_t sft);
+void cec_sft_config(uint32_t sftmopt, uint32_t sft);
 /* configure generate Error-bit when detected some abnormal situation or not */
 void cec_generate_errorbit_config(uint32_t broadcast, uint32_t singlecast_lbpe, uint32_t singlecast_bre);
 /* whether stop receive message when detected bit rising error */

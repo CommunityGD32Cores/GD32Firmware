@@ -1,36 +1,37 @@
 /*!
     \file    gd32f3x0_tsi.h
     \brief   definitions for the TSI
-    
+
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
     \version 2020-09-30, V2.1.0, firmware for GD32F3x0
+    \version 2022-01-06, V2.2.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -313,7 +314,7 @@ OF SUCH DAMAGE.
 /* reset TSI peripheral */
 void tsi_deinit(void);
 /* initialize TSI plus prescaler,charge plus,transfer plus,max cycle number */
-void tsi_init(uint32_t prescaler,uint32_t charge_duration,uint32_t transfer_duration,uint32_t max_number);
+void tsi_init(uint32_t prescaler, uint32_t charge_duration, uint32_t transfer_duration, uint32_t max_number);
 /* enable TSI module */
 void tsi_enable(void);
 /* disable TSI module */
@@ -328,7 +329,7 @@ void tsi_channel_pin_enable(uint32_t channel);
 void tsi_channel_pin_disable(uint32_t channel);
 
 /* configure TSI triggering by software */
-void tsi_sofeware_mode_config(void);
+void tsi_software_mode_config(void);
 /* start a charge-transfer sequence when TSI is in software trigger mode */
 void tsi_software_start(void);
 /* stop a charge-transfer sequence when TSI is in software trigger mode */
@@ -338,10 +339,10 @@ void tsi_hardware_mode_config(uint8_t trigger_edge);
 /* configure TSI pin mode when charge-transfer sequence is IDLE */
 void tsi_pin_mode_config(uint8_t pin_mode);
 /* configure extend charge state */
-void tsi_extend_charge_config(ControlStatus extend,uint8_t prescaler,uint32_t max_duration);
+void tsi_extend_charge_config(ControlStatus extend, uint8_t prescaler, uint32_t max_duration);
 
 /* configure charge plus and transfer plus */
-void tsi_plus_config(uint32_t prescaler,uint32_t charge_duration,uint32_t transfer_duration);
+void tsi_plus_config(uint32_t prescaler, uint32_t charge_duration, uint32_t transfer_duration);
 /* configure the max cycle number of a charge-transfer sequence */
 void tsi_max_number_config(uint32_t max_number);
 /* switch on hysteresis pin */
@@ -352,20 +353,6 @@ void tsi_hysteresis_off(uint32_t group_pin);
 void tsi_analog_on(uint32_t group_pin);
 /* switch off analog pin */
 void tsi_analog_off(uint32_t group_pin);
-
-/* enable TSI interrupt */
-void tsi_interrupt_enable(uint32_t source);
-/* disable TSI interrupt */
-void tsi_interrupt_disable(uint32_t source);
-/* clear interrupt flag */
-void tsi_interrupt_flag_clear(uint32_t flag);
-/* get TSI interrupt flag */
-FlagStatus tsi_interrupt_flag_get(uint32_t flag);
-
-/* clear flag */
-void tsi_flag_clear(uint32_t flag);
-/* get flag */
-FlagStatus tsi_flag_get(uint32_t flag);
 
 /* enbale group */
 void tsi_group_enable(uint32_t group);
@@ -385,5 +372,19 @@ uint16_t tsi_group3_cycle_get(void);
 uint16_t tsi_group4_cycle_get(void);
 /* get the cycle number for group5 as soon as a charge-transfer sequence completes */
 uint16_t tsi_group5_cycle_get(void);
+
+/* clear flag */
+void tsi_flag_clear(uint32_t flag);
+/* get flag */
+FlagStatus tsi_flag_get(uint32_t flag);
+
+/* enable TSI interrupt */
+void tsi_interrupt_enable(uint32_t source);
+/* disable TSI interrupt */
+void tsi_interrupt_disable(uint32_t source);
+/* clear interrupt flag */
+void tsi_interrupt_flag_clear(uint32_t flag);
+/* get TSI interrupt flag */
+FlagStatus tsi_interrupt_flag_get(uint32_t flag);
 
 #endif /* GD32F3X0_TSI_H */

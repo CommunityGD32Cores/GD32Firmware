@@ -1,36 +1,37 @@
 /*!
     \file    gd32f3x0_usart.h
     \brief   definitions for the USART
-    
+
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
     \version 2020-09-30, V2.1.0, firmware for GD32F3x0
+    \version 2022-01-06, V2.2.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -212,7 +213,7 @@ OF SUCH DAMAGE.
 #define USART_RFCS_REG_OFFSET              (0x000000D0U)                   /*!< RFCS register offset */
 
 /* USART flags */
-typedef enum{
+typedef enum {
     /* flags in STAT register */
     USART_FLAG_REA = USART_REGIDX_BIT(USART_STAT_REG_OFFSET, 22U),         /*!< receive enable acknowledge flag */
     USART_FLAG_TEA = USART_REGIDX_BIT(USART_STAT_REG_OFFSET, 21U),         /*!< transmit enable acknowledge flag */
@@ -239,11 +240,10 @@ typedef enum{
     /* flags in RFCS register */
     USART_FLAG_RFF = USART_REGIDX_BIT(USART_RFCS_REG_OFFSET, 11U),         /*!< receive FIFO full flag */
     USART_FLAG_RFE = USART_REGIDX_BIT(USART_RFCS_REG_OFFSET, 10U),         /*!< receive FIFO empty flag */
-}usart_flag_enum;
+} usart_flag_enum;
 
 /* USART interrupt flags */
-typedef enum
-{
+typedef enum {
     /* interrupt flags in CTL0 register */
     USART_INT_FLAG_EB = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 27U, USART_STAT_REG_OFFSET, 12U),       /*!< end of block interrupt flag */
     USART_INT_FLAG_RT = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 26U, USART_STAT_REG_OFFSET, 11U),       /*!< receiver timeout interrupt flag */
@@ -264,11 +264,10 @@ typedef enum
     USART_INT_FLAG_ERR_FERR = USART_REGIDX_BIT2(USART_CTL2_REG_OFFSET, 0U, USART_STAT_REG_OFFSET, 1U),   /*!< frame error interrupt flag */
     /* interrupt flags in RFCS register */
     USART_INT_FLAG_RFFINT = USART_REGIDX_BIT2(USART_RFCS_REG_OFFSET, 9U, USART_RFCS_REG_OFFSET, 15U),    /*!< receive FIFO full interrupt flag */
-}usart_interrupt_flag_enum;
+} usart_interrupt_flag_enum;
 
 /* USART interrupt enable or disable */
-typedef enum
-{
+typedef enum {
     /* interrupt in CTL0 register */
     USART_INT_EB = USART_REGIDX_BIT(USART_CTL0_REG_OFFSET, 27U),     /*!< end of block interrupt */
     USART_INT_RT = USART_REGIDX_BIT(USART_CTL0_REG_OFFSET, 26U),     /*!< receiver timeout interrupt */
@@ -286,7 +285,7 @@ typedef enum
     USART_INT_ERR = USART_REGIDX_BIT(USART_CTL2_REG_OFFSET, 0U),     /*!< error interrupt */
     /* interrupt in RFCS register */
     USART_INT_RFF = USART_REGIDX_BIT(USART_RFCS_REG_OFFSET, 9U),     /*!< receive FIFO full interrupt */
-}usart_interrupt_enum;
+} usart_interrupt_enum;
 
 /* USART invert configure */
 typedef enum {
@@ -294,15 +293,15 @@ typedef enum {
     USART_DINV_ENABLE,                                               /*!< data bit level inversion */
     USART_DINV_DISABLE,                                              /*!< data bit level not inversion */
     /* TX pin level inversion */
-    USART_TXPIN_ENABLE,                                              /*!< TX pin level inversion */               
+    USART_TXPIN_ENABLE,                                              /*!< TX pin level inversion */
     USART_TXPIN_DISABLE,                                             /*!< TX pin level not inversion */
     /* RX pin level inversion */
     USART_RXPIN_ENABLE,                                              /*!< RX pin level inversion */
     USART_RXPIN_DISABLE,                                             /*!< RX pin level not inversion */
     /* swap TX/RX pins */
-    USART_SWAP_ENABLE,                                               /*!< swap TX/RX pins */                
+    USART_SWAP_ENABLE,                                               /*!< swap TX/RX pins */
     USART_SWAP_DISABLE,                                              /*!< not swap TX/RX pins */
-}usart_invert_enum;
+} usart_invert_enum;
 
 /* USART receiver configure */
 #define CTL0_REN(regval)              (BIT(2) & ((uint32_t)(regval) << 2))

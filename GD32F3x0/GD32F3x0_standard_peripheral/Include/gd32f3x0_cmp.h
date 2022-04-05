@@ -5,32 +5,34 @@
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
     \version 2020-09-30, V2.1.0, firmware for GD32F3x0
+    \version 2021-05-19, V2.1.1, firmware for GD32F3x0
+    \version 2022-01-06, V2.2.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -40,7 +42,7 @@ OF SUCH DAMAGE.
 #include "gd32f3x0.h"
 
 /* CMP definitions */
-#define CMP                                      CMP_BASE                       /*!< CMP base address */  
+#define CMP                                      CMP_BASE                       /*!< CMP base address */
 
 /* registers definitions */
 #define CMP_CS                                   REG32((CMP) + 0x00000000U)     /*!< CMP control and status register */
@@ -67,17 +69,15 @@ OF SUCH DAMAGE.
 
 /* consts definitions */
 /* operating mode */
-typedef enum
-{
+typedef enum {
     CMP_HIGHSPEED = 0,                                                          /*!< high speed mode */
     CMP_MIDDLESPEED,                                                            /*!< medium speed mode */
     CMP_LOWSPEED,                                                               /*!< low speed mode */
     CMP_VERYLOWSPEED                                                            /*!< very-low speed mode */
-}operating_mode_enum;
+} operating_mode_enum;
 
 /* inverting input */
-typedef enum
-{
+typedef enum {
     CMP_1_4VREFINT = 0,                                                         /*!< VREFINT /4 input */
     CMP_1_2VREFINT,                                                             /*!< VREFINT /2 input */
     CMP_3_4VREFINT,                                                             /*!< VREFINT *3/4 input */
@@ -85,20 +85,18 @@ typedef enum
     CMP_DAC,                                                                    /*!< PA4 (DAC) input */
     CMP_PA5,                                                                    /*!< PA5 input */
     CMP_PA_0_2                                                                  /*!< PA0 or PA2 input */
-}inverting_input_enum;
+} inverting_input_enum;
 
 /* hysteresis */
-typedef enum
-{
+typedef enum {
     CMP_HYSTERESIS_NO = 0,                                                      /*!< output no hysteresis */
     CMP_HYSTERESIS_LOW,                                                         /*!< output low hysteresis */
     CMP_HYSTERESIS_MIDDLE,                                                      /*!< output middle hysteresis */
     CMP_HYSTERESIS_HIGH                                                         /*!< output high hysteresis */
-}cmp_hysteresis_enum;
+} cmp_hysteresis_enum;
 
-/* output */  
-typedef enum
-{
+/* output */
+typedef enum {
     CMP_OUTPUT_NONE = 0,                                                        /*!< output no selection */
     CMP_OUTPUT_TIMER0BKIN,                                                      /*!< TIMER 0 break input */
     CMP_OUTPUT_TIMER0IC0,                                                       /*!< TIMER 0 channel0 input capture */
@@ -107,7 +105,7 @@ typedef enum
     CMP_OUTPUT_TIMER1OCPRECLR,                                                  /*!< TIMER 1 OCPRE_CLR input */
     CMP_OUTPUT_TIMER2IC0,                                                       /*!< TIMER 2 channel0 input capture */
     CMP_OUTPUT_TIMER2OCPRECLR                                                   /*!< TIMER 2 OCPRE_CLR input */
-}cmp_output_enum;
+} cmp_output_enum;
 
 /* CMP0 mode */
 #define CS_CMP0M(regval)                         (BITS(2,3) & ((uint32_t)(regval) << 2))
@@ -131,7 +129,7 @@ typedef enum
 #define CS_CMP0OSEL_OUTPUT_NONE                  CS_CMP0OSEL(0)                 /*!< CMP0 output none  */
 #define CS_CMP0OSEL_OUTPUT_TIMER0BKIN            CS_CMP0OSEL(1)                 /*!< CMP0 output TIMER 0 break input */
 #define CS_CMP0OSEL_OUTPUT_TIMER0IC0             CS_CMP0OSEL(2)                 /*!< CMP0 output TIMER 0 channel 0 input capture */
-#define CS_CMP0OSEL_OUTPUT_TIMER0OCPRECLR        CS_CMP0OSEL(3)                 /*!< CMP0 output TIMER 0 ocpreclear input */ 
+#define CS_CMP0OSEL_OUTPUT_TIMER0OCPRECLR        CS_CMP0OSEL(3)                 /*!< CMP0 output TIMER 0 ocpreclear input */
 #define CS_CMP0OSEL_OUTPUT_TIMER1IC3             CS_CMP0OSEL(4)                 /*!< CMP0 output TIMER 1 channel 3 input capture */
 #define CS_CMP0OSEL_OUTPUT_TIMER1OCPRECLR        CS_CMP0OSEL(5)                 /*!< CMP0 output TIMER 1 ocpreclear input */
 #define CS_CMP0OSEL_OUTPUT_TIMER2IC0             CS_CMP0OSEL(6)                 /*!< CMP0 output TIMER 2 channle 0 input capture */
@@ -166,7 +164,7 @@ typedef enum
 #define CS_CMP1OSEL_OUTPUT_NONE                  CS_CMP1OSEL(0)                 /*!< CMP1 output none  */
 #define CS_CMP1OSEL_OUTPUT_TIMER0BKIN            CS_CMP1OSEL(1)                 /*!< CMP1 output TIMER 0 break input */
 #define CS_CMP1OSEL_OUTPUT_TIMER0IC0             CS_CMP1OSEL(2)                 /*!< CMP1 output TIMER 0 channel 0 input capture */
-#define CS_CMP1OSEL_OUTPUT_TIMER0OCPRECLR        CS_CMP1OSEL(3)                 /*!< CMP1 output TIMER 0 ocpreclear input */ 
+#define CS_CMP1OSEL_OUTPUT_TIMER0OCPRECLR        CS_CMP1OSEL(3)                 /*!< CMP1 output TIMER 0 ocpreclear input */
 #define CS_CMP1OSEL_OUTPUT_TIMER1IC3             CS_CMP1OSEL(4)                 /*!< CMP1 output TIMER 1 channel 3 input capture */
 #define CS_CMP1OSEL_OUTPUT_TIMER1OCPRECLR        CS_CMP1OSEL(5)                 /*!< CMP1 output TIMER 1 ocpreclear input */
 #define CS_CMP1OSEL_OUTPUT_TIMER2IC0             CS_CMP1OSEL(6)                 /*!< CMP1 output TIMER 2 channle 0 input capture */
@@ -197,7 +195,8 @@ typedef enum
 /* CMP deinit */
 void cmp_deinit(void);
 /* CMP mode init */
-void cmp_mode_init(uint32_t cmp_periph, operating_mode_enum operating_mode, inverting_input_enum inverting_input, cmp_hysteresis_enum output_hysteresis);
+void cmp_mode_init(uint32_t cmp_periph, operating_mode_enum operating_mode, inverting_input_enum inverting_input,
+                   cmp_hysteresis_enum output_hysteresis);
 /* CMP output init */
 void cmp_output_init(uint32_t cmp_periph, cmp_output_enum output_slection, uint32_t output_polarity);
 

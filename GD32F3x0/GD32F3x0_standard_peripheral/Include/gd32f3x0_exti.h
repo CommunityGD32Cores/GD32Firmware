@@ -5,32 +5,33 @@
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
     \version 2020-09-30, V2.1.0, firmware for GD32F3x0
+    \version 2022-01-06, V2.2.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -40,15 +41,15 @@ OF SUCH DAMAGE.
 #include "gd32f3x0.h"
 
 /* EXTI definitions */
-#define EXTI                         EXTI_BASE
+#define EXTI                         EXTI_BASE                 /*!< EXTI base address */
 
 /* registers definitions */
-#define EXTI_INTEN                   REG32(EXTI + 0x00000000U)/*!< interrupt enable register */
-#define EXTI_EVEN                    REG32(EXTI + 0x00000004U)/*!< event enable register */
-#define EXTI_RTEN                    REG32(EXTI + 0x00000008U)/*!< rising edge trigger enable register */
-#define EXTI_FTEN                    REG32(EXTI + 0x0000000CU)/*!< falling trigger enable register */
-#define EXTI_SWIEV                   REG32(EXTI + 0x00000010U)/*!< software interrupt event register */
-#define EXTI_PD                      REG32(EXTI + 0x00000014U)/*!< pending register */
+#define EXTI_INTEN                   REG32(EXTI + 0x00000000U) /*!< interrupt enable register */
+#define EXTI_EVEN                    REG32(EXTI + 0x00000004U) /*!< event enable register */
+#define EXTI_RTEN                    REG32(EXTI + 0x00000008U) /*!< rising edge trigger enable register */
+#define EXTI_FTEN                    REG32(EXTI + 0x0000000CU) /*!< falling trigger enable register */
+#define EXTI_SWIEV                   REG32(EXTI + 0x00000010U) /*!< software interrupt event register */
+#define EXTI_PD                      REG32(EXTI + 0x00000014U) /*!< pending register */
 
 /* bits definitions */
 /* EXTI_INTEN */
@@ -209,8 +210,7 @@ OF SUCH DAMAGE.
 
 /* constants definitions */
 /* EXTI line number */
-typedef enum
-{ 
+typedef enum {
     EXTI_0      = BIT(0),                                     /*!< EXTI line 0 */
     EXTI_1      = BIT(1),                                     /*!< EXTI line 1 */
     EXTI_2      = BIT(2),                                     /*!< EXTI line 2 */
@@ -231,7 +231,7 @@ typedef enum
     EXTI_17     = BIT(17),                                    /*!< EXTI line 17 */
     EXTI_18     = BIT(18),                                    /*!< EXTI line 18 */
     EXTI_19     = BIT(19),                                    /*!< EXTI line 19 */
-    EXTI_20     = BIT(20),                                    /*!< EXTI line 20 */    
+    EXTI_20     = BIT(20),                                    /*!< EXTI line 20 */
     EXTI_21     = BIT(21),                                    /*!< EXTI line 21 */
     EXTI_22     = BIT(22),                                    /*!< EXTI line 22 */
     EXTI_23     = BIT(23),                                    /*!< EXTI line 23 */
@@ -239,26 +239,24 @@ typedef enum
     EXTI_25     = BIT(25),                                    /*!< EXTI line 25 */
     EXTI_26     = BIT(26),                                    /*!< EXTI line 26 */
     EXTI_27     = BIT(27),                                    /*!< EXTI line 27 */
-}exti_line_enum;
+} exti_line_enum;
 
 /* external interrupt and event */
-typedef enum
-{
+typedef enum {
     EXTI_INTERRUPT   = 0,                                     /*!< EXTI interrupt mode */
     EXTI_EVENT                                                /*!< EXTI event mode */
-}exti_mode_enum;
+} exti_mode_enum;
 
 /* interrupt trigger mode */
-typedef enum
-{ 
+typedef enum {
     EXTI_TRIG_RISING = 0,                                     /*!< EXTI rising edge trigger */
     EXTI_TRIG_FALLING,                                        /*!< EXTI falling edge trigger */
     EXTI_TRIG_BOTH,                                           /*!< EXTI rising and falling edge trigger */
     EXTI_TRIG_NONE                                            /*!< without rising edge or falling edge trigger */
-}exti_trig_type_enum;
+} exti_trig_type_enum;
 
 /* function declarations */
-/* deinitialize the EXTI */
+/* reset EXTI, reset the value of all EXTI registers into initial values */
 void exti_deinit(void);
 /* initialize the EXTI, enable the configuration of EXTI initialize */
 void exti_init(exti_line_enum linex, exti_mode_enum mode, exti_trig_type_enum trig_type);

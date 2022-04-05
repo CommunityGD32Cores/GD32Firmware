@@ -1,36 +1,37 @@
 /*!
     \file    gd32f3x0_rtc.h
-    \brief   definitions for the RTC 
+    \brief   definitions for the RTC
 
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
     \version 2020-09-30, V2.1.0, firmware for GD32F3x0
+    \version 2022-01-06, V2.2.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -208,8 +209,7 @@ OF SUCH DAMAGE.
 
 /* constants definitions */
 /* structure for initialization of the RTC */
-typedef struct
-{
+typedef struct {
     uint8_t rtc_year;                                                                  /*!< RTC year value: 0x0 - 0x99(BCD format) */
     uint8_t rtc_month;                                                                 /*!< RTC month value */
     uint8_t rtc_date;                                                                  /*!< RTC date value: 0x1 - 0x31(BCD format) */
@@ -221,11 +221,10 @@ typedef struct
     uint16_t rtc_factor_syn;                                                           /*!< RTC synchronous prescaler value: 0x0 - 0x7FFF */
     uint32_t rtc_am_pm;                                                                /*!< RTC AM/PM value */
     uint32_t rtc_display_format;                                                       /*!< RTC time notation */
-}rtc_parameter_struct;
+} rtc_parameter_struct;
 
 /* structure for RTC alarm configuration */
-typedef struct
-{
+typedef struct {
     uint32_t rtc_alarm_mask;                                                           /*!< RTC alarm mask */
     uint32_t rtc_weekday_or_date;                                                      /*!< specify RTC alarm is on date or weekday */
     uint8_t rtc_alarm_day;                                                             /*!< RTC alarm date or weekday value*/
@@ -233,11 +232,10 @@ typedef struct
     uint8_t rtc_alarm_minute;                                                          /*!< RTC alarm minute value: 0x0 - 0x59(BCD format) */
     uint8_t rtc_alarm_second;                                                          /*!< RTC alarm second value: 0x0 - 0x59(BCD format) */
     uint32_t rtc_am_pm;                                                                /*!< RTC alarm AM/PM value */
-}rtc_alarm_struct;
+} rtc_alarm_struct;
 
 /* structure for RTC time-stamp configuration */
-typedef struct
-{
+typedef struct {
     uint8_t rtc_timestamp_month;                                                       /*!< RTC time-stamp month value */
     uint8_t rtc_timestamp_date;                                                        /*!< RTC time-stamp date value: 0x1 - 0x31(BCD format) */
     uint8_t rtc_timestamp_day;                                                         /*!< RTC time-stamp weekday value */
@@ -245,38 +243,38 @@ typedef struct
     uint8_t rtc_timestamp_minute;                                                      /*!< RTC time-stamp minute value: 0x0 - 0x59(BCD format) */
     uint8_t rtc_timestamp_second;                                                      /*!< RTC time-stamp second value: 0x0 - 0x59(BCD format) */
     uint32_t rtc_am_pm;                                                                /*!< RTC time-stamp AM/PM value */
-}rtc_timestamp_struct;
+} rtc_timestamp_struct;
 
 /* structure for RTC tamper configuration */
-typedef struct
-{
+typedef struct {
     uint32_t rtc_tamper_source;                                                        /*!< RTC tamper source */
     uint32_t rtc_tamper_trigger;                                                       /*!< RTC tamper trigger */
     uint32_t rtc_tamper_filter;                                                        /*!< RTC tamper consecutive samples needed during a voltage level detection */
     uint32_t rtc_tamper_sample_frequency;                                              /*!< RTC tamper sampling frequency during a voltage level detection */
-    ControlStatus rtc_tamper_precharge_enable;                                         /*!< RTC tamper precharge feature during a voltage level detection */
+    ControlStatus
+    rtc_tamper_precharge_enable;                                         /*!< RTC tamper precharge feature during a voltage level detection */
     uint32_t rtc_tamper_precharge_time;                                                /*!< RTC tamper precharge duration if precharge feature is enabled */
     ControlStatus rtc_tamper_with_timestamp;                                           /*!< RTC tamper time-stamp feature */
-}rtc_tamper_struct; 
+} rtc_tamper_struct;
 
 /* time register value */
-#define TIME_SC(regval)                    (BITS(0,6) & ((uint32_t)(regval) << 0U))     /*!< write value to RTC_TIME_SC bit field */
+#define TIME_SC(regval)                    (BITS(0,6) & ((uint32_t)(regval) << 0U))    /*!< write value to RTC_TIME_SC bit field */
 #define GET_TIME_SC(regval)                GET_BITS((regval),0,6)                      /*!< get value of RTC_TIME_SC bit field */
 
-#define TIME_MN(regval)                    (BITS(8,14) & ((uint32_t)(regval) << 8U))    /*!< write value to RTC_TIME_MN bit field */
+#define TIME_MN(regval)                    (BITS(8,14) & ((uint32_t)(regval) << 8U))   /*!< write value to RTC_TIME_MN bit field */
 #define GET_TIME_MN(regval)                GET_BITS((regval),8,14)                     /*!< get value of RTC_TIME_MN bit field */
 
-#define TIME_HR(regval)                    (BITS(16,21) & ((uint32_t)(regval) << 16U))  /*!< write value to RTC_TIME_HR bit field */
+#define TIME_HR(regval)                    (BITS(16,21) & ((uint32_t)(regval) << 16U)) /*!< write value to RTC_TIME_HR bit field */
 #define GET_TIME_HR(regval)                GET_BITS((regval),16,21)                    /*!< get value of RTC_TIME_HR bit field */
 
-#define RTC_AM                             ((uint32_t)0x00000000U)                      /*!< AM format */
+#define RTC_AM                             ((uint32_t)0x00000000U)                     /*!< AM format */
 #define RTC_PM                             RTC_TIME_PM                                 /*!< PM format */
 
 /* date register value */
-#define DATE_DAY(regval)                   (BITS(0,5) & ((uint32_t)(regval) << 0U))     /*!< write value to RTC_DATE_DAY bit field */
+#define DATE_DAY(regval)                   (BITS(0,5) & ((uint32_t)(regval) << 0U))    /*!< write value to RTC_DATE_DAY bit field */
 #define GET_DATE_DAY(regval)               GET_BITS((regval),0,5)                      /*!< get value of RTC_DATE_DAY bit field */
 
-#define DATE_MON(regval)                   (BITS(8,12) & ((uint32_t)(regval) << 8U))    /*!< write value to RTC_DATE_MON bit field */
+#define DATE_MON(regval)                   (BITS(8,12) & ((uint32_t)(regval) << 8U))   /*!< write value to RTC_DATE_MON bit field */
 #define GET_DATE_MON(regval)               GET_BITS((regval),8,12)                     /*!< get value of RTC_DATE_MON bit field */
 #define RTC_JAN                            ((uint8_t)0x01U)                            /*!< Janurary */
 #define RTC_FEB                            ((uint8_t)0x02U)                            /*!< February */
@@ -291,7 +289,7 @@ typedef struct
 #define RTC_NOV                            ((uint8_t)0x11U)                            /*!< November */
 #define RTC_DEC                            ((uint8_t)0x12U)                            /*!< December */
 
-#define DATE_DOW(regval)                   (BITS(13,15) & ((uint32_t)(regval) << 13U))  /*!< write value to RTC_DATE_DOW bit field */
+#define DATE_DOW(regval)                   (BITS(13,15) & ((uint32_t)(regval) << 13U)) /*!< write value to RTC_DATE_DOW bit field */
 #define GET_DATE_DOW(regval)               GET_BITS((regval),13,15)                    /*!< get value of RTC_DATE_DOW bit field */
 #define RTC_MONDAY                         ((uint8_t)0x01U)                            /*!< Monday */
 #define RTC_TUESDAY                        ((uint8_t)0x02U)                            /*!< Tuesday */
@@ -301,11 +299,11 @@ typedef struct
 #define RTC_SATURDAY                       ((uint8_t)0x06U)                            /*!< Saturday */
 #define RTC_SUNDAY                         ((uint8_t)0x07U)                            /*!< Sunday */
 
-#define DATE_YR(regval)                    (BITS(16,23) & ((uint32_t)(regval) << 16U))  /*!< write value to RTC_DATE_YR bit field */
+#define DATE_YR(regval)                    (BITS(16,23) & ((uint32_t)(regval) << 16U)) /*!< write value to RTC_DATE_YR bit field */
 #define GET_DATE_YR(regval)                GET_BITS((regval),16,23)                    /*!< get value of RTC_DATE_YR bit field */
 
 /* ctl register value */
-#define CTL_OS(regval)                     (BITS(21,22) & ((uint32_t)(regval) << 21U))   /*!< write value to RTC_CTL_OS bit field */
+#define CTL_OS(regval)                     (BITS(21,22) & ((uint32_t)(regval) << 21U)) /*!< write value to RTC_CTL_OS bit field */
 #define RTC_OS_DISABLE                     CTL_OS(0)                                   /*!< disable output RTC_ALARM */
 #define RTC_OS_ENABLE                      CTL_OS(1)                                   /*!< enable alarm flag output */
 
@@ -319,25 +317,25 @@ typedef struct
 
 #define RTC_TIMESTAMP_RISING_EDGE          ((uint32_t)0x00000000U)                     /*!< rising edge is valid event edge for time-stamp event */
 #define RTC_TIMESTAMP_FALLING_EDGE         RTC_CTL_TSEG                                /*!< falling edge is valid event edge for time-stamp event */
- 
+
 /* psc register value */
-#define PSC_FACTOR_S(regval)               (BITS(0,14) & ((uint32_t)(regval) << 0U))    /*!< write value to RTC_PSC_FACTOR_S bit field */
+#define PSC_FACTOR_S(regval)               (BITS(0,14) & ((uint32_t)(regval) << 0U))   /*!< write value to RTC_PSC_FACTOR_S bit field */
 #define GET_PSC_FACTOR_S(regval)           GET_BITS((regval),0,14)                     /*!< get value of RTC_PSC_FACTOR_S bit field */
 
-#define PSC_FACTOR_A(regval)               (BITS(16,22) & ((uint32_t)(regval) << 16U))  /*!< write value to RTC_PSC_FACTOR_A bit field */
+#define PSC_FACTOR_A(regval)               (BITS(16,22) & ((uint32_t)(regval) << 16U)) /*!< write value to RTC_PSC_FACTOR_A bit field */
 #define GET_PSC_FACTOR_A(regval)           GET_BITS((regval),16,22)                    /*!< get value of RTC_PSC_FACTOR_A bit field */
 
 /* alrm0td register value */
-#define ALRM0TD_SC(regval)                 (BITS(0,6) & ((uint32_t)(regval)<< 0U))      /*!< write value to RTC_ALRM0TD_SC bit field */
+#define ALRM0TD_SC(regval)                 (BITS(0,6) & ((uint32_t)(regval)<< 0U))     /*!< write value to RTC_ALRM0TD_SC bit field */
 #define GET_ALRM0TD_SC(regval)             GET_BITS((regval),0,6)                      /*!< get value of RTC_ALRM0TD_SC bit field */
 
-#define ALRM0TD_MN(regval)                 (BITS(8,14) & ((uint32_t)(regval) << 8U))    /*!< write value to RTC_ALRM0TD_MN bit field */
+#define ALRM0TD_MN(regval)                 (BITS(8,14) & ((uint32_t)(regval) << 8U))   /*!< write value to RTC_ALRM0TD_MN bit field */
 #define GET_ALRM0TD_MN(regval)             GET_BITS((regval),8,14)                     /*!< get value of RTC_ALRM0TD_MN bit field */
 
-#define ALRM0TD_HR(regval)                 (BITS(16,21) & ((uint32_t)(regval) << 16U))  /*!< write value to RTC_ALRM0TD_HR bit field */
+#define ALRM0TD_HR(regval)                 (BITS(16,21) & ((uint32_t)(regval) << 16U)) /*!< write value to RTC_ALRM0TD_HR bit field */
 #define GET_ALRM0TD_HR(regval)             GET_BITS((regval),16,21)                    /*!< get value of RTC_ALRM0TD_HR bit field */
 
-#define ALRM0TD_DAY(regval)                (BITS(24,29) & ((uint32_t)(regval) << 24U))  /*!< write value to RTC_ALRM0TD_DAY bit field */
+#define ALRM0TD_DAY(regval)                (BITS(24,29) & ((uint32_t)(regval) << 24U)) /*!< write value to RTC_ALRM0TD_DAY bit field */
 #define GET_ALRM0TD_DAY(regval)            GET_BITS((regval),24,29)                    /*!< get value of RTC_ALRM0TD_DAY bit field */
 
 #define RTC_ALARM_NONE_MASK                ((uint32_t)0x00000000U)                     /*!< alarm none mask */
@@ -357,36 +355,36 @@ typedef struct
 #define SS_SSC(regval)                     (BITS(0,15) & ((uint32_t)(regval) << 0U))    /*!< write value to RTC_SS_SSC bit field */
 
 /* shiftctl register value */
-#define SHIFTCTL_SFS(regval)               (BITS(0,14) & ((uint32_t)(regval) << 0U))    /*!< write value to RTC_SHIFTCTL_SFS bit field */
+#define SHIFTCTL_SFS(regval)               (BITS(0,14) & ((uint32_t)(regval) << 0U))   /*!< write value to RTC_SHIFTCTL_SFS bit field */
 
 #define RTC_SHIFT_ADD1S_RESET              ((uint32_t)0x00000000U)                     /*!< not add 1 second */
 #define RTC_SHIFT_ADD1S_SET                RTC_SHIFTCTL_A1S                            /*!< add one second to the clock */
 
 /* tts register value */
-#define TTS_SC(regval)                     (BITS(0,6) & ((uint32_t)(regval) << 0U))     /*!< write value to RTC_TTS_SC bit field */
+#define TTS_SC(regval)                     (BITS(0,6) & ((uint32_t)(regval) << 0U))    /*!< write value to RTC_TTS_SC bit field */
 #define GET_TTS_SC(regval)                 GET_BITS((regval),0,6)                      /*!< get value of RTC_TTS_SC bit field */
 
-#define TTS_MN(regval)                     (BITS(8,14) & ((uint32_t)(regval) << 8U))    /*!< write value to RTC_TTS_MN bit field */
+#define TTS_MN(regval)                     (BITS(8,14) & ((uint32_t)(regval) << 8U))   /*!< write value to RTC_TTS_MN bit field */
 #define GET_TTS_MN(regval)                 GET_BITS((regval),8,14)                     /*!< get value of RTC_TTS_MN bit field */
 
-#define TTS_HR(regval)                     (BITS(16,21) & ((uint32_t)(regval) << 16U))  /*!< write value to RTC_TTS_HR bit field */
+#define TTS_HR(regval)                     (BITS(16,21) & ((uint32_t)(regval) << 16U)) /*!< write value to RTC_TTS_HR bit field */
 #define GET_TTS_HR(regval)                 GET_BITS((regval),16,21)                    /*!< get value of RTC_TTS_HR bit field */
 
 /* dts register value */
-#define DTS_DAY(regval)                    (BITS(0,5) & ((uint32_t)(regval) << 0U))     /*!< write value to RTC_DTS_DAY bit field */
+#define DTS_DAY(regval)                    (BITS(0,5) & ((uint32_t)(regval) << 0U))    /*!< write value to RTC_DTS_DAY bit field */
 #define GET_DTS_DAY(regval)                GET_BITS((regval),0,5)                      /*!< get value of RTC_DTS_DAY bit field */
 
-#define DTS_MON(regval)                    (BITS(8,12) & ((uint32_t)(regval) << 8U))    /*!< write value to RTC_DTS_MON bit field */
+#define DTS_MON(regval)                    (BITS(8,12) & ((uint32_t)(regval) << 8U))   /*!< write value to RTC_DTS_MON bit field */
 #define GET_DTS_MON(regval)                GET_BITS((regval),8,12)                     /*!< get value of RTC_DTS_MON bit field */
 
-#define DTS_DOW(regval)                    (BITS(13,15) & ((uint32_t)(regval) << 13U))  /*!< write value to RTC_DTS_DOW bit field */
+#define DTS_DOW(regval)                    (BITS(13,15) & ((uint32_t)(regval) << 13U)) /*!< write value to RTC_DTS_DOW bit field */
 #define GET_DTS_DOW(regval)                GET_BITS((regval),13,15)                    /*!< get value of RTC_DTS_DOW bit field */
 
 /* ssts register value */
-#define SSTS_SSC(regval)                   (BITS(0,15) & ((uint32_t)(regval) << 0U))    /*!< write value to RTC_SSTS_SSC bit field */
+#define SSTS_SSC(regval)                   (BITS(0,15) & ((uint32_t)(regval) << 0U))   /*!< write value to RTC_SSTS_SSC bit field */
 
 /* hrfc register value */
-#define HRFC_CMSK(regval)                  (BITS(0,8) & ((uint32_t)(regval) << 0U))     /*!< write value to RTC_HRFC_CMSK bit field */
+#define HRFC_CMSK(regval)                  (BITS(0,8) & ((uint32_t)(regval) << 0U))    /*!< write value to RTC_HRFC_CMSK bit field */
 
 #define RTC_CALIBRATION_WINDOW_32S         ((uint32_t)0x00000000U)                     /*!< 2exp20 RTCCLK cycles, 32s if RTCCLK = 32768 Hz */
 #define RTC_CALIBRATION_WINDOW_16S         RTC_HRFC_CWND16                             /*!< 2exp19 RTCCLK cycles, 16s if RTCCLK = 32768 Hz */
@@ -396,7 +394,7 @@ typedef struct
 #define RTC_CALIBRATION_PLUS_RESET         ((uint32_t)0x00000000U)                     /*!< no effect */
 
 /* tamp register value */
-#define TAMP_FREQ(regval)                  (BITS(8,10) & ((uint32_t)(regval) << 8U))    /*!< write value to RTC_TAMP_FREQ bit field */
+#define TAMP_FREQ(regval)                  (BITS(8,10) & ((uint32_t)(regval) << 8U))   /*!< write value to RTC_TAMP_FREQ bit field */
 #define RTC_FREQ_DIV32768                  TAMP_FREQ(0)                                /*!< sample once every 32768 RTCCLK(1Hz if RTCCLK=32.768KHz) */
 #define RTC_FREQ_DIV16384                  TAMP_FREQ(1)                                /*!< sample once every 16384 RTCCLK(2Hz if RTCCLK=32.768KHz) */
 #define RTC_FREQ_DIV8192                   TAMP_FREQ(2)                                /*!< sample once every 8192 RTCCLK(4Hz if RTCCLK=32.768KHz) */
@@ -412,7 +410,7 @@ typedef struct
 #define RTC_FLT_4S                         TAMP_FLT(2)                                 /*!< detecting tamper event using level mode.4 consecutive valid level samples will make an effective tamper event */
 #define RTC_FLT_8S                         TAMP_FLT(3)                                 /*!< detecting tamper event using level mode.8 consecutive valid level samples will make a effective tamper event  */
 
-#define TAMP_PRCH(regval)                  (BITS(13,14) & ((uint32_t)(regval) << 13U))  /*!< write value to RTC_TAMP_PRCH bit field */
+#define TAMP_PRCH(regval)                  (BITS(13,14) & ((uint32_t)(regval) << 13U)) /*!< write value to RTC_TAMP_PRCH bit field */
 #define RTC_PRCH_1C                        TAMP_PRCH(0)                                /*!< 1 RTC clock prechagre time before each sampling */
 #define RTC_PRCH_2C                        TAMP_PRCH(1)                                /*!< 2 RTC clock prechagre time before each sampling  */
 #define RTC_PRCH_4C                        TAMP_PRCH(2)                                /*!< 4 RTC clock prechagre time before each sampling */
@@ -432,9 +430,9 @@ typedef struct
 #define RTC_ALARM_OUTPUT_PP                RTC_TAMP_PC13VAL                            /*!< RTC alarm output push-pull mode */
 
 /* alrm0ss register value */
-#define ALRM0SS_SSC(regval)                (BITS(0,14) & ((uint32_t)(regval)<< 0U))     /*!< write value to RTC_ALRM0SS_SSC bit field */
+#define ALRM0SS_SSC(regval)                (BITS(0,14) & ((uint32_t)(regval)<< 0U))    /*!< write value to RTC_ALRM0SS_SSC bit field */
 
-#define ALRM0SS_MASKSSC(regval)            (BITS(24,27) & ((uint32_t)(regval) << 24U))  /*!< write value to RTC_ALRM0SS_MASKSSC bit field */
+#define ALRM0SS_MASKSSC(regval)            (BITS(24,27) & ((uint32_t)(regval) << 24U)) /*!< write value to RTC_ALRM0SS_MASKSSC bit field */
 #define RTC_MASKSSC_0_14                   ALRM0SS_MASKSSC(0)                          /*!< mask alarm subsecond configuration */
 #define RTC_MASKSSC_1_14                   ALRM0SS_MASKSSC(1)                          /*!< mask RTC_ALRM0SS_SSC[14:1], and RTC_ALRM0SS_SSC[0] is to be compared */
 #define RTC_MASKSSC_2_14                   ALRM0SS_MASKSSC(2)                          /*!< mask RTC_ALRM0SS_SSC[14:2], and RTC_ALRM0SS_SSC[1:0] is to be compared */
@@ -492,7 +490,7 @@ typedef struct
 /* reset most of the RTC registers */
 ErrStatus rtc_deinit(void);
 /* initialize RTC registers */
-ErrStatus rtc_init(rtc_parameter_struct* rtc_initpara_struct);
+ErrStatus rtc_init(rtc_parameter_struct *rtc_initpara_struct);
 /* enter RTC init mode */
 ErrStatus rtc_init_mode_enter(void);
 /* exit RTC init mode */
@@ -501,16 +499,16 @@ void rtc_init_mode_exit(void);
 ErrStatus rtc_register_sync_wait(void);
 
 /* get current time and date */
-void rtc_current_time_get(rtc_parameter_struct* rtc_initpara_struct);
+void rtc_current_time_get(rtc_parameter_struct *rtc_initpara_struct);
 /* get current subsecond value */
 uint32_t rtc_subsecond_get(void);
 
 /* configure RTC alarm */
-void rtc_alarm_config(rtc_alarm_struct* rtc_alarm_time);
+void rtc_alarm_config(rtc_alarm_struct *rtc_alarm_time);
 /* configure subsecond of RTC alarm */
 void rtc_alarm_subsecond_config(uint32_t mask_subsecond, uint32_t subsecond);
 /* get RTC alarm */
-void rtc_alarm_get(rtc_alarm_struct* rtc_alarm_time);
+void rtc_alarm_get(rtc_alarm_struct *rtc_alarm_time);
 /* get RTC alarm subsecond */
 uint32_t rtc_alarm_subsecond_get(void);
 /* enable RTC alarm */
@@ -523,12 +521,12 @@ void rtc_timestamp_enable(uint32_t edge);
 /* disable RTC time-stamp */
 void rtc_timestamp_disable(void);
 /* get RTC timestamp time and date */
-void rtc_timestamp_get(rtc_timestamp_struct* rtc_timestamp);
+void rtc_timestamp_get(rtc_timestamp_struct *rtc_timestamp);
 /* get RTC time-stamp subsecond */
 uint32_t rtc_timestamp_subsecond_get(void);
 
 /* enable RTC tamper */
-void rtc_tamper_enable(rtc_tamper_struct* rtc_tamper);
+void rtc_tamper_enable(rtc_tamper_struct *rtc_tamper);
 /* disable RTC tamper */
 void rtc_tamper_disable(uint32_t source);
 
