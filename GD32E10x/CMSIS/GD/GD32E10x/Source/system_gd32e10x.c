@@ -781,10 +781,11 @@ static void system_clock_120m_hxtal(void)
 */
 void SystemCoreClockUpdate (void)
 {
-    uint32_t sws;
-    uint32_t pllsel, pllpresel, predv0sel, pllmf,ck_src;
-    uint32_t predv0, predv1, pll1mf;
-
+    uint32_t sws = 0U;
+    uint32_t pllsel = 0U, pllpresel = 0U, predv0sel = 0U, pllmf,ck_src = 0U;
+    uint32_t predv0 = 0U, predv1 = 0U, pll1mf = 0U,idx = 0U,clk_exp = 0U;
+    /* exponent of AHB clock divider */
+    const uint8_t ahb_exp[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
     sws = GET_BITS(RCU_CFG0, 2, 3);
     switch(sws){
     /* IRC8M is selected as CK_SYS */
@@ -850,5 +851,8 @@ void SystemCoreClockUpdate (void)
         SystemCoreClock = IRC8M_VALUE;
         break;
     }
-
+    /* calculate AHB clock frequency */
+    idx = GET_BITS(RCU_CFG0, 4, 7);
+    clk_exp = ahb_exp[idx];
+    SystemCoreClock >>= clk_exp;
 }

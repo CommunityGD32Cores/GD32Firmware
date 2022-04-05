@@ -5,10 +5,11 @@
     \version 2017-12-26, V1.0.1, firmware for GD32E10x
     \version 2020-09-30, V1.1.0, firmware for GD32E10x
     \version 2020-12-31, V1.2.0, firmware for GD32E10x
+    \version 2021-05-31, V1.2.1, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -36,7 +37,7 @@ OF SUCH DAMAGE.
 
 #include "gd32e10x_spi.h"
 
-#define SPI_ERROR_HANDLE(s)           do{}while(1)
+#define SPI_ERROR_HANDLE(s)             do{}while(1)
 
 /* SPI/I2S parameter initialization mask */
 #define SPI_INIT_MASK                   ((uint32_t)0x00003040U)  /*!< SPI parameter initialization mask */
@@ -84,7 +85,7 @@ void spi_i2s_deinit(uint32_t spi_periph)
 
 /*!
     \brief      initialize the parameters of SPI struct with the default values
-    \param[in]  spi_struct: SPI parameter stuct
+    \param[in]  spi_struct: SPI parameter struct
     \param[out] none
     \retval     none
 */
@@ -102,7 +103,7 @@ void spi_struct_para_init(spi_parameter_struct* spi_struct)
 /*!
     \brief      initialize SPI parameter
     \param[in]  spi_periph: SPIx(x=0,1,2)
-    \param[in]  spi_struct: SPI parameter initialization stuct members of the structure 
+    \param[in]  spi_struct: SPI parameter initialization struct members of the structure 
                             and the member values are shown as below:
                   device_mode: SPI_MASTER, SPI_SLAVE
                   trans_mode: SPI_TRANSMODE_FULLDUPLEX, SPI_TRANSMODE_RECEIVEONLY,
@@ -491,9 +492,6 @@ void spi_bidirectional_transfer_config(uint32_t spi_periph, uint32_t transfer_di
 */
 void spi_crc_polynomial_set(uint32_t spi_periph,uint16_t crc_poly)
 {
-    /* enable SPI CRC */
-    SPI_CTL0(spi_periph) |= (uint32_t)SPI_CTL0_CRCEN;
-
     /* set SPI CRC polynomial */
     SPI_CRCPOLY(spi_periph) = (uint32_t)crc_poly;
 }

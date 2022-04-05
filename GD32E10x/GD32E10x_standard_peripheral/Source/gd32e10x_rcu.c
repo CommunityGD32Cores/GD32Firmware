@@ -5,10 +5,11 @@
     \version 2017-12-26, V1.0.0, firmware for GD32E10x
     \version 2020-09-30, V1.1.0, firmware for GD32E10x
     \version 2020-12-31, V1.2.0, firmware for GD32E10x
+    \version 2021-05-31, V1.2.1, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -72,15 +73,18 @@ void rcu_deinit(void)
 
     /* reset CFG0 register */
     RCU_CFG0 &= ~(RCU_CFG0_SCS | RCU_CFG0_AHBPSC | RCU_CFG0_APB1PSC | RCU_CFG0_APB2PSC |
-                  RCU_CFG0_ADCPSC | RCU_CFG0_PLLSEL | RCU_CFG0_PREDV0_LSB | RCU_CFG0_PLLMF |
-                  RCU_CFG0_USBFSPSC | RCU_CFG0_CKOUT0SEL | RCU_CFG0_ADCPSC_2 | RCU_CFG0_PLLMF_4 | RCU_CFG0_USBFSPSC_2);
-    /* reset CTL register */
+                  RCU_CFG0_ADCPSC | RCU_CFG0_CKOUT0SEL | RCU_CFG0_ADCPSC_2);
+    /* reset HXTALEN, CKMEN, PLLEN bits */
     RCU_CTL &= ~(RCU_CTL_HXTALEN | RCU_CTL_CKMEN | RCU_CTL_PLLEN);
+    /* reset HXTALBPS bit */
     RCU_CTL &= ~RCU_CTL_HXTALBPS;
+    /* reset PLLSEL, PREDV0_LSB, PLLMF, USBFSPSC bits */
+    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PREDV0_LSB | RCU_CFG0_PLLMF |
+                  RCU_CFG0_USBFSPSC | RCU_CFG0_PLLMF_4 | RCU_CFG0_USBFSPSC_2);
+    /* reset PLL1EN and PLL2EN bits */
     RCU_CTL &= ~(RCU_CTL_PLL1EN | RCU_CTL_PLL2EN);
 
     /* reset INT and CFG1 register */
-
     RCU_INT = 0x00ff0000U;
     RCU_CFG1 &= ~(RCU_CFG1_PREDV0 | RCU_CFG1_PREDV1 | RCU_CFG1_PLL1MF | RCU_CFG1_PLL2MF |
                   RCU_CFG1_PREDV0SEL | RCU_CFG1_I2S1SEL | RCU_CFG1_I2S2SEL | RCU_CFG1_ADCPSC_3 |
@@ -662,8 +666,8 @@ void rcu_ck48m_clock_config(uint32_t ck48m_clock_source)
 }
 
 /*!
-    \brief      get the clock stabilization and periphral reset flags
-    \param[in]  flag: the clock stabilization and periphral reset flags, refer to rcu_flag_enum
+    \brief      get the clock stabilization and peripheral reset flags
+    \param[in]  flag: the clock stabilization and peripheral reset flags, refer to rcu_flag_enum
                 only one parameter can be selected which is shown as below:
       \arg        RCU_FLAG_IRC8MSTB: IRC8M stabilization flag
       \arg        RCU_FLAG_HXTALSTB: HXTAL stabilization flag

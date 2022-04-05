@@ -4,10 +4,11 @@
 
     \version 2020-08-05, V2.0.0, firmware for GD32E10x
     \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2021-05-31, V2.1.1, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -349,8 +350,6 @@ usb_status usb_transc_inxfer (usb_core_driver *udev, usb_transc *transc)
     udev->regs.er_in[ep_num]->DIEPCTL = epctl;
 
     if ((uint8_t)USB_USE_FIFO == udev->bp.transfer_mode) {
-        udev->regs.er_in[ep_num]->DIEPCTL = epctl;
-
         if (transc->ep_type != (uint8_t)USB_EPTYPE_ISOC) {
             /* enable the TX FIFO empty interrupt for this endpoint */
             if (transc->xfer_len > 0U) {
@@ -391,7 +390,7 @@ usb_status usb_transc_outxfer (usb_core_driver *udev, usb_transc *transc)
         eplen |= 1U << 19U;
     } else {
         /* configure the transfer size and packet count as follows:
-         * pktcnt = N
+         * packet_count = N
          * xfersize = N * maxpacket
          */
         uint32_t packet_count = (transc->xfer_len + transc->max_len - 1U) / transc->max_len;
