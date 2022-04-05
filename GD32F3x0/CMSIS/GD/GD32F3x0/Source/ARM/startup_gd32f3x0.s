@@ -1,12 +1,36 @@
 ;/*!
 ;    \file  startup_gd32f3x0.s
 ;    \brief start up file
+;
+;    \version 2017-06-06, V1.0.0, firmware for GD32F3x0
+;    \version 2019-06-01, V2.0.0, firmware for GD32F3x0
 ;*/
-
+;
 ;/*
-;    Copyright (C) 2017 GigaDevice
-
-;    2017-06-06, V1.0.0, firmware for GD32F3x0
+;    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+;
+;    Redistribution and use in source and binary forms, with or without modification, 
+;are permitted provided that the following conditions are met:
+;
+;    1. Redistributions of source code must retain the above copyright notice, this 
+;       list of conditions and the following disclaimer.
+;    2. Redistributions in binary form must reproduce the above copyright notice, 
+;       this list of conditions and the following disclaimer in the documentation 
+;       and/or other materials provided with the distribution.
+;    3. Neither the name of the copyright holder nor the names of its contributors 
+;       may be used to endorse or promote products derived from this software without 
+;       specific prior written permission.
+;
+;    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+;AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+;WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+;IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+;INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+;NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+;PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+;WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+;ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+;OF SUCH DAMAGE.
 ;*/
 
 ; <h> Stack Configuration
@@ -62,7 +86,7 @@ __Vectors       DCD     __initial_sp                      ; Top of Stack
                 DCD     LVD_IRQHandler                    ; 17:LVD through EXTI Line detect
                 DCD     RTC_IRQHandler                    ; 18:RTC through EXTI Line
                 DCD     FMC_IRQHandler                    ; 19:FMC
-                DCD     RCU_IRQHandler                    ; 20:RCU
+                DCD     RCU_CTC_IRQHandler                ; 20:RCU and CTC
                 DCD     EXTI0_1_IRQHandler                ; 21:EXTI Line 0 and EXTI Line 1
                 DCD     EXTI2_3_IRQHandler                ; 22:EXTI Line 2 and EXTI Line 3
                 DCD     EXTI4_15_IRQHandler               ; 23:EXTI Line 4 to EXTI Line 15
@@ -72,7 +96,7 @@ __Vectors       DCD     __initial_sp                      ; Top of Stack
                 DCD     DMA_Channel3_4_IRQHandler         ; 27:DMA Channel 3 and DMA Channel 4
                 DCD     ADC_CMP_IRQHandler                ; 28:ADC and Comparator 0-1
                 DCD     TIMER0_BRK_UP_TRG_COM_IRQHandler  ; 29:TIMER0 Break,Update,Trigger and Commutation
-                DCD     TIMER0_CC_IRQHandler              ; 30:TIMER0 Capture Compare
+                DCD     TIMER0_Channel_IRQHandler         ; 30:TIMER0 Channel Capture Compare
                 DCD     TIMER1_IRQHandler                 ; 31:TIMER1
                 DCD     TIMER2_IRQHandler                 ; 32:TIMER2
                 DCD     TIMER5_DAC_IRQHandler             ; 33:TIMER5 and DAC
@@ -93,8 +117,8 @@ __Vectors       DCD     __initial_sp                      ; Top of Stack
                 DCD     I2C0_ER_IRQHandler                ; 48:I2C0 Error
                 DCD     0                                 ; Reserved
                 DCD     I2C1_ER_IRQHandler                ; 50:I2C1 Error
-                DCD     I2C2_EV_IRQHandler                ; 51:I2C2 Event
-                DCD     I2C2_ER_IRQHandler                ; 52:I2C2 Error
+                DCD     0                                 ; Reserved
+                DCD     0                                 ; Reserved
                 DCD     0                                 ; Reserved
                 DCD     0                                 ; Reserved
                 DCD     0                                 ; Reserved
@@ -109,7 +133,7 @@ __Vectors       DCD     __initial_sp                      ; Top of Stack
                 DCD     DMA_Channel5_6_IRQHandler         ; 64:DMA Channel5 and Channel6 
                 DCD     0                                 ; Reserved
                 DCD     0                                 ; Reserved
-                DCD     SPI2_IRQHandler                   ; 67:SPI2
+                DCD     0                                 ; Reserved
                 DCD     0                                 ; Reserved
                 DCD     0                                 ; Reserved
                 DCD     0                                 ; Reserved
@@ -194,7 +218,7 @@ Default_Handler PROC
                 EXPORT  LVD_IRQHandler                    [WEAK]
                 EXPORT  RTC_IRQHandler                    [WEAK]
                 EXPORT  FMC_IRQHandler                    [WEAK]
-                EXPORT  RCU_IRQHandler                    [WEAK]
+                EXPORT  RCU_CTC_IRQHandler                [WEAK]
                 EXPORT  EXTI0_1_IRQHandler                [WEAK]
                 EXPORT  EXTI2_3_IRQHandler                [WEAK]
                 EXPORT  EXTI4_15_IRQHandler               [WEAK]
@@ -204,7 +228,7 @@ Default_Handler PROC
                 EXPORT  DMA_Channel3_4_IRQHandler         [WEAK]
                 EXPORT  ADC_CMP_IRQHandler                [WEAK]
                 EXPORT  TIMER0_BRK_UP_TRG_COM_IRQHandler  [WEAK]
-                EXPORT  TIMER0_CC_IRQHandler              [WEAK]
+                EXPORT  TIMER0_Channel_IRQHandler         [WEAK]
                 EXPORT  TIMER1_IRQHandler                 [WEAK]
                 EXPORT  TIMER2_IRQHandler                 [WEAK]
                 EXPORT  TIMER5_DAC_IRQHandler             [WEAK]
@@ -221,11 +245,8 @@ Default_Handler PROC
                 EXPORT  CEC_IRQHandler                    [WEAK]
                 EXPORT  I2C0_ER_IRQHandler                [WEAK]
                 EXPORT  I2C1_ER_IRQHandler                [WEAK]
-                EXPORT  I2C2_EV_IRQHandler                [WEAK]
-                EXPORT  I2C2_ER_IRQHandler                [WEAK]
                 EXPORT  USBFS_WKUP_IRQHandler             [WEAK]
                 EXPORT  DMA_Channel5_6_IRQHandler         [WEAK]
-                EXPORT  SPI2_IRQHandler                   [WEAK]
                 EXPORT  USBFS_IRQHandler                  [WEAK]
 
 ;/* external interrupts handler */
@@ -233,7 +254,7 @@ WWDGT_IRQHandler
 LVD_IRQHandler
 RTC_IRQHandler
 FMC_IRQHandler
-RCU_IRQHandler
+RCU_CTC_IRQHandler
 EXTI0_1_IRQHandler
 EXTI2_3_IRQHandler
 EXTI4_15_IRQHandler
@@ -243,7 +264,7 @@ DMA_Channel1_2_IRQHandler
 DMA_Channel3_4_IRQHandler
 ADC_CMP_IRQHandler
 TIMER0_BRK_UP_TRG_COM_IRQHandler
-TIMER0_CC_IRQHandler
+TIMER0_Channel_IRQHandler
 TIMER1_IRQHandler
 TIMER2_IRQHandler
 TIMER5_DAC_IRQHandler
@@ -260,11 +281,8 @@ USART1_IRQHandler
 CEC_IRQHandler
 I2C0_ER_IRQHandler
 I2C1_ER_IRQHandler
-I2C2_EV_IRQHandler
-I2C2_ER_IRQHandler
 USBFS_WKUP_IRQHandler
 DMA_Channel5_6_IRQHandler
-SPI2_IRQHandler
 USBFS_IRQHandler
 
                 B       .

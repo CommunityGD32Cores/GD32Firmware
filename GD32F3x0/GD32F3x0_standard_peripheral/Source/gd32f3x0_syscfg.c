@@ -1,12 +1,36 @@
 /*!
     \file  gd32f3x0_syscfg.c
     \brief SYSCFG driver
+
+    \version 2017-06-06, V1.0.0, firmware for GD32F3x0
+    \version 2019-06-01, V2.0.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2017-06-06, V1.0.0, firmware for GD32F3x0
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "gd32f3x0_syscfg.h"
@@ -26,6 +50,7 @@ void syscfg_deinit(void)
 /*!
     \brief      enable the DMA channels remapping
     \param[in]  syscfg_dma_remap: specify the DMA channels to remap
+                one or more parameters can be selected which is shown as below:
       \arg        SYSCFG_DMA_REMAP_TIMER16: remap TIMER16 channel0 and UP DMA requests to channel1(defaut channel0)
       \arg        SYSCFG_DMA_REMAP_TIMER15: remap TIMER15 channel2 and UP DMA requests to channel3(defaut channel2)
       \arg        SYSCFG_DMA_REMAP_USART0RX: remap USART0 Rx DMA request to channel4(default channel2)
@@ -42,6 +67,7 @@ void syscfg_dma_remap_enable(uint32_t syscfg_dma_remap)
 /*!
     \brief      disable the DMA channels remapping
     \param[in]  syscfg_dma_remap: specify the DMA channels to remap
+                one or more parameters can be selected which is shown as below:
       \arg        SYSCFG_DMA_REMAP_TIMER16: remap TIMER16 channel0 and UP DMA requests to channel1(defaut channel0)
       \arg        SYSCFG_DMA_REMAP_TIMER15: remap TIMER15 channel2 and UP DMA requests to channel3(defaut channel2)
       \arg        SYSCFG_DMA_REMAP_USART0RX: remap USART0 Rx DMA request to channel4(default channel2)
@@ -80,8 +106,10 @@ void syscfg_high_current_disable(void)
 /*!
     \brief      configure the GPIO pin as EXTI Line
     \param[in]  exti_port: specify the GPIO port used in EXTI
+                only one parameter can be selected which is shown as below:
       \arg        EXTI_SOURCE_GPIOx(x = A,B,C,D,F): EXTI GPIO port
     \param[in]  exti_pin: specify the EXTI line
+                only one parameter can be selected which is shown as below:
       \arg        EXTI_SOURCE_PINx(x = 0..15): EXTI GPIO pin
     \param[out] none
     \retval     none
@@ -124,6 +152,7 @@ void syscfg_exti_line_config(uint8_t exti_port, uint8_t exti_pin)
 /*!
     \brief      connect TIMER0/14/15/16 break input to the selected parameter
     \param[in]  syscfg_lock: Specify the parameter to be connected
+                one or more parameters can be selected which is shown as below:
       \arg        SYSCFG_LOCK_LOCKUP: Cortex-M4 lockup output connected to the break input
       \arg        SYSCFG_LOCK_SRAM_PARITY_ERROR: SRAM_PARITY check error connected to the break input
       \arg        SYSCFG_LOCK_LVD: LVD interrupt connected to the break input
@@ -166,12 +195,13 @@ void syscfg_flag_clear(uint32_t syscfg_flag)
 /*!
     \brief      configure the I/O compensation cell
     \param[in]  syscfg_compensation: specifies the I/O compensation cell mode
+                only one parameter can be selected which is shown as below:
       \arg        SYSCFG_COMPENSATION_ENABLE: I/O compensation cell is enabled
       \arg        SYSCFG_COMPENSATION_DISABLE: I/O compensation cell is disabled
     \param[out] none
     \retval     none
 */
-void syscfg_compensation_config(uint32_t syscfg_compensation) 
+void syscfg_compensation_config(uint32_t syscfg_compensation)
 {
     uint32_t reg;
 

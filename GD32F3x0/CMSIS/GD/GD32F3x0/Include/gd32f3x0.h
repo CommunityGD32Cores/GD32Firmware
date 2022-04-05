@@ -1,12 +1,36 @@
 /*!
     \file  gd32f3x0.h
     \brief general definitions for gd32f3x0
+    
+    \version 2017-06-06, V1.0.0, firmware for GD32F3x0
+    \version 2019-06-01, V2.0.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2017-06-06, V1.0.0, firmware for GD32F3x0
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F3X0_H
@@ -83,9 +107,10 @@
 
 /* configuration of the Cortex-M4 processor and core peripherals */
 #define __CM4_REV                 0x0001   /*!< Core revision r0p1                                       */
-#define __MPU_PRESENT             1        /*!< GD32F3x0 do not provide MPU                              */
-#define __NVIC_PRIO_BITS          4        /*!< GD32F3x0 uses 4 bits for the priority levels             */
-#define __Vendor_SysTickConfig    0        /*!< set to 1 if different sysTick config is used             */
+#define __MPU_PRESENT             0U       /*!< GD32F3x0 do not provide MPU                              */
+#define __NVIC_PRIO_BITS          4U       /*!< GD32F3x0 uses 4 bits for the priority levels             */
+#define __Vendor_SysTickConfig    0U       /*!< set to 1 if different sysTick config is used             */
+#define __FPU_PRESENT             1U       /*!< FPU present                                              */
 
 /* define interrupt number */
 typedef enum IRQn
@@ -102,7 +127,7 @@ typedef enum IRQn
     /* interruput numbers */
     WWDGT_IRQn                   = 0,      /*!< window watchdog timer interrupt                          */
     LVD_IRQn                     = 1,      /*!< LVD through EXTI line detect interrupt                   */
-    RTC_IRQn                     = 2,      /*!< RTC through EXTI line interrupt                          */
+    RCU_CTC_IRQn                 = 2,      /*!< RTC and CTC interrupt                                    */
     FMC_IRQn                     = 3,      /*!< FMC interrupt                                            */
     RCU_IRQn                     = 4,      /*!< RCU interrupt                                            */
     EXTI0_1_IRQn                 = 5,      /*!< EXTI line 0 and 1 interrupts                             */
@@ -114,7 +139,7 @@ typedef enum IRQn
     DMA_Channel3_4_IRQn          = 11,     /*!< DMA channel 3 and channel 4 interrupts                   */
     ADC_CMP_IRQn                 = 12,     /*!< ADC, CMP0 and CMP1 interrupts                            */
     TIMER0_BRK_UP_TRG_COM_IRQn   = 13,     /*!< TIMER0 break, update, trigger and commutation interrupts */
-    TIMER0_CC_IRQn               = 14,     /*!< TIMER0 capture compare interrupt                         */
+    TIMER0_Channel_IRQn          = 14,     /*!< TIMER0 channel capture compare interrupts                */
     TIMER1_IRQn                  = 15,     /*!< TIMER1 interrupt                                         */
     TIMER2_IRQn                  = 16,     /*!< TIMER2 interrupt                                         */
 #ifdef GD32F350
@@ -135,14 +160,9 @@ typedef enum IRQn
 #endif /* GD32F350 */
     I2C0_ER_IRQn                 = 32,     /*!< I2C0 error interrupt                                     */
     I2C1_ER_IRQn                 = 34,     /*!< I2C1 error interrupt                                     */
-    I2C2_EV_IRQn                 = 35,     /*!< I2C2 event interrupt                                     */
-    I2C2_ER_IRQn                 = 36,     /*!< I2C2 error interrupt                                     */
-    DMA_Channel5_6_IRQn          = 48,     /*!< DMA1 channel 5 and channel 6 interrupts                  */
+    DMA_Channel5_6_IRQn          = 48,     /*!< DMA channel 5 and channel 6 interrupts                   */
 #ifdef GD32F350
     USBFS_WKUP_IRQn              = 42,     /*!< USBFS wakeup interrupt                                   */
-#endif /* GD32F350 */
-    SPI2_IRQn                    = 51,     /*!< SPI2 global interrupt                                    */ 
-#ifdef GD32F350
     USBFS_IRQn                   = 67,     /*!< USBFS global interrupt                                   */
 #endif /* GD32F350 */
 } IRQn_Type;

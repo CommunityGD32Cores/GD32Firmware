@@ -1,12 +1,36 @@
 /*!
     \file  gd32f3x0_rcu.h
     \brief definitions for the RCU
+
+    \version 2017-06-06, V1.0.0, firmware for GD32F3x0
+    \version 2019-06-01, V2.0.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2017-06-06, V1.0.0, firmware for GD32F3x0
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F3X0_RCU_H
@@ -18,26 +42,26 @@
 #define RCU                         RCU_BASE
 
 /* registers definitions */
-#define RCU_CTL0                    REG32(RCU + 0x00U)        /*!< control register 0 */
-#define RCU_CFG0                    REG32(RCU + 0x04U)        /*!< configuration register 0 */
-#define RCU_INT                     REG32(RCU + 0x08U)        /*!< interrupt register */
-#define RCU_APB2RST                 REG32(RCU + 0x0CU)        /*!< APB2 reset register */
-#define RCU_APB1RST                 REG32(RCU + 0x10U)        /*!< APB1 reset register */
-#define RCU_AHBEN                   REG32(RCU + 0x14U)        /*!< AHB enable register */
-#define RCU_APB2EN                  REG32(RCU + 0x18U)        /*!< APB2 enable register */
-#define RCU_APB1EN                  REG32(RCU + 0x1CU)        /*!< APB1 enable register  */
-#define RCU_BDCTL                   REG32(RCU + 0x20U)        /*!< backup domain control register */
-#define RCU_RSTSCK                  REG32(RCU + 0x24U)        /*!< reset source /clock register */
-#define RCU_AHBRST                  REG32(RCU + 0x28U)        /*!< AHB reset register */
-#define RCU_CFG1                    REG32(RCU + 0x2CU)        /*!< configuration register 1 */
-#define RCU_CFG2                    REG32(RCU + 0x30U)        /*!< configuration register 2 */
-#define RCU_CTL1                    REG32(RCU + 0x34U)        /*!< control register 1 */
-#define RCU_ADDCTL                  REG32(RCU + 0xC0U)        /*!< additional clock control register */
-#define RCU_ADDINT                  REG32(RCU + 0xCCU)        /*!< additional clock interrupt register  */
-#define RCU_ADDAPB1EN               REG32(RCU + 0xF8U)        /*!< APB1 additional enable register */
-#define RCU_ADDAPB1RST              REG32(RCU + 0xFCU)        /*!< APB1 additional reset register */
-#define RCU_VKEY                    REG32(RCU + 0x100U)       /*!< voltage key register */
-#define RCU_DSV                     REG32(RCU + 0x134U)       /*!< deep-sleep mode voltage register */
+#define RCU_CTL0                    REG32(RCU + 0x00000000U)        /*!< control register 0 */
+#define RCU_CFG0                    REG32(RCU + 0x00000004U)        /*!< configuration register 0 */
+#define RCU_INT                     REG32(RCU + 0x00000008U)        /*!< interrupt register */
+#define RCU_APB2RST                 REG32(RCU + 0x0000000CU)        /*!< APB2 reset register */
+#define RCU_APB1RST                 REG32(RCU + 0x00000010U)        /*!< APB1 reset register */
+#define RCU_AHBEN                   REG32(RCU + 0x00000014U)        /*!< AHB enable register */
+#define RCU_APB2EN                  REG32(RCU + 0x00000018U)        /*!< APB2 enable register */
+#define RCU_APB1EN                  REG32(RCU + 0x0000001CU)        /*!< APB1 enable register  */
+#define RCU_BDCTL                   REG32(RCU + 0x00000020U)        /*!< backup domain control register */
+#define RCU_RSTSCK                  REG32(RCU + 0x00000024U)        /*!< reset source /clock register */
+#define RCU_AHBRST                  REG32(RCU + 0x00000028U)        /*!< AHB reset register */
+#define RCU_CFG1                    REG32(RCU + 0x0000002CU)        /*!< configuration register 1 */
+#define RCU_CFG2                    REG32(RCU + 0x00000030U)        /*!< configuration register 2 */
+#define RCU_CTL1                    REG32(RCU + 0x00000034U)        /*!< control register 1 */
+#define RCU_ADDCTL                  REG32(RCU + 0x000000C0U)        /*!< additional clock control register */
+#define RCU_ADDINT                  REG32(RCU + 0x000000CCU)        /*!< additional clock interrupt register */
+#define RCU_ADDAPB1EN               REG32(RCU + 0x000000F8U)        /*!< APB1 additional enable register */
+#define RCU_ADDAPB1RST              REG32(RCU + 0x000000FCU)        /*!< APB1 additional reset register */
+#define RCU_VKEY                    REG32(RCU + 0x00000100U)        /*!< voltage key register */
+#define RCU_DSV                     REG32(RCU + 0x00000134U)        /*!< deep-sleep mode voltage register */
 
 /* bits definitions */
 /* RCU_CTL0 */
@@ -45,7 +69,7 @@
 #define RCU_CTL0_IRC8MSTB           BIT(1)                    /*!< IRC8M high speed internal oscillator stabilization flag */
 #define RCU_CTL0_IRC8MADJ           BITS(3,7)                 /*!< high speed internal oscillator clock trim adjust value */
 #define RCU_CTL0_IRC8MCALIB         BITS(8,15)                /*!< high speed internal oscillator calibration value register */
-#define RCU_CTL0_HXTALEN             BIT(16)                   /*!< external high speed oscillator enable */
+#define RCU_CTL0_HXTALEN            BIT(16)                   /*!< external high speed oscillator enable */
 #define RCU_CTL0_HXTALSTB           BIT(17)                   /*!< external crystal oscillator clock stabilization flag */
 #define RCU_CTL0_HXTALBPS           BIT(18)                   /*!< external crystal oscillator clock bypass mode enable */
 #define RCU_CTL0_CKMEN              BIT(19)                   /*!< HXTAL clock monitor enable */
@@ -107,7 +131,6 @@
 #define RCU_APB1RST_TIMER13RST      BIT(8)                    /*!< TIMER13 timer reset */
 #define RCU_APB1RST_WWDGTRST        BIT(11)                   /*!< window watchdog timer reset */
 #define RCU_APB1RST_SPI1RST         BIT(14)                   /*!< SPI1 reset */
-#define RCU_APB1RST_SPI2RST         BIT(15)                   /*!< SPI2 reset */
 #define RCU_APB1RST_USART1RST       BIT(17)                   /*!< USART1 reset */
 #define RCU_APB1RST_I2C0RST         BIT(21)                   /*!< I2C0 reset */
 #define RCU_APB1RST_I2C1RST         BIT(22)                   /*!< I2C1 reset */
@@ -145,7 +168,6 @@
 #define RCU_APB1EN_TIMER13EN        BIT(8)                    /*!< TIMER13 timer clock enable */
 #define RCU_APB1EN_WWDGTEN          BIT(11)                   /*!< window watchdog timer clock enable */
 #define RCU_APB1EN_SPI1EN           BIT(14)                   /*!< SPI1 clock enable */
-#define RCU_APB1EN_SPI2EN           BIT(15)                   /*!< SPI2 clock enable */
 #define RCU_APB1EN_USART1EN         BIT(17)                   /*!< USART1 clock enable */
 #define RCU_APB1EN_I2C0EN           BIT(21)                   /*!< I2C0 clock enable */
 #define RCU_APB1EN_I2C1EN           BIT(22)                   /*!< I2C1 clock enable */
@@ -215,11 +237,9 @@
 #define RCU_ADDINT_IRC48MSTBIC      BIT(22)                   /*!< IRC48M stabilization interrupt clear */
 
 /* RCU_ADDAPB1EN */
-#define RCU_ADDAPB1EN_I2C2EN        BIT(0)                    /*!< I2C2 unit clock enable */
 #define RCU_ADDAPB1EN_CTCEN         BIT(27)                   /*!< CTC unit clock enable */
 
 /* RCU_ADDAPB1RST */
-#define RCU_ADDAPB1RST_I2C2RST      BIT(0)                    /*!< I2C2 unit reset */
 #define RCU_ADDAPB1RST_CTCRST       BIT(27)                   /*!< CTC unit reset */
 
 /* RCU_VKEY */
@@ -232,36 +252,36 @@
 /* define the peripheral clock enable bit position and its register index offset */
 #define RCU_REGIDX_BIT(regidx, bitpos)      (((uint32_t)(regidx)<<6) | (uint32_t)(bitpos))
 #define RCU_REG_VAL(periph)                 (REG32(RCU + ((uint32_t)(periph)>>6)))
-#define RCU_BIT_POS(val)                    ((uint32_t)(val) & 0x1FU)
+#define RCU_BIT_POS(val)                    ((uint32_t)(val) & (uint32_t)0x0000001FU)
 /* define the voltage key unlock value */
-#define RCU_VKEY_UNLOCK                     ((uint32_t)0x1A2B3C4D)
+#define RCU_VKEY_UNLOCK                     ((uint32_t)0x1A2B3C4DU)
 
 /* register index */
 typedef enum
 {
     /* peripherals enable */
-    IDX_AHBEN      = 0x14U, 
-    IDX_APB2EN     = 0x18U, 
-    IDX_APB1EN     = 0x1CU, 
-    IDX_ADDAPB1EN  = 0xF8U,
+    IDX_AHBEN      = ((uint32_t)0x00000014U),
+    IDX_APB2EN     = ((uint32_t)0x00000018U),
+    IDX_APB1EN     = ((uint32_t)0x0000001CU),
+    IDX_ADDAPB1EN  = ((uint32_t)0x000000F8U),
     /* peripherals reset */
-    IDX_AHBRST     = 0x28U, 
-    IDX_APB2RST    = 0x0CU, 
-    IDX_APB1RST    = 0x10U, 
-    IDX_ADDAPB1RST = 0xFCU,
+    IDX_AHBRST     = ((uint32_t)0x00000028U),
+    IDX_APB2RST    = ((uint32_t)0x0000000CU),
+    IDX_APB1RST    = ((uint32_t)0x00000010U),
+    IDX_ADDAPB1RST = ((uint32_t)0x000000FCU),
     /* clock stabilization */
-    IDX_CTL0       = 0x00U,
-    IDX_BDCTL      = 0x20U,
-    IDX_CTL1       = 0x34U,
-    IDX_ADDCTL     = 0xC0U,
+    IDX_CTL0       = ((uint32_t)0x00000000U),
+    IDX_BDCTL      = ((uint32_t)0x00000020U),
+    IDX_CTL1       = ((uint32_t)0x00000034U),
+    IDX_ADDCTL     = ((uint32_t)0x000000C0U),
     /* peripheral reset */
-    IDX_RSTSCK     = 0x24U,
+    IDX_RSTSCK     = ((uint32_t)0x00000024U),
     /* clock stabilization and stuck interrupt */
-    IDX_INT        = 0x08U,
-    IDX_ADDINT     = 0xCCU,
+    IDX_INT        = ((uint32_t)0x00000008U),
+    IDX_ADDINT     = ((uint32_t)0x000000CCU),
     /* configuration register */
-    IDX_CFG0       = 0x04U,
-    IDX_CFG2       = 0x30U
+    IDX_CFG0       = ((uint32_t)0x00000004U),
+    IDX_CFG2       = ((uint32_t)0x00000030U)
 }reg_idx;
 
 /* peripheral clock enable */
@@ -293,7 +313,6 @@ typedef enum
     RCU_TIMER13 = RCU_REGIDX_BIT(IDX_APB1EN, 8U),                 /*!< TIMER13 clock */
     RCU_WWDGT   = RCU_REGIDX_BIT(IDX_APB1EN, 11U),                /*!< WWDGT clock */
     RCU_SPI1    = RCU_REGIDX_BIT(IDX_APB1EN, 14U),                /*!< SPI1 clock */
-    RCU_SPI2    = RCU_REGIDX_BIT(IDX_APB1EN, 15U),                /*!< SPI2 clock */
     RCU_USART1  = RCU_REGIDX_BIT(IDX_APB1EN, 17U),                /*!< USART1 clock */
     RCU_I2C0    = RCU_REGIDX_BIT(IDX_APB1EN, 21U),                /*!< I2C0 clock */
     RCU_I2C1    = RCU_REGIDX_BIT(IDX_APB1EN, 22U),                /*!< I2C1 clock */
@@ -307,7 +326,6 @@ typedef enum
     RCU_RTC     = RCU_REGIDX_BIT(IDX_BDCTL, 15U),                 /*!< RTC clock */
     
     /* RCU_ADDAPB1EN */
-    RCU_I2C2    = RCU_REGIDX_BIT(IDX_ADDAPB1EN, 0U),              /*!< I2C2 clock */
     RCU_CTC     = RCU_REGIDX_BIT(IDX_ADDAPB1EN, 27U)              /*!< CTC clock */
 }rcu_periph_enum;
 
@@ -346,7 +364,6 @@ typedef enum
     RCU_TIMER13RST = RCU_REGIDX_BIT(IDX_APB1RST, 8U),             /*!< TIMER13 reset */
     RCU_WWDGTRST   = RCU_REGIDX_BIT(IDX_APB1RST, 11U),            /*!< WWDGT reset */
     RCU_SPI1RST    = RCU_REGIDX_BIT(IDX_APB1RST, 14U),            /*!< SPI1 reset */
-    RCU_SPI2RST    = RCU_REGIDX_BIT(IDX_APB1RST, 15U),            /*!< SPI2 reset */
     RCU_USART1RST  = RCU_REGIDX_BIT(IDX_APB1RST, 17U),            /*!< USART1 reset */
     RCU_I2C0RST    = RCU_REGIDX_BIT(IDX_APB1RST, 21U),            /*!< I2C0 reset */
     RCU_I2C1RST    = RCU_REGIDX_BIT(IDX_APB1RST, 22U),            /*!< I2C1 reset */
@@ -358,7 +375,6 @@ typedef enum
     RCU_USBFSRST   = RCU_REGIDX_BIT(IDX_AHBRST, 12U),             /*!< USBFS reset */
 #endif /* GD32F350 */
     /* RCU_ADDAPB1RST */
-    RCU_I2C2RST    = RCU_REGIDX_BIT(IDX_ADDAPB1RST, 0U),          /*!< I2C2 reset */
     RCU_CTCRST     = RCU_REGIDX_BIT(IDX_ADDAPB1RST, 27U),         /*!< CTC reset */
 }rcu_periph_reset_enum;
 
@@ -427,13 +443,13 @@ typedef enum
     RCU_ADCCK_IRC28M_DIV2   = 0U,                                 /*!< ADC clock source select IRC28M/2 */
     RCU_ADCCK_IRC28M,                                             /*!< ADC clock source select IRC28M */
     RCU_ADCCK_APB2_DIV2,                                          /*!< ADC clock source select APB2/2 */
-    RCU_ADCCK_APB2_DIV3,                                          /*!< ADC clock source select APB2/3 */
+    RCU_ADCCK_AHB_DIV3,                                           /*!< ADC clock source select AHB/3 */
     RCU_ADCCK_APB2_DIV4,                                          /*!< ADC clock source select APB2/4 */
-    RCU_ADCCK_APB2_DIV5,                                          /*!< ADC clock source select APB2/5 */
+    RCU_ADCCK_AHB_DIV5,                                           /*!< ADC clock source select AHB/5 */
     RCU_ADCCK_APB2_DIV6,                                          /*!< ADC clock source select APB2/6 */
-    RCU_ADCCK_APB2_DIV7,                                          /*!< ADC clock source select APB2/7 */
+    RCU_ADCCK_AHB_DIV7,                                           /*!< ADC clock source select AHB/7 */
     RCU_ADCCK_APB2_DIV8,                                          /*!< ADC clock source select APB2/8 */
-    RCU_ADCCK_APB2_DIV9                                           /*!< ADC clock source select APB2/9 */
+    RCU_ADCCK_AHB_DIV9                                            /*!< ADC clock source select AHB/9 */
 }rcu_adc_clock_enum;
 
 /* oscillator types */
@@ -508,15 +524,15 @@ typedef enum
 #define RCU_ADC_CKAPB2_DIV8         CFG0_ADCPSC(3)                /*!< ADC clock prescaler select CK_APB2/8 */
 
 /* PLL clock source selection */
-#define RCU_PLLSRC_IRC8M_DIV2       (uint32_t)0x00000000U         /*!< PLL clock source select IRC8M/2 */
+#define RCU_PLLSRC_IRC8M_DIV2       ((uint32_t)0x00000000U)       /*!< PLL clock source select IRC8M/2 */
 #define RCU_PLLSRC_HXTAL_IRC48M     RCU_CFG0_PLLSEL               /*!< PLL clock source select HXTAL or IRC48M*/
 
 /* PLL clock source preselection */
-#define RCU_PLLPRESEL_HXTAL         (uint32_t)0x00000000U         /*!< PLL clock source preselection HXTAL */
+#define RCU_PLLPRESEL_HXTAL         ((uint32_t)0x00000000U)       /*!< PLL clock source preselection HXTAL */
 #define RCU_PLLPRESEL_IRC48M        RCU_CFG1_PLLPRESEL            /*!< PLL clock source preselection IRC48M */
 
 /* HXTAL or IRC48M divider for PLL source clock selection */
-#define RCU_PLLPREDV                (uint32_t)0x00000000U         /*!< HXTAL or IRC48M clock selected */
+#define RCU_PLLPREDV                ((uint32_t)0x00000000U)       /*!< HXTAL or IRC48M clock selected */
 #define RCU_PLLPREDV_DIV2           RCU_CFG0_PLLPREDV             /*!< (HXTAL or IRC48M) /2 clock selected */
 
 /* PLL multiply factor */
@@ -596,93 +612,93 @@ typedef enum
 
 /* CK_OUT clock source selection */
 #define CFG0_CKOUTSEL(regval)       (BITS(24,26) & ((uint32_t)(regval) << 24))
-#define RCU_CKOUTSRC_NONE           CFG0_CKOUTSEL(0)                    /*!< no clock selected */
-#define RCU_CKOUTSRC_IRC28M         CFG0_CKOUTSEL(1)                    /*!< CK_OUT clock source select IRC28M */
-#define RCU_CKOUTSRC_IRC40K         CFG0_CKOUTSEL(2)                    /*!< CK_OUT clock source select IRC40K */
-#define RCU_CKOUTSRC_LXTAL          CFG0_CKOUTSEL(3)                    /*!< CK_OUT clock source select LXTAL */
-#define RCU_CKOUTSRC_CKSYS          CFG0_CKOUTSEL(4)                    /*!< CK_OUT clock source select CKSYS */
-#define RCU_CKOUTSRC_IRC8M          CFG0_CKOUTSEL(5)                    /*!< CK_OUT clock source select IRC8M */
-#define RCU_CKOUTSRC_HXTAL          CFG0_CKOUTSEL(6)                    /*!< CK_OUT clock source select HXTAL */
-#define RCU_CKOUTSRC_CKPLL_DIV1     (RCU_CFG0_PLLDV | CFG0_CKOUTSEL(7)) /*!< CK_OUT clock source select CK_PLL */
-#define RCU_CKOUTSRC_CKPLL_DIV2     CFG0_CKOUTSEL(7)                    /*!< CK_OUT clock source select CK_PLL/2 */
+#define RCU_CKOUTSRC_NONE           CFG0_CKOUTSEL(0)                      /*!< no clock selected */
+#define RCU_CKOUTSRC_IRC28M         CFG0_CKOUTSEL(1)                      /*!< CK_OUT clock source select IRC28M */
+#define RCU_CKOUTSRC_IRC40K         CFG0_CKOUTSEL(2)                      /*!< CK_OUT clock source select IRC40K */
+#define RCU_CKOUTSRC_LXTAL          CFG0_CKOUTSEL(3)                      /*!< CK_OUT clock source select LXTAL */
+#define RCU_CKOUTSRC_CKSYS          CFG0_CKOUTSEL(4)                      /*!< CK_OUT clock source select CKSYS */
+#define RCU_CKOUTSRC_IRC8M          CFG0_CKOUTSEL(5)                      /*!< CK_OUT clock source select IRC8M */
+#define RCU_CKOUTSRC_HXTAL          CFG0_CKOUTSEL(6)                      /*!< CK_OUT clock source select HXTAL */
+#define RCU_CKOUTSRC_CKPLL_DIV1     (RCU_CFG0_PLLDV | CFG0_CKOUTSEL(7))   /*!< CK_OUT clock source select CK_PLL */
+#define RCU_CKOUTSRC_CKPLL_DIV2     CFG0_CKOUTSEL(7)                      /*!< CK_OUT clock source select CK_PLL/2 */
 
 /* CK_OUT divider */
 #define CFG0_CKOUTDIV(regval)       (BITS(28,30) & ((uint32_t)(regval) << 28))
-#define RCU_CKOUT_DIV1              CFG0_CKOUTDIV(0)                    /*!< CK_OUT is divided by 1 */
-#define RCU_CKOUT_DIV2              CFG0_CKOUTDIV(1)                    /*!< CK_OUT is divided by 2 */
-#define RCU_CKOUT_DIV4              CFG0_CKOUTDIV(2)                    /*!< CK_OUT is divided by 4 */
-#define RCU_CKOUT_DIV8              CFG0_CKOUTDIV(3)                    /*!< CK_OUT is divided by 8 */
-#define RCU_CKOUT_DIV16             CFG0_CKOUTDIV(4)                    /*!< CK_OUT is divided by 16 */
-#define RCU_CKOUT_DIV32             CFG0_CKOUTDIV(5)                    /*!< CK_OUT is divided by 32 */
-#define RCU_CKOUT_DIV64             CFG0_CKOUTDIV(6)                    /*!< CK_OUT is divided by 64 */
-#define RCU_CKOUT_DIV128            CFG0_CKOUTDIV(7)                    /*!< CK_OUT is divided by 128 */
+#define RCU_CKOUT_DIV1              CFG0_CKOUTDIV(0)                      /*!< CK_OUT is divided by 1 */
+#define RCU_CKOUT_DIV2              CFG0_CKOUTDIV(1)                      /*!< CK_OUT is divided by 2 */
+#define RCU_CKOUT_DIV4              CFG0_CKOUTDIV(2)                      /*!< CK_OUT is divided by 4 */
+#define RCU_CKOUT_DIV8              CFG0_CKOUTDIV(3)                      /*!< CK_OUT is divided by 8 */
+#define RCU_CKOUT_DIV16             CFG0_CKOUTDIV(4)                      /*!< CK_OUT is divided by 16 */
+#define RCU_CKOUT_DIV32             CFG0_CKOUTDIV(5)                      /*!< CK_OUT is divided by 32 */
+#define RCU_CKOUT_DIV64             CFG0_CKOUTDIV(6)                      /*!< CK_OUT is divided by 64 */
+#define RCU_CKOUT_DIV128            CFG0_CKOUTDIV(7)                      /*!< CK_OUT is divided by 128 */
 
 /* CK_PLL divide by 1 or 2 for CK_OUT */
-#define RCU_PLLDV_CKPLL_DIV2        (uint32_t)0x00000000U               /*!< CK_PLL divide by 2 for CK_OUT */
-#define RCU_PLLDV_CKPLL             RCU_CFG0_PLLDV                      /*!< CK_PLL divide by 1 for CK_OUT */
+#define RCU_PLLDV_CKPLL_DIV2        ((uint32_t)0x00000000U)               /*!< CK_PLL divide by 2 for CK_OUT */
+#define RCU_PLLDV_CKPLL             RCU_CFG0_PLLDV                        /*!< CK_PLL divide by 1 for CK_OUT */
 
 /* LXTAL drive capability */
 #define BDCTL_LXTALDRI(regval)      (BITS(3,4) & ((uint32_t)(regval) << 3))
-#define RCU_LXTAL_LOWDRI            BDCTL_LXTALDRI(0)                   /*!< lower driving capability */
-#define RCU_LXTAL_MED_LOWDRI        BDCTL_LXTALDRI(1)                   /*!< medium low driving capability */
-#define RCU_LXTAL_MED_HIGHDRI       BDCTL_LXTALDRI(2)                   /*!< medium high driving capability */
-#define RCU_LXTAL_HIGHDRI           BDCTL_LXTALDRI(3)                   /*!< higher driving capability */
+#define RCU_LXTAL_LOWDRI            BDCTL_LXTALDRI(0)                     /*!< lower driving capability */
+#define RCU_LXTAL_MED_LOWDRI        BDCTL_LXTALDRI(1)                     /*!< medium low driving capability */
+#define RCU_LXTAL_MED_HIGHDRI       BDCTL_LXTALDRI(2)                     /*!< medium high driving capability */
+#define RCU_LXTAL_HIGHDRI           BDCTL_LXTALDRI(3)                     /*!< higher driving capability */
 
 /* RTC clock entry selection */
 #define BDCTL_RTCSRC(regval)        (BITS(8,9) & ((uint32_t)(regval) << 8))
-#define RCU_RTCSRC_NONE             BDCTL_RTCSRC(0)                     /*!< no clock selected */
-#define RCU_RTCSRC_LXTAL            BDCTL_RTCSRC(1)                     /*!< LXTAL selected as RTC source clock */
-#define RCU_RTCSRC_IRC40K           BDCTL_RTCSRC(2)                     /*!< IRC40K selected as RTC source clock */
-#define RCU_RTCSRC_HXTAL_DIV32      BDCTL_RTCSRC(3)                     /*!< HXTAL/32 selected as RTC source clock */
+#define RCU_RTCSRC_NONE             BDCTL_RTCSRC(0)                       /*!< no clock selected */
+#define RCU_RTCSRC_LXTAL            BDCTL_RTCSRC(1)                       /*!< LXTAL selected as RTC source clock */
+#define RCU_RTCSRC_IRC40K           BDCTL_RTCSRC(2)                       /*!< IRC40K selected as RTC source clock */
+#define RCU_RTCSRC_HXTAL_DIV32      BDCTL_RTCSRC(3)                       /*!< HXTAL/32 selected as RTC source clock */
 
 /* CK_HXTAL divider previous PLL */
 #define CFG1_PREDV(regval)         (BITS(0,3) & ((uint32_t)(regval) << 0))
-#define RCU_PLL_PREDV1              CFG1_PREDV(0)                       /*!< PLL not divided */
-#define RCU_PLL_PREDV2              CFG1_PREDV(1)                       /*!< PLL divided by 2 */
-#define RCU_PLL_PREDV3              CFG1_PREDV(2)                       /*!< PLL divided by 3 */
-#define RCU_PLL_PREDV4              CFG1_PREDV(3)                       /*!< PLL divided by 4 */
-#define RCU_PLL_PREDV5              CFG1_PREDV(4)                       /*!< PLL divided by 5 */
-#define RCU_PLL_PREDV6              CFG1_PREDV(5)                       /*!< PLL divided by 6 */
-#define RCU_PLL_PREDV7              CFG1_PREDV(6)                       /*!< PLL divided by 7 */
-#define RCU_PLL_PREDV8              CFG1_PREDV(7)                       /*!< PLL divided by 8 */
-#define RCU_PLL_PREDV9              CFG1_PREDV(8)                       /*!< PLL divided by 9 */
-#define RCU_PLL_PREDV10             CFG1_PREDV(9)                       /*!< PLL divided by 10 */
-#define RCU_PLL_PREDV11             CFG1_PREDV(10)                      /*!< PLL divided by 11 */
-#define RCU_PLL_PREDV12             CFG1_PREDV(11)                      /*!< PLL divided by 12 */
-#define RCU_PLL_PREDV13             CFG1_PREDV(12)                      /*!< PLL divided by 13 */
-#define RCU_PLL_PREDV14             CFG1_PREDV(13)                      /*!< PLL divided by 14 */
-#define RCU_PLL_PREDV15             CFG1_PREDV(14)                      /*!< PLL divided by 15 */
-#define RCU_PLL_PREDV16             CFG1_PREDV(15)                      /*!< PLL divided by 16 */
+#define RCU_PLL_PREDV1              CFG1_PREDV(0)                         /*!< PLL not divided */
+#define RCU_PLL_PREDV2              CFG1_PREDV(1)                         /*!< PLL divided by 2 */
+#define RCU_PLL_PREDV3              CFG1_PREDV(2)                         /*!< PLL divided by 3 */
+#define RCU_PLL_PREDV4              CFG1_PREDV(3)                         /*!< PLL divided by 4 */
+#define RCU_PLL_PREDV5              CFG1_PREDV(4)                         /*!< PLL divided by 5 */
+#define RCU_PLL_PREDV6              CFG1_PREDV(5)                         /*!< PLL divided by 6 */
+#define RCU_PLL_PREDV7              CFG1_PREDV(6)                         /*!< PLL divided by 7 */
+#define RCU_PLL_PREDV8              CFG1_PREDV(7)                         /*!< PLL divided by 8 */
+#define RCU_PLL_PREDV9              CFG1_PREDV(8)                         /*!< PLL divided by 9 */
+#define RCU_PLL_PREDV10             CFG1_PREDV(9)                         /*!< PLL divided by 10 */
+#define RCU_PLL_PREDV11             CFG1_PREDV(10)                        /*!< PLL divided by 11 */
+#define RCU_PLL_PREDV12             CFG1_PREDV(11)                        /*!< PLL divided by 12 */
+#define RCU_PLL_PREDV13             CFG1_PREDV(12)                        /*!< PLL divided by 13 */
+#define RCU_PLL_PREDV14             CFG1_PREDV(13)                        /*!< PLL divided by 14 */
+#define RCU_PLL_PREDV15             CFG1_PREDV(14)                        /*!< PLL divided by 15 */
+#define RCU_PLL_PREDV16             CFG1_PREDV(15)                        /*!< PLL divided by 16 */
 
 /* USART0 clock source selection */
 #define CFG2_USART0SEL(regval)      (BITS(0,1) & ((uint32_t)(regval) << 0))
-#define RCU_USART0SRC_CKAPB2        CFG2_USART0SEL(0)                   /*!< CK_USART0 select CK_APB2 */
-#define RCU_USART0SRC_CKSYS         CFG2_USART0SEL(1)                   /*!< CK_USART0 select CK_SYS */
-#define RCU_USART0SRC_LXTAL         CFG2_USART0SEL(2)                   /*!< CK_USART0 select LXTAL */
-#define RCU_USART0SRC_IRC8M         CFG2_USART0SEL(3)                   /*!< CK_USART0 select IRC8M */
+#define RCU_USART0SRC_CKAPB2        CFG2_USART0SEL(0)                     /*!< CK_USART0 select CK_APB2 */
+#define RCU_USART0SRC_CKSYS         CFG2_USART0SEL(1)                     /*!< CK_USART0 select CK_SYS */
+#define RCU_USART0SRC_LXTAL         CFG2_USART0SEL(2)                     /*!< CK_USART0 select LXTAL */
+#define RCU_USART0SRC_IRC8M         CFG2_USART0SEL(3)                     /*!< CK_USART0 select IRC8M */
 
 /* CEC clock source selection */
-#define RCU_CECSRC_IRC8M_DIV244     (uint32_t)0x00000000U               /*!< CK_CEC clock source select IRC8M/244 */
-#define RCU_CECSRC_LXTAL            RCU_CFG2_CECSEL                     /*!< CK_CEC clock source select LXTAL */
+#define RCU_CECSRC_IRC8M_DIV244     ((uint32_t)0x00000000U)               /*!< CK_CEC clock source select IRC8M/244 */
+#define RCU_CECSRC_LXTAL            RCU_CFG2_CECSEL                       /*!< CK_CEC clock source select LXTAL */
 
 /* ADC clock source selection */
-#define RCU_ADCSRC_IRC28M           (uint32_t)0x00000000U               /*!< ADC clock source select */
-#define RCU_ADCSRC_APB2DIV          RCU_CFG2_ADCSEL                     /*!< ADC clock source select */
+#define RCU_ADCSRC_IRC28M           ((uint32_t)0x00000000U)               /*!< ADC clock source select */
+#define RCU_ADCSRC_AHB_APB2DIV      RCU_CFG2_ADCSEL                       /*!< ADC clock source select */
 
 /* IRC28M clock divider for ADC */
-#define RCU_ADC_IRC28M_DIV2         (uint32_t)0x00000000U               /*!< IRC28M/2 select to ADC clock */
-#define RCU_ADC_IRC28M_DIV1         RCU_CFG2_IRC28MDIV                  /*!< IRC28M select to ADC clock */
+#define RCU_ADC_IRC28M_DIV2         ((uint32_t)0x00000000U)               /*!< IRC28M/2 select to ADC clock */
+#define RCU_ADC_IRC28M_DIV1         RCU_CFG2_IRC28MDIV                    /*!< IRC28M select to ADC clock */
 
 /* CK48M clock source selection */ 
-#define RCU_CK48MSRC_PLL48M         ((uint32_t)0x00000000U)             /*!< CK48M source clock select PLL48M */
-#define RCU_CK48MSRC_IRC48M         RCU_ADDCTL_CK48MSEL                 /*!< CK48M source clock select IRC48M */
+#define RCU_CK48MSRC_PLL48M         ((uint32_t)0x00000000U)               /*!< CK48M source clock select PLL48M */
+#define RCU_CK48MSRC_IRC48M         RCU_ADDCTL_CK48MSEL                   /*!< CK48M source clock select IRC48M */
 
 /* Deep-sleep mode voltage */
 #define DSV_DSLPVS(regval)          (BITS(0,1) & ((uint32_t)(regval) << 0))
-#define RCU_DEEPSLEEP_V_1_0         DSV_DSLPVS(0)                       /*!< core voltage is 1.0V in deep-sleep mode */
-#define RCU_DEEPSLEEP_V_0_9         DSV_DSLPVS(1)                       /*!< core voltage is 0.9V in deep-sleep mode */
-#define RCU_DEEPSLEEP_V_0_8         DSV_DSLPVS(2)                       /*!< core voltage is 0.8V in deep-sleep mode */
-#define RCU_DEEPSLEEP_V_0_7         DSV_DSLPVS(3)                       /*!< core voltage is 0.7V in deep-sleep mode */
+#define RCU_DEEPSLEEP_V_1_0         DSV_DSLPVS(0)                         /*!< core voltage is 1.0V in deep-sleep mode */
+#define RCU_DEEPSLEEP_V_0_9         DSV_DSLPVS(1)                         /*!< core voltage is 0.9V in deep-sleep mode */
+#define RCU_DEEPSLEEP_V_0_8         DSV_DSLPVS(2)                         /*!< core voltage is 0.8V in deep-sleep mode */
+#define RCU_DEEPSLEEP_V_0_7         DSV_DSLPVS(3)                         /*!< core voltage is 0.7V in deep-sleep mode */
 
 /* function declarations */
 /* deinitialize the RCU */

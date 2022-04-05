@@ -1,12 +1,36 @@
 /*!
     \file  gd32f3x0_misc.c
     \brief MISC driver
+
+    \version 2017-06-06, V1.0.0, firmware for GD32F3x0
+    \version 2019-06-01, V2.0.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2017-06-06, V1.0.0, firmware for GD32F3x0
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "gd32f3x0_misc.h"
@@ -14,6 +38,7 @@
 /*!
     \brief      set the priority group
     \param[in]  nvic_prigroup: the NVIC priority group
+                only one parameter can be selected which is shown as below:
       \arg        NVIC_PRIGROUP_PRE0_SUB4:0 bits for pre-emption priority 4 bits for subpriority
       \arg        NVIC_PRIGROUP_PRE1_SUB3:1 bits for pre-emption priority 3 bits for subpriority
       \arg        NVIC_PRIGROUP_PRE2_SUB2:2 bits for pre-emption priority 2 bits for subpriority
@@ -65,6 +90,9 @@ void nvic_irq_enable(uint8_t nvic_irq,
         temp_sub = 0x0U;
         break;
     default:
+        nvic_priority_group_set(NVIC_PRIGROUP_PRE2_SUB2);
+        temp_pre = 2U;
+        temp_sub = 0x2U;
         break;
     }
 
@@ -87,12 +115,13 @@ void nvic_irq_enable(uint8_t nvic_irq,
 void nvic_irq_disable(uint8_t nvic_irq)
 {
     /* disable the selected IRQ.*/
-    NVIC->ICER[nvic_irq >> 0x05] = (uint32_t)0x01 << (nvic_irq & (uint8_t)0x1F);
+    NVIC->ICER[nvic_irq >> 0x05U] = (uint32_t)0x01U << (nvic_irq & (uint8_t)0x1FU);
 }
 
 /*!
     \brief      set the NVIC vector table base address
     \param[in]  nvic_vict_tab: the RAM or FLASH base address
+                only one parameter can be selected which is shown as below:
       \arg        NVIC_VECTTAB_RAM: RAM base address
       \are        NVIC_VECTTAB_FLASH: Flash base address
     \param[in]  offset: Vector Table offset
@@ -107,6 +136,7 @@ void nvic_vector_table_set(uint32_t nvic_vict_tab, uint32_t offset)
 /*!
     \brief      set the state of the low power mode
     \param[in]  lowpower_mode: the low power mode state
+                only one parameter can be selected which is shown as below:
       \arg        SCB_LPM_SLEEP_EXIT_ISR: if chose this para, the system always enter low power 
                     mode by exiting from ISR
       \arg        SCB_LPM_DEEPSLEEP: if chose this para, the system will enter the DEEPSLEEP mode
@@ -123,6 +153,7 @@ void system_lowpower_set(uint8_t lowpower_mode)
 /*!
     \brief      reset the state of the low power mode
     \param[in]  lowpower_mode: the low power mode state
+                only one parameter can be selected which is shown as below:
       \arg        SCB_LPM_SLEEP_EXIT_ISR: if chose this para, the system will exit low power 
                     mode by exiting from ISR
       \arg        SCB_LPM_DEEPSLEEP: if chose this para, the system will enter the SLEEP mode
@@ -139,6 +170,7 @@ void system_lowpower_reset(uint8_t lowpower_mode)
 /*!
     \brief      set the systick clock source
     \param[in]  systick_clksource: the systick clock source needed to choose
+                only one parameter can be selected which is shown as below:
       \arg        SYSTICK_CLKSOURCE_HCLK: systick clock source is from HCLK
       \arg        SYSTICK_CLKSOURCE_HCLK_DIV8: systick clock source is from HCLK/8
     \param[out] none

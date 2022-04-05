@@ -1,24 +1,48 @@
 /*!
     \file  gd32f3x0_rcu.c
     \brief RCU driver
+
+    \version 2017-06-06, V1.0.0, firmware for GD32F3x0
+    \version 2019-06-01, V2.0.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2017-06-06, V1.0.0, firmware for GD32F3x0
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "gd32f3x0_rcu.h"
 
 /* define clock source */
-#define SEL_IRC8M       0x00U
-#define SEL_HXTAL       0x01U
-#define SEL_PLL         0x02U
+#define SEL_IRC8M                    ((uint32_t)0x00000000U)
+#define SEL_HXTAL                    ((uint32_t)0x00000001U)
+#define SEL_PLL                      ((uint32_t)0x00000002U)
 
 /* define startup timeout count */
-#define OSC_STARTUP_TIMEOUT         ((uint32_t)0xFFFFFU)
-#define LXTAL_STARTUP_TIMEOUT       ((uint32_t)0x3FFFFFFU)
+#define OSC_STARTUP_TIMEOUT          ((uint32_t)0x000FFFFFU)
+#define LXTAL_STARTUP_TIMEOUT        ((uint32_t)0x03FFFFFFU)
 
 /*!
     \brief      deinitialize the RCU
@@ -62,10 +86,10 @@ void rcu_deinit(void)
       \arg        RCU_CFGCMP: CFGCMP clock
       \arg        RCU_ADC: ADC clock
       \arg        RCU_TIMERx (x=0,1,2,5,13,14,15,16): TIMER clock (RCU_TIMER5 only for GD32F350)
-      \arg        RCU_SPIx (x=0,1,2): SPI clock
+      \arg        RCU_SPIx (x=0,1): SPI clock
       \arg        RCU_USARTx (x=0,1): USART clock
       \arg        RCU_WWDGT: WWDGT clock
-      \arg        RCU_I2Cx (x=0,1,2): I2C clock
+      \arg        RCU_I2Cx (x=0,1): I2C clock
       \arg        RCU_USBFS: USBFS clock (only for GD32F350)
       \arg        RCU_PMU: PMU clock
       \arg        RCU_DAC: DAC clock (only for GD32F350)
@@ -91,10 +115,10 @@ void rcu_periph_clock_enable(rcu_periph_enum periph)
       \arg        RCU_CFGCMP: CFGCMP clock
       \arg        RCU_ADC: ADC clock
       \arg        RCU_TIMERx (x=0,1,2,5,13,14,15,16): TIMER clock (RCU_TIMER5 only for GD32F350)
-      \arg        RCU_SPIx (x=0,1,2): SPI clock
+      \arg        RCU_SPIx (x=0,1): SPI clock
       \arg        RCU_USARTx (x=0,1): USART clock
       \arg        RCU_WWDGT: WWDGT clock
-      \arg        RCU_I2Cx (x=0,1,2): I2C clock
+      \arg        RCU_I2Cx (x=0,1): I2C clock
       \arg        RCU_USBFS: USBFS clock (only for GD32F350)
       \arg        RCU_PMU: PMU clock
       \arg        RCU_DAC: DAC clock (only for GD32F350)
@@ -145,10 +169,10 @@ void rcu_periph_clock_sleep_disable(rcu_periph_sleep_enum periph)
       \arg        RCU_CFGCMPRST: reset CFGCMP
       \arg        RCU_ADCRST: reset ADC
       \arg        RCU_TIMERxRST (x=0,1,2,5,13,14,15,16): reset TIMER (RCU_TIMER5 only for GD32F350)
-      \arg        RCU_SPIxRST (x=0,1,2): reset SPI
+      \arg        RCU_SPIxRST (x=0,1): reset SPI
       \arg        RCU_USARTxRST (x=0,1): reset USART
       \arg        RCU_WWDGTRST: reset WWDGT
-      \arg        RCU_I2CxRST (x=0,1,2): reset I2C
+      \arg        RCU_I2CxRST (x=0,1): reset I2C
       \arg        RCU_USBFSRST: reset USBFS (only for GD32F350)
       \arg        RCU_PMURST: reset PMU
       \arg        RCU_DACRST: reset DAC (only for GD32F350)
@@ -234,6 +258,7 @@ void rcu_system_clock_source_config(uint32_t ck_sys)
     \param[in]  none
     \param[out] none
     \retval     which clock is selected as CK_SYS source
+                only one parameter can be selected which is shown as below:
       \arg        RCU_SCSS_IRC8M: select CK_IRC8M as the CK_SYS source
       \arg        RCU_SCSS_HXTAL: select CK_HXTAL as the CK_SYS source
       \arg        RCU_SCSS_PLL: select CK_PLL as the CK_SYS source
@@ -246,6 +271,7 @@ uint32_t rcu_system_clock_source_get(void)
 /*!
     \brief      configure the AHB clock prescaler selection
     \param[in]  ck_ahb: AHB clock prescaler selection
+                only one parameter can be selected which is shown as below:
       \arg        RCU_AHB_CKSYS_DIVx, x=1, 2, 4, 8, 16, 64, 128, 256, 512
     \param[out] none
     \retval     none
@@ -262,6 +288,7 @@ void rcu_ahb_clock_config(uint32_t ck_ahb)
 /*!
     \brief      configure the APB1 clock prescaler selection
     \param[in]  ck_apb1: APB1 clock prescaler selection
+                only one parameter can be selected which is shown as below:
       \arg        RCU_APB1_CKAHB_DIV1: select CK_AHB as CK_APB1
       \arg        RCU_APB1_CKAHB_DIV2: select CK_AHB/2 as CK_APB1
       \arg        RCU_APB1_CKAHB_DIV4: select CK_AHB/4 as CK_APB1
@@ -282,6 +309,7 @@ void rcu_apb1_clock_config(uint32_t ck_apb1)
 /*!
     \brief      configure the APB2 clock prescaler selection
     \param[in]  ck_apb2: APB2 clock prescaler selection
+                only one parameter can be selected which is shown as below:
       \arg        RCU_APB2_CKAHB_DIV1: select CK_AHB as CK_APB2
       \arg        RCU_APB2_CKAHB_DIV2: select CK_AHB/2 as CK_APB2
       \arg        RCU_APB2_CKAHB_DIV4: select CK_AHB/4 as CK_APB2
@@ -302,16 +330,17 @@ void rcu_apb2_clock_config(uint32_t ck_apb2)
 /*!
     \brief      configure the ADC clock prescaler selection
     \param[in]  ck_adc: ADC clock prescaler selection, refer to rcu_adc_clock_enum
+                only one parameter can be selected which is shown as below:
       \arg        RCU_ADCCK_IRC28M_DIV2: select CK_IRC28M/2 as CK_ADC
       \arg        RCU_ADCCK_IRC28M: select CK_IRC28M as CK_ADC
       \arg        RCU_ADCCK_APB2_DIV2: select CK_APB2/2 as CK_ADC
-      \arg        RCU_ADCCK_APB2_DIV3: select CK_APB2/3 as CK_ADC
+      \arg        RCU_ADCCK_AHB_DIV3: select CK_AHB/3 as CK_ADC
       \arg        RCU_ADCCK_APB2_DIV4: select CK_APB2/4 as CK_ADC
-      \arg        RCU_ADCCK_APB2_DIV5: select CK_APB2/5 as CK_ADC
+      \arg        RCU_ADCCK_AHB_DIV5: select CK_AHB/5 as CK_ADC
       \arg        RCU_ADCCK_APB2_DIV6: select CK_APB2/6 as CK_ADC
-      \arg        RCU_ADCCK_APB2_DIV7: select CK_APB2/7 as CK_ADC
+      \arg        RCU_ADCCK_AHB_DIV7: select CK_AHB/7 as CK_ADC
       \arg        RCU_ADCCK_APB2_DIV8: select CK_APB2/8 as CK_ADC
-      \arg        RCU_ADCCK_APB2_DIV9: select CK_APB2/9 as CK_ADC
+      \arg        RCU_ADCCK_AHB_DIV9: select CK_AHB/9 as CK_ADC
     \param[out] none
     \retval     none
 */
@@ -335,7 +364,7 @@ void rcu_adc_clock_config(rcu_adc_clock_enum ck_adc)
         RCU_CFG0 |= RCU_ADC_CKAPB2_DIV2;
         RCU_CFG2 |= RCU_CFG2_ADCSEL;
         break;
-    case RCU_ADCCK_APB2_DIV3:
+    case RCU_ADCCK_AHB_DIV3:
         RCU_CFG0 |= RCU_ADC_CKAPB2_DIV2;
         RCU_CFG2 |= RCU_CFG2_ADCPSC2;
         RCU_CFG2 |= RCU_CFG2_ADCSEL;
@@ -344,7 +373,7 @@ void rcu_adc_clock_config(rcu_adc_clock_enum ck_adc)
         RCU_CFG0 |= RCU_ADC_CKAPB2_DIV4;
         RCU_CFG2 |= RCU_CFG2_ADCSEL;
         break;
-    case RCU_ADCCK_APB2_DIV5: 
+    case RCU_ADCCK_AHB_DIV5: 
         RCU_CFG0 |= RCU_ADC_CKAPB2_DIV4;
         RCU_CFG2 |= RCU_CFG2_ADCPSC2;
         RCU_CFG2 |= RCU_CFG2_ADCSEL;
@@ -353,7 +382,7 @@ void rcu_adc_clock_config(rcu_adc_clock_enum ck_adc)
         RCU_CFG0 |= RCU_ADC_CKAPB2_DIV6;
         RCU_CFG2 |= RCU_CFG2_ADCSEL;
         break;
-    case RCU_ADCCK_APB2_DIV7: 
+    case RCU_ADCCK_AHB_DIV7: 
         RCU_CFG0 |= RCU_ADC_CKAPB2_DIV6;
         RCU_CFG2 |= RCU_CFG2_ADCPSC2;
         RCU_CFG2 |= RCU_CFG2_ADCSEL;
@@ -362,7 +391,7 @@ void rcu_adc_clock_config(rcu_adc_clock_enum ck_adc)
         RCU_CFG0 |= RCU_ADC_CKAPB2_DIV8;
         RCU_CFG2 |= RCU_CFG2_ADCSEL;
         break;
-    case RCU_ADCCK_APB2_DIV9: 
+    case RCU_ADCCK_AHB_DIV9: 
         RCU_CFG0 |= RCU_ADC_CKAPB2_DIV8;
         RCU_CFG2 |= RCU_CFG2_ADCPSC2;
         RCU_CFG2 |= RCU_CFG2_ADCSEL;
@@ -375,6 +404,7 @@ void rcu_adc_clock_config(rcu_adc_clock_enum ck_adc)
 /*!
     \brief      configure the USBFS clock prescaler selection
     \param[in]  ck_usbfs: USBFS clock prescaler selection
+                only one parameter can be selected which is shown as below:
       \arg        RCU_USBFS_CKPLL_DIV1_5: select CK_PLL/1.5 as CK_USBFS
       \arg        RCU_USBFS_CKPLL_DIV1: select CK_PLL as CK_USBFS
       \arg        RCU_USBFS_CKPLL_DIV2_5: select CK_PLL/2.5 as CK_USBFS
@@ -397,6 +427,7 @@ void rcu_usbfs_clock_config(uint32_t ck_usbfs)
 /*!
     \brief      configure the CK_OUT clock source and divider
     \param[in]  ckout_src: CK_OUT clock source selection
+                only one parameter can be selected which is shown as below:
       \arg        RCU_CKOUTSRC_NONE: no clock selected
       \arg        RCU_CKOUTSRC_IRC28M: IRC28M selected
       \arg        RCU_CKOUTSRC_IRC40K: IRC40K selected
@@ -423,6 +454,7 @@ void rcu_ckout_config(uint32_t ckout_src, uint32_t ckout_div)
 /*!
     \brief      configure the PLL clock source preselection
     \param[in]  pll_presel: PLL clock source preselection
+                only one parameter can be selected which is shown as below:
       \arg        RCU_PLLPRESEL_IRC48M: select IRC48M as PLL preselection clock
       \arg        RCU_PLLPRESEL_HXTAL: select HXTAL as PLL preselection clock
     \param[out] none
@@ -437,9 +469,11 @@ void rcu_pll_preselection_config(uint32_t pll_presel)
 /*!
     \brief      configure the PLL clock source selection and PLL multiply factor
     \param[in]  pll_src: PLL clock source selection
+                only one parameter can be selected which is shown as below:
       \arg        RCU_PLLSRC_IRC8M_DIV2: select CK_IRC8M/2 as PLL source clock
       \arg        RCU_PLLSRC_HXTAL_IRC48M: select HXTAL or IRC48M as PLL source clock
     \param[in]  pll_mul: PLL multiply factor
+                only one parameter can be selected which is shown as below:
       \arg        RCU_PLL_MULx(x=2..64): PLL source clock * x
     \param[out] none
     \retval     none
@@ -455,6 +489,7 @@ void rcu_pll_config(uint32_t pll_src, uint32_t pll_mul)
 /*!
     \brief      configure the USART clock source selection
     \param[in]  ck_usart: USART clock source selection
+                only one parameter can be selected which is shown as below:
       \arg        RCU_USART0SRC_CKAPB2: CK_USART0 select CK_APB2
       \arg        RCU_USART0SRC_CKSYS: CK_USART0 select CK_SYS
       \arg        RCU_USART0SRC_LXTAL: CK_USART0 select CK_LXTAL
@@ -472,6 +507,7 @@ void rcu_usart_clock_config(uint32_t ck_usart)
 /*!
     \brief      configure the CEC clock source selection
     \param[in]  ck_cec: CEC clock source selection
+                only one parameter can be selected which is shown as below:
       \arg        RCU_CECSRC_IRC8M_DIV244: CK_CEC select CK_IRC8M/244
       \arg        RCU_CECSRC_LXTAL: CK_CEC select CK_LXTAL
     \param[out] none
@@ -487,6 +523,7 @@ void rcu_cec_clock_config(uint32_t ck_cec)
 /*!
     \brief      configure the RTC clock source selection
     \param[in]  rtc_clock_source: RTC clock source selection
+                only one parameter can be selected which is shown as below:
       \arg        RCU_RTCSRC_NONE: no clock selected
       \arg        RCU_RTCSRC_LXTAL: CK_LXTAL selected as RTC source clock
       \arg        RCU_RTCSRC_IRC40K: CK_IRC40K selected as RTC source clock
@@ -523,6 +560,7 @@ void rcu_ck48m_clock_config(uint32_t ck48m_clock_source)
 /*!
     \brief      configure the HXTAL divider used as input of PLL
     \param[in]  hxtal_prediv: HXTAL divider used as input of PLL
+                only one parameter can be selected which is shown as below:
       \arg        RCU_PLL_PREDVx(x=1..16): HXTAL or IRC48M divided x used as input of PLL
     \param[out] none
     \retval     none
@@ -539,6 +577,7 @@ void rcu_hxtal_prediv_config(uint32_t hxtal_prediv)
 /*!
     \brief      configure the LXTAL drive capability
     \param[in]  lxtal_dricap: drive capability of LXTAL
+                only one parameter can be selected which is shown as below:
       \arg        RCU_LXTAL_LOWDRI: lower driving capability
       \arg        RCU_LXTAL_MED_LOWDRI: medium low driving capability
       \arg        RCU_LXTAL_MED_HIGHDRI: medium high driving capability
@@ -681,6 +720,7 @@ void rcu_interrupt_disable(rcu_int_enum stab_int)
 /*!
     \brief      wait until oscillator stabilization flags is SET
     \param[in]  osci: oscillator types, refer to rcu_osci_type_enum
+                only one parameter can be selected which is shown as below:
       \arg        RCU_HXTAL: HXTAL
       \arg        RCU_LXTAL: LXTAL
       \arg        RCU_IRC8M: IRC8M
@@ -794,6 +834,7 @@ ErrStatus rcu_osci_stab_wait(rcu_osci_type_enum osci)
 /*!
     \brief      turn on the oscillator
     \param[in]  osci: oscillator types, refer to rcu_osci_type_enum
+                only one parameter can be selected which is shown as below:
       \arg        RCU_HXTAL: HXTAL
       \arg        RCU_LXTAL: LXTAL
       \arg        RCU_IRC8M: IRC8M
@@ -812,6 +853,7 @@ void rcu_osci_on(rcu_osci_type_enum osci)
 /*!
     \brief      turn off the oscillator
     \param[in]  osci: oscillator types, refer to rcu_osci_type_enum
+                only one parameter can be selected which is shown as below:
       \arg        RCU_HXTAL: HXTAL
       \arg        RCU_LXTAL: LXTAL
       \arg        RCU_IRC8M: IRC8M
@@ -830,6 +872,7 @@ void rcu_osci_off(rcu_osci_type_enum osci)
 /*!
     \brief      enable the oscillator bypass mode, HXTALEN or LXTALEN must be reset before it
     \param[in]  osci: oscillator types, refer to rcu_osci_type_enum
+                only one parameter can be selected which is shown as below:
       \arg        RCU_HXTAL: HXTAL
       \arg        RCU_LXTAL: LXTAL
     \param[out] none
@@ -865,6 +908,7 @@ void rcu_osci_bypass_mode_enable(rcu_osci_type_enum osci)
 /*!
     \brief      disable the oscillator bypass mode, HXTALEN or LXTALEN must be reset before it
     \param[in]  osci: oscillator types, refer to rcu_osci_type_enum
+                only one parameter can be selected which is shown as below:
       \arg        RCU_HXTAL: HXTAL
       \arg        RCU_LXTAL: LXTAL
     \param[out] none
@@ -965,6 +1009,7 @@ void rcu_voltage_key_unlock(void)
 /*!
     \brief      set voltage in deep sleep mode
     \param[in]  dsvol: deep sleep mode voltage
+                only one parameter can be selected which is shown as below:
       \arg        RCU_DEEPSLEEP_V_1_0: the core voltage is 1.0V
       \arg        RCU_DEEPSLEEP_V_0_9: the core voltage is 0.9V
       \arg        RCU_DEEPSLEEP_V_0_8: the core voltage is 0.8V
@@ -982,6 +1027,7 @@ void rcu_deepsleep_voltage_set(uint32_t dsvol)
 /*!
     \brief      get the system clock, bus and peripheral clock frequency
     \param[in]  clock: the clock frequency which to get
+                only one parameter can be selected which is shown as below:
       \arg        CK_SYS: system clock frequency
       \arg        CK_AHB: AHB clock frequency
       \arg        CK_APB1: APB1 clock frequency
@@ -1023,13 +1069,17 @@ uint32_t rcu_clock_freq_get(rcu_clock_freq_enum clock)
         if(1U == pllmf4){
             pllmf += 17U;
         }else{
-            pllmf += 2U;
+            if(pllmf == 15U){
+                pllmf += 1U; 
+            }else{                
+                pllmf += 2U;
+            }
         }
         if(1U == pllmf5){
             pllmf += 31U;
         }
             
-        /* PLL clock source selection, HXTAL or IRC8M/2 */
+        /* PLL clock source selection, HXTAL or IRC48M or IRC8M/2 */
         pllsel = GET_BITS(RCU_CFG0, 16, 16);
         pllpresel = GET_BITS(RCU_CFG1, 30, 30);
         if(0U != pllsel){
@@ -1079,14 +1129,14 @@ uint32_t rcu_clock_freq_get(rcu_clock_freq_enum clock)
         break;
     case CK_ADC:
         /* calculate ADC clock frequency */
-        if(RCU_ADCSRC_APB2DIV != (RCU_CFG2 & RCU_CFG2_ADCSEL)){
+        if(RCU_ADCSRC_AHB_APB2DIV != (RCU_CFG2 & RCU_CFG2_ADCSEL)){
             if(RCU_ADC_IRC28M_DIV1 != (RCU_CFG2 & RCU_CFG2_IRC28MDIV)){
                 adc_freq = IRC28M_VALUE >> 1;
             }else{
                 adc_freq = IRC28M_VALUE;
             }
         }else{
-            /* ADC clock select CK_APB2 divided by 2/3/4/5/6/7/8/9 */
+            /* ADC clock select CK_APB2 divided by 2/4/6/8 or CK_AHB divided by 3/5/7/9 */
             adcps = GET_BITS(RCU_CFG0, 14, 15);
             adcps2 = GET_BITS(RCU_CFG2, 31, 31);
             switch(adcps){
@@ -1094,28 +1144,28 @@ uint32_t rcu_clock_freq_get(rcu_clock_freq_enum clock)
                 if(0U == adcps2){
                    adc_freq = apb2_freq / 2U;
                 }else{
-                   adc_freq = apb2_freq / 3U;
+                   adc_freq = ahb_freq / 3U;
                 }
                 break;
             case 1:
                 if(0U == adcps2){
                    adc_freq = apb2_freq / 4U;
                 }else{
-                   adc_freq = apb2_freq / 5U;
+                   adc_freq = ahb_freq / 5U;
                 }
                 break;
             case 2:
                 if(0U == adcps2){
                    adc_freq = apb2_freq / 6U;
                 }else{
-                   adc_freq = apb2_freq / 7U;
+                   adc_freq = ahb_freq / 7U;
                 }
                 break;
             case 3:
                 if(0U == adcps2){
                    adc_freq = apb2_freq / 8U;
                 }else{
-                   adc_freq = apb2_freq / 9U;
+                   adc_freq = ahb_freq / 9U;
                 }
                 break;
             default:

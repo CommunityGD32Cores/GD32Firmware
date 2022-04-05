@@ -1,16 +1,40 @@
 /*!
     \file  gd32f3x0_pmu.c
     \brief PMU driver
+
+    \version 2017-06-06, V1.0.0, firmware for GD32F3x0
+    \version 2019-06-01, V2.0.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2017-06-06, V1.0.0, firmware for GD32F3x0
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "gd32f3x0_pmu.h"
-#include "core_cm4.h"
+
 
 /*!
     \brief      reset PMU register
@@ -28,7 +52,7 @@ void pmu_deinit(void)
 /*!
     \brief      select low voltage detector threshold
     \param[in]  lvdt_n:
-                only one among these parameters can be selected
+                only one parameter can be selected which is shown as below:
       \arg        PMU_LVDT_0: voltage threshold is 2.1V
       \arg        PMU_LVDT_1: voltage threshold is 2.3V
       \arg        PMU_LVDT_2: voltage threshold is 2.4V
@@ -56,7 +80,7 @@ void pmu_lvd_select(uint32_t lvdt_n)
     \brief      select LDO output voltage
                 these bits set by software when the main PLL closed
     \param[in]  ldo_output:
-                only one among these parameters can be selected
+                only one parameter can be selected which is shown as below:
       \arg        PMU_LDOVS_LOW: LDO output voltage low mode
       \arg        PMU_LDOVS_MID: LDO output voltage mid mode
       \arg        PMU_LDOVS_HIGH: LDO output voltage high mode
@@ -94,7 +118,7 @@ void pmu_lowdriver_mode_enable(void)
 }
 
 /*!
-    \brief      enable low-driver mode in deep-sleep mode
+    \brief      disable low-driver mode in deep-sleep mode
     \param[in]  none
     \param[out] none
     \retval     none
@@ -132,7 +156,7 @@ void pmu_highdriver_mode_disable(void)
     \brief      switch high-driver mode
                 this bit set by software only when IRC8M or HXTAL used as system clock
     \param[in]  highdr_switch:
-                only one among these parameters can be selected
+                only one parameter can be selected which is shown as below:
       \arg        PMU_HIGHDR_SWITCH_NONE: disable high-driver mode switch
       \arg        PMU_HIGHDR_SWITCH_EN: enable high-driver mode switch
     \param[out] none
@@ -150,7 +174,7 @@ void pmu_highdriver_switch_select(uint32_t highdr_switch)
 /*!
     \brief      low-driver mode when use low power LDO
     \param[in]  mode:
-                only one among these parameters can be selected
+                only one parameter can be selected which is shown as below:
       \arg        PMU_NORMALDR_LOWPWR: normal-driver when use low power LDO
       \arg        PMU_LOWDR_LOWPWR: low-driver mode enabled when LDEN is 11 and use low power LDO
     \param[out] none
@@ -165,7 +189,7 @@ void pmu_lowpower_driver_config(uint32_t mode)
 /*!
     \brief      low-driver mode when use normal power LDO
     \param[in]  mode:
-                only one among these parameters can be selected
+                only one parameter can be selected which is shown as below:
       \arg        PMU_NORMALDR_NORMALPWR: normal-driver when use low power LDO
       \arg        PMU_LOWDR_NORMALPWR: low-driver mode enabled when LDEN is 11 and use low power LDO
     \param[out] none
@@ -180,7 +204,7 @@ void pmu_normalpower_driver_config(uint32_t mode)
 /*!
     \brief      PMU work at sleep mode
     \param[in]  sleepmodecmd:
-                only one among these parameters can be selected
+                only one parameter can be selected which is shown as below:
       \arg        WFI_CMD: use WFI command
       \arg        WFE_CMD: use WFE command
     \param[out] none
@@ -202,11 +226,11 @@ void pmu_to_sleepmode(uint8_t sleepmodecmd)
 /*!
     \brief      PMU work at deepsleep mode
     \param[in]  ldo:
-                only one among these parameters can be selected
+                only one parameter can be selected which is shown as below:
       \arg        PMU_LDO_NORMAL: LDO operates normally when pmu enter deepsleep mode
       \arg        PMU_LDO_LOWPOWER: LDO work at low power mode when pmu enter deepsleep mode
     \param[in]  deepsleepmodecmd:
-                only one among these parameters can be selected
+                only one parameter can be selected which is shown as below:
       \arg        WFI_CMD: use WFI command
       \arg        WFE_CMD: use WFE command
     \param[out] none
@@ -214,6 +238,7 @@ void pmu_to_sleepmode(uint8_t sleepmodecmd)
 */
 void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
 {
+    static uint32_t reg_snap[ 4 ];  
     /* clear stbmod and ldolp bits */
     PMU_CTL &= ~((uint32_t)(PMU_CTL_STBMOD | PMU_CTL_LDOLP));
     
@@ -222,7 +247,17 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
     
     /* set sleepdeep bit of Cortex-M4 system control register */
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+
+    reg_snap[ 0 ] = REG32( 0xE000E010U );
+    reg_snap[ 1 ] = REG32( 0xE000E100U );
+    reg_snap[ 2 ] = REG32( 0xE000E104U );
+    reg_snap[ 3 ] = REG32( 0xE000E108U );
     
+    REG32( 0xE000E010U ) &= 0x00010004U;
+    REG32( 0xE000E180U )  = 0XB7FFEF19U;
+    REG32( 0xE000E184U )  = 0XFFFFFBFFU;
+    REG32( 0xE000E188U )  = 0xFFFFFFFFU;
+  
     /* select WFI or WFE command to enter deepsleep mode */
     if(WFI_CMD == deepsleepmodecmd){
         __WFI();
@@ -231,6 +266,12 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
         __WFE();
         __WFE();
     }
+
+    REG32( 0xE000E010U ) = reg_snap[ 0 ] ; 
+    REG32( 0xE000E100U ) = reg_snap[ 1 ] ;
+    REG32( 0xE000E104U ) = reg_snap[ 2 ] ;
+    REG32( 0xE000E108U ) = reg_snap[ 3 ] ;   
+    
     /* reset sleepdeep bit of Cortex-M4 system control register */
     SCB->SCR &= ~((uint32_t)SCB_SCR_SLEEPDEEP_Msk);
 }
@@ -238,7 +279,7 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
 /*!
     \brief      pmu work at standby mode
     \param[in]  standbymodecmd:
-                only one among these parameters can be selected
+                only one parameter can be selected which is shown as below:
       \arg        WFI_CMD: use WFI command
       \arg        WFE_CMD: use WFE command
     \param[out] none
@@ -266,7 +307,7 @@ void pmu_to_standbymode(uint8_t standbymodecmd)
 /*!
     \brief      enable wakeup pin
     \param[in]  wakeup_pin:
-                one or more parameters can be selected below
+                one or more parameters can be selected which are shown as below:
       \arg        PMU_WAKEUP_PIN0: WKUP Pin 0 (PA0) 
       \arg        PMU_WAKEUP_PIN1: WKUP Pin 1 (PC13) 
       \arg        PMU_WAKEUP_PIN4: WKUP Pin 4 (PC5) 
@@ -283,7 +324,7 @@ void pmu_wakeup_pin_enable(uint32_t wakeup_pin)
 /*!
     \brief      disable wakeup pin
     \param[in]  wakeup_pin:
-                one or more parameters can be selected below
+                one or more parameters can be selected which are shown as below:
       \arg        PMU_WAKEUP_PIN0: WKUP Pin 0 (PA0) 
       \arg        PMU_WAKEUP_PIN1: WKUP Pin 1 (PC13) 
       \arg        PMU_WAKEUP_PIN4: WKUP Pin 4 (PC5) 
@@ -322,7 +363,7 @@ void pmu_backup_write_disable(void)
 /*!
     \brief      clear flag bit
     \param[in]  flag_clear:
-                one or more parameters can be selected below
+                one or more parameters can be selected which are shown as below:
       \arg        PMU_FLAG_RESET_WAKEUP: reset wakeup flag
       \arg        PMU_FLAG_RESET_STANDBY: reset standby flag
     \param[out] none
@@ -343,7 +384,7 @@ void pmu_flag_clear(uint32_t flag_clear)
 /*!
     \brief      get flag state
     \param[in]  flag:
-                only one among these parameters can be selected
+                only one parameter can be selected which is shown as below:
       \arg        PMU_FLAG_WAKEUP: wakeup flag
       \arg        PMU_FLAG_STANDBY: standby flag
       \arg        PMU_FLAG_LVD: lvd flag

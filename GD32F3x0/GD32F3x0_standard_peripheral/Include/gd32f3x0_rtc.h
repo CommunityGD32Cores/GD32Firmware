@@ -1,12 +1,36 @@
 /*!
     \file  gd32f3x0_rtc.h
     \brief definitions for the RTC 
+
+    \version 2017-06-06, V1.0.0, firmware for GD32F3x0
+    \version 2019-06-01, V2.0.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2017-06-06, V1.0.0, firmware for GD32F3x0
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F3X0_RTC_H
@@ -18,26 +42,26 @@
 #define RTC                                RTC_BASE
 
 /* registers definitions */
-#define RTC_TIME                           REG32((RTC) + 0x00U)                        /*!< RTC time of day register */
-#define RTC_DATE                           REG32((RTC) + 0x04U)                        /*!< RTC date register */
-#define RTC_CTL                            REG32((RTC) + 0x08U)                        /*!< RTC control register */
-#define RTC_STAT                           REG32((RTC) + 0x0CU)                        /*!< RTC status register */
-#define RTC_PSC                            REG32((RTC) + 0x10U)                        /*!< RTC time prescaler register */
-#define RTC_ALRM0TD                        REG32((RTC) + 0x1CU)                        /*!< RTC alarm 0 time and date register */
-#define RTC_WPK                            REG32((RTC) + 0x24U)                        /*!< RTC write protection key register */
-#define RTC_SS                             REG32((RTC) + 0x28U)                        /*!< RTC sub second register */
-#define RTC_SHIFTCTL                       REG32((RTC) + 0x2CU)                        /*!< RTC shift function control register */
-#define RTC_TTS                            REG32((RTC) + 0x30U)                        /*!< RTC time of timestamp register */
-#define RTC_DTS                            REG32((RTC) + 0x34U)                        /*!< RTC date of timestamp register */
-#define RTC_SSTS                           REG32((RTC) + 0x38U)                        /*!< RTC sub second of timestamp register */
-#define RTC_HRFC                           REG32((RTC) + 0x3CU)                        /*!< RTC high resolution frequency compensation registor */
-#define RTC_TAMP                           REG32((RTC) + 0x40U)                        /*!< RTC tamper register */
-#define RTC_ALRM0SS                        REG32((RTC) + 0x44U)                        /*!< RTC alarm 0 sub second register */
-#define RTC_BKP0                           REG32((RTC) + 0x50U)                        /*!< RTC backup 0 register */
-#define RTC_BKP1                           REG32((RTC) + 0x54U)                        /*!< RTC backup 1 register */
-#define RTC_BKP2                           REG32((RTC) + 0x58U)                        /*!< RTC backup 2 register */
-#define RTC_BKP3                           REG32((RTC) + 0x5CU)                        /*!< RTC backup 3 register */
-#define RTC_BKP4                           REG32((RTC) + 0x60U)                        /*!< RTC backup 4 register */
+#define RTC_TIME                           REG32(RTC + 0x00000000U)                    /*!< RTC time of day register */
+#define RTC_DATE                           REG32(RTC + 0x00000004U)                    /*!< RTC date register */
+#define RTC_CTL                            REG32(RTC + 0x00000008U)                    /*!< RTC control register */
+#define RTC_STAT                           REG32(RTC + 0x0000000CU)                    /*!< RTC status register */
+#define RTC_PSC                            REG32(RTC + 0x00000010U)                    /*!< RTC time prescaler register */
+#define RTC_ALRM0TD                        REG32(RTC + 0x0000001CU)                    /*!< RTC alarm 0 time and date register */
+#define RTC_WPK                            REG32(RTC + 0x00000024U)                    /*!< RTC write protection key register */
+#define RTC_SS                             REG32(RTC + 0x00000028U)                    /*!< RTC sub second register */
+#define RTC_SHIFTCTL                       REG32(RTC + 0x0000002CU)                    /*!< RTC shift function control register */
+#define RTC_TTS                            REG32(RTC + 0x00000030U)                    /*!< RTC time of timestamp register */
+#define RTC_DTS                            REG32(RTC + 0x00000034U)                    /*!< RTC date of timestamp register */
+#define RTC_SSTS                           REG32(RTC + 0x00000038U)                    /*!< RTC sub second of timestamp register */
+#define RTC_HRFC                           REG32(RTC + 0x0000003CU)                    /*!< RTC high resolution frequency compensation registor */
+#define RTC_TAMP                           REG32(RTC + 0x00000040U)                    /*!< RTC tamper register */
+#define RTC_ALRM0SS                        REG32(RTC + 0x00000044U)                    /*!< RTC alarm 0 sub second register */
+#define RTC_BKP0                           REG32(RTC + 0x00000050U)                    /*!< RTC backup 0 register */
+#define RTC_BKP1                           REG32(RTC + 0x00000054U)                    /*!< RTC backup 1 register */
+#define RTC_BKP2                           REG32(RTC + 0x00000058U)                    /*!< RTC backup 2 register */
+#define RTC_BKP3                           REG32(RTC + 0x0000005CU)                    /*!< RTC backup 3 register */
+#define RTC_BKP4                           REG32(RTC + 0x00000060U)                    /*!< RTC backup 4 register */
 
 /* bits definitions */
 /* RTC_TIME */
@@ -352,7 +376,7 @@ typedef struct
 #define GET_DTS_DAY(regval)                GET_BITS((regval),0,5)                      /*!< get value of RTC_DTS_DAY bit field */
 
 #define DTS_MON(regval)                    (BITS(8,12) & ((uint32_t)(regval) << 8U))    /*!< write value to RTC_DTS_MON bit field */
-#define GET_DTS_MON(regval)                GET_BITS((regval),8,11)                     /*!< get value of RTC_DTS_MON bit field */
+#define GET_DTS_MON(regval)                GET_BITS((regval),8,12)                     /*!< get value of RTC_DTS_MON bit field */
 
 #define DTS_DOW(regval)                    (BITS(13,15) & ((uint32_t)(regval) << 13U))  /*!< write value to RTC_DTS_DOW bit field */
 #define GET_DTS_DOW(regval)                GET_BITS((regval),13,15)                    /*!< get value of RTC_DTS_DOW bit field */
@@ -523,7 +547,7 @@ ErrStatus rtc_calibration_config(uint32_t window, uint32_t plus, uint32_t minus)
 /* ajust the daylight saving time by adding or substracting one hour from the current time */
 void rtc_hour_adjust(uint32_t operation);
 /* ajust RTC second or subsecond value of current time */
-ErrStatus rtc_second_ajust(uint32_t add, uint32_t minus);
+ErrStatus rtc_second_adjust(uint32_t add, uint32_t minus);
 /* enable RTC bypass shadow registers function */
 void rtc_bypass_shadow_enable(void);
 /* disable RTC bypass shadow registers function */

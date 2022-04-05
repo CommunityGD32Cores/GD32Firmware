@@ -1,12 +1,36 @@
 /*!
     \file  usbd_std.c 
     \brief USB 2.0 standard handler driver
+
+    \version 2017-06-06, V1.0.0, firmware for GD32F3x0
+    \version 2019-06-01, V2.0.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2017-06-06, V1.0.0, firmware for GD32F3x0
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "usbd_std.h"
@@ -503,19 +527,20 @@ static void  usbd_setaddress (usb_core_handle_struct *pudev, usb_device_req_stru
 static void  usbd_getdescriptor (usb_core_handle_struct *pudev, usb_device_req_struct *req)
 {
     if (USB_REQTYPE_DEVICE == (req->bmRequestType & USB_REQTYPE_MASK)) {
-        uint8_t desc_index = (uint8_t)(req->wValue >> 8U);
+        uint8_t  desc_type = (uint8_t)(req->wValue >> 8);
+        uint8_t  desc_index = (uint8_t)(req->wValue) & 0xFFU;
 
-        if (desc_index <= 0x03U) {
+        if ((desc_type <= 0x03U) && (desc_index <= 0x05U)) {
             uint16_t len;
             uint8_t *pbuf;
 
             /* call corresponding descriptor get function */
-            pbuf = standard_descriptor_get[desc_index - 1U](pudev, (uint8_t)(req->wValue) & 0xFFU, &len);
+            pbuf = standard_descriptor_get[desc_type - 1U](pudev, desc_index, &len);
 
             if ((0U != len) && (0U != req->wLength)) {
                 len = USB_MIN(len, req->wLength);
 
-                if ((1U == desc_index) && (64U == req->wLength)) {
+                if ((1U == desc_type) && (64U == req->wLength)) {
                     len = 8U;
                 }
 

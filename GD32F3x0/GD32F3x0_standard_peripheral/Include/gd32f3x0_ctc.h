@@ -1,12 +1,36 @@
 /*!
     \file  gd32f3x0_ctc.h
     \brief definitions for the CTC
+
+    \version 2017-06-06, V1.0.0, firmware for GD32F3x0
+    \version 2019-06-01, V2.0.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2017-06-06, V1.0.0, firmware for GD32F3x0
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F3X0_CTC_H
@@ -18,10 +42,10 @@
 #define CTC                          CTC_BASE
 
 /* registers definitions */
-#define CTC_CTL0                     REG32((CTC) + 0x00U)      /*!< CTC control register 0 */
-#define CTC_CTL1                     REG32((CTC) + 0x04U)      /*!< CTC control register 1 */
-#define CTC_STAT                     REG32((CTC) + 0x08U)      /*!< CTC status register */
-#define CTC_INTC                     REG32((CTC) + 0x0CU)      /*!< CTC interrupt clear register */
+#define CTC_CTL0                     REG32(CTC + 0x00000000U)  /*!< CTC control register 0 */
+#define CTC_CTL1                     REG32(CTC + 0x00000004U)  /*!< CTC control register 1 */
+#define CTC_STAT                     REG32(CTC + 0x00000008U)  /*!< CTC status register */
+#define CTC_INTC                     REG32(CTC + 0x0000000CU)  /*!< CTC interrupt clear register */
 
 /* bits definitions */
 /* CTC_CTL0 */
@@ -90,59 +114,33 @@
 #define CTC_REFSOURCE_PSC_DIV128                         CTL1_REFPSC(7)               /*!< reference signal divided by 128 */
 
 /* CTC interrupt enable definitions */
-#define CTC_INT_CKOK                                     CTC_CTL0_CKOKIE             /*!< clock trim OK interrupt enable */
-#define CTC_INT_CKWARN                                   CTC_CTL0_CKWARNIE           /*!< clock trim warning interrupt enable */
-#define CTC_INT_ERR                                      CTC_CTL0_ERRIE              /*!< error interrupt enable */
-#define CTC_INT_EREF                                     CTC_CTL0_EREFIE             /*!< expect reference interrupt enable */
+#define CTC_INT_CKOK                                     CTC_CTL0_CKOKIE              /*!< clock trim OK interrupt enable */
+#define CTC_INT_CKWARN                                   CTC_CTL0_CKWARNIE            /*!< clock trim warning interrupt enable */
+#define CTC_INT_ERR                                      CTC_CTL0_ERRIE               /*!< error interrupt enable */
+#define CTC_INT_EREF                                     CTC_CTL0_EREFIE              /*!< expect reference interrupt enable */
 
 /* CTC interrupt source definitions */
-#define CTC_INT_FLAG_CKOK                                CTC_STAT_CKOKIF             /*!< clock trim OK interrupt flag */
-#define CTC_INT_FLAG_CKWARN                              CTC_STAT_CKWARNIF           /*!< clock trim warning interrupt flag */
-#define CTC_INT_FLAG_ERR                                 CTC_STAT_ERRIF              /*!< error interrupt flag */
-#define CTC_INT_FLAG_EREF                                CTC_STAT_EREFIF             /*!< expect reference interrupt flag */
-#define CTC_INT_FLAG_CKERR                               CTC_STAT_CKERR              /*!< clock trim error bit */
-#define CTC_INT_FLAG_REFMISS                             CTC_STAT_REFMISS            /*!< reference sync pulse miss */
-#define CTC_INT_FLAG_TRIMERR                             CTC_STAT_TRIMERR            /*!< trim value error */
+#define CTC_INT_FLAG_CKOK                                CTC_STAT_CKOKIF              /*!< clock trim OK interrupt flag */
+#define CTC_INT_FLAG_CKWARN                              CTC_STAT_CKWARNIF            /*!< clock trim warning interrupt flag */
+#define CTC_INT_FLAG_ERR                                 CTC_STAT_ERRIF               /*!< error interrupt flag */
+#define CTC_INT_FLAG_EREF                                CTC_STAT_EREFIF              /*!< expect reference interrupt flag */
+#define CTC_INT_FLAG_CKERR                               CTC_STAT_CKERR               /*!< clock trim error bit */
+#define CTC_INT_FLAG_REFMISS                             CTC_STAT_REFMISS             /*!< reference sync pulse miss */
+#define CTC_INT_FLAG_TRIMERR                             CTC_STAT_TRIMERR             /*!< trim value error */
 
 /* CTC flag definitions */
-#define CTC_FLAG_CKOK                                    CTC_STAT_CKOKIF             /*!< clock trim OK flag */
-#define CTC_FLAG_CKWARN                                  CTC_STAT_CKWARNIF           /*!< clock trim warning flag */
-#define CTC_FLAG_ERR                                     CTC_STAT_ERRIF              /*!< error flag */
-#define CTC_FLAG_EREF                                    CTC_STAT_EREFIF             /*!< expect reference flag */
-#define CTC_FLAG_CKERR                                   CTC_STAT_CKERR              /*!< clock trim error bit */
-#define CTC_FLAG_REFMISS                                 CTC_STAT_REFMISS            /*!< reference sync pulse miss */
-#define CTC_FLAG_TRIMERR                                 CTC_STAT_TRIMERR            /*!< trim value error bit */
+#define CTC_FLAG_CKOK                                    CTC_STAT_CKOKIF              /*!< clock trim OK flag */
+#define CTC_FLAG_CKWARN                                  CTC_STAT_CKWARNIF            /*!< clock trim warning flag */
+#define CTC_FLAG_ERR                                     CTC_STAT_ERRIF               /*!< error flag */
+#define CTC_FLAG_EREF                                    CTC_STAT_EREFIF              /*!< expect reference flag */
+#define CTC_FLAG_CKERR                                   CTC_STAT_CKERR               /*!< clock trim error bit */
+#define CTC_FLAG_REFMISS                                 CTC_STAT_REFMISS             /*!< reference sync pulse miss */
+#define CTC_FLAG_TRIMERR                                 CTC_STAT_TRIMERR             /*!< trim value error bit */
 
 /* function declarations */
+/* initialization functions */
 /* reset ctc clock trim controller */
 void ctc_deinit(void);
-
-/* enable the CTC interrupt */
-void ctc_interrupt_enable(uint32_t interrupt);
-/* disable the CTC interrupt */
-void ctc_interrupt_disable(uint32_t interrupt);
-/* get CTC interrupt flag */
-FlagStatus ctc_interrupt_flag_get(uint32_t interrupt); 
-/* clear CTC interrupt flag */
-void ctc_interrupt_flag_clear(uint32_t interrupt);
-
-/* get CTC flag */
-FlagStatus ctc_flag_get(uint32_t flag);
-/* clear CTC flag */
-void ctc_flag_clear(uint32_t flag);
-
-/* configure the IRC48M trim value */
-void ctc_irc48m_trim_value_config(uint8_t trim_value);
-/* generate software reference source sync pulse */
-void ctc_software_refsource_pulse_generate(void);
-/* configure hardware automatically trim mode */
-void ctc_hardware_trim_mode_config(uint32_t hardmode);
-
-/* enable CTC trim counter */
-void ctc_counter_enable(void);
-/* disable CTC trim counter */
-void ctc_counter_disable(void);
-
 /* configure reference signal source polarity */
 void ctc_refsource_polarity_config(uint32_t polarity);
 /* select reference signal source */
@@ -153,7 +151,20 @@ void ctc_refsource_prescaler_config(uint32_t prescaler);
 void ctc_clock_limit_value_config(uint8_t limit_value);
 /* configure CTC counter reload value */
 void ctc_counter_reload_value_config(uint16_t reload_value);
+/* enable CTC trim counter */
+void ctc_counter_enable(void);
+/* disable CTC trim counter */
+void ctc_counter_disable(void);
 
+/* function configuration */
+/* configure the IRC48M trim value */
+void ctc_irc48m_trim_value_config(uint8_t trim_value);
+/* generate software reference source sync pulse */
+void ctc_software_refsource_pulse_generate(void);
+/* configure hardware automatically trim mode */
+void ctc_hardware_trim_mode_config(uint32_t hardmode);
+
+/* reading functions */
 /* read CTC counter capture value when reference sync pulse occurred */
 uint16_t ctc_counter_capture_value_read(void);
 /* read CTC trim counter direction when reference sync pulse occurred */
@@ -162,5 +173,19 @@ FlagStatus ctc_counter_direction_read(void);
 uint16_t ctc_counter_reload_value_read(void);
 /* read the IRC48M trim value */
 uint8_t ctc_irc48m_trim_value_read(void);
+
+/* interrupt & flag functions */
+/* enable the CTC interrupt */
+void ctc_interrupt_enable(uint32_t interrupt);
+/* disable the CTC interrupt */
+void ctc_interrupt_disable(uint32_t interrupt);
+/* get CTC flag */
+FlagStatus ctc_flag_get(uint32_t flag);
+/* clear CTC flag */
+void ctc_flag_clear(uint32_t flag);
+/* get CTC interrupt flag */
+FlagStatus ctc_interrupt_flag_get(uint32_t interrupt); 
+/* clear CTC interrupt flag */
+void ctc_interrupt_flag_clear(uint32_t interrupt);
 
 #endif /* GD32F3X0_CTC_H */

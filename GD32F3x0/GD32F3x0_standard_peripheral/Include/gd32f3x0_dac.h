@@ -1,12 +1,36 @@
 /*!
     \file  gd32f3x0_dac.h
     \brief definitions for the DAC
+
+    \version 2017-06-06, V1.0.0, firmware for GD32F3x0
+    \version 2019-06-01, V2.0.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2017-06-06, V1.0.0, firmware for GD32F3x0
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifdef GD32F350
@@ -19,13 +43,13 @@
 #define DAC                     DAC_BASE
 
 /* registers definitions */
-#define DAC_CTL                 REG32(DAC + 0x00U)          /*!< DAC control register */
-#define DAC_SWT                 REG32(DAC + 0x04U)          /*!< DAC software trigger register */
-#define DAC_R12DH               REG32(DAC + 0x08U)          /*!< DAC 12-bit right-aligned data holding register */
-#define DAC_L12DH               REG32(DAC + 0x0CU)          /*!< DAC 12-bit left-aligned data holding register */
-#define DAC_R8DH                REG32(DAC + 0x10U)          /*!< DAC 8-bit right-aligned data holding register */
-#define DAC_DO                  REG32(DAC + 0x2CU)          /*!< DAC output data register */
-#define DAC_STAT                REG32(DAC + 0x34U)          /*!< DAC status register */
+#define DAC_CTL                 REG32(DAC + (0x00000000U))  /*!< DAC control register */
+#define DAC_SWT                 REG32(DAC + (0x00000004U))  /*!< DAC software trigger register */
+#define DAC_R12DH               REG32(DAC + (0x00000008U))  /*!< DAC 12-bit right-aligned data holding register */
+#define DAC_L12DH               REG32(DAC + (0x0000000CU))  /*!< DAC 12-bit left-aligned data holding register */
+#define DAC_R8DH                REG32(DAC + (0x00000010U))  /*!< DAC 8-bit right-aligned data holding register */
+#define DAC_DO                  REG32(DAC + (0x0000002CU))  /*!< DAC output data register */
+#define DAC_STAT                REG32(DAC + (0x00000034U))  /*!< DAC status register */
 
 /* bits definitions */
 /* DAC_CTL */

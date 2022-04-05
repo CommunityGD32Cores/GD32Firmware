@@ -1,12 +1,36 @@
 /*!
     \file  gd32f3x0_gpio.h
     \brief definitions for the GPIO
+
+    \version 2017-06-06, V1.0.0, firmware for GD32F3x0
+    \version 2019-06-01, V2.0.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2017-06-06, V1.0.0, firmware for GD32F3x0
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F3X0_GPIO_H
@@ -22,19 +46,19 @@
 #define GPIOF                      (GPIO_BASE + 0x00001400U)
 
 /* registers definitions */
-#define GPIO_CTL(gpiox)            REG32((gpiox) + 0x00U)    /*!< GPIO port control register */
-#define GPIO_OMODE(gpiox)          REG32((gpiox) + 0x04U)    /*!< GPIO port output mode register */
-#define GPIO_OSPD0(gpiox)          REG32((gpiox) + 0x08U)    /*!< GPIO port output speed register 0 */
-#define GPIO_PUD(gpiox)            REG32((gpiox) + 0x0CU)    /*!< GPIO port pull-up/pull-down register */
-#define GPIO_ISTAT(gpiox)          REG32((gpiox) + 0x10U)    /*!< GPIO port input status register */
-#define GPIO_OCTL(gpiox)           REG32((gpiox) + 0x14U)    /*!< GPIO port output control register */
-#define GPIO_BOP(gpiox)            REG32((gpiox) + 0x18U)    /*!< GPIO port bit operation register */
-#define GPIO_LOCK(gpiox)           REG32((gpiox) + 0x1CU)    /*!< GPIO port configuration lock register */
-#define GPIO_AFSEL0(gpiox)         REG32((gpiox) + 0x20U)    /*!< GPIO alternate function selected register 0 */
-#define GPIO_AFSEL1(gpiox)         REG32((gpiox) + 0x24U)    /*!< GPIO alternate function selected register 1 */
-#define GPIO_BC(gpiox)             REG32((gpiox) + 0x28U)    /*!< GPIO bit clear register */
-#define GPIO_TG(gpiox)             REG32((gpiox) + 0x2CU)    /*!< GPIO port bit toggle register */
-#define GPIO_OSPD1(gpiox)          REG32((gpiox) + 0x3CU)    /*!< GPIO port output speed register 1 */
+#define GPIO_CTL(gpiox)            REG32((gpiox) + 0x00000000U)    /*!< GPIO port control register */
+#define GPIO_OMODE(gpiox)          REG32((gpiox) + 0x00000004U)    /*!< GPIO port output mode register */
+#define GPIO_OSPD0(gpiox)          REG32((gpiox) + 0x00000008U)    /*!< GPIO port output speed register 0 */
+#define GPIO_PUD(gpiox)            REG32((gpiox) + 0x0000000CU)    /*!< GPIO port pull-up/pull-down register */
+#define GPIO_ISTAT(gpiox)          REG32((gpiox) + 0x00000010U)    /*!< GPIO port input status register */
+#define GPIO_OCTL(gpiox)           REG32((gpiox) + 0x00000014U)    /*!< GPIO port output control register */
+#define GPIO_BOP(gpiox)            REG32((gpiox) + 0x00000018U)    /*!< GPIO port bit operation register */
+#define GPIO_LOCK(gpiox)           REG32((gpiox) + 0x0000001CU)    /*!< GPIO port configuration lock register */
+#define GPIO_AFSEL0(gpiox)         REG32((gpiox) + 0x00000020U)    /*!< GPIO alternate function selected register 0 */
+#define GPIO_AFSEL1(gpiox)         REG32((gpiox) + 0x00000024U)    /*!< GPIO alternate function selected register 1 */
+#define GPIO_BC(gpiox)             REG32((gpiox) + 0x00000028U)    /*!< GPIO bit clear register */
+#define GPIO_TG(gpiox)             REG32((gpiox) + 0x0000002CU)    /*!< GPIO port bit toggle register */
+#define GPIO_OSPD1(gpiox)          REG32((gpiox) + 0x0000003CU)    /*!< GPIO port output speed register 1 */
 
 /* bits definitions */
 /* GPIO_CTL */
@@ -309,15 +333,15 @@ typedef FlagStatus bit_status;
 
 /* GPIO mode configuration values */
 #define GPIO_MODE_SET(n, mode)     ((uint32_t)((uint32_t)(mode) << (2U * (n))))
-#define GPIO_MODE_MASK(n)          (0x3U << (2U * (n)))
+#define GPIO_MODE_MASK(n)          ((uint32_t)((uint32_t)0x00000003U << (2U * (n))))
 
 /* GPIO pull-up/pull-down values */
 #define GPIO_PUPD_SET(n, pupd)     ((uint32_t)((uint32_t)(pupd) << (2U * (n))))
-#define GPIO_PUPD_MASK(n)          (0x3U << (2U * (n)))
+#define GPIO_PUPD_MASK(n)          ((uint32_t)((uint32_t)0x00000003U << (2U * (n))))
 
 /* GPIO output speed values */
 #define GPIO_OSPEED_SET(n, speed)  ((uint32_t)((uint32_t)(speed) << (2U * (n))))
-#define GPIO_OSPEED_MASK(n)        (0x3U << (2U * (n)))
+#define GPIO_OSPEED_MASK(n)        ((uint32_t)((uint32_t)0x00000003U << (2U * (n))))
 
 /* GPIO output type */
 #define GPIO_OTYPE_PP              ((uint8_t)(0x00U))    /*!< push pull mode */
@@ -325,14 +349,14 @@ typedef FlagStatus bit_status;
 
 /* GPIO output max speed value */
 #define OSPD_OSPD0(regval)         (BITS(0,1) & ((uint32_t)(regval) << 0))
-#define GPIO_OSPEED_2MHZ           OSPD_OSPD0(0)         /*!< output max speed 2MHz */
-#define GPIO_OSPEED_10MHZ          OSPD_OSPD0(1)         /*!< output max speed 10MHz */
-#define GPIO_OSPEED_50MHZ          OSPD_OSPD0(3)         /*!< output max speed 50MHz */
-#define GPIO_OSPEED_MAX            0x0000FFFFU           /*!< GPIO very high output speed, max speed more than 50MHz */
+#define GPIO_OSPEED_2MHZ           OSPD_OSPD0(0)                     /*!< output max speed 2MHz */
+#define GPIO_OSPEED_10MHZ          OSPD_OSPD0(1)                     /*!< output max speed 10MHz */
+#define GPIO_OSPEED_50MHZ          OSPD_OSPD0(3)                     /*!< output max speed 50MHz */
+#define GPIO_OSPEED_MAX            ((uint32_t)0x0000FFFFU)           /*!< GPIO very high output speed, max speed more than 50MHz */
 
 /* GPIO alternate function values */
 #define GPIO_AFR_SET(n, af)        ((uint32_t)((uint32_t)(af) << (4U * (n))))
-#define GPIO_AFR_MASK(n)           (0xFU << (4U * (n)))
+#define GPIO_AFR_MASK(n)           ((uint32_t)((uint32_t)0x0000000FU << (4U * (n))))
  
 /* GPIO alternate function */
 #define AF(regval)                 (BITS(0,3) & ((uint32_t)(regval) << 0)) 

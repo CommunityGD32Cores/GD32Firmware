@@ -1,12 +1,36 @@
 /*!
     \file  gd32f3x0_cmp.c
     \brief CMP driver
+
+    \version 2017-06-06, V1.0.0, firmware for GD32F3x0
+    \version 2019-06-01, V2.0.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2017-06-06, V1.0.0, firmware for GD32F3x0
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "gd32f3x0_cmp.h"
@@ -52,9 +76,11 @@ void cmp_mode_init(uint32_t cmp_periph, operating_mode_enum operating_mode, inve
 {
     if(CMP0 == cmp_periph){
         /* initialize comparator 0 mode */
+        CMP_CS &= ~(uint32_t)(CMP_CS_CMP0M | CMP_CS_CMP0MSEL | CMP_CS_CMP0HST ); 
         CMP_CS |= CS_CMP0M(operating_mode) | CS_CMP0MSEL(inverting_input) | CS_CMP0HST(output_hysteresis);
     }else{
         /* initialize comparator 1 mode */
+        CMP_CS &= ~(uint32_t)(CMP_CS_CMP1M | CMP_CS_CMP1MSEL | CMP_CS_CMP1HST );
         CMP_CS |= CS_CMP1M(operating_mode) | CS_CMP1MSEL(inverting_input) | CS_CMP1HST(output_hysteresis);
     }
 }
@@ -83,6 +109,7 @@ void cmp_output_init(uint32_t cmp_periph, cmp_output_enum output_slection, uint3
 {
     /* initialize comparator 0 output */
     if(CMP0 == cmp_periph){
+        CMP_CS &= ~(uint32_t)CMP_CS_CMP0OSEL;
         CMP_CS |= CS_CMP0OSEL(output_slection);
         /* output polarity */
         if(CMP_OUTPUT_POLARITY_INVERTED == output_polarity){
@@ -91,8 +118,10 @@ void cmp_output_init(uint32_t cmp_periph, cmp_output_enum output_slection, uint3
             CMP_CS &= ~CMP_CS_CMP0PL;
         }
     }else{
+        /* initialize comparator 1 output */
+        CMP_CS &= ~(uint32_t)CMP_CS_CMP1OSEL;
         CMP_CS |= CS_CMP1OSEL(output_slection);
-        
+        /* output polarity */
         if(CMP_OUTPUT_POLARITY_INVERTED == output_polarity){
             CMP_CS |= CMP_CS_CMP1PL;
         }else{ 
@@ -158,31 +187,6 @@ void cmp_switch_disable(void)
 }
 
 /*!
-    \brief      get output level
-    \param[in]  cmp_periph
-      \arg        CMP0: comparator 0
-      \arg        CMP1: comparator 1
-    \param[out] none
-    \retval     the output level
-*/
-uint32_t cmp_output_level_get(uint32_t cmp_periph)
-{
-    if(CMP0 == cmp_periph){
-        if(CMP_CS & CMP_CS_CMP0O){
-            return CMP_OUTPUTLEVEL_HIGH;
-        }else{
-            return CMP_OUTPUTLEVEL_LOW;
-        }
-    }else{
-        if(CMP_CS & CMP_CS_CMP1O){
-            return CMP_OUTPUTLEVEL_HIGH;
-        }else{
-            return CMP_OUTPUTLEVEL_LOW;
-        }
-    }
-}
-
-/*!
     \brief      enable the window mode
     \param[in]  none
     \param[out] none
@@ -215,25 +219,37 @@ void cmp_window_disable(void)
 void cmp_lock_enable(uint32_t cmp_periph)
 {
     if(CMP0 == cmp_periph){
+        /* lock CMP0 */
         CMP_CS |= CMP_CS_CMP0LK;
     }else{
+        /* lock CMP1 */
         CMP_CS |= CMP_CS_CMP1LK;
     }
 }
 
 /*!
-    \brief      unlock the comparator
+    \brief      get output level
     \param[in]  cmp_periph
       \arg        CMP0: comparator 0
       \arg        CMP1: comparator 1
     \param[out] none
-    \retval     none
+    \retval     the output level
 */
-void cmp_lock_disable(uint32_t cmp_periph)
+uint32_t cmp_output_level_get(uint32_t cmp_periph)
 {
     if(CMP0 == cmp_periph){
-        CMP_CS &= ~CMP_CS_CMP0LK;
+        /* get output level of CMP0 */
+        if(CMP_CS & CMP_CS_CMP0O){
+            return CMP_OUTPUTLEVEL_HIGH;
+        }else{
+            return CMP_OUTPUTLEVEL_LOW;
+        }
     }else{
-        CMP_CS &= ~CMP_CS_CMP1LK;
+        /* get output level of CMP1 */
+        if(CMP_CS & CMP_CS_CMP1O){
+            return CMP_OUTPUTLEVEL_HIGH;
+        }else{
+            return CMP_OUTPUTLEVEL_LOW;
+        }
     }
 }

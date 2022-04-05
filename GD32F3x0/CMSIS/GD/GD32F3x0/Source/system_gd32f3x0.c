@@ -40,6 +40,8 @@
 #define __HXTAL           (HXTAL_VALUE)            /* high speed crystal oscillator frequency */
 #define __SYS_OSC_CLK     (__IRC8M)                /* main oscillator frequency */
 
+#define VECT_TAB_OFFSET  (uint32_t)0x00            /* vector table base offset */
+
 /* select a system clock by uncommenting the following line */
 #if defined (GD32F330)
 //#define __SYSTEM_CLOCK_8M_HXTAL              (__HXTAL)
@@ -130,6 +132,15 @@ static void system_clock_config(void);
 */
 void SystemInit (void)
 {
+#if (defined(GD32F350))
+    RCU_APB2EN = BIT(0);
+    CMP_CS |= (CMP_CS_CMP1MSEL | CMP_CS_CMP0MSEL);
+#endif /* GD32F350 */
+
+    /* FPU settings */
+#if (__FPU_PRESENT == 1U) && (__FPU_USED == 1U)
+    SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));  /* set CP10 and CP11 Full Access */
+#endif
     /* enable IRC8M */
     RCU_CTL0 |= RCU_CTL0_IRC8MEN;
     while(0U == (RCU_CTL0 & RCU_CTL0_IRC8MSTB)){
@@ -151,8 +162,15 @@ void SystemInit (void)
     RCU_ADDCTL &= ~RCU_ADDCTL_IRC48MEN;
     RCU_INT = 0x00000000U;
     RCU_ADDINT = 0x00000000U;
+
     /* configure system clock */
     system_clock_config();
+    
+#ifdef VECT_TAB_SRAM
+    nvic_vector_table_set(NVIC_VECTTAB_RAM,VECT_TAB_OFFSET);
+#else
+    nvic_vector_table_set(NVIC_VECTTAB_FLASH,VECT_TAB_OFFSET);
+#endif
 }
 
 /*!

@@ -1,12 +1,36 @@
 /*!
     \file  gd32f3x0_usart.h
     \brief definitions for the USART
+    
+    \version 2017-06-06, V1.0.0, firmware for GD32F3x0
+    \version 2019-06-01, V2.0.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2017-06-06, V1.0.0, firmware for GD32F3x0
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F3X0_USART_H
@@ -19,18 +43,18 @@
 #define USART1                        USART_BASE
 
 /* registers definitions */
-#define USART_CTL0(usartx)            REG32((usartx) + 0x00U)        /*!< USART control register 0 */
-#define USART_CTL1(usartx)            REG32((usartx) + 0x04U)        /*!< USART control register 1 */
-#define USART_CTL2(usartx)            REG32((usartx) + 0x08U)        /*!< USART control register 2 */
-#define USART_BAUD(usartx)            REG32((usartx) + 0x0CU)        /*!< USART baud rate register */
-#define USART_GP(usartx)              REG32((usartx) + 0x10U)        /*!< USART guard time and prescaler register */
-#define USART_RT(usartx)              REG32((usartx) + 0x14U)        /*!< USART receiver timeout register */
-#define USART_CMD(usartx)             REG32((usartx) + 0x18U)        /*!< USART command register */
-#define USART_STAT(usartx)            REG32((usartx) + 0x1CU)        /*!< USART status register */
-#define USART_INTC(usartx)            REG32((usartx) + 0x20U)        /*!< USART status clear register */
-#define USART_RDATA(usartx)           REG32((usartx) + 0x24U)        /*!< USART receive data register */
-#define USART_TDATA(usartx)           REG32((usartx) + 0x28U)        /*!< USART transmit data register */
-#define USART_RFCS(usartx)            REG32((usartx) + 0xD0U)        /*!< USART receive FIFO control and status register */
+#define USART_CTL0(usartx)            REG32((usartx) + 0x00000000U)  /*!< USART control register 0 */
+#define USART_CTL1(usartx)            REG32((usartx) + 0x00000004U)  /*!< USART control register 1 */
+#define USART_CTL2(usartx)            REG32((usartx) + 0x00000008U)  /*!< USART control register 2 */
+#define USART_BAUD(usartx)            REG32((usartx) + 0x0000000CU)  /*!< USART baud rate register */
+#define USART_GP(usartx)              REG32((usartx) + 0x00000010U)  /*!< USART guard time and prescaler register */
+#define USART_RT(usartx)              REG32((usartx) + 0x00000014U)  /*!< USART receiver timeout register */
+#define USART_CMD(usartx)             REG32((usartx) + 0x00000018U)  /*!< USART command register */
+#define USART_STAT(usartx)            REG32((usartx) + 0x0000001CU)  /*!< USART status register */
+#define USART_INTC(usartx)            REG32((usartx) + 0x00000020U)  /*!< USART status clear register */
+#define USART_RDATA(usartx)           REG32((usartx) + 0x00000024U)  /*!< USART receive data register */
+#define USART_TDATA(usartx)           REG32((usartx) + 0x00000028U)  /*!< USART transmit data register */
+#define USART_RFCS(usartx)            REG32((usartx) + 0x000000D0U)  /*!< USART receive FIFO control and status register */
 
 /* bits definitions */
 /* USARTx_CTL0 */
@@ -172,26 +196,26 @@
 
 /* define the USART bit position and its register index offset */
 #define USART_REGIDX_BIT(regidx, bitpos)    (((uint32_t)(regidx) << 6) | (uint32_t)(bitpos))
-#define USART_REG_VAL(usartx, offset)       (REG32((usartx) + (((uint32_t)(offset) & 0xFFFFU) >> 6)))
-#define USART_BIT_POS(val)                  ((uint32_t)(val) & 0x1FU)
+#define USART_REG_VAL(usartx, offset)       (REG32((usartx) + (((uint32_t)(offset) & 0x0000FFFFU) >> 6)))
+#define USART_BIT_POS(val)                  ((uint32_t)(val) & 0x0000001FU)
 #define USART_REGIDX_BIT2(regidx, bitpos, regidx2, bitpos2)   (((uint32_t)(regidx2) << 22) | (uint32_t)((bitpos2) << 16)\
                                                               | (((uint32_t)(regidx) << 6) | (uint32_t)(bitpos)))
 #define USART_REG_VAL2(usartx, offset)       (REG32((usartx) + ((uint32_t)(offset) >> 22)))
-#define USART_BIT_POS2(val)                  (((uint32_t)(val) & 0x1F0000U) >> 16)
+#define USART_BIT_POS2(val)                  (((uint32_t)(val) & 0x001F0000U) >> 16)
 
 /* register offset */
-#define USART_CTL0_REG_OFFSET              0x00U                           /*!< CTL0 register offset */
-#define USART_CTL1_REG_OFFSET              0x04U                           /*!< CTL1 register offset */
-#define USART_CTL2_REG_OFFSET              0x08U                           /*!< CTL2 register offset */
-#define USART_STAT_REG_OFFSET              0x1CU                           /*!< STAT register offset */
-#define USART_RFCS_REG_OFFSET              0xD0U                           /*!< RFCS register offset */
+#define USART_CTL0_REG_OFFSET              (0x00000000U)                   /*!< CTL0 register offset */
+#define USART_CTL1_REG_OFFSET              (0x00000004U)                   /*!< CTL1 register offset */
+#define USART_CTL2_REG_OFFSET              (0x00000008U)                   /*!< CTL2 register offset */
+#define USART_STAT_REG_OFFSET              (0x0000001CU)                   /*!< STAT register offset */
+#define USART_RFCS_REG_OFFSET              (0x000000D0U)                   /*!< RFCS register offset */
 
 /* USART flags */
 typedef enum{
     /* flags in STAT register */
     USART_FLAG_REA = USART_REGIDX_BIT(USART_STAT_REG_OFFSET, 22U),         /*!< receive enable acknowledge flag */
     USART_FLAG_TEA = USART_REGIDX_BIT(USART_STAT_REG_OFFSET, 21U),         /*!< transmit enable acknowledge flag */
-    USART_FLAG_WU = USART_REGIDX_BIT(USART_STAT_REG_OFFSET, 20U),          /*!< wakeup from Deep-sleep mode flag */
+    USART_FLAG_WU = USART_REGIDX_BIT(USART_STAT_REG_OFFSET, 20U),          /*!< wakeup from deep-sleep mode flag */
     USART_FLAG_RWU = USART_REGIDX_BIT(USART_STAT_REG_OFFSET, 19U),         /*!< receiver wakeup from mute mode */
     USART_FLAG_SB = USART_REGIDX_BIT(USART_STAT_REG_OFFSET, 18U),          /*!< send break flag */
     USART_FLAG_AM = USART_REGIDX_BIT(USART_STAT_REG_OFFSET, 17U),          /*!< ADDR match flag */
@@ -212,7 +236,6 @@ typedef enum{
     USART_FLAG_FERR = USART_REGIDX_BIT(USART_STAT_REG_OFFSET, 1U),         /*!< frame error flag */
     USART_FLAG_PERR = USART_REGIDX_BIT(USART_STAT_REG_OFFSET, 0U),         /*!< parity error flag */
     /* flags in RFCS register */
-    USART_FLAG_RFFINT = USART_REGIDX_BIT(USART_RFCS_REG_OFFSET, 15U),      /*!< receive FIFO full interrupt flag */
     USART_FLAG_RFF = USART_REGIDX_BIT(USART_RFCS_REG_OFFSET, 11U),         /*!< receive FIFO full flag */
     USART_FLAG_RFE = USART_REGIDX_BIT(USART_RFCS_REG_OFFSET, 10U),         /*!< receive FIFO empty flag */
 }usart_flag_enum;
@@ -221,47 +244,47 @@ typedef enum{
 typedef enum
 {
     /* interrupt flags in CTL0 register */
-    USART_INT_FLAG_EB = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 27U, USART_STAT_REG_OFFSET, 12U),       /*!< end of block interrupt and flag */
-    USART_INT_FLAG_RT = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 26U, USART_STAT_REG_OFFSET, 11U),       /*!< receiver timeout interrupt and flag */
-    USART_INT_FLAG_AM = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 14U, USART_STAT_REG_OFFSET, 17U),       /*!< address match interrupt and flag */
-    USART_INT_FLAG_PERR = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 8U, USART_STAT_REG_OFFSET, 0U),       /*!< parity error interrupt and flag */
-    USART_INT_FLAG_TBE = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 7U, USART_STAT_REG_OFFSET, 7U),        /*!< transmitter buffer empty interrupt and flag */
-    USART_INT_FLAG_TC = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 6U, USART_STAT_REG_OFFSET, 6U),         /*!< transmission complete interrupt and flag */
-    USART_INT_FLAG_RBNE = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 5U, USART_STAT_REG_OFFSET, 5U),       /*!< read data buffer not empty interrupt and flag */
-    USART_INT_FLAG_RBNE_ORERR = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 5U, USART_STAT_REG_OFFSET, 3U), /*!< read data buffer not empty interrupt and overrun error flag */
-    USART_INT_FLAG_IDLE = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 4U, USART_STAT_REG_OFFSET, 4U),       /*!< IDLE line detected interrupt and flag */
+    USART_INT_FLAG_EB = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 27U, USART_STAT_REG_OFFSET, 12U),       /*!< end of block interrupt flag */
+    USART_INT_FLAG_RT = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 26U, USART_STAT_REG_OFFSET, 11U),       /*!< receiver timeout interrupt flag */
+    USART_INT_FLAG_AM = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 14U, USART_STAT_REG_OFFSET, 17U),       /*!< address match interrupt flag */
+    USART_INT_FLAG_PERR = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 8U, USART_STAT_REG_OFFSET, 0U),       /*!< parity error interrupt flag */
+    USART_INT_FLAG_TBE = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 7U, USART_STAT_REG_OFFSET, 7U),        /*!< transmitter buffer empty interrupt flag */
+    USART_INT_FLAG_TC = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 6U, USART_STAT_REG_OFFSET, 6U),         /*!< transmission complete interrupt flag */
+    USART_INT_FLAG_RBNE = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 5U, USART_STAT_REG_OFFSET, 5U),       /*!< read data buffer not empty interrupt flag */
+    USART_INT_FLAG_RBNE_ORERR = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 5U, USART_STAT_REG_OFFSET, 3U), /*!< overrun error interrupt flag */
+    USART_INT_FLAG_IDLE = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 4U, USART_STAT_REG_OFFSET, 4U),       /*!< IDLE line detected interrupt flag */
     /* interrupt flags in CTL1 register */
-    USART_INT_FLAG_LBD = USART_REGIDX_BIT2(USART_CTL1_REG_OFFSET, 6U, USART_STAT_REG_OFFSET, 8U),        /*!< LIN break detected interrupt and flag */
+    USART_INT_FLAG_LBD = USART_REGIDX_BIT2(USART_CTL1_REG_OFFSET, 6U, USART_STAT_REG_OFFSET, 8U),        /*!< LIN break detected interrupt flag */
     /* interrupt flags in CTL2 register */
-    USART_INT_FLAG_WU = USART_REGIDX_BIT2(USART_CTL2_REG_OFFSET, 22U, USART_STAT_REG_OFFSET, 20U),       /*!< wakeup from deep-sleep mode interrupt and flag */
-    USART_INT_FLAG_CTS = USART_REGIDX_BIT2(USART_CTL2_REG_OFFSET, 10U, USART_STAT_REG_OFFSET, 9U),       /*!< CTS interrupt and flag */
-    USART_INT_FLAG_ERR_NERR = USART_REGIDX_BIT2(USART_CTL2_REG_OFFSET, 0U, USART_STAT_REG_OFFSET, 2U),   /*!< error interrupt and noise error flag */
-    USART_INT_FLAG_ERR_ORERR = USART_REGIDX_BIT2(USART_CTL2_REG_OFFSET, 0U, USART_STAT_REG_OFFSET, 3U),  /*!< error interrupt and overrun error */
-    USART_INT_FLAG_ERR_FERR = USART_REGIDX_BIT2(USART_CTL2_REG_OFFSET, 0U, USART_STAT_REG_OFFSET, 1U),   /*!< error interrupt and frame error flag */
+    USART_INT_FLAG_WU = USART_REGIDX_BIT2(USART_CTL2_REG_OFFSET, 22U, USART_STAT_REG_OFFSET, 20U),       /*!< wakeup from deep-sleep mode interrupt flag */
+    USART_INT_FLAG_CTS = USART_REGIDX_BIT2(USART_CTL2_REG_OFFSET, 10U, USART_STAT_REG_OFFSET, 9U),       /*!< CTS interrupt flag */
+    USART_INT_FLAG_ERR_NERR = USART_REGIDX_BIT2(USART_CTL2_REG_OFFSET, 0U, USART_STAT_REG_OFFSET, 2U),   /*!< noise error interrupt flag */
+    USART_INT_FLAG_ERR_ORERR = USART_REGIDX_BIT2(USART_CTL2_REG_OFFSET, 0U, USART_STAT_REG_OFFSET, 3U),  /*!< overrun error interrupt flag */
+    USART_INT_FLAG_ERR_FERR = USART_REGIDX_BIT2(USART_CTL2_REG_OFFSET, 0U, USART_STAT_REG_OFFSET, 1U),   /*!< frame error interrupt flag */
     /* interrupt flags in RFCS register */
-    USART_INT_FLAG_RFF = USART_REGIDX_BIT2(USART_RFCS_REG_OFFSET, 9U, USART_RFCS_REG_OFFSET, 15U),       /*!< receive FIFO full interrupt and flag */
+    USART_INT_FLAG_RFFINT = USART_REGIDX_BIT2(USART_RFCS_REG_OFFSET, 9U, USART_RFCS_REG_OFFSET, 15U),    /*!< receive FIFO full interrupt flag */
 }usart_interrupt_flag_enum;
 
 /* USART interrupt enable or disable */
 typedef enum
 {
     /* interrupt in CTL0 register */
-    USART_INT_EB = USART_REGIDX_BIT(USART_CTL0_REG_OFFSET, 27U),         /*!< end of block interrupt */
-    USART_INT_RT = USART_REGIDX_BIT(USART_CTL0_REG_OFFSET, 26U),         /*!< receiver timeout interrupt */
-    USART_INT_AM = USART_REGIDX_BIT(USART_CTL0_REG_OFFSET, 14U),         /*!< address match interrupt */
-    USART_INT_PERR = USART_REGIDX_BIT(USART_CTL0_REG_OFFSET, 8U),        /*!< parity error interrupt */
-    USART_INT_TBE = USART_REGIDX_BIT(USART_CTL0_REG_OFFSET, 7U),         /*!< transmitter buffer empty interrupt */
-    USART_INT_TC = USART_REGIDX_BIT(USART_CTL0_REG_OFFSET, 6U),          /*!< transmission complete interrupt */
-    USART_INT_RBNE = USART_REGIDX_BIT(USART_CTL0_REG_OFFSET, 5U),        /*!< read data buffer not empty interrupt and overrun error interrupt */
-    USART_INT_IDLE = USART_REGIDX_BIT(USART_CTL0_REG_OFFSET, 4U),        /*!< IDLE line detected interrupt */
+    USART_INT_EB = USART_REGIDX_BIT(USART_CTL0_REG_OFFSET, 27U),     /*!< end of block interrupt */
+    USART_INT_RT = USART_REGIDX_BIT(USART_CTL0_REG_OFFSET, 26U),     /*!< receiver timeout interrupt */
+    USART_INT_AM = USART_REGIDX_BIT(USART_CTL0_REG_OFFSET, 14U),     /*!< address match interrupt */
+    USART_INT_PERR = USART_REGIDX_BIT(USART_CTL0_REG_OFFSET, 8U),    /*!< parity error interrupt */
+    USART_INT_TBE = USART_REGIDX_BIT(USART_CTL0_REG_OFFSET, 7U),     /*!< transmitter buffer empty interrupt */
+    USART_INT_TC = USART_REGIDX_BIT(USART_CTL0_REG_OFFSET, 6U),      /*!< transmission complete interrupt */
+    USART_INT_RBNE = USART_REGIDX_BIT(USART_CTL0_REG_OFFSET, 5U),    /*!< read data buffer not empty interrupt and overrun error interrupt */
+    USART_INT_IDLE = USART_REGIDX_BIT(USART_CTL0_REG_OFFSET, 4U),    /*!< IDLE line detected interrupt */
     /* interrupt in CTL1 register */
-    USART_INT_LBD = USART_REGIDX_BIT(USART_CTL1_REG_OFFSET, 6U),         /*!< LIN break detected interrupt */
+    USART_INT_LBD = USART_REGIDX_BIT(USART_CTL1_REG_OFFSET, 6U),     /*!< LIN break detected interrupt */
     /* interrupt in CTL2 register */
-    USART_INT_WU = USART_REGIDX_BIT(USART_CTL2_REG_OFFSET, 22U),         /*!< wakeup from deep-sleep mode interrupt */
-    USART_INT_CTS = USART_REGIDX_BIT(USART_CTL2_REG_OFFSET, 10U),        /*!< CTS interrupt */
-    USART_INT_ERR = USART_REGIDX_BIT(USART_CTL2_REG_OFFSET, 0U),         /*!< error interrupt */
+    USART_INT_WU = USART_REGIDX_BIT(USART_CTL2_REG_OFFSET, 22U),     /*!< wakeup from deep-sleep mode interrupt */
+    USART_INT_CTS = USART_REGIDX_BIT(USART_CTL2_REG_OFFSET, 10U),    /*!< CTS interrupt */
+    USART_INT_ERR = USART_REGIDX_BIT(USART_CTL2_REG_OFFSET, 0U),     /*!< error interrupt */
     /* interrupt in RFCS register */
-    USART_INT_RFF = USART_REGIDX_BIT(USART_RFCS_REG_OFFSET, 9U),         /*!< receive FIFO full interrupt */
+    USART_INT_RFF = USART_REGIDX_BIT(USART_RFCS_REG_OFFSET, 9U),     /*!< receive FIFO full interrupt */
 }usart_interrupt_enum;
 
 /* USART invert configure */
@@ -406,8 +429,6 @@ void usart_parity_config(uint32_t usart_periph, uint32_t paritycfg);
 void usart_word_length_set(uint32_t usart_periph, uint32_t wlen);
 /* configure USART stop bit length */
 void usart_stop_bit_set(uint32_t usart_periph, uint32_t stblen);
-
-/* USART normal mode communication */
 /* enable USART */
 void usart_enable(uint32_t usart_periph);
 /* disable USART */
@@ -416,100 +437,102 @@ void usart_disable(uint32_t usart_periph);
 void usart_transmit_config(uint32_t usart_periph, uint32_t txconfig);
 /* configure USART receiver */
 void usart_receive_config(uint32_t usart_periph, uint32_t rxconfig);
-/* USART transmit data function */
-void usart_data_transmit(uint32_t usart_periph, uint32_t data);
-/* USART receive data function */
-uint16_t usart_data_receive(uint32_t usart_periph);
+
+/* USART normal mode communication */
 /* data is transmitted/received with the LSB/MSB first */
 void usart_data_first_config(uint32_t usart_periph, uint32_t msbf);
 /* configure USART inverted */
 void usart_invert_config(uint32_t usart_periph, usart_invert_enum invertpara);
-/* overrun function is enabled */
+/* enable the USART overrun function */
 void usart_overrun_enable(uint32_t usart_periph);
-/* overrun function is disabled */
+/* disable the USART overrun function */
 void usart_overrun_disable(uint32_t usart_periph);
 /* configure the USART oversample mode */
 void usart_oversample_config(uint32_t usart_periph, uint32_t oversamp);
-/* sample bit method configure */
+/* configure sample bit method */
 void usart_sample_bit_config(uint32_t usart_periph, uint32_t osb);
+/* enable receiver timeout */
+void usart_receiver_timeout_enable(uint32_t usart_periph);
+/* disable receiver timeout */
+void usart_receiver_timeout_disable(uint32_t usart_periph);
+/* configure receiver timeout threshold */
+void usart_receiver_timeout_threshold_config(uint32_t usart_periph, uint32_t rtimeout);
+/* USART transmit data function */
+void usart_data_transmit(uint32_t usart_periph, uint32_t data);
+/* USART receive data function */
+uint16_t usart_data_receive(uint32_t usart_periph);
 
 /* auto baud rate detection */
-/* auto baud rate detection enable */
+/* enable auto baud rate detection */
 void usart_autobaud_detection_enable(uint32_t usart_periph);
-/* auto baud rate detection disable */
+/* disable auto baud rate detection */
 void usart_autobaud_detection_disable(uint32_t usart_periph);
-/* auto baud rate detection mode configure */
+/* configure auto baud rate detection mode */
 void usart_autobaud_detection_mode_config(uint32_t usart_periph, uint32_t abdmod);
 
 /* multi-processor communication */
+/* configure the address of the USART in wake up by address match mode */
+void usart_address_config(uint32_t usart_periph, uint8_t addr);
+/* configure address detection mode */
+void usart_address_detection_mode_config(uint32_t usart_periph, uint32_t addmod);
 /* enable mute mode */
 void usart_mute_mode_enable(uint32_t usart_periph);
 /* disable mute mode */
 void usart_mute_mode_disable(uint32_t usart_periph);
 /* configure wakeup method in mute mode */
 void usart_mute_mode_wakeup_config(uint32_t usart_periph, uint32_t wmethod);
-/* address detection mode configure */
-void usart_address_detection_mode_config(uint32_t usart_periph, uint32_t addmod);
-/* configure address of the USART */
-void usart_address_config(uint32_t usart_periph, uint8_t addr);
-/* enable receiver timeout */
-void usart_receiver_timeout_enable(uint32_t usart_periph);
-/* disable receiver timeout */
-void usart_receiver_timeout_disable(uint32_t usart_periph);
-/* configure receiver timeout threshold */
-void usart_receiver_timeout_config(uint32_t usart_periph, uint32_t rtimeout);
 
 /* LIN mode communication */
-/* LIN mode enable */
+/* enable LIN mode */
 void usart_lin_mode_enable(uint32_t usart_periph);
-/* LIN mode disable */
+/* disable LIN mode */
 void usart_lin_mode_disable(uint32_t usart_periph);
-/* LIN break detection length */
-void usart_lin_break_dection_length_config(uint32_t usart_periph, uint32_t lblen);
+/* configure LIN break frame length */
+void usart_lin_break_detection_length_config(uint32_t usart_periph, uint32_t lblen);
 
 /* half-duplex communication */
-/* half-duplex enable */
+/* enable half-duplex mode */
 void usart_halfduplex_enable(uint32_t usart_periph);
-/* half-duplex disable */
+/* disable half-duplex mode */
 void usart_halfduplex_disable(uint32_t usart_periph);
 
 /* synchronous communication */
-/* clock enable */
+/* enable USART clock */
 void usart_clock_enable(uint32_t usart_periph);
-/* clock disable*/
+/* disable USART clock */
 void usart_clock_disable(uint32_t usart_periph);
 /* configure USART synchronous mode parameters */
 void usart_synchronous_clock_config(uint32_t usart_periph, uint32_t clen, uint32_t cph, uint32_t cpl);
 
 /* smartcard communication */
-/* smartcard mode enable */
-void usart_smartcard_mode_enable(uint32_t usart_periph);
-/* smartcard mode disable */
-void usart_smartcard_mode_disable(uint32_t usart_periph);
-/* NACK enable in smartcard mode */
-void usart_smartcard_mode_nack_enable(uint32_t usart_periph);
-/* NACK disable in smartcard mode */
-void usart_smartcard_mode_nack_disable(uint32_t usart_periph);
-/* guard time value configure in smartcard mode */
+/* configure guard time value in smartcard mode */
 void usart_guard_time_config(uint32_t usart_periph, uint32_t guat);
-/* block length configure */
-void usart_block_length_config(uint32_t usart_periph, uint32_t bl);
-/* smartcard auto-retry number configure */
-void usart_smartcard_autoretry_config(uint32_t usart_periph, uint32_t scrtnum);
-/* early NACK enable */
+/* enable smartcard mode */
+void usart_smartcard_mode_enable(uint32_t usart_periph);
+/* disable smartcard mode */
+void usart_smartcard_mode_disable(uint32_t usart_periph);
+/* enable NACK in smartcard mode */
+void usart_smartcard_mode_nack_enable(uint32_t usart_periph);
+/* disable NACK in smartcard mode */
+void usart_smartcard_mode_nack_disable(uint32_t usart_periph);
+/* enable early NACK in smartcard mode */
 void usart_smartcard_mode_early_nack_enable(uint32_t usart_periph);
-/* early NACK disable */
+/* disable early NACK in smartcard mode */
 void usart_smartcard_mode_early_nack_disable(uint32_t usart_periph);
+/* configure smartcard auto-retry number */
+void usart_smartcard_autoretry_config(uint32_t usart_periph, uint32_t scrtnum);
+/* configure block length */
+void usart_block_length_config(uint32_t usart_periph, uint32_t bl);
 
 /* IrDA communication */
 /* enable IrDA mode */
 void usart_irda_mode_enable(uint32_t usart_periph);
 /* disable IrDA mode */
 void usart_irda_mode_disable(uint32_t usart_periph);
+/* configure the peripheral clock prescaler in USART IrDA low-power mode or SmartCard mode */
+void usart_prescaler_config(uint32_t usart_periph, uint32_t psc);
 /* configure IrDA low-power */
 void usart_irda_lowpower_config(uint32_t usart_periph, uint32_t irlp);
-/* configure the peripheral clock prescaler */
-void usart_prescaler_config(uint32_t usart_periph, uint32_t psc);
 
 /* hardware flow communication */
 /* configure hardware flow control RTS */
@@ -517,13 +540,13 @@ void usart_hardware_flow_rts_config(uint32_t usart_periph, uint32_t rtsconfig);
 /* configure hardware flow control CTS */
 void usart_hardware_flow_cts_config(uint32_t usart_periph, uint32_t ctsconfig);
 
-/* RS485 driver enable */
+/* enable RS485 driver */
 void usart_rs485_driver_enable(uint32_t usart_periph);
-/* RS485 driver disable */
+/* disable RS485 driver */
 void usart_rs485_driver_disable(uint32_t usart_periph);
-/* driver enable assertion time configure */
+/* configure driver enable assertion time */
 void usart_driver_assertime_config(uint32_t usart_periph, uint32_t deatime);
-/* driver enable de-assertion time configure */
+/* configure driver enable de-assertion time */
 void usart_driver_deassertime_config(uint32_t usart_periph, uint32_t dedtime);
 /* configure driver enable polarity mode */
 void usart_depolarity_config(uint32_t usart_periph, uint32_t dep);
@@ -538,34 +561,35 @@ void usart_reception_error_dma_disable(uint32_t usart_periph);
 /* enable DMA on reception error */
 void usart_reception_error_dma_enable(uint32_t usart_periph);
 
-/* USART be able to wake up the mcu from deep-sleep mode */
+/* enable USART to wakeup the mcu from deep-sleep mode */
 void usart_wakeup_enable(uint32_t usart_periph);
-/* USART be not able to wake up the mcu from deep-sleep mode */
+/* disable USART to wakeup the mcu from deep-sleep mode */
 void usart_wakeup_disable(uint32_t usart_periph);
-/* wakeup mode from deep-sleep mode */
+/* configure the USART wakeup mode from deep-sleep mode */
 void usart_wakeup_mode_config(uint32_t usart_periph, uint32_t wum);
+/* enable USART command */
+void usart_command_enable(uint32_t usart_periph, uint32_t cmdtype);
 
 /* USART receive FIFO */
-/* receive FIFO enable */
+/* enable receive FIFO */
 void usart_receive_fifo_enable(uint32_t usart_periph);
-/* receive FIFO disable */
+/* disable receive FIFO */
 void usart_receive_fifo_disable(uint32_t usart_periph);
 /* read receive FIFO counter number */
 uint8_t usart_receive_fifo_counter_number(uint32_t usart_periph);
 
+/* flag & interrupt functions */
 /* get flag in STAT/RFCS register */
 FlagStatus usart_flag_get(uint32_t usart_periph, usart_flag_enum flag);
-/* clear USART status */
+/* clear flag in STAT register */
 void usart_flag_clear(uint32_t usart_periph, usart_flag_enum flag);
-
 /* enable USART interrupt */
-void usart_interrupt_enable(uint32_t usart_periph, uint32_t inttype);
+void usart_interrupt_enable(uint32_t usart_periph, usart_interrupt_enum interrupt);
 /* disable USART interrupt */
-void usart_interrupt_disable(uint32_t usart_periph, uint32_t inttype);
-/* enable USART command */
-void usart_command_enable(uint32_t usart_periph, uint32_t cmdtype);
+void usart_interrupt_disable(uint32_t usart_periph, usart_interrupt_enum interrupt);
 /* get USART interrupt and flag status */
-FlagStatus usart_interrupt_flag_get(uint32_t usart_periph, uint32_t int_flag);
+FlagStatus usart_interrupt_flag_get(uint32_t usart_periph, usart_interrupt_flag_enum int_flag);
 /* clear USART interrupt flag */
-void usart_interrupt_flag_clear(uint32_t usart_periph, uint32_t flag);
+void usart_interrupt_flag_clear(uint32_t usart_periph, usart_interrupt_flag_enum int_flag);
+
 #endif /* GD32F3X0_USART_H */

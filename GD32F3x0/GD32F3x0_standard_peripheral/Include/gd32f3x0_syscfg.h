@@ -1,12 +1,36 @@
 /*!
     \file  gd32f3x0_syscfg.h
     \brief definitions for the SYSCFG
+
+    \version 2017-06-06, V1.0.0, firmware for GD32F3x0
+    \version 2019-06-01, V2.0.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2017-06-06, V1.0.0, firmware for GD32F3x0
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F3X0_SYSCFG_H
@@ -18,13 +42,13 @@
 #define SYSCFG                              SYSCFG_BASE
 
 /* registers definitions */
-#define SYSCFG_CFG0                         REG32(SYSCFG + 0x00U)               /*!< system configuration register 0 */
-#define SYSCFG_EXTISS0                      REG32(SYSCFG + 0x08U)               /*!< EXTI sources selection register 0 */
-#define SYSCFG_EXTISS1                      REG32(SYSCFG + 0x0CU)               /*!< EXTI sources selection register 1 */
-#define SYSCFG_EXTISS2                      REG32(SYSCFG + 0x10U)               /*!< EXTI sources selection register 2 */
-#define SYSCFG_EXTISS3                      REG32(SYSCFG + 0x14U)               /*!< EXTI sources selection register 3 */
-#define SYSCFG_CFG2                         REG32(SYSCFG + 0x18U)               /*!< system configuration register 2 */
-#define SYSCFG_CPSCTL                       REG32(SYSCFG + 0x20U)               /*!< system I/O compensation control register */
+#define SYSCFG_CFG0                         REG32(SYSCFG + 0x00000000U)         /*!< system configuration register 0 */
+#define SYSCFG_EXTISS0                      REG32(SYSCFG + 0x00000008U)         /*!< EXTI sources selection register 0 */
+#define SYSCFG_EXTISS1                      REG32(SYSCFG + 0x0000000CU)         /*!< EXTI sources selection register 1 */
+#define SYSCFG_EXTISS2                      REG32(SYSCFG + 0x00000010U)         /*!< EXTI sources selection register 2 */
+#define SYSCFG_EXTISS3                      REG32(SYSCFG + 0x00000014U)         /*!< EXTI sources selection register 3 */
+#define SYSCFG_CFG2                         REG32(SYSCFG + 0x00000018U)         /*!< system configuration register 2 */
+#define SYSCFG_CPSCTL                       REG32(SYSCFG + 0x00000020U)         /*!< system I/O compensation control register */
 
 /* SYSCFG_CFG0 bits definitions */
 #define SYSCFG_CFG0_BOOT_MODE               BITS(0,1)                           /*!< SYSCFG memory remap config */
@@ -91,7 +115,7 @@
 #define EXTI_SS_MASK                        BITS(0,3)                           /*!< EXTI source select mask */
 
 /* EXTI source select jumping step definition */
-#define EXTI_SS_JSTEP                       ((uint8_t)(0x04U))                  /*!< EXTI source select jumping step */
+#define EXTI_SS_JSTEP                       ((uint8_t)0x04U)                    /*!< EXTI source select jumping step */
 
 /* EXTI source select moving step definition */
 #define EXTI_SS_MSTEP(pin)                  (EXTI_SS_JSTEP * ((pin) % EXTI_SS_JSTEP))   /*!< EXTI source select moving step */
