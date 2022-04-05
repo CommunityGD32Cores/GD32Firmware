@@ -1,20 +1,44 @@
 /*!
     \file  gd32f1x0_opa.c
     \brief OPA driver
+
+    \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
+    \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
+    \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
-    2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
-    2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
-    2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifdef GD32F170_190
 
-#include "gd32f1x0_opa.h" 
+#include "gd32f1x0_opa.h"
 
 /*!
     \brief      deinit the OPA register to its default reset value
@@ -30,7 +54,8 @@ void opa_deinit(void)
 
 /*!
     \brief      enable OPA switch
-    \param[in]  opax_swy
+    \param[in]  opax_swy£ºOPA switch
+                only one parameter can be selected which is shown as below:
       \arg        OPA_T3OPA0: T3 switch enable for OPA0
       \arg        OPA_S1OPA0: S1 switch enable for OPA0
       \arg        OPA_S2OPA0: S2 switch enable for OPA0
@@ -90,7 +115,8 @@ void opa_disable(uint32_t opa_periph)
 
 /*!
     \brief      disable OPA switch
-    \param[in]  opax_swy
+    \param[in]  opax_swy£ºOPA switch
+                only one parameter can be selected which is shown as below:
       \arg        OPA_T3OPA0: T3 switch enable for OPA0
       \arg        OPA_S1OPA0: S1 switch enable for OPA0
       \arg        OPA_S2OPA0: S2 switch enable for OPA0
@@ -150,7 +176,8 @@ void opa_low_power_disable(uint32_t opa_periph)
 
 /*!
     \brief      set OPA power range
-    \param[in]  powerrange
+    \param[in]  powerrange: opa power range
+                only one parameter can be selected which is shown as below:
       \arg        OPA_POWRANGE_LOW: Low power range is selected (VDDA is lower than 3.3V)
       \arg        OPA_POWRANGE_HIGH: High power range is selected (VDDA is higher than 3.3V)
     \param[out] none
@@ -164,7 +191,8 @@ void opa_power_range_config(uint32_t powerrange)
 
 /*!
     \brief      set OPA bias trimming mode
-    \param[in]  opa_trimmode
+    \param[in]  opa_trimmode: opa trimming mode
+                only one parameter can be selected which is shown as below:
       \arg        OPA_BT_TRIM_FACTORY: factory trimming values are used for offset calibration
       \arg        OPA_BT_TRIM_USER: user trimming values are used for offset calibration
     \param[out] none
@@ -180,7 +208,8 @@ void opa_trim_mode_set(uint32_t opa_trimmode)
     \brief      set OPA bias trimming value
     \param[in]  opa_periph
       \arg        OPAx(x =0,1,2)
-    \param[in]  opa_input
+    \param[in]  opa_input: opa input
+                only one parameter can be selected which is shown as below:
       \arg        OPA_INPUT_P: PMOS input is selected to configure the trimming value
       \arg        OPA_INPUT_N: NMOS input is selected to configure the trimming value
     \param[in]  opa_trimmode
@@ -243,7 +272,8 @@ void opa_trim_value_config(uint32_t opa_periph,uint32_t opa_input,uint32_t opa_t
     \brief      set OPA bias trimming value low power
     \param[in]  opa_periph
       \arg        OPAx(x =0,1,2)
-    \param[in]  opa_input
+    \param[in]  opa_input: opa input
+                only one parameter can be selected which is shown as below:
       \arg        OPA_INPUT_P: PMOS input is selected to configure the trimming value
       \arg        OPA_INPUT_N: NMOS input is selected to configure the trimming value
     \param[in]  opa_trimmode

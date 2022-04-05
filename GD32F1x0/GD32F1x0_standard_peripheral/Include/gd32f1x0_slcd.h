@@ -1,15 +1,39 @@
 /*!
     \file  gd32f1x0_slcd.h
     \brief definitions for the SLCD
+    
+    \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
+    \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
+    \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
-    2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
-    2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
-    2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifdef GD32F170_190
@@ -22,22 +46,22 @@
 #define SLCD                            SLCD_BASE
 
 /* registers definitions */
-#define SLCD_CTL                        REG32(SLCD + 0x00U)                 /*!< SLCD controller register */
-#define SLCD_CFG                        REG32(SLCD + 0x04U)                 /*!< SLCD configuration register */
-#define SLCD_STAT                       REG32(SLCD + 0x08U)                 /*!< SLCD status flag register */
-#define SLCD_STATC                      REG32(SLCD + 0x0CU)                 /*!< SLCD status flag clear register */
-#define SLCD_DATA0                      REG32(SLCD + 0x14U)                 /*!< SLCD display data register 0 */
-#define SLCD_DATA1                      REG32(SLCD + 0x1CU)                 /*!< SLCD display data register 1 */
-#define SLCD_DATA2                      REG32(SLCD + 0x24U)                 /*!< SLCD display data register 2 */
-#define SLCD_DATA3                      REG32(SLCD + 0x2CU)                 /*!< SLCD display data register 3 */
-#define SLCD_DATA4                      REG32(SLCD + 0x34U)                 /*!< SLCD display data register 4 */
-#define SLCD_DATA5                      REG32(SLCD + 0x3CU)                 /*!< SLCD display data register 5 */
-#define SLCD_DATA6                      REG32(SLCD + 0x44U)                 /*!< SLCD display data register 6 */
-#define SLCD_DATA7                      REG32(SLCD + 0x4CU)                 /*!< SLCD display data register 7 */
+#define SLCD_CTL                        REG32(SLCD + 0x00000000U)           /*!< SLCD controller register */
+#define SLCD_CFG                        REG32(SLCD + 0x00000004U)           /*!< SLCD configuration register */
+#define SLCD_STAT                       REG32(SLCD + 0x00000008U)           /*!< SLCD status flag register */
+#define SLCD_STATC                      REG32(SLCD + 0x0000000CU)           /*!< SLCD status flag clear register */
+#define SLCD_DATA0                      REG32(SLCD + 0x00000014U)           /*!< SLCD display data register 0 */
+#define SLCD_DATA1                      REG32(SLCD + 0x0000001CU)           /*!< SLCD display data register 1 */
+#define SLCD_DATA2                      REG32(SLCD + 0x00000024U)           /*!< SLCD display data register 2 */
+#define SLCD_DATA3                      REG32(SLCD + 0x0000002CU)           /*!< SLCD display data register 3 */
+#define SLCD_DATA4                      REG32(SLCD + 0x00000034U)           /*!< SLCD display data register 4 */
+#define SLCD_DATA5                      REG32(SLCD + 0x0000003CU)           /*!< SLCD display data register 5 */
+#define SLCD_DATA6                      REG32(SLCD + 0x00000044U)           /*!< SLCD display data register 6 */
+#define SLCD_DATA7                      REG32(SLCD + 0x0000004CU)           /*!< SLCD display data register 7 */
 
 /* bits definitions */
 /* SLCD_CTL */
-#define SLCD_CTL_LCDON                  BIT(0)                              /*!< SLCD controller start */
+#define SLCD_CTL_SLCDON                 BIT(0)                              /*!< SLCD controller start */
 #define SLCD_CTL_VSRC                   BIT(1)                              /*!< SLCD Voltage source */
 #define SLCD_CTL_DUTY                   BITS(2,4)                           /*!< duty select */
 #define SLCD_CTL_BIAS                   BITS(5,6)                           /*!< SLCD bias voltage select */
@@ -91,15 +115,21 @@
 #define SLCD_VOLTAGE_INTERNAL           ((uint8_t)0x00U)                    /*!< SLCD internal voltage source */
 #define SLCD_VOLTAGE_EXTERNAL           ((uint8_t)0x01U)                    /*!< SLCD external voltage source */
 
-/* data register definitions */
-#define SLCD_DATA_REG0                  ((uint32_t)0x00000000U)             /*!< SLCD display data register 0 */
-#define SLCD_DATA_REG1                  ((uint32_t)0x00000002U)             /*!< SLCD display data register 1 */
-#define SLCD_DATA_REG2                  ((uint32_t)0x00000004U)             /*!< SLCD display data register 2 */
-#define SLCD_DATA_REG3                  ((uint32_t)0x00000006U)             /*!< SLCD display data register 3 */
-#define SLCD_DATA_REG4                  ((uint32_t)0x00000008U)             /*!< SLCD display data register 4 */
-#define SLCD_DATA_REG5                  ((uint32_t)0x0000000AU)             /*!< SLCD display data register 5 */
-#define SLCD_DATA_REG6                  ((uint32_t)0x0000000CU)             /*!< SLCD display data register 6 */
-#define SLCD_DATA_REG7                  ((uint32_t)0x0000000EU)             /*!< SLCD display data register 7 */
+/*data register number */
+typedef enum 
+{
+    SLCD_DATA_REG0,                                                         /*!< SLCD display data register 0 */
+    SLCD_DATA_REG1,                                                         /*!< SLCD display data register 1 */
+    SLCD_DATA_REG2,                                                         /*!< SLCD display data register 2 */
+    SLCD_DATA_REG3,                                                         /*!< SLCD display data register 3 */
+    SLCD_DATA_REG4,                                                         /*!< SLCD display data register 4 */
+    SLCD_DATA_REG5,                                                         /*!< SLCD display data register 5 */
+    SLCD_DATA_REG6,                                                         /*!< SLCD display data register 6 */
+    SLCD_DATA_REG7,                                                         /*!< SLCD display data register 7 */
+}slcd_data_register_enum;
+
+/* SLCD data register */
+#define SLCD_DATA0_7(number)             REG32((SLCD) + (uint32_t)0x14U + (number) * (uint32_t)0x08U)
 
 /* bias voltage definitions */
 #define CTL_BIAS(regval)                (BITS(5,6) & ((uint32_t)(regval) << 5U))
@@ -109,12 +139,12 @@
 
 /* duty select definitions */
 #define CTL_DUTY(regval)                (BITS(2,4) & ((uint32_t)(regval) << 2U))
-#define SLCD_DUTY_STATIC                CTL_DUTY(0)                         /*!< static dutycycle */
-#define SLCD_DUTY_1_2                   CTL_DUTY(1)                         /*!< 1/2 dutycycle */
-#define SLCD_DUTY_1_3                   CTL_DUTY(2)                         /*!< 1/3 dutycycle */
-#define SLCD_DUTY_1_4                   CTL_DUTY(3)                         /*!< 1/4 dutycycle */
-#define SLCD_DUTY_1_6                   CTL_DUTY(5)                         /*!< 1/6 dutycycle */
-#define SLCD_DUTY_1_8                   CTL_DUTY(4)                         /*!< 1/8 dutycycle */
+#define SLCD_DUTY_STATIC                CTL_DUTY(0)                         /*!< static duty */
+#define SLCD_DUTY_1_2                   CTL_DUTY(1)                         /*!< 1/2 duty */
+#define SLCD_DUTY_1_3                   CTL_DUTY(2)                         /*!< 1/3 duty */
+#define SLCD_DUTY_1_4                   CTL_DUTY(3)                         /*!< 1/4 duty */
+#define SLCD_DUTY_1_6                   CTL_DUTY(5)                         /*!< 1/6 duty */
+#define SLCD_DUTY_1_8                   CTL_DUTY(4)                         /*!< 1/8 duty */
 
 /* SLCD clock prescaler */
 #define CFG_PRE(regval)                 (BITS(22,25) & ((uint32_t)(regval) << 22U))
@@ -206,16 +236,12 @@
 #define SLCD_PULSEON_DURATION_7         CFG_PULSE(7)                        /*!< pulse on duration = 7*1/fPRE */
 
 /* function declarations */
-/* check the SLCD status flag */
-FlagStatus slcd_flag_get(uint8_t slcd_flag);
-/* check the SLCD interrupt flag */
-FlagStatus slcd_interrupt_flag_get(uint8_t slcd_interrupt);
-/* clear the SLCD flag */
-void slcd_flag_clear(uint8_t slcd_flag);
-/* clear the SLCD interrupt flag */
-void slcd_interrupt_flag_clear(uint8_t slcd_interrupt);
-/* the SLCD interrupt config */
-void slcd_interrupt_config(uint8_t slcd_interrupt,ControlStatus newvalue);
+/* SLCD reset */
+void slcd_deinit(void);
+/* enable SLCD interface */
+void slcd_enable(void);
+/* disable SLCD interface */
+void slcd_disable(void);
 
 /* SLCD bias voltage select */
 void slcd_bias_voltage_select(uint32_t bias_voltage);
@@ -239,17 +265,20 @@ void slcd_voltage_source_select(uint8_t voltage_source);
 void slcd_high_drive_config(ControlStatus newvalue);
 
 /* SLCD data register write */
-void slcd_data_register_write(uint32_t data_reg,uint32_t data);
+void slcd_data_register_write(slcd_data_register_enum register_number, uint32_t data);
 /* SLCD data update request */
 void slcd_data_update_request(void);
 
-/* SLCD reset */
-void slcd_deinit(void);
-/* enable SLCD interface */
-void slcd_enable(void);
-/* disable SLCD interface */
-void slcd_disable(void);
-
+/* the SLCD interrupt config */
+void slcd_interrupt_config(uint8_t slcd_interrupt,ControlStatus newvalue);
+/* check the SLCD status flag */
+FlagStatus slcd_flag_get(uint8_t slcd_flag);
+/* clear the SLCD flag */
+void slcd_flag_clear(uint8_t slcd_flag);
+/* check the SLCD interrupt flag */
+FlagStatus slcd_interrupt_flag_get(uint8_t slcd_interrupt);
+/* clear the SLCD interrupt flag */
+void slcd_interrupt_flag_clear(uint8_t slcd_interrupt);
 #endif /* GD32F1X0_SLCD_H */
 
 #endif /* GD32F170_190 */

@@ -1,15 +1,39 @@
 /*!
     \file  gd32f1x0_gpio.h
     \brief definitions for the GPIO
+    
+    \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
+    \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
+    \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, platform for GD32F1x0(x=3,5)
-    2016-01-15, V2.0.0, platform for GD32F1x0(x=3,5,7,9)
-    2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
-    2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F1X0_GPIO_H
@@ -25,18 +49,20 @@
 #define GPIOF                      (GPIO_BASE + 0x00001400U)
 
 /* registers definitions */
-#define GPIO_CTL(gpiox)            REG32((gpiox) + 0x00U)    /*!< GPIO port control register */
-#define GPIO_OMODE(gpiox)          REG32((gpiox) + 0x04U)    /*!< GPIO port output mode register */
-#define GPIO_OSPD(gpiox)           REG32((gpiox) + 0x08U)    /*!< GPIO port output speed register */
-#define GPIO_PUD(gpiox)            REG32((gpiox) + 0x0CU)    /*!< GPIO port pull-up/down register */
-#define GPIO_ISTAT(gpiox)          REG32((gpiox) + 0x10U)    /*!< GPIO port input status register */
-#define GPIO_OCTL(gpiox)           REG32((gpiox) + 0x14U)    /*!< GPIO port output control register */
-#define GPIO_BOP(gpiox)            REG32((gpiox) + 0x18U)    /*!< GPIO port bit operation register */
-#define GPIO_LOCK(gpiox)           REG32((gpiox) + 0x1CU)    /*!< GPIO port configuration lock register */
-#define GPIO_AFSEL0(gpiox)         REG32((gpiox) + 0x20U)    /*!< GPIO alternate function selected register 0 */
-#define GPIO_AFSEL1(gpiox)         REG32((gpiox) + 0x24U)    /*!< GPIO alternate function selected register 1 */
-#define GPIO_BC(gpiox)             REG32((gpiox) + 0x28U)    /*!< GPIO bit clear register */
-#define GPIO_TG(gpiox)             REG32((gpiox) + 0x2CU)    /*!< GPIO port bit toggle register */
+#define GPIO_CTL(gpiox)            REG32((gpiox) + 0x00000000U)    /*!< GPIO port control register */
+#define GPIO_OMODE(gpiox)          REG32((gpiox) + 0x00000004U)    /*!< GPIO port output mode register */
+#define GPIO_OSPD(gpiox)           REG32((gpiox) + 0x00000008U)    /*!< GPIO port output speed register */
+#define GPIO_PUD(gpiox)            REG32((gpiox) + 0x0000000CU)    /*!< GPIO port pull-up/pull-down register */
+#define GPIO_ISTAT(gpiox)          REG32((gpiox) + 0x00000010U)    /*!< GPIO port input status register */
+#define GPIO_OCTL(gpiox)           REG32((gpiox) + 0x00000014U)    /*!< GPIO port output control register */
+#define GPIO_BOP(gpiox)            REG32((gpiox) + 0x00000018U)    /*!< GPIO port bit operation register */
+#define GPIO_LOCK(gpiox)           REG32((gpiox) + 0x0000001CU)    /*!< GPIO port configuration lock register */
+#define GPIO_AFSEL0(gpiox)         REG32((gpiox) + 0x00000020U)    /*!< GPIO alternate function selected register 0 */
+#define GPIO_AFSEL1(gpiox)         REG32((gpiox) + 0x00000024U)    /*!< GPIO alternate function selected register 1 */
+#define GPIO_BC(gpiox)             REG32((gpiox) + 0x00000028U)    /*!< GPIO bit clear register */
+#ifdef GD32F170_190
+#define GPIO_TG(gpiox)             REG32((gpiox) + 0x0000002CU)    /*!< GPIO port bit toggle register */
+#endif /* GD32F170_190 */
 
 /* bits definitions */
 /* GPIO_CTL */
@@ -271,9 +297,9 @@ typedef FlagStatus bit_status;
 
 /* pull-up/pull-down definitions */
 #define PUD_PUPD(regval)           (BITS(0,1) & ((uint32_t)(regval) << 0))
-#define GPIO_PUPD_NONE             PUD_PUPD(0)           /*!< without weak pull-up and pull-down resistors */
-#define GPIO_PUPD_PULLUP           PUD_PUPD(1)           /*!< with weak pull-up resistor */
-#define GPIO_PUPD_PULLDOWN         PUD_PUPD(2)           /*!< with weak pull-down resistor */
+#define GPIO_PUPD_NONE             PUD_PUPD(0)           /*!< floating mode, no pull-up and pull-down resistors */
+#define GPIO_PUPD_PULLUP           PUD_PUPD(1)           /*!< with pull-up resistor */
+#define GPIO_PUPD_PULLDOWN         PUD_PUPD(2)           /*!< with pull-down resistor */
 
 /* GPIO pin definitions */
 #define GPIO_PIN_0                 BIT(0)                /*!< GPIO pin 0 */
@@ -296,19 +322,19 @@ typedef FlagStatus bit_status;
 
 /* GPIO mode configuration values */
 #define GPIO_MODE_SET(n, mode)     ((uint32_t)((uint32_t)(mode) << (2U * (n))))
-#define GPIO_MODE_MASK(n)          (0x3U << (2U * (n)))
+#define GPIO_MODE_MASK(n)          ((uint32_t)((uint32_t)0x00000003U << (2U * (n))))
 
 /* GPIO pull-up/pull-down values */
 #define GPIO_PUPD_SET(n, pupd)     ((uint32_t)((uint32_t)(pupd) << (2U * (n))))
-#define GPIO_PUPD_MASK(n)          (0x3U << (2U * (n)))
+#define GPIO_PUPD_MASK(n)          ((uint32_t)((uint32_t)0x00000003U << (2U * (n))))
 
 /* GPIO output speed values */
 #define GPIO_OSPEED_SET(n, speed)  ((uint32_t)((uint32_t)(speed) << (2U * (n))))
-#define GPIO_OSPEED_MASK(n)        (0x3U << (2U * (n)))
+#define GPIO_OSPEED_MASK(n)        ((uint32_t)((uint32_t)0x00000003U << (2U * (n))))
 
 /* GPIO output type */
-#define GPIO_OTYPE_PP              ((uint8_t)(0x00U))     /*!< push pull mode */
-#define GPIO_OTYPE_OD              ((uint8_t)(0x01U))     /*!< open drain mode */
+#define GPIO_OTYPE_PP              ((uint8_t)(0x00U))    /*!< push pull mode */
+#define GPIO_OTYPE_OD              ((uint8_t)(0x01U))    /*!< open drain mode */
 
 /* GPIO output max speed value */
 #define OSPD_OSPD(regval)          (BITS(0,1) & ((uint32_t)(regval) << 0))
@@ -318,58 +344,56 @@ typedef FlagStatus bit_status;
 
 /* GPIO alternate function values */
 #define GPIO_AFR_SET(n, af)        ((uint32_t)((uint32_t)(af) << (4U * (n))))
-#define GPIO_AFR_MASK(n)           (0xFU << (4U * (n)))
+#define GPIO_AFR_MASK(n)           ((uint32_t)((uint32_t)0x0000000FU << (4U * (n))))
  
 /* GPIO alternate function */
 #define AF(regval)                 (BITS(0,3) & ((uint32_t)(regval) << 0)) 
-#define GPIO_AF_0                  AF(0)                /*!< alternate function selected 0 */
-#define GPIO_AF_1                  AF(1)                /*!< alternate function selected 1 */
-#define GPIO_AF_2                  AF(2)                /*!< alternate function selected 2 */
-#define GPIO_AF_3                  AF(3)                /*!< alternate function selected 3 */
-#define GPIO_AF_4                  AF(4)                /*!< alternate function selected 4 */
-#define GPIO_AF_5                  AF(5)                /*!< alternate function selected 5 */
-#define GPIO_AF_6                  AF(6)                /*!< alternate function selected 6 */
-#define GPIO_AF_7                  AF(7)                /*!< alternate function selected 7 */
-#define GPIO_AF_8                  AF(8)                /*!< alternate function selected 8 */
-#define GPIO_AF_9                  AF(9)                /*!< alternate function selected 9 */
-#define GPIO_AF_10                 AF(10)               /*!< alternate function selected 10 */
-#define GPIO_AF_11                 AF(11)               /*!< alternate function selected 11 */
+#define GPIO_AF_0                  AF(0)                 /*!< alternate function 0 selected */
+#define GPIO_AF_1                  AF(1)                 /*!< alternate function 1 selected */
+#define GPIO_AF_2                  AF(2)                 /*!< alternate function 2 selected */
+#define GPIO_AF_3                  AF(3)                 /*!< alternate function 3 selected */
+#define GPIO_AF_4                  AF(4)                 /*!< alternate function 4 selected (port A,B only) */
+#define GPIO_AF_5                  AF(5)                 /*!< alternate function 5 selected (port A,B only) */
+#define GPIO_AF_6                  AF(6)                 /*!< alternate function 6 selected (port A,B only) */
+#define GPIO_AF_7                  AF(7)                 /*!< alternate function 7 selected (port A only) */
+#define GPIO_AF_9                  AF(9)                 /*!< alternate function 9 selected (port A,B only) */
+#define GPIO_AF_11                 AF(11)                /*!< alternate function 11 selected */
 
 /* function declarations */
 /* reset GPIO port */
 void gpio_deinit(uint32_t gpio_periph);
 /* set GPIO mode */
-void gpio_mode_set(uint32_t gpio_periph,uint32_t mode,uint32_t pull_up_down,uint32_t pin);
+void gpio_mode_set(uint32_t gpio_periph, uint32_t mode, uint32_t pull_up_down, uint32_t pin);
 /* set GPIO output type and speed */
-void gpio_output_options_set(uint32_t gpio_periph,uint8_t otype,uint32_t speed,uint32_t pin);
+void gpio_output_options_set(uint32_t gpio_periph, uint8_t otype, uint32_t speed, uint32_t pin);
 
 /* set GPIO pin bit */
-void gpio_bit_set(uint32_t gpio_periph,uint32_t pin);
+void gpio_bit_set(uint32_t gpio_periph, uint32_t pin);
 /* reset GPIO pin bit */
-void gpio_bit_reset(uint32_t gpio_periph,uint32_t pin);
+void gpio_bit_reset(uint32_t gpio_periph, uint32_t pin);
 /* write data to the specified GPIO pin */
-void gpio_bit_write(uint32_t gpio_periph,uint32_t pin,bit_status bit_value);
+void gpio_bit_write(uint32_t gpio_periph, uint32_t pin, bit_status bit_value);
 /* write data to the specified GPIO port */
-void gpio_port_write(uint32_t gpio_periph,uint16_t data);
+void gpio_port_write(uint32_t gpio_periph, uint16_t data);
 
 /* get GPIO pin input status */
-FlagStatus gpio_input_bit_get(uint32_t gpio_periph,uint32_t pin);
+FlagStatus gpio_input_bit_get(uint32_t gpio_periph, uint32_t pin);
 /* get GPIO port input status */
 uint16_t gpio_input_port_get(uint32_t gpio_periph);
 /* get GPIO pin output status */
-FlagStatus gpio_output_bit_get(uint32_t gpio_periph,uint32_t pin);
+FlagStatus gpio_output_bit_get(uint32_t gpio_periph, uint32_t pin);
 /* get GPIO port output status */
 uint16_t gpio_output_port_get(uint32_t gpio_periph);
 
 /* set GPIO alternate function */
-void gpio_af_set(uint32_t gpio_periph,uint32_t alt_func_num,uint32_t pin);
+void gpio_af_set(uint32_t gpio_periph,uint32_t alt_func_num, uint32_t pin);
 /* lock GPIO pin bit */
-void gpio_pin_lock(uint32_t gpio_periph,uint32_t pin);
+void gpio_pin_lock(uint32_t gpio_periph, uint32_t pin);
 
 #ifdef GD32F170_190
 
 /* toggle GPIO pin status */
-void gpio_bit_toggle(uint32_t gpio_periph,uint32_t pin);
+void gpio_bit_toggle(uint32_t gpio_periph, uint32_t pin);
 /* toggle GPIO port status */
 void gpio_port_toggle(uint32_t gpio_periph);
 

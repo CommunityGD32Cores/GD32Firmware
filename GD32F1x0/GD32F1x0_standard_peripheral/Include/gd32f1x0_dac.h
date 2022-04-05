@@ -1,17 +1,40 @@
 /*!
     \file  gd32f1x0_dac.h
     \brief definitions for the DAC
+
+    \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
+    \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
+    \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
-    2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
-    2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
-    2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
-
 
 #ifndef GD32F1X0_DAC_H
 #define GD32F1X0_DAC_H
@@ -26,24 +49,24 @@
 #endif  /* GD32F170_190 */
 
 /* registers definitions */
-#define DAC_CTL                 REG32(DAC + 0x00U) /*!< DAC control register */
-#define DAC_SWT                 REG32(DAC + 0x04U) /*!< DAC software trigger register */
-#define DAC0_R12DH              REG32(DAC + 0x08U) /*!< DAC0 12-bit right-aligned data holding register */
-#define DAC0_L12DH              REG32(DAC + 0x0CU) /*!< DAC0 12-bit left-aligned data holding register */
-#define DAC0_R8DH               REG32(DAC + 0x10U) /*!< DAC0 8-bit right-aligned data holding register */
+#define DAC_CTL                 REG32(DAC + 0x00000000U) /*!< DAC control register */
+#define DAC_SWT                 REG32(DAC + 0x00000004U) /*!< DAC software trigger register */
+#define DAC0_R12DH              REG32(DAC + 0x00000008U) /*!< DAC0 12-bit right-aligned data holding register */
+#define DAC0_L12DH              REG32(DAC + 0x0000000CU) /*!< DAC0 12-bit left-aligned data holding register */
+#define DAC0_R8DH               REG32(DAC + 0x00000010U) /*!< DAC0 8-bit right-aligned data holding register */
 #ifdef GD32F170_190
-#define DAC1_R12DH              REG32(DAC + 0x14U) /*!< DAC1 12-bit right-aligned data holding register */
-#define DAC1_L12DH              REG32(DAC + 0x18U) /*!< DAC1 12-bit left-aligned data holding register */
-#define DAC1_R8DH               REG32(DAC + 0x1CU) /*!< DAC1 8-bit right-aligned data holding register */
-#define DACC_R12DH              REG32(DAC + 0x20U) /*!< DAC concurrent mode 12-bit right-aligned data holding register */
-#define DACC_L12DH              REG32(DAC + 0x24U) /*!< DAC concurrent mode 12-bit left-aligned data holding register */
-#define DACC_R8DH               REG32(DAC + 0x28U) /*!< DAC concurrent mode 8-bit right-aligned data holding register */
+#define DAC1_R12DH              REG32(DAC + 0x00000014U) /*!< DAC1 12-bit right-aligned data holding register */
+#define DAC1_L12DH              REG32(DAC + 0x00000018U) /*!< DAC1 12-bit left-aligned data holding register */
+#define DAC1_R8DH               REG32(DAC + 0x0000001CU) /*!< DAC1 8-bit right-aligned data holding register */
+#define DACC_R12DH              REG32(DAC + 0x00000020U) /*!< DAC concurrent mode 12-bit right-aligned data holding register */
+#define DACC_L12DH              REG32(DAC + 0x00000024U) /*!< DAC concurrent mode 12-bit left-aligned data holding register */
+#define DACC_R8DH               REG32(DAC + 0x00000028U) /*!< DAC concurrent mode 8-bit right-aligned data holding register */
 #endif  /* GD32F170_190 */
-#define DAC0_DO                 REG32(DAC + 0x2CU) /*!< DAC0 output data register */
+#define DAC0_DO                 REG32(DAC + 0x0000002CU) /*!< DAC0 output data register */
 #ifdef GD32F170_190
-#define DAC1_DO                 REG32(DAC + 0x30U) /*!< DAC1 output data register */
+#define DAC1_DO                 REG32(DAC + 0x00000030U) /*!< DAC1 output data register */
 #endif  /* GD32F170_190 */
-#define DAC_STAT                REG32(DAC + 0x34U) /*!< DAC status register */
+#define DAC_STAT                REG32(DAC + 0x00000034U) /*!< DAC status register */
 
 /* bits definitions */
 /* DAC_CTL */
@@ -121,7 +144,7 @@
 #define DAC_TRIGGER_T2_TRGO     CTL_DTSEL(1)       /*!< TIMER2 TRGO */
 #define DAC_TRIGGER_T14_TRGO    CTL_DTSEL(3)       /*!< TIMER14 TRGO */
 #define DAC_TRIGGER_T1_TRGO     CTL_DTSEL(4)       /*!< TIMER1 TRGO */
-#define DAC_TRIGGER_EXTI_9    CTL_DTSEL(6)         /*!< EXTI interrupt line9 event */
+#define DAC_TRIGGER_EXTI_9      CTL_DTSEL(6)       /*!< EXTI interrupt line9 event */
 #define DAC_TRIGGER_SOFTWARE    CTL_DTSEL(7)       /*!< software trigger */
 
 /* dac data alignment */
@@ -197,10 +220,6 @@ void dac_trigger_disable(uint32_t dac_periph);
 void dac_software_trigger_enable(uint32_t dac_periph);
 /* disable DAC software trigger */
 void dac_software_trigger_disable(uint32_t dac_periph);
-/* enable DAC interrupt(DAC0 DMA underrun interrupt) */
-void dac_interrupt_enable(uint32_t dac_periph);
-/* disable DAC interrupt(DAC0 DMA underrun interrupt) */
-void dac_interrupt_disable(uint32_t dac_periph);
 
 /* set DAC tgigger source */
 void dac_trigger_source_config(uint32_t dac_periph,uint32_t triggersource);
@@ -211,6 +230,10 @@ uint16_t dac_output_value_get(uint32_t dac_periph);
 FlagStatus dac_flag_get(uint32_t dac_periph);
 /* clear the specified DAC flag(DAC DMA underrun flag) */
 void dac_flag_clear(uint32_t dac_periph);
+/* enable DAC interrupt(DAC0 DMA underrun interrupt) */
+void dac_interrupt_enable(uint32_t dac_periph);
+/* disable DAC interrupt(DAC0 DMA underrun interrupt) */
+void dac_interrupt_disable(uint32_t dac_periph);
 /* get the specified DAC interrupt flag(DAC DMA underrun interrupt flag) */
 FlagStatus dac_interrupt_flag_get(uint32_t dac_periph);
 /* clear the specified DAC interrupt flag(DAC DMA underrun interrupt flag) */

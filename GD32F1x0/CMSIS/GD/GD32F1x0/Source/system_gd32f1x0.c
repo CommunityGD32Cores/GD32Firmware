@@ -40,6 +40,8 @@
 #define __HXTAL           (HXTAL_VALUE)            /* high speed crystal oscillator frequency */
 #define __SYS_OSC_CLK     (__IRC8M)                /* main oscillator frequency */
 
+#define VECT_TAB_OFFSET  (uint32_t)0x00            /* vector table base offset */
+
 /* select a system clock by uncommenting the following line */
 //#define __SYSTEM_CLOCK_8M_HXTAL              (__HXTAL)
 //#define __SYSTEM_CLOCK_8M_IRC8M              (__IRC8M)
@@ -88,7 +90,7 @@ void SystemInit (void)
     RCU_CFG0 &= ~(RCU_CFG0_SCS | RCU_CFG0_AHBPSC | RCU_CFG0_APB1PSC | RCU_CFG0_APB2PSC |\
                   RCU_CFG0_ADCPSC | RCU_CFG0_CKOUT0SEL | RCU_CFG0_CKOUT0DIV | RCU_CFG0_PLLDV);
 #endif /* GD32F130_150 */
-    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF | RCU_CFG0_PLLDV);
+    RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PLLMF | RCU_CFG0_PLLPREDV);
 #ifdef GD32F130_150
     RCU_CFG0 &= ~(RCU_CFG0_USBDPSC);
 #endif /* GD32F130_150 */
@@ -100,13 +102,19 @@ void SystemInit (void)
 #elif defined (GD32F170_190)
     RCU_CFG2 &= ~RCU_CFG2_IRC28MDIV;
     RCU_CTL1 &= ~RCU_CTL1_IRC28MEN;
-    RCU_CFG3 &= ~RCU_CFG3_CKOUT1SRC;
+    RCU_CFG3 &= ~RCU_CFG3_CKOUT1SEL;
     RCU_CFG3 &= ~RCU_CFG3_CKOUT1DIV;
 #endif /* GD32F130_150 */
     RCU_INT = 0x00000000U;
     
     /* configure system clock */
     system_clock_config();
+    
+#ifdef VECT_TAB_SRAM
+    nvic_vector_table_set(NVIC_VECTTAB_RAM, VECT_TAB_OFFSET);
+#else
+    nvic_vector_table_set(NVIC_VECTTAB_FLASH, VECT_TAB_OFFSET);
+#endif
 }
 
 /*!

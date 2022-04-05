@@ -1,15 +1,39 @@
 /*!
     \file  gd32f1x0_cmp.h
     \brief definitions for the CMP
+
+    \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
+    \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
+    \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, platform GD32F1x0(x=5)
-    2016-01-15, V2.0.0, platform GD32F1x0(x=5,9)
-    2016-04-30, V3.0.0, firmware update for GD32F1x0(x=5,9)
-    2017-06-19, V3.1.0, firmware update for GD32F1x0(x=5,9)
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F1X0_CMP_H
@@ -21,9 +45,10 @@
 #define CMP                                      CMP_BASE                       /*!< CMP base address */  
 
 /* registers definitions */
-#define CMP_CS                                   REG32((CMP) + 0x00U)           /*!< CMP control and status register */
+#define CMP_CS                                   REG32(CMP + 0x00000000U)       /*!< CMP control and status register */
 
-/* CMP_CS bits definitions */
+/* bits definitions */
+/* CMP_CS */
 #define CMP_CS_CMP0EN                            BIT(0)                         /*!< CMP0 enable  */
 #define CMP_CS_CMP0SW                            BIT(1)                         /*!< CMP0 switch */
 #define CMP_CS_CMP0M                             BITS(2,3)                      /*!< CMP0 mode */
@@ -45,7 +70,8 @@
 
 /* consts definitions */
 /* operating mode */
-typedef enum{
+typedef enum
+{
     CMP_HIGHSPEED = 0,                                                          /*!< high speed mode */
     CMP_MIDDLESPEED,                                                            /*!< medium speed mode */
     CMP_LOWSPEED,                                                               /*!< low speed mode */
@@ -53,14 +79,15 @@ typedef enum{
 }operating_mode_enum;
 
 /* inverting input */
-typedef enum{
+typedef enum
+{
     CMP_1_4VREFINT = 0,                                                         /*!< VREFINT /4 input */
     CMP_1_2VREFINT,                                                             /*!< VREFINT /2 input */
     CMP_3_4VREFINT,                                                             /*!< VREFINT *3/4 input */
     CMP_VREFINT,                                                                /*!< VREFINT input */
     CMP_DAC0,                                                                   /*!< PA4 (DAC0) input */
 #ifdef GD32F170_190
-    CMP_DAC1,                                                                   /*!< DAC1 input */
+    CMP_DAC1,                                                                   /*!< PA5 (DAC1) input */
 #else
     CMP_PA5,                                                                    /*!< PA5 input */
 #endif
@@ -68,7 +95,8 @@ typedef enum{
 }inverting_input_enum;
 
 /* hysteresis */
-typedef enum{
+typedef enum
+{
     CMP_HYSTERESIS_NO = 0,                                                      /*!< output no hysteresis */
     CMP_HYSTERESIS_LOW,                                                         /*!< output low hysteresis */
     CMP_HYSTERESIS_MIDDLE,                                                      /*!< output middle hysteresis */
@@ -76,7 +104,8 @@ typedef enum{
 }cmp_hysteresis_enum;
 
 /* output */  
-typedef enum{
+typedef enum
+{
     CMP_OUTPUT_NONE = 0,                                                        /*!< output no selection */
     CMP_OUTPUT_TIMER0BKIN,                                                      /*!< TIMER 0 break input */
     CMP_OUTPUT_TIMER0IC0,                                                       /*!< TIMER 0 channel0 input capture */
@@ -96,7 +125,6 @@ typedef enum{
 
 /* comparator 0 inverting input */
 #define CS_CMP0MSEL(regval)                      (BITS(4,6) & ((uint32_t)(regval) << 4))
-
 #define CS_CMP0MSEL_1_4VREFINT                   CS_CMP0MSEL(0)                 /*!< CMP0 inverting input 1/4 Vrefint */
 #define CS_CMP0MSEL_1_2VREFINT                   CS_CMP0MSEL(1)                 /*!< CMP0 inverting input 1/2 Vrefint */
 #define CS_CMP0MSEL_3_4VREFINT                   CS_CMP0MSEL(2)                 /*!< CMP0 inverting input 3/4 Vrefint */
@@ -107,7 +135,6 @@ typedef enum{
 
 /* CMP0 output */
 #define CS_CMP0OSEL(regval)                      (BITS(8,10) & ((uint32_t)(regval) << 8))
-
 #define CS_CMP0OSEL_OUTPUT_NONE                  CS_CMP0OSEL(0)                 /*!< CMP0 output none  */
 #define CS_CMP0OSEL_OUTPUT_TIMER0BKIN            CS_CMP0OSEL(1)                 /*!< CMP0 output TIMER 0 break input */
 #define CS_CMP0OSEL_OUTPUT_TIMER0IC0             CS_CMP0OSEL(2)                 /*!< CMP0 output TIMER 0 channel 0 input capture */
@@ -133,7 +160,6 @@ typedef enum{
 
 /* CMP1 inverting input */
 #define CS_CMP1MSEL(regval)                      (BITS(20,22) & ((uint32_t)(regval) << 20))
-
 #define CS_CMP1MSEL_1_4VREFINT                   CS_CMP1MSEL(0)                 /*!< CMP1 inverting input 1/4 Vrefint */
 #define CS_CMP1MSEL_1_2VREFINT                   CS_CMP1MSEL(1)                 /*!< CMP1 inverting input 1/2 Vrefint */
 #define CS_CMP1MSEL_3_4VREFINT                   CS_CMP1MSEL(2)                 /*!< CMP1 inverting input 3/4 Vrefint */
@@ -148,7 +174,6 @@ typedef enum{
 
 /* comparator channel1 output */
 #define CS_CMP1OSEL(regval)                      (BITS(24,26) & ((uint32_t)(regval) << 24))
-
 #define CS_CMP1OSEL_OUTPUT_NONE                  CS_CMP1OSEL(0)                 /*!< CMP1 output none  */
 #define CS_CMP1OSEL_OUTPUT_TIMER0BKIN            CS_CMP1OSEL(1)                 /*!< CMP1 output TIMER 0 break input */
 #define CS_CMP1OSEL_OUTPUT_TIMER0IC0             CS_CMP1OSEL(2)                 /*!< CMP1 output TIMER 0 channel 0 input capture */
@@ -166,26 +191,25 @@ typedef enum{
 #define CS_CMP1HST_HYSTERESIS_HIGH               CS_CMP1HST(3)                  /*!< CMP1 output high hysteresis */
 
 /* comparator x definitions */
-#define CMP0                                     ((uint32_t)0x00000000)          /*!< comparator 0 */
-#define CMP1                                     ((uint32_t)0x00000010)          /*!< comparator 1 */
+#define CMP0                                     ((uint32_t)0x00000000U)        /*!< comparator 0 */
+#define CMP1                                     ((uint32_t)0x00000010U)        /*!< comparator 1 */
 
 /* comparator output level */
-#define CMP_OUTPUTLEVEL_HIGH                     ((uint32_t)0x00000001)          /*!< comparator output high */
-#define CMP_OUTPUTLEVEL_LOW                      ((uint32_t)0x00000000)          /*!< comparator output low */
+#define CMP_OUTPUTLEVEL_HIGH                     ((uint32_t)0x00000001U)        /*!< comparator output high */
+#define CMP_OUTPUTLEVEL_LOW                      ((uint32_t)0x00000000U)        /*!< comparator output low */
 
 /* output polarity of comparator */
-#define CMP_OUTPUT_POLARITY_INVERTED             ((uint32_t)0x00000001)          /*!< output is inverted */
-#define CMP_OUTPUT_POLARITY_NOINVERTED           ((uint32_t)0x00000000)          /*!< output is not inverted */
+#define CMP_OUTPUT_POLARITY_INVERTED             ((uint32_t)0x00000001U)        /*!< output is inverted */
+#define CMP_OUTPUT_POLARITY_NOINVERTED           ((uint32_t)0x00000000U)        /*!< output is not inverted */
 
 /* function declarations */
-
 /* initialization functions */
 /* CMP deinit */
 void cmp_deinit(void);
 /* CMP mode init */
-void cmp_mode_init(uint32_t cmp_periph, operating_mode_enum cmp_operating_mode, inverting_input_enum cmp_inverting_input, cmp_hysteresis_enum output_hysteresis);
+void cmp_mode_init(uint32_t cmp_periph, operating_mode_enum operating_mode, inverting_input_enum inverting_input, cmp_hysteresis_enum output_hysteresis);
 /* CMP output init */
-void cmp_output_init(uint32_t cmp_periph, cmp_output_enum cmp_output_slection, uint32_t cmp_output_polarity);
+void cmp_output_init(uint32_t cmp_periph, cmp_output_enum output_slection, uint32_t output_polarity);
 
 /* enable functions */
 /* enable CMP */
@@ -202,8 +226,6 @@ void cmp_window_enable(void);
 void cmp_window_disable(void);
 /* lock the CMP */
 void cmp_lock_enable(uint32_t cmp_periph);
-/* unlock the CMP */
-void cmp_lock_disable(uint32_t cmp_periph);
 
 /* output functions */
 /* get output level */

@@ -1,15 +1,39 @@
 /*!
     \file  gd32f1x0_spi.h
     \brief definitions for the SPI
+
+    \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
+    \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
+    \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
-    2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
-    2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
-    2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F1X0_SPI_H
@@ -23,40 +47,40 @@
 #define SPI2                            (SPI_BASE + 0x00000400U)
 
 /* registers definitions */
-#define SPI_CTL0(spix)                  REG32((spix) + 0x00U)                  /*!< SPI control register 0 */
-#define SPI_CTL1(spix)                  REG32((spix) + 0x04U)                  /*!< SPI control register 1*/
-#define SPI_STAT(spix)                  REG32((spix) + 0x08U)                  /*!< SPI status register */
-#define SPI_DATA(spix)                  REG32((spix) + 0x0CU)                  /*!< SPI data register */
-#define SPI_CRCPOLY(spix)               REG32((spix) + 0x10U)                  /*!< SPI CRC polynomial register */
-#define SPI_RCRC(spix)                  REG32((spix) + 0x14U)                  /*!< SPI receive CRC register */
-#define SPI_TCRC(spix)                  REG32((spix) + 0x18U)                  /*!< SPI transmit CRC register */
-#define SPI_I2SCTL(spix)                REG32((spix) + 0x1CU)                  /*!< SPI I2S control register */
-#define SPI_I2SPSC(spix)                REG32((spix) + 0x20U)                  /*!< SPI I2S clock prescaler register */
+#define SPI_CTL0(spix)                  REG32((spix) + 0x00000000U)            /*!< SPI control register 0 */
+#define SPI_CTL1(spix)                  REG32((spix) + 0x00000004U)            /*!< SPI control register 1 */
+#define SPI_STAT(spix)                  REG32((spix) + 0x00000008U)            /*!< SPI status register */
+#define SPI_DATA(spix)                  REG32((spix) + 0x0000000CU)            /*!< SPI data register */
+#define SPI_CRCPOLY(spix)               REG32((spix) + 0x00000010U)            /*!< SPI CRC polynomial register */
+#define SPI_RCRC(spix)                  REG32((spix) + 0x00000014U)            /*!< SPI receive CRC register */
+#define SPI_TCRC(spix)                  REG32((spix) + 0x00000018U)            /*!< SPI transmit CRC register */
+#define SPI_I2SCTL(spix)                REG32((spix) + 0x0000001CU)            /*!< SPI I2S control register */
+#define SPI_I2SPSC(spix)                REG32((spix) + 0x00000020U)            /*!< SPI I2S clock prescaler register */
 #ifdef GD32F170_190
-#define SPI_QCTL(spix)                  REG32((spix) + 0x80U)                  /*!< SPI quad wire control register */
+#define SPI_QCTL(spix)                  REG32((spix) + 0x00000080U)            /*!< SPI quad mode control register(only available in SPI1) */
 #endif /* GD32F170_190 */ 
 
 /* bits definitions */
 /* SPI_CTL0 */
-#define SPI_CTL0_CKPH                   BIT(0)                                 /*!< clock phase selection*/
+#define SPI_CTL0_CKPH                   BIT(0)                                 /*!< clock phase selection */
 #define SPI_CTL0_CKPL                   BIT(1)                                 /*!< clock polarity selection */
-#define SPI_CTL0_MSTMOD                 BIT(2)                                 /*!< master selection */
+#define SPI_CTL0_MSTMOD                 BIT(2)                                 /*!< master mode enable */
 #define SPI_CTL0_PSC                    BITS(3,5)                              /*!< master clock prescaler selection */
 #define SPI_CTL0_SPIEN                  BIT(6)                                 /*!< SPI enable*/
-#define SPI_CTL0_LF                     BIT(7)                                 /*!< lsb first mode */
-#define SPI_CTL0_SWNSS                  BIT(8)                                 /*!< nss pin selection in nss software mode */
-#define SPI_CTL0_SWNSSEN                BIT(9)                                 /*!< nss software mode selection */
+#define SPI_CTL0_LF                     BIT(7)                                 /*!< LSB first mode */
+#define SPI_CTL0_SWNSS                  BIT(8)                                 /*!< NSS pin selection in NSS software mode */
+#define SPI_CTL0_SWNSSEN                BIT(9)                                 /*!< NSS software mode selection */
 #define SPI_CTL0_RO                     BIT(10)                                /*!< receive only */
 #define SPI_CTL0_FF16                   BIT(11)                                /*!< data frame size */
-#define SPI_CTL0_CRCNT                  BIT(12)                                /*!< CRC transfer next */
+#define SPI_CTL0_CRCNT                  BIT(12)                                /*!< CRC next transfer */
 #define SPI_CTL0_CRCEN                  BIT(13)                                /*!< CRC calculation enable */
-#define SPI_CTL0_BDOEN                  BIT(14)                                /*!< bidirectional transmit output enable*/
+#define SPI_CTL0_BDOEN                  BIT(14)                                /*!< bidirectional transmit output enable */
 #define SPI_CTL0_BDEN                   BIT(15)                                /*!< bidirectional enable */
 
 /* SPI_CTL1 */
 #define SPI_CTL1_DMAREN                 BIT(0)                                 /*!< receive buffer dma enable */
 #define SPI_CTL1_DMATEN                 BIT(1)                                 /*!< transmit buffer dma enable */
-#define SPI_CTL1_NSSDRV                 BIT(2)                                 /*!< drive nss output */
+#define SPI_CTL1_NSSDRV                 BIT(2)                                 /*!< drive NSS output */
 #define SPI_CTL1_ERRIE                  BIT(5)                                 /*!< errors interrupt enable */
 #define SPI_CTL1_RBNEIE                 BIT(6)                                 /*!< receive buffer not empty interrupt enable */
 #define SPI_CTL1_TBEIE                  BIT(7)                                 /*!< transmit buffer empty interrupt enable */
@@ -67,21 +91,21 @@
 #define SPI_STAT_I2SCH                  BIT(2)                                 /*!< I2S channel side */
 #define SPI_STAT_TXURERR                BIT(3)                                 /*!< I2S transmission underrun error bit */
 #define SPI_STAT_CRCERR                 BIT(4)                                 /*!< SPI CRC error bit */
-#define SPI_STAT_CONFERR                BIT(5)                                 /*!< SPI config error */
-#define SPI_STAT_RXORERR                BIT(6)                                 /*!< SPI reception overrun error Bit */
-#define SPI_STAT_TRANS                  BIT(7)                                 /*!< transmitting on-going Bit*/
+#define SPI_STAT_CONFERR                BIT(5)                                 /*!< SPI configuration error bit */
+#define SPI_STAT_RXORERR                BIT(6)                                 /*!< SPI reception overrun error bit */
+#define SPI_STAT_TRANS                  BIT(7)                                 /*!< transmitting on-going bit */
 
 /* SPI_DATA */
 #define SPI_DATA_DATA                   BITS(0,15)                             /*!< data transfer register */
 
 /* SPI_CRCPOLY */
-#define SPI_CRCPOLY_CPR                 BITS(0,15)                             /*!< CRC polynomial register */
+#define SPI_CRCPOLY_CRCPOLY             BITS(0,15)                             /*!< CRC polynomial value */
 
 /* SPI_RCRC */
-#define SPI_RCRC_RCR                    BITS(0,15)                             /*!< RX CRC register */
+#define SPI_RCRC_RCRC                   BITS(0,15)                             /*!< RX CRC value */
 
 /* SPI_TCRC */
-#define SPI_TCRC_TCR                    BITS(0,15)                             /*!< RX CRC register */
+#define SPI_TCRC_TCRC                   BITS(0,15)                             /*!< TX CRC value */
 
 /* SPI_I2SCTL */
 #define SPI_I2SCTL_CHLEN                BIT(0)                                 /*!< channel length */
@@ -99,10 +123,10 @@
 #define SPI_I2SPSC_MCKOEN               BIT(9)                                 /*!< I2S MCK output enable */
 
 #ifdef GD32F170_190
-/* SPI_QCTL */
-#define SPI_QCTL_QMOD                   BIT(0)                                 /*!< quad wire mode enable. */
-#define SPI_QCTL_QRD                    BIT(1)                                 /*!< quad wire read select. */
-#define SPI_QCTL_IO23_DRV               BIT(2)                                 /*!< drive SPI_IO2 and SPI_IO3 */
+/* SPI_QCTL(only available in SPI1) */
+#define SPI_QCTL_QMOD                   BIT(0)                                 /*!< quad-SPI mode enable */
+#define SPI_QCTL_QRD                    BIT(1)                                 /*!< quad-SPI mode read select */
+#define SPI_QCTL_IO23_DRV               BIT(2)                                 /*!< drive SPI_IO2 and SPI_IO3 enable */
 #endif /* GD32F170_190 */ 
 
 /* constants definitions */
@@ -124,13 +148,13 @@ typedef struct
 
 /* SPI bidirectional transfer direction */
 #define SPI_BIDIRECTIONAL_TRANSMIT      SPI_CTL0_BDOEN                          /*!< SPI work in transmit-only mode */
-#define SPI_BIDIRECTIONAL_RECEIVE       ~SPI_CTL0_BDOEN                         /*!< SPI work in receive-only mode */
+#define SPI_BIDIRECTIONAL_RECEIVE       (~SPI_CTL0_BDOEN)                       /*!< SPI work in receive-only mode */
 
 /* SPI transmit type */
 #define SPI_TRANSMODE_FULLDUPLEX        ((uint32_t)0x00000000U)                 /*!< SPI receive and send data at fullduplex communication */
 #define SPI_TRANSMODE_RECEIVEONLY       SPI_CTL0_RO                             /*!< SPI only receive data */
 #define SPI_TRANSMODE_BDRECEIVE         SPI_CTL0_BDEN                           /*!< bidirectional receive data */
-#define SPI_TRANSMODE_BDTRANSMIT        (SPI_CTL0_BDEN | SPI_CTL0_BDOEN)        /*!< bidirectional transmit data*/
+#define SPI_TRANSMODE_BDTRANSMIT        (SPI_CTL0_BDEN | SPI_CTL0_BDOEN)        /*!< bidirectional transmit data */
 
 /* SPI frame size */
 #define SPI_FRAMESIZE_16BIT             SPI_CTL0_FF16                           /*!< SPI frame size is 16 bits */
@@ -216,55 +240,60 @@ typedef struct
 #define SPI_I2S_INT_ERR                 ((uint8_t)0x02U)                        /*!< error interrupt */
 
 /* SPI/I2S interrupt flag constants definitions */
-#define SPI_I2S_INT_FLAG_TBE            ((uint8_t)0x00U)                        /*!< transmit buffer empty interrupt */
-#define SPI_I2S_INT_FLAG_RBNE           ((uint8_t)0x01U)                        /*!< receive buffer not empty interrupt */
-#define SPI_I2S_INT_FLAG_RXORERR        ((uint8_t)0x02U)                        /*!< overrun interrupt */
-#define SPI_INT_FLAG_CONFERR            ((uint8_t)0x03U)                        /*!< config error interrupt */
-#define SPI_INT_FLAG_CRCERR             ((uint8_t)0x04U)                        /*!< CRC error interrupt */
-#define I2S_INT_FLAG_TXURERR            ((uint8_t)0x05U)                        /*!< underrun error interrupt */
+#define SPI_I2S_INT_FLAG_TBE            ((uint8_t)0x00U)                        /*!< transmit buffer empty interrupt flag */
+#define SPI_I2S_INT_FLAG_RBNE           ((uint8_t)0x01U)                        /*!< receive buffer not empty interrupt flag */
+#define SPI_I2S_INT_FLAG_RXORERR        ((uint8_t)0x02U)                        /*!< overrun interrupt flag */
+#define SPI_INT_FLAG_CONFERR            ((uint8_t)0x03U)                        /*!< config error interrupt flag */
+#define SPI_INT_FLAG_CRCERR             ((uint8_t)0x04U)                        /*!< CRC error interrupt flag */
+#define I2S_INT_FLAG_TXURERR            ((uint8_t)0x05U)                        /*!< underrun error interrupt flag */
     
 /* SPI/I2S flag definitions */                                                  
 #define SPI_FLAG_RBNE                   SPI_STAT_RBNE                           /*!< receive buffer not empty flag */
 #define SPI_FLAG_TBE                    SPI_STAT_TBE                            /*!< transmit buffer empty flag */
 #define SPI_FLAG_CRCERR                 SPI_STAT_CRCERR                         /*!< CRC error flag */
 #define SPI_FLAG_CONFERR                SPI_STAT_CONFERR                        /*!< mode config error flag */
-#define SPI_FLAG_RXORERR                SPI_STAT_RXORERR                        /*!< receive overrun flag */
+#define SPI_FLAG_RXORERR                SPI_STAT_RXORERR                        /*!< receive overrun error flag */
 #define SPI_FLAG_TRANS                  SPI_STAT_TRANS                          /*!< transmit on-going flag */
 #define I2S_FLAG_RBNE                   SPI_STAT_RBNE                           /*!< receive buffer not empty flag */
 #define I2S_FLAG_TBE                    SPI_STAT_TBE                            /*!< transmit buffer empty flag */
-#define I2S_FLAG_CH                     SPI_STAT_I2SCH                          /*!< transmit buffer empty interrupt */
+#define I2S_FLAG_CH                     SPI_STAT_I2SCH                          /*!< channel side flag */
 #define I2S_FLAG_TXURERR                SPI_STAT_TXURERR                        /*!< underrun error flag */
-#define I2S_FLAG_RXORERR                SPI_STAT_RXORERR                        /*!< overrun flag */
+#define I2S_FLAG_RXORERR                SPI_STAT_RXORERR                        /*!< overrun error flag */
 #define I2S_FLAG_TRANS                  SPI_STAT_TRANS                          /*!< transmit on-going flag */
 
 /* function declarations */
+/* SPI/I2S deinitialization and initialization functions */
 /* reset SPI and I2S */
 void spi_i2s_deinit(uint32_t spi_periph);
-/* initialize SPI parameter */
+/* initialize the parameters of SPI struct with the default values */
+void spi_struct_para_init(spi_parameter_struct* spi_struct);
+/* initialize SPI */
 void spi_init(uint32_t spi_periph, spi_parameter_struct* spi_struct);
 /* enable SPI */
 void spi_enable(uint32_t spi_periph);
 /* disable SPI */
 void spi_disable(uint32_t spi_periph);
 
+/* initialize I2S */
+void i2s_init(uint32_t spi_periph, uint32_t mode, uint32_t standard, uint32_t ckpl);
 /* configure I2S prescaler */
-void i2s_psc_config(uint32_t spi_periph,uint32_t audiosample,uint32_t frameformat,uint32_t mckout);
-/* initialize I2S parameter */
-void i2s_init(uint32_t spi_periph,uint32_t mode,uint32_t standard,uint32_t ckpl);
+void i2s_psc_config(uint32_t spi_periph, uint32_t audiosample, uint32_t frameformat, uint32_t mckout);
 /* enable I2S */
 void i2s_enable(uint32_t spi_periph);
 /* disable I2S */
 void i2s_disable(uint32_t spi_periph);
 
+/* NSS functions */
 /* enable SPI NSS output */
 void spi_nss_output_enable(uint32_t spi_periph);
 /* disable SPI NSS output */
 void spi_nss_output_disable(uint32_t spi_periph);
-/* SPI NSS pin high level in software mode */
+/* pull NSS pin high in software mode */
 void spi_nss_internal_high(uint32_t spi_periph);
-/* SPI NSS pin low level in software mode */
+/* pull NSS pin low in software mode */
 void spi_nss_internal_low(uint32_t spi_periph);
 
+/* DMA functions */
 /* enable SPI DMA */
 void spi_dma_enable(uint32_t spi_periph, uint8_t dma);
 /* disable SPI DMA */
@@ -278,18 +307,8 @@ void spi_i2s_data_transmit(uint32_t spi_periph, uint16_t data);
 uint16_t spi_i2s_data_receive(uint32_t spi_periph);
 /* configure SPI bidirectional transfer direction */
 void spi_bidirectional_transfer_config(uint32_t spi_periph, uint32_t transfer_direction);
- 
-/* enable SPI and I2S interrupt */
-void spi_i2s_interrupt_enable(uint32_t spi_periph, uint8_t interrupt);
-/* disable SPI and I2S interrupt */
-void spi_i2s_interrupt_disable(uint32_t spi_periph, uint8_t interrupt);
-/* get SPI and I2S interrupt status */
-FlagStatus spi_i2s_interrupt_flag_get(uint32_t spi_periph, uint8_t interrupt);
-/* get SPI and I2S flag status */
-FlagStatus spi_i2s_flag_get(uint32_t spi_periph,uint32_t flag);
-/* clear SPI CRC error flag status */
-void spi_crc_error_clear(uint32_t spi_periph);
 
+/* SPI CRC functions */
 /* set SPI CRC polynomial */
 void spi_crc_polynomial_set(uint32_t spi_periph, uint16_t crc_poly);
 /* get SPI CRC polynomial */
@@ -301,9 +320,10 @@ void spi_crc_off(uint32_t spi_periph);
 /* SPI next data is CRC value */
 void spi_crc_next(uint32_t spi_periph);
 /* get SPI CRC send value or receive value */
-uint16_t spi_crc_get(uint32_t spi_periph,uint8_t crc);
+uint16_t spi_crc_get(uint32_t spi_periph, uint8_t crc);
 
-#ifdef GD32F170_190
+#ifdef GD32F170_190 
+/* quad wire SPI functions */
 /* enable quad wire SPI */
 void qspi_enable(uint32_t spi_periph);
 /* disable quad wire SPI */
@@ -317,5 +337,17 @@ void qspi_io23_output_enable(uint32_t spi_periph);
 /* disable quad wire SPI_IO2 and SPI_IO3 pin output */
 void qspi_io23_output_disable(uint32_t spi_periph);
 #endif /* GD32F170_190 */
+
+/* flag and interrupt functions */ 
+/* enable SPI and I2S interrupt */
+void spi_i2s_interrupt_enable(uint32_t spi_periph, uint8_t interrupt);
+/* disable SPI and I2S interrupt */
+void spi_i2s_interrupt_disable(uint32_t spi_periph, uint8_t interrupt);
+/* get SPI and I2S interrupt status */
+FlagStatus spi_i2s_interrupt_flag_get(uint32_t spi_periph, uint8_t interrupt);
+/* get SPI and I2S flag status */
+FlagStatus spi_i2s_flag_get(uint32_t spi_periph, uint32_t flag);
+/* clear SPI CRC error flag status */
+void spi_crc_error_clear(uint32_t spi_periph);
 
 #endif /* GD32F1X0_SPI_H */

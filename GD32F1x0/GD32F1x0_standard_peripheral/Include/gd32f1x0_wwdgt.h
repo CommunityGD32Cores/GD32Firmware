@@ -1,15 +1,39 @@
 /*!
     \file  gd32f1x0_wwdgt.h
     \brief definitions for the WWDGT 
+
+    \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
+    \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
+    \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
-    2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
-    2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
-    2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F1X0_WWDGT_H
@@ -21,9 +45,9 @@
 #define WWDGT                       WWDGT_BASE
 
 /* registers definitions */
-#define WWDGT_CTL                   REG32((WWDGT) + 0x00U)           /*!< WWDGT control register */
-#define WWDGT_CFG                   REG32((WWDGT) + 0x04U)           /*!< WWDGT configuration register */
-#define WWDGT_STAT                  REG32((WWDGT) + 0x08U)           /*!< WWDGT status register */
+#define WWDGT_CTL                   REG32(WWDGT + 0x00000000U)      /*!< WWDGT control register */
+#define WWDGT_CFG                   REG32(WWDGT + 0x00000004U)      /*!< WWDGT configuration register */
+#define WWDGT_STAT                  REG32(WWDGT + 0x00000008U)      /*!< WWDGT status register */
 
 /* bits definitions */
 /* WWDGT_CTL */
@@ -33,16 +57,16 @@
 /* WWDGT_CFG */
 #define WWDGT_CFG_WIN               BITS(0,6)                       /*!< WWDGT counter window value */
 #define WWDGT_CFG_PSC               BITS(7,8)                       /*!< WWDGT prescaler divider value */
-#define WWDGT_CFG_EWIE              BIT(9)                          /*!< early wakeup interrupt enable */
+#define WWDGT_CFG_EWIE              BIT(9)                          /*!< WWDGT early wakeup interrupt enable */
 
 /* WWDGT_STAT */
-#define WWDGT_STAT_EWIF             BIT(0)                          /*!< early wakeup interrupt flag */
+#define WWDGT_STAT_EWIF             BIT(0)                          /*!< WWDGT early wakeup interrupt flag */
 
 /* constants definitions */
-/* ctl register value */
+/* WWDGT_CTL register value */
 #define CTL_CNT(regval)             (BITS(0,6) & ((uint32_t)(regval) << 0U))   /*!< write value to WWDGT_CTL_CNT bit field */
 
-/* cfg register value */
+/* WWDGT_CFG register value */
 #define CFG_WIN(regval)             (BITS(0,6) & ((uint32_t)(regval) << 0U))   /*!< write value to WWDGT_CFG_WIN bit field */
 
 #define CFG_PSC(regval)             (BITS(7,8) & ((uint32_t)(regval) << 7U))   /*!< write value to WWDGT_CFG_PSC bit field */

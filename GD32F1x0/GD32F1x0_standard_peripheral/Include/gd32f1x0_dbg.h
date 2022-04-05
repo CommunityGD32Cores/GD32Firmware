@@ -1,15 +1,39 @@
 /*!
     \file  gd32f1x0_dbg.h
     \brief definitions for the DBG
+
+    \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
+    \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
+    \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
-    2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
-    2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
-    2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F1X0_DBG_H
@@ -21,9 +45,9 @@
 #define DBG                     DBG_BASE
 
 /* registers definitions */
-#define DBG_ID                  REG32(DBG + 0x00U)          /*!< DBG_ID code register */
-#define DBG_CTL0                REG32(DBG + 0x04U)          /*!< DBG control register 0 */
-#define DBG_CTL1                REG32(DBG + 0x08U)          /*!< DBG control register 1 */
+#define DBG_ID                  REG32(DBG + 0x00000000U)    /*!< DBG_ID code register */
+#define DBG_CTL0                REG32(DBG + 0x00000004U)    /*!< DBG control register 0 */
+#define DBG_CTL1                REG32(DBG + 0x00000008U)    /*!< DBG control register 1 */
 
 /* bits definitions */
 /* DBG_ID */
@@ -64,14 +88,14 @@
 /* define the peripheral debug hold bit position and its register index offset */
 #define DBG_REGIDX_BIT(regidx, bitpos)      (((regidx) << 6) | (bitpos))
 #define DBG_REG_VAL(periph)                 (REG32(DBG + ((uint32_t)(periph) >> 6)))
-#define DBG_BIT_POS(val)                    ((uint32_t)(val) & 0x1FU)
+#define DBG_BIT_POS(val)                    ((uint32_t)(val) & 0x0000001FU)
 
 /* register index */
-enum dbg_reg_idx
+typedef enum 
 {
-    DBG_IDX_CTL0  = 0x04U, 
-    DBG_IDX_CTL1  = 0x08U, 
-};
+    DBG_IDX_CTL0            = 0x04U,                                         /*!< DBG control register 0 offset */
+    DBG_IDX_CTL1            = 0x08U,                                         /*!< DBG control register 1 offset */
+}dbg_reg_idx;
 
 /* peripherals hold bit */
 typedef enum

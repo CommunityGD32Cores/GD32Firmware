@@ -1,15 +1,39 @@
 /*!
     \file  gd32f1x0_cec.h
     \brief definitions for the CEC
+    
+    \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
+    \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
+    \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
-    2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
-    2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
-    2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F1X0_CEC_H
@@ -21,12 +45,12 @@
 #define CEC                                CEC_BASE                   /*!< CEC base address */
 
 /* registers definitions */
-#define CEC_CTL                            REG32(CEC + 0x00U)         /*!< CEC control register */
-#define CEC_CFG                            REG32(CEC + 0x04U)         /*!< CEC configuration register */
-#define CEC_TDATA                          REG32(CEC + 0x08U)         /*!< CEC transmit data register */
-#define CEC_RDATA                          REG32(CEC + 0x0CU)         /*!< CEC receive data register */
-#define CEC_INTF                           REG32(CEC + 0x10U)         /*!< CEC interrupt flag Register */
-#define CEC_INTEN                          REG32(CEC + 0x14U)         /*!< CEC interrupt enable register */
+#define CEC_CTL                            REG32(CEC + 0x00000000U)         /*!< CEC control register */
+#define CEC_CFG                            REG32(CEC + 0x00000004U)         /*!< CEC configuration register */
+#define CEC_TDATA                          REG32(CEC + 0x00000008U)         /*!< CEC transmit data register */
+#define CEC_RDATA                          REG32(CEC + 0x0000000CU)         /*!< CEC receive data register */
+#define CEC_INTF                           REG32(CEC + 0x00000010U)         /*!< CEC interrupt flag Register */
+#define CEC_INTEN                          REG32(CEC + 0x00000014U)         /*!< CEC interrupt enable register */
 
 /* bits definitions */
 /* CEC_CTL */
@@ -172,11 +196,12 @@
 #define CEC_INT_TERR                       CEC_INTEN_TERRIE           /*!< TE interrupt enable */
 #define CEC_INT_TAERR                      CEC_INTEN_TAERRIE          /*!< TAE interrupt enable */
 
-/* function declarations */
+/* function configuration */
+/*  initialization functions */
 /* reset HDMI-CEC controller */
 void cec_deinit(void);
 /* configure signal free time,the signal free time counter start option,own address */
-void cec_init(uint32_t sftmopt, uint32_t sft, uint32_t address);
+void cec_init(uint32_t sftopt, uint32_t sft, uint32_t address);
 /* configure generate Error-bit, whether stop receive message when detected bit rising error */
 void cec_error_config(uint32_t broadcast, uint32_t singlecast_lbpe, uint32_t singlecast_bre, uint32_t rxbrestp);
 /* enable HDMI-CEC controller */
@@ -184,6 +209,7 @@ void cec_enable(void);
 /* disable HDMI-CEC controller */
 void cec_disable(void);
 
+/* function configuration */
 /* start CEC message transmission */
 void cec_transmission_start(void);
 /* end CEC message transmission */
@@ -195,7 +221,7 @@ void cec_listen_mode_disable(void);
 /* configure and clear own address */
 void cec_own_address_config(uint32_t address);
 /* configure signal free time and the signal free time counter start option */
-void cec_sft_config(uint32_t sftmopt,uint32_t sft);
+void cec_sft_config(uint32_t sftopt,uint32_t sft);
 /* configure generate Error-bit when detected some abnormal situation or not */
 void cec_generate_errorbit_config(uint32_t broadcast, uint32_t singlecast_lbpe, uint32_t singlecast_bre);
 /* whether stop receive message when detected bit rising error */
@@ -209,18 +235,19 @@ void cec_data_send(uint8_t data);
 /* receive a data by the CEC peripheral */
 uint8_t cec_data_receive(void);
 
-/* clear CEC int flag and status */
-FlagStatus cec_interrupt_flag_get(uint32_t flag);
-/* clear CEC flag */
-void cec_interrupt_flag_clear(uint32_t flag);
-/* enable interrupt */
-void cec_interrupt_enable(uint32_t flag);
-/* disable interrupt */
-void cec_interrupt_disable(uint32_t flag);
+/* interrupt & flag functions */
 /* get CEC status */
 FlagStatus cec_flag_get(uint32_t flag);
 /* clear CEC status */
 void cec_flag_clear(uint32_t flag);
+/* enable CEC interrupt */
+void cec_interrupt_enable(uint32_t flag);
+/* disable CEC interrupt */
+void cec_interrupt_disable(uint32_t flag);
+/* get CEC interrupt flag */
+FlagStatus cec_interrupt_flag_get(uint32_t flag);
+/* clear CEC interrupt flag */
+void cec_interrupt_flag_clear(uint32_t flag);
 
 #endif /* GD32F1X0_CEC_H */
 

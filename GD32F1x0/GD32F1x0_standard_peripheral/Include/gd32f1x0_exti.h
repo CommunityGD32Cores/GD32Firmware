@@ -1,15 +1,39 @@
 /*!
     \file  gd32f1x0_exti.h
     \brief definitions for the EXTI
+
+    \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
+    \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
+    \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
-    2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
-    2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
-    2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F1X0_EXTI_H
@@ -21,12 +45,12 @@
 #define EXTI                        EXTI_BASE
 
 /* registers definitions */
-#define EXTI_INTEN                  REG32(EXTI + 0x00U)      /*!< interrupt enable register */
-#define EXTI_EVEN                   REG32(EXTI + 0x04U)      /*!< event enable register */
-#define EXTI_RTEN                   REG32(EXTI + 0x08U)      /*!< rising edge trigger enable register */
-#define EXTI_FTEN                   REG32(EXTI + 0x0CU)      /*!< falling trigger enable register */
-#define EXTI_SWIEV                  REG32(EXTI + 0x10U)      /*!< software interrupt event register */
-#define EXTI_PD                     REG32(EXTI + 0x14U)      /*!< pending register */
+#define EXTI_INTEN                  REG32(EXTI + 0x00000000U)       /*!< interrupt enable register */
+#define EXTI_EVEN                   REG32(EXTI + 0x00000004U)       /*!< event enable register */
+#define EXTI_RTEN                   REG32(EXTI + 0x00000008U)       /*!< rising edge trigger enable register */
+#define EXTI_FTEN                   REG32(EXTI + 0x0000000CU)       /*!< falling trigger enable register */
+#define EXTI_SWIEV                  REG32(EXTI + 0x00000010U)       /*!< software interrupt event register */
+#define EXTI_PD                     REG32(EXTI + 0x00000014U)       /*!< pending register */
 
 /* bits definitions */
 /* EXTI_INTEN */
@@ -188,7 +212,7 @@
 /* constants definitions */
 /* EXTI line number */
 typedef enum
-{ 
+{
     EXTI_0      = BIT(0),                                    /*!< EXTI line 0 */
     EXTI_1      = BIT(1),                                    /*!< EXTI line 1 */
     EXTI_2      = BIT(2),                                    /*!< EXTI line 2 */
@@ -226,37 +250,42 @@ typedef enum
 
 /* interrupt trigger mode */
 typedef enum
-{ 
+{
     EXTI_TRIG_RISING = 0,                                    /*!< EXTI rising edge trigger */
     EXTI_TRIG_FALLING,                                       /*!< EXTI falling edge trigger */
-    EXTI_TRIG_BOTH                                           /*!< EXTI rising and falling edge trigger */
+    EXTI_TRIG_BOTH,                                           /*!< EXTI rising and falling edge trigger */
+    EXTI_TRIG_NONE                                            /*!< without rising edge or falling edge trigger */
 }exti_trig_type_enum;
 
 /* function declarations */
+/* initialization functions */
 /* deinitialize the EXTI */
 void exti_deinit(void);
-/* enable the configuration of EXTI initialize */
+/* initialize the EXTI */
 void exti_init(exti_line_enum linex, exti_mode_enum mode, exti_trig_type_enum trig_type);
+
+/* enable functions */
 /* enable the interrupts from EXTI line x */
 void exti_interrupt_enable(exti_line_enum linex);
-/* enable the events from EXTI line x */
-void exti_event_enable(exti_line_enum linex);
 /* disable the interrupts from EXTI line x */
 void exti_interrupt_disable(exti_line_enum linex);
+/* enable the events from EXTI line x */
+void exti_event_enable(exti_line_enum linex);
 /* disable the events from EXTI line x */
 void exti_event_disable(exti_line_enum linex);
 
-/* get EXTI lines pending flag */
-FlagStatus exti_flag_get(exti_line_enum linex);
-/* clear EXTI lines pending flag */
-void exti_flag_clear(exti_line_enum linex);
-/* get EXTI lines flag when the interrupt flag is set */
-FlagStatus exti_interrupt_flag_get(exti_line_enum linex);
-/* clear EXTI lines pending flag */
-void exti_interrupt_flag_clear(exti_line_enum linex);
-/* EXTI software interrupt event enable */
+/* interrupt & flag functions */
+/* enable EXTI software interrupt event */
 void exti_software_interrupt_enable(exti_line_enum linex);
-/* EXTI software interrupt event disable */
+/* disable EXTI software interrupt event */
 void exti_software_interrupt_disable(exti_line_enum linex);
+/* get EXTI line x pending flag */
+FlagStatus exti_flag_get(exti_line_enum linex);
+/* clear EXTI line x pending flag */
+void exti_flag_clear(exti_line_enum linex);
+/* get EXTI line x flag when the interrupt flag is set */
+FlagStatus exti_interrupt_flag_get(exti_line_enum linex);
+/* clear EXTI line x pending flag */
+void exti_interrupt_flag_clear(exti_line_enum linex);
 
 #endif /* GD32F1X0_EXTI_H */

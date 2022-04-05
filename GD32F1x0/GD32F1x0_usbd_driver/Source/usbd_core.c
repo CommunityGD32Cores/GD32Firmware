@@ -1,15 +1,41 @@
 /*!
     \file  usbd_core.c
     \brief USB device driver
-*/
-
-/*
-    Copyright (C) 2017 GigaDevice
 
     2014-12-26, V1.0.0, platform GD32F1x0(x=5)
     2016-01-15, V2.0.0, platform GD32F1x0(x=5)
     2016-04-30, V3.0.0, firmware update for GD32F1x0(x=5)
     2017-06-19, V3.1.0, firmware update for GD32F1x0(x=5)
+    2019-11-20, V3.2.0, firmware update for GD32F1x0(x=5)
+*/
+
+/*
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
+
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "usbd_core.h"
@@ -18,7 +44,7 @@
 uint32_t g_interrupt_mask = 0U;
 uint32_t g_free_buf_addr = ENDP_BUF_ADDR;
 
-usbd_ep_buf_struct *pbuf_reg = (usbd_ep_buf_struct *)USBD_RAM;
+usbd_ep_buf_struct *pbuf_reg = (usbd_ep_buf_struct *)(USBD_RAM + BUFFER_ADDRESS * 2U);
 
 /*!
     \brief      device core register initialization
@@ -99,7 +125,7 @@ void  usbd_ep_init (usbd_core_handle_struct *pudev, usbd_epkind_enum buf_kind, c
     usb_descriptor_endpoint_struct *desc_ep = (usb_descriptor_endpoint_struct *)ep_desc;
 
     uint8_t ep_num = desc_ep->bEndpointAddress & 0x0FU;
-    uint32_t reg_value = 0;
+    uint32_t reg_value = 0U;
 
     /* set the endpoint type */
     switch (desc_ep->bmAttributes & USB_EPTYPE_MASK) {
@@ -419,7 +445,7 @@ void usbd_ep_data_read(uint8_t *user_fifo, uint16_t usbram_addr, uint16_t bytes)
     \param[out] none
     \retval     received data length
 */
-uint16_t  usbd_rx_count_get (usbd_core_handle_struct *pudev, uint8_t ep_num)
+uint16_t usbd_rx_count_get (usbd_core_handle_struct *pudev, uint8_t ep_num)
 {
     return (uint16_t)pudev->out_ep[ep_num].trs_count;
 }

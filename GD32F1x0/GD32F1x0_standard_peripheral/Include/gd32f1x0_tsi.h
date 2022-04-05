@@ -1,15 +1,39 @@
 /*!
     \file  gd32f1x0_tsi.h
     \brief definitions for the TSI
+    
+    \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
+    \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
+    \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
-    2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
-    2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
-    2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F1X0_TSI_H
@@ -18,24 +42,24 @@
 #include "gd32f1x0.h"
 
 /* TSI definitions */
-#define TSI                     TSI_BASE          /*!< TSI base address */
+#define TSI                     TSI_BASE                  /*!< TSI base address */
 
 /* registers definitions */
-#define TSI_CTL                 REG32(TSI + 0x00U)  /*!< TSI control register */
-#define TSI_INTEN               REG32(TSI + 0x04U)  /*!< TSI interrupt enable register */
-#define TSI_INTC                REG32(TSI + 0x08U)  /*!< TSI interrupt flag clear register */
-#define TSI_INTF                REG32(TSI + 0x0CU)  /*!< TSI interrupt flag register */
-#define TSI_PHM                 REG32(TSI + 0x10U)  /*!< TSI pin hysteresis mode register */
-#define TSI_ASW                 REG32(TSI + 0x18U)  /*!< TSI analog switch register */
-#define TSI_SAMPCFG             REG32(TSI + 0x20U)  /*!< TSI sample configuration register */
-#define TSI_CHCFG               REG32(TSI + 0x28U)  /*!< TSI channel configuration register */
-#define TSI_GCTL                REG32(TSI + 0x30U)  /*!< TSI group control register */
-#define TSI_G0CYCN              REG32(TSI + 0x34U)  /*!< TSI group 0 cycle number register */
-#define TSI_G1CYCN              REG32(TSI + 0x38U)  /*!< TSI group 1 cycle number register */
-#define TSI_G2CYCN              REG32(TSI + 0x3CU)  /*!< TSI group 2 cycle number register */
-#define TSI_G3CYCN              REG32(TSI + 0x40U)  /*!< TSI group 3 cycle number register */
-#define TSI_G4CYCN              REG32(TSI + 0x44U)  /*!< TSI group 4 cycle number register */
-#define TSI_G5CYCN              REG32(TSI + 0x48U)  /*!< TSI group 5 cycle number register */
+#define TSI_CTL                 REG32(TSI + 0x00000000U)  /*!< TSI control register */
+#define TSI_INTEN               REG32(TSI + 0x00000004U)  /*!< TSI interrupt enable register */
+#define TSI_INTC                REG32(TSI + 0x00000008U)  /*!< TSI interrupt flag clear register */
+#define TSI_INTF                REG32(TSI + 0x0000000CU)  /*!< TSI interrupt flag register */
+#define TSI_PHM                 REG32(TSI + 0x00000010U)  /*!< TSI pin hysteresis mode register */
+#define TSI_ASW                 REG32(TSI + 0x00000018U)  /*!< TSI analog switch register */
+#define TSI_SAMPCFG             REG32(TSI + 0x00000020U)  /*!< TSI sample configuration register */
+#define TSI_CHCFG               REG32(TSI + 0x00000028U)  /*!< TSI channel configuration register */
+#define TSI_GCTL                REG32(TSI + 0x00000030U)  /*!< TSI group control register */
+#define TSI_G0CYCN              REG32(TSI + 0x00000034U)  /*!< TSI group 0 cycle number register */
+#define TSI_G1CYCN              REG32(TSI + 0x00000038U)  /*!< TSI group 1 cycle number register */
+#define TSI_G2CYCN              REG32(TSI + 0x0000003CU)  /*!< TSI group 2 cycle number register */
+#define TSI_G3CYCN              REG32(TSI + 0x00000040U)  /*!< TSI group 3 cycle number register */
+#define TSI_G4CYCN              REG32(TSI + 0x00000044U)  /*!< TSI group 4 cycle number register */
+#define TSI_G5CYCN              REG32(TSI + 0x00000048U)  /*!< TSI group 5 cycle number register */
 
 /* bits definitions */
 /* TSI_CTL */
@@ -57,8 +81,8 @@
 #define TSI_INTEN_MNERRIE       BIT(1)              /*!< max cycle number error interrupt enable */
 
 /* TSI_INTC */
-#define TSI_INTC_CCTCF          BIT(0)              /*!< clear charge transfer complete flag */
-#define TSI_INTC_CMNERR         BIT(1)              /*!< clear max cycle number error */
+#define TSI_INTC_CCTCF          BIT(0)                  /*!< clear charge transfer complete flag */
+#define TSI_INTC_CMNERR         BIT(1)                  /*!< clear max cycle number error flag*/
 
 /* TSI_INTF */
 #define TSI_INTF_CTCF           BIT(0)              /*!< charge transfer complete flag */
@@ -184,7 +208,7 @@
 
 /* constants definitions */
 /* CTCLK clock division factor */
-#define CTL_CTCDIV(regval)      (BITS(12,14) & ((regval) << 12U))   /*!< CTCLK clock division factor */
+#define CTL_CTCDIV(regval)      (BITS(12,14) & ((uint32_t)(regval) << 12U))   /*!< CTCLK clock division factor */
 #define TSI_CTCDIV_DIV1         CTL_CTCDIV(0)                       /*!< fCTCLK = fHCLK */
 #define TSI_CTCDIV_DIV2         CTL_CTCDIV(1)                       /*!< fCTCLK = fHCLK/2 */
 #define TSI_CTCDIV_DIV4         CTL_CTCDIV(2)                       /*!< fCTCLK = fHCLK/4 */
@@ -195,7 +219,7 @@
 #define TSI_CTCDIV_DIV128       CTL_CTCDIV(7)                       /*!< fCTCLK = fHCLK/128 */
 
 /* charge transfer state duration Time */
-#define CTL_CTDT(regval)        (BITS(24,27) & ((regval) << 24U))   /*!< charge transfer state duration time */
+#define CTL_CTDT(regval)        (BITS(24,27) & ((uint32_t)(regval) << 24U))   /*!< charge transfer state duration time */
 #define TSI_TRANSFER_1CTCLK     CTL_CTDT(0)                         /*!< the duration time of transfer state is 1 CTCLK */
 #define TSI_TRANSFER_2CTCLK     CTL_CTDT(1)                         /*!< the duration time of transfer state is 2 CTCLK */
 #define TSI_TRANSFER_3CTCLK     CTL_CTDT(2)                         /*!< the duration time of transfer state is 3 CTCLK */
@@ -214,7 +238,7 @@
 #define TSI_TRANSFER_16CTCLK    CTL_CTDT(15)                        /*!< the duration time of transfer state is 16 CTCLK */
 
 /* charge state duration time */
-#define CTL_CDT(regval)         (BITS(28,31) & ((regval) << 28U))   /*!< charge state duration time */
+#define CTL_CDT(regval)         (BITS(28,31) & ((uint32_t)(regval) << 28U))   /*!< charge state duration time */
 #define TSI_CHARGE_1CTCLK       CTL_CDT(0)                          /*!< the duration time of charge state is 1 CTCLK */
 #define TSI_CHARGE_2CTCLK       CTL_CDT(1)                          /*!< the duration time of charge state is 2 CTCLK */
 #define TSI_CHARGE_3CTCLK       CTL_CDT(2)                          /*!< the duration time of charge state is 3 CTCLK */
@@ -233,7 +257,7 @@
 #define TSI_CHARGE_16CTCLK      CTL_CDT(15)                         /*!< the duration time of charge state is 16 CTCLK */
 
 /* max cycle number of a sequence */
-#define CTL_MCN(regval)         (BITS(5,7) & ((regval) << 5U))      /*!< max cycle number of a sequence */
+#define CTL_MCN(regval)         (BITS(5,7) & ((uint32_t)(regval) << 5U))      /*!< max cycle number of a sequence */
 #define TSI_MAXNUM255           CTL_MCN(0)                          /*!< the max cycle number of a sequence is 255 */
 #define TSI_MAXNUM511           CTL_MCN(1)                          /*!< the max cycle number of a sequence is 511 */
 #define TSI_MAXNUM1023          CTL_MCN(2)                          /*!< the max cycle number of a sequence is 1023 */
@@ -247,7 +271,7 @@
 #define TSI_EXTEND_DIV2         ((uint32_t)0x00000001U)             /*!< fECCLK = fHCLK/2 */
 
 /* Extend Charge State Maximum Duration Time */
-#define TSI_EXTENDMAX(regval)   (BITS(17,23) & ((regval) << 17U))   /* value range 1...128,extend charge state maximum duration time */
+#define TSI_EXTENDMAX(regval)   (BITS(17,23) & ((uint32_t)(regval) << 17U))   /* value range 1...128,extend charge state maximum duration time */
 
 /* hardware trigger mode */
 #define TSI_FALLING_TRIGGER     ((uint32_t)0x00000000U)             /*!< falling edge trigger TSI charge transfer sequence */
@@ -262,10 +286,16 @@
 #define TSI_INTEN_MNERR         TSI_INTEN_MNERRIE                   /*!< max cycle number error interrupt enable */
 
 /* interrupt flag bits */
-#define TSI_INT_FLAG_CTC        TSI_INTF_CTCF                       /*!< charge transfer complete flag */
-#define TSI_INT_FLAG_MNERR      TSI_INTF_MNERR                      /*!< max cycle number error */
+#define TSI_INT_FLAG_CTCF       TSI_INTF_CTCF                       /*!< charge transfer complete interrupt flag */
+#define TSI_INT_FLAG_MNERR      TSI_INTF_MNERR                      /*!< max cycle number error interrupt flag */
+
+/* TSI flags */
+#define TSI_FLAG_CTCF           TSI_INTF_CTCF                       /*!< charge transfer complete flag */
+#define TSI_FLAG_MNERR          TSI_INTF_MNERR                      /*!< max cycle number error flag*/
+
 
 /* function declarations */
+/*  initialization functions */
 /* reset TSI peripheral */
 void tsi_deinit(void);
 /* initialize TSI plus prescaler,charge plus,transfer plus,max cycle number */
@@ -283,8 +313,9 @@ void tsi_channel_pin_enable(uint32_t channel);
 /* disable channel pin */
 void tsi_channel_pin_disable(uint32_t channel);
 
+/* function configuration */
 /* configure TSI triggering by software */
-void tsi_sofeware_mode_config(void);
+void tsi_software_mode_config(void);
 /* start a charge-transfer sequence when TSI is in software trigger mode */
 void tsi_software_start(void);
 /* stop a charge-transfer sequence when TSI is in software trigger mode */
@@ -295,7 +326,6 @@ void tsi_hardware_mode_config(uint8_t trigger_edge);
 void tsi_pin_mode_config(uint8_t pin_mode);
 /* configure extend charge state */
 void tsi_extend_charge_config(ControlStatus extend,uint8_t prescaler,uint32_t max_duration);
-
 /* configure charge plus and transfer plus */
 void tsi_plus_config(uint32_t prescaler,uint32_t charge_duration,uint32_t transfer_duration);
 /* configure the max cycle number of a charge-transfer sequence */
@@ -309,14 +339,19 @@ void tsi_analog_on(uint32_t group_pin);
 /* switch off analog pin */
 void tsi_analog_off(uint32_t group_pin);
 
+/* interrupt & flag functions */
+/* get flag */
+FlagStatus tsi_flag_get(uint32_t flag);
+/* clear flag */
+void tsi_flag_clear(uint32_t flag);
 /* enable TSI interrupt */
 void tsi_interrupt_enable(uint32_t source);
 /* disable TSI interrupt */
 void tsi_interrupt_disable(uint32_t source);
-/* clear interrupt flag */
+/* get TSI interrupt flag */
+FlagStatus tsi_interrupt_flag_get(uint32_t flag);
+/* clear TSI interrupt flag */
 void tsi_interrupt_flag_clear(uint32_t flag);
-/* get TSI module current status */
-FlagStatus tsi_interrupt_flag_get(uint32_t status);
 
 /* enbale group */
 void tsi_group_enable(uint32_t group);

@@ -1,15 +1,39 @@
 /*!
     \file  gd32f1x0_rcu.h
     \brief definitions for the RCU
+
+    \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
+    \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
+    \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
-    2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
-    2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
-    2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #ifndef GD32F1X0_RCU_H
@@ -21,29 +45,29 @@
 #define RCU                         RCU_BASE
 
 /* registers definitions */
-#define RCU_CTL0                    REG32(RCU + 0x00U)        /*!< control register 0 */
-#define RCU_CFG0                    REG32(RCU + 0x04U)        /*!< configuration register 0 */
-#define RCU_INT                     REG32(RCU + 0x08U)        /*!< interrupt register */
-#define RCU_APB2RST                 REG32(RCU + 0x0CU)        /*!< APB2 reset register */
-#define RCU_APB1RST                 REG32(RCU + 0x10U)        /*!< APB1 reset register */
-#define RCU_AHBEN                   REG32(RCU + 0x14U)        /*!< AHB enable register */
-#define RCU_APB2EN                  REG32(RCU + 0x18U)        /*!< APB2 enable register */
-#define RCU_APB1EN                  REG32(RCU + 0x1CU)        /*!< APB1 enable register  */
-#define RCU_BDCTL                   REG32(RCU + 0x20U)        /*!< backup domain control register */
-#define RCU_RSTSCK                  REG32(RCU + 0x24U)        /*!< reset source /clock register */
-#define RCU_AHBRST                  REG32(RCU + 0x28U)        /*!< AHB reset register */
-#define RCU_CFG1                    REG32(RCU + 0x2CU)        /*!< configuration register 1 */
-#define RCU_CFG2                    REG32(RCU + 0x30U)        /*!< configuration register 2 */
-#define RCU_CTL1                    REG32(RCU + 0x34U)        /*!< control register 1 */
+#define RCU_CTL0                    REG32(RCU + 0x00000000U)  /*!< control register 0 */
+#define RCU_CFG0                    REG32(RCU + 0x00000004U)  /*!< configuration register 0 */
+#define RCU_INT                     REG32(RCU + 0x00000008U)  /*!< interrupt register */
+#define RCU_APB2RST                 REG32(RCU + 0x0000000CU)  /*!< APB2 reset register */
+#define RCU_APB1RST                 REG32(RCU + 0x00000010U)  /*!< APB1 reset register */
+#define RCU_AHBEN                   REG32(RCU + 0x00000014U)  /*!< AHB enable register */
+#define RCU_APB2EN                  REG32(RCU + 0x00000018U)  /*!< APB2 enable register */
+#define RCU_APB1EN                  REG32(RCU + 0x0000001CU)  /*!< APB1 enable register  */
+#define RCU_BDCTL                   REG32(RCU + 0x00000020U)  /*!< backup domain control register */
+#define RCU_RSTSCK                  REG32(RCU + 0x00000024U)  /*!< reset source /clock register */
+#define RCU_AHBRST                  REG32(RCU + 0x00000028U)  /*!< AHB reset register */
+#define RCU_CFG1                    REG32(RCU + 0x0000002CU)  /*!< configuration register 1 */
+#define RCU_CFG2                    REG32(RCU + 0x00000030U)  /*!< configuration register 2 */
+#define RCU_CTL1                    REG32(RCU + 0x00000034U)  /*!< control register 1 */
 #ifdef GD32F170_190
-#define RCU_CFG3                    REG32(RCU + 0x80U)        /*!< configuration register 3 */
+#define RCU_CFG3                    REG32(RCU + 0x00000080U)  /*!< configuration register 3 */
 #endif /* GD32F170_190 */
-#define RCU_ADDAPB1EN               REG32(RCU + 0xF8U)        /*!< APB1 additional enable register */
-#define RCU_ADDAPB1RST              REG32(RCU + 0xFCU)        /*!< APB1 additional reset register */
-#define RCU_VKEY                    REG32(RCU + 0x100U)       /*!< voltage key register */
-#define RCU_DSV                     REG32(RCU + 0x134U)       /*!< deep-sleep mode voltage register */
+#define RCU_ADDAPB1EN               REG32(RCU + 0x000000F8U)  /*!< APB1 additional enable register */
+#define RCU_ADDAPB1RST              REG32(RCU + 0x000000FCU)  /*!< APB1 additional reset register */
+#define RCU_VKEY                    REG32(RCU + 0x00000100U)  /*!< voltage key register */
+#define RCU_DSV                     REG32(RCU + 0x00000134U)  /*!< deep-sleep mode voltage register */
 #ifdef GD32F130_150
-#define RCU_PDVSEL                  REG32(RCU + 0x138U)       /*!< power down voltage select register */
+#define RCU_PDVSEL                  REG32(RCU + 0x00000138U)        /*!< power down voltage select register */
 #endif /* GD32F130_150 */
 
 /* bits definitions */
@@ -118,7 +142,7 @@
 #define RCU_INT_CKMIC               BIT(23)                   /*!< HXTAL clock stuck interrupt clear */
 
 /* RCU_APB2RST */
-#define RCU_APB2RST_CFGRST          BIT(0)                    /*!< system configuration reset */
+#define RCU_APB2RST_CFGCMPRST       BIT(0)                    /*!< system configuration and comparator reset */
 #define RCU_APB2RST_ADCRST          BIT(9)                    /*!< ADC reset */
 #define RCU_APB2RST_TIMER0RST       BIT(11)                   /*!< TIMER0 reset */
 #define RCU_APB2RST_SPI0RST         BIT(12)                   /*!< SPI0 reset */
@@ -157,8 +181,8 @@
 
 /* RCU_AHBEN */
 #define RCU_AHBEN_DMAEN             BIT(0)                    /*!< DMA clock enable */
-#define RCU_AHBEN_SRAMSPEN          BIT(2)                    /*!< SRAM interface clock enable */
-#define RCU_AHBEN_FMCSPEN           BIT(4)                    /*!< FMC clock enable */
+#define RCU_AHBEN_SRAMSPEN          BIT(2)                    /*!< SRAM interface clock enable when sleep mode */
+#define RCU_AHBEN_FMCSPEN           BIT(4)                    /*!< FMC clock enable when sleep mode */
 #define RCU_AHBEN_CRCEN             BIT(6)                    /*!< CRC clock enable */
 #define RCU_AHBEN_PAEN              BIT(17)                   /*!< GPIO port A clock enable */
 #define RCU_AHBEN_PBEN              BIT(18)                   /*!< GPIO port B clock enable */
@@ -217,7 +241,7 @@
 /* RCU_RSTSCK */
 #define RCU_RSTSCK_IRC40KEN         BIT(0)                    /*!< IRC40K enable */
 #define RCU_RSTSCK_IRC40KSTB        BIT(1)                    /*!< IRC40K stabilization */
-#define RCU_RSTSCK_V12RSTF          BIT(23)                   /*!< V12 domain Power reset flag */
+#define RCU_RSTSCK_V12RSTF          BIT(23)                   /*!< 1.2V domain power reset flag */
 #define RCU_RSTSCK_RSTFC            BIT(24)                   /*!< reset flag clear */
 #define RCU_RSTSCK_OBLRSTF          BIT(25)                   /*!< option byte loader reset flag */
 #define RCU_RSTSCK_EPRSTF           BIT(26)                   /*!< external pin reset flag */
@@ -261,7 +285,7 @@
 
 #ifdef GD32F170_190
 /* RCU_CFG3 */
-#define RCU_CFG3_CKOUT1SRC          BITS(0,2)                 /*!< CKOUT1 clock source selection */
+#define RCU_CFG3_CKOUT1SEL          BITS(0,2)                 /*!< CKOUT1 clock source selection */
 #define RCU_CFG3_CKOUT1DIV          BITS(8,13)                /*!< CK_OUT1 divider which the CK_OUT1 frequency can be reduced */
 #endif /* GD32F170_190 */
 
@@ -284,38 +308,38 @@
 
 /* constants definitions */
 /* define the peripheral clock enable bit position and its register index offset */
-#define RCU_REGIDX_BIT(regidx, bitpos)      (((uint32_t)(regidx) << 6) | (bitpos))
+#define RCU_REGIDX_BIT(regidx, bitpos)      (((uint32_t)(regidx) << 6) | (uint32_t)(bitpos))
 #define RCU_REG_VAL(periph)                 (REG32(RCU + ((uint32_t)(periph) >> 6)))
-#define RCU_BIT_POS(val)                    ((uint32_t)(val) & 0x1FU)
+#define RCU_BIT_POS(val)                    ((uint32_t)(val) & (uint32_t)0x0000001FU)
 /* define the voltage key unlock value */
 #define RCU_VKEY_UNLOCK                 ((uint32_t)0x1A2B3C4DU)
 
 /* register index */
-enum reg_idx
+typedef enum
 {
     /* peripherals enable */
-    IDX_AHBEN   = 0x14U, 
-    IDX_APB2EN  = 0x18U, 
-    IDX_APB1EN  = 0x1CU, 
-    IDX_ADDAPB1EN = 0xF8U,
+    IDX_AHBEN   = (uint32_t)0x00000014U, 
+    IDX_APB2EN  = (uint32_t)0x00000018U, 
+    IDX_APB1EN  = (uint32_t)0x0000001CU, 
+    IDX_ADDAPB1EN = (uint32_t)0x000000F8U,
     /* peripherals reset */
-    IDX_AHBRST  = 0x28U, 
-    IDX_APB2RST = 0x0CU, 
-    IDX_APB1RST = 0x10U, 
-    IDX_ADDAPB1RST = 0xFCU,
+    IDX_AHBRST  = (uint32_t)0x00000028U, 
+    IDX_APB2RST = (uint32_t)0x0000000CU, 
+    IDX_APB1RST = (uint32_t)0x00000010U, 
+    IDX_ADDAPB1RST = (uint32_t)0x000000FCU,
     /* clock stabilization */
-    IDX_CTL0    = 0x00U,
-    IDX_BDCTL   = 0x20U,
-    IDX_STB     = 0x24U,
-    IDX_CTL1    = 0x34U,
+    IDX_CTL0    = (uint32_t)0x00000000U,
+    IDX_BDCTL   = (uint32_t)0x00000020U,
+    IDX_STB     = (uint32_t)0x00000024U,
+    IDX_CTL1    = (uint32_t)0x00000034U,
     /* peripheral reset */
-    IDX_RSTSCK  = 0x24U,
+    IDX_RSTSCK  = (uint32_t)0x00000024U,
     /* clock stabilization and stuck interrupt */
-    IDX_INT     = 0x08U,
+    IDX_INT     = (uint32_t)0x00000008U,
     /* configuration register */
-    IDX_CFG0    = 0x04U,
-    IDX_CFG2    = 0x30U
-};
+    IDX_CFG0    = (uint32_t)0x00000004U,
+    IDX_CFG2    = (uint32_t)0x00000030U
+}reg_idx;
 
 /* peripheral clock enable */
 typedef enum
@@ -437,24 +461,24 @@ typedef enum
 /* clock stabilization and peripheral reset flags */
 typedef enum
 {
-    RCU_FLAG_IRC40KSTB    = RCU_REGIDX_BIT(IDX_STB, 1U),      /*!< IRC40K stabilization flags */
-    RCU_FLAG_LXTALSTB     = RCU_REGIDX_BIT(IDX_BDCTL, 1U),    /*!< LXTAL stabilization flags */
-    RCU_FLAG_IRC8MSTB     = RCU_REGIDX_BIT(IDX_CTL0, 1U),     /*!< IRC8M stabilization flags */
-    RCU_FLAG_HXTALSTB     = RCU_REGIDX_BIT(IDX_CTL0, 17U),    /*!< HXTAL stabilization flags */
-    RCU_FLAG_PLLSTB       = RCU_REGIDX_BIT(IDX_CTL0, 25U),    /*!< PLL stabilization flags */
+    RCU_FLAG_IRC40KSTB    = RCU_REGIDX_BIT(IDX_STB, 1U),      /*!< IRC40K stabilization flag */
+    RCU_FLAG_LXTALSTB     = RCU_REGIDX_BIT(IDX_BDCTL, 1U),    /*!< LXTAL stabilization flag */
+    RCU_FLAG_IRC8MSTB     = RCU_REGIDX_BIT(IDX_CTL0, 1U),     /*!< IRC8M stabilization flag */
+    RCU_FLAG_HXTALSTB     = RCU_REGIDX_BIT(IDX_CTL0, 17U),    /*!< HXTAL stabilization flag */
+    RCU_FLAG_PLLSTB       = RCU_REGIDX_BIT(IDX_CTL0, 25U),    /*!< PLL stabilization flag */
 #ifdef GD32F130_150
-    RCU_FLAG_IRC14MSTB    = RCU_REGIDX_BIT(IDX_CTL1, 1U),     /*!< IRC14M stabilization flags */
+    RCU_FLAG_IRC14MSTB    = RCU_REGIDX_BIT(IDX_CTL1, 1U),     /*!< IRC14M stabilization flag */
 #elif defined (GD32F170_190)
-    RCU_FLAG_IRC28MSTB    = RCU_REGIDX_BIT(IDX_CTL1, 1U),     /*!< IRC28M stabilization flags */
+    RCU_FLAG_IRC28MSTB    = RCU_REGIDX_BIT(IDX_CTL1, 1U),     /*!< IRC28M stabilization flag */
 #endif /* GD32F130_150 */
-    RCU_FLAG_V12RST       = RCU_REGIDX_BIT(IDX_RSTSCK, 23U),  /*!< V12 reset flags */
-    RCU_FLAG_OBLRST       = RCU_REGIDX_BIT(IDX_RSTSCK, 25U),  /*!< OBL reset flags */
-    RCU_FLAG_EPRST        = RCU_REGIDX_BIT(IDX_RSTSCK, 26U),  /*!< EPR reset flags */
-    RCU_FLAG_PORRST       = RCU_REGIDX_BIT(IDX_RSTSCK, 27U),  /*!< Power reset flags */
-    RCU_FLAG_SWRST        = RCU_REGIDX_BIT(IDX_RSTSCK, 28U),  /*!< SW reset flags */
-    RCU_FLAG_FWDGTRST     = RCU_REGIDX_BIT(IDX_RSTSCK, 29U),  /*!< FWDGT reset flags */
-    RCU_FLAG_WWDGTRST     = RCU_REGIDX_BIT(IDX_RSTSCK, 30U),  /*!< WWDGT reset flags */
-    RCU_FLAG_LPRST        = RCU_REGIDX_BIT(IDX_RSTSCK, 31U)   /*!< LP reset flags */
+    RCU_FLAG_V12RST       = RCU_REGIDX_BIT(IDX_RSTSCK, 23U),  /*!< 1.2V reset flags */
+    RCU_FLAG_OBLRST       = RCU_REGIDX_BIT(IDX_RSTSCK, 25U),  /*!< option byte loader reset flag */
+    RCU_FLAG_EPRST        = RCU_REGIDX_BIT(IDX_RSTSCK, 26U),  /*!< external pin reset reset flag */
+    RCU_FLAG_PORRST       = RCU_REGIDX_BIT(IDX_RSTSCK, 27U),  /*!< power reset flag */
+    RCU_FLAG_SWRST        = RCU_REGIDX_BIT(IDX_RSTSCK, 28U),  /*!< software reset reset flag */
+    RCU_FLAG_FWDGTRST     = RCU_REGIDX_BIT(IDX_RSTSCK, 29U),  /*!< free watchdog timer reset flag */
+    RCU_FLAG_WWDGTRST     = RCU_REGIDX_BIT(IDX_RSTSCK, 30U),  /*!< window watchdog timer reset flag */
+    RCU_FLAG_LPRST        = RCU_REGIDX_BIT(IDX_RSTSCK, 31U)   /*!< low-power reset flag */
 }rcu_flag_enum;
 
 /* clock stabilization and ckm interrupt flags */
@@ -470,7 +494,7 @@ typedef enum
 #elif defined (GD32F170_190)
     RCU_INT_FLAG_IRC28MSTB = RCU_INT_IRC28MSTBIF,             /*!< IRC28M stabilization interrupt flag */
 #endif /* GD32F130_150 */
-    RCU_INT_FLAG_CKM       = RCU_INT_CKMIF                    /*!< CKM interrupt flag */
+    RCU_INT_FLAG_CKM       = RCU_INT_CKMIF                    /*!< HXTAL clock stuck interrupt flag */
 }rcu_int_flag_enum;
 
 /* clock stabilization and stuck interrupt flags clear */
@@ -486,7 +510,7 @@ typedef enum
 #elif defined (GD32F170_190)
     RCU_INT_FLAG_IRC28MSTB_CLR = RCU_INT_IRC28MSTBIC,        /*!< IRC28M stabilization interrupt flags clear */
 #endif /* GD32F130_150 */
-    RCU_INT_FLAG_CKM_CLR       = RCU_INT_CKMIC               /*!< CKM interrupt flags clear */
+    RCU_INT_FLAG_CKM_CLR       = RCU_INT_CKMIC               /*!< HXTAL clock stuck interrupt flags clear */
 }rcu_int_flag_clear_enum;
 
 /* clock stabilization interrupt enable or disable */
@@ -508,9 +532,9 @@ typedef enum
 typedef enum
 {
 #ifdef GD32F130_150
-    RCU_ADCCK_IRC14M        = 0,                             /*!< ADC clock source select IRC14M */
+    RCU_ADCCK_IRC14M        = 0U,                            /*!< ADC clock source select IRC14M */
 #elif defined (GD32F170_190)
-    RCU_ADCCK_IRC28M_DIV2   = 0,                             /*!< ADC clock source select IRC28M/2 */
+    RCU_ADCCK_IRC28M_DIV2   = 0U,                            /*!< ADC clock source select IRC28M/2 */
     RCU_ADCCK_IRC28M,                                        /*!< ADC clock source select IRC28M */
 #endif /* GD32F130_150 */
     RCU_ADCCK_APB2_DIV2,                                     /*!< ADC clock source select APB2/2 */
@@ -537,7 +561,7 @@ typedef enum
 /* rcu clock frequency */
 typedef enum
 {
-    CK_SYS      = 0,                                         /*!< system clock */
+    CK_SYS      = 0U,                                        /*!< system clock */
     CK_AHB,                                                  /*!< AHB clock */
     CK_APB1,                                                 /*!< APB1 clock */
     CK_APB2,                                                 /*!< APB2 clock */
@@ -594,11 +618,11 @@ typedef enum
 #define RCU_ADC_CKAPB2_DIV8         CFG0_ADCPSC(3)           /*!< ADC clock prescaler select CK_APB2/8 */
 
 /* PLL clock source selection */
-#define RCU_PLLSRC_IRC8M_DIV2       (uint32_t)0x00000000     /*!< PLL clock source select IRC8M/2 */
+#define RCU_PLLSRC_IRC8M_DIV2       (uint32_t)0x00000000U    /*!< PLL clock source select IRC8M/2 */
 #define RCU_PLLSRC_HXTAL            RCU_CFG0_PLLSEL          /*!< PLL clock source select HXTAL */
 
 /* HXTAL divider for PLL source clock selection */
-#define RCU_PLLPREDV_HXTAL          (uint32_t)0x00000000     /*!< HXTAL clock selected */
+#define RCU_PLLPREDV_HXTAL          (uint32_t)0x00000000U    /*!< HXTAL clock selected */
 #define RCU_PLLPREDV_HXTAL_DIV2     RCU_CFG0_PLLPREDV        /*!< HXTAL/2 clock selected */
 
 /* PLL multiply factor */
@@ -665,6 +689,7 @@ typedef enum
 #define RCU_CKOUT_DIV32             CFG0_CKOUTDIV(5)                    /*!< CK_OUT is divided by 32 */
 #define RCU_CKOUT_DIV64             CFG0_CKOUTDIV(6)                    /*!< CK_OUT is divided by 64 */
 #define RCU_CKOUT_DIV128            CFG0_CKOUTDIV(7)                    /*!< CK_OUT is divided by 128 */
+
 #elif defined (GD32F170_190)
 /* CK_OUT0 clock source selection */
 #define CFG0_CKOUT0SEL(regval)      (BITS(24,26) & ((uint32_t)(regval) << 24))
@@ -761,14 +786,14 @@ typedef enum
 #define RCU_ADC_IRC28M_DIV1         RCU_CFG2_IRC28MDIV                  /*!< IRC28M select to ADC clock */
 
 /* CK_OUT1 clock source selection */
-#define CFG3_CKOUT1SRC(regval)      (BITS(0,2) & ((uint32_t)(regval) << 0))
-#define RCU_CKOUT1SRC_NONE          CFG3_CKOUT1SRC(0)                   /*!< no clock selected */
-#define RCU_CKOUT1SRC_IRC28M        CFG3_CKOUT1SRC(1)                   /*!< CK_OUT1 clock source select IRC28M */
-#define RCU_CKOUT1SRC_IRC40K        CFG3_CKOUT1SRC(2)                   /*!< CK_OUT1 clock source select IRC40K */
-#define RCU_CKOUT1SRC_LXTAL         CFG3_CKOUT1SRC(3)                   /*!< CK_OUT1 clock source select LXTAL */
-#define RCU_CKOUT1SRC_CKSYS         CFG3_CKOUT1SRC(4)                   /*!< CK_OUT1 clock source select CKSYS */
-#define RCU_CKOUT1SRC_IRC8M         CFG3_CKOUT1SRC(5)                   /*!< CK_OUT1 clock source select IRC8M */
-#define RCU_CKOUT1SRC_HXTAL         CFG3_CKOUT1SRC(6)                   /*!< CK_OUT1 clock source select HXTAL */
+#define CFG3_CKOUT1SEL(regval)      (BITS(0,2) & ((uint32_t)(regval) << 0))
+#define RCU_CKOUT1SRC_NONE          CFG3_CKOUT1SEL(0)                   /*!< no clock selected */
+#define RCU_CKOUT1SRC_IRC28M        CFG3_CKOUT1SEL(1)                   /*!< CK_OUT1 clock source select IRC28M */
+#define RCU_CKOUT1SRC_IRC40K        CFG3_CKOUT1SEL(2)                   /*!< CK_OUT1 clock source select IRC40K */
+#define RCU_CKOUT1SRC_LXTAL         CFG3_CKOUT1SEL(3)                   /*!< CK_OUT1 clock source select LXTAL */
+#define RCU_CKOUT1SRC_CKSYS         CFG3_CKOUT1SEL(4)                   /*!< CK_OUT1 clock source select CKSYS */
+#define RCU_CKOUT1SRC_IRC8M         CFG3_CKOUT1SEL(5)                   /*!< CK_OUT1 clock source select IRC8M */
+#define RCU_CKOUT1SRC_HXTAL         CFG3_CKOUT1SEL(6)                   /*!< CK_OUT1 clock source select HXTAL */
 #define RCU_CKOUT1SRC_CKPLL_DIV1    0x00000007U                         /*!< CK_OUT1 clock source select CK_PLL */
 #define RCU_CKOUT1SRC_CKPLL_DIV2    0x00000008U                         /*!< CK_OUT1 clock source select CK_PLL/2 */
 
@@ -862,7 +887,8 @@ typedef enum
 #endif /* GD32F130_150 */
 
 /* function declarations */
-/* deinitialize the RCU */
+/* initialization, peripheral clock and reset configuration functions */
+/* deinitialize the RCU, reset the value of all RCU registers into initial values */
 void rcu_deinit(void);
 /* enable the peripherals clock */
 void rcu_periph_clock_enable(rcu_periph_enum periph);
@@ -881,6 +907,7 @@ void rcu_bkp_reset_enable(void);
 /* disable the BKP domain reset */
 void rcu_bkp_reset_disable(void);
 
+/* system clock, AHB, APB1, APB2, clock out, USART, ADC and other periphral configuration functions */
 /* configure the system clock source */
 void rcu_system_clock_source_config(uint32_t ck_sys);
 /* get the system clock source */
@@ -913,6 +940,7 @@ void rcu_cec_clock_config(uint32_t ck_cec);
 /* configure the RTC clock source selection */
 void rcu_rtc_clock_config(uint32_t rtc_clock_source);
 #ifdef GD32F170_190
+/* configure the SLCD clock source selection */
 void rcu_slcd_clock_config(uint32_t slcd_clock_source);
 #endif /* GD32F170_190 */
 /* configure the HXTAL divider used as input of PLL */
@@ -920,6 +948,7 @@ void rcu_hxtal_prediv_config(uint32_t hxtal_prediv);
 /* configure the LXTAL drive capability */
 void rcu_lxtal_drive_capability_config(uint32_t lxtal_dricap);
 
+/* flag and interrupt functions */
 /* get the clock stabilization and periphral reset flags */
 FlagStatus rcu_flag_get(rcu_flag_enum flag);
 /* clear the reset flag */
@@ -933,6 +962,7 @@ void rcu_interrupt_enable(rcu_int_enum stab_int);
 /* disable the stabilization interrupt */
 void rcu_interrupt_disable(rcu_int_enum stab_int);
 
+/* oscillator configuration functions */
 /* wait until oscillator stabilization flags is SET or oscillator startup is timeout */
 ErrStatus rcu_osci_stab_wait(rcu_osci_type_enum osci);
 /* turn on the oscillator */

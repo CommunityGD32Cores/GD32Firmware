@@ -1,15 +1,39 @@
 /*!
     \file  gd32f1x0_rtc.c
     \brief RTC driver
+
+    \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
+    \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
+    \version 2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    \version 2019-11-20, V3.2.0, firmware update for GD32F1x0(x=3,5,7,9)
 */
 
 /*
-    Copyright (C) 2017 GigaDevice
+    Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
-    2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
-    2016-04-30, V3.0.0, firmware update for GD32F1x0(x=3,5,7,9)
-    2017-06-19, V3.1.0, firmware update for GD32F1x0(x=3,5,7,9)
+    Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this 
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
+       and/or other materials provided with the distribution.
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
+       specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+OF SUCH DAMAGE.
 */
 
 #include "gd32f1x0_rtc.h"
@@ -90,7 +114,7 @@ ErrStatus rtc_deinit(void)
 ErrStatus rtc_init(rtc_parameter_struct* rtc_initpara_struct)
 {
     ErrStatus error_status = ERROR;
-    uint32_t reg_time = 0U, reg_date = 0U;
+    uint32_t reg_time = 0x00U, reg_date = 0x00U;
 
     reg_date = (DATE_YR(rtc_initpara_struct->rtc_year) | \
                 DATE_DOW(rtc_initpara_struct->rtc_day_of_week) | \
@@ -151,7 +175,7 @@ ErrStatus rtc_init_mode_enter(void)
         /* wait until the INITF flag to be set */
         do{
            flag_status = RTC_STAT & RTC_STAT_INITF;
-        }while((--time_index > 0U) && ((uint32_t)RESET == flag_status));
+        }while((--time_index > 0x00U) && ((uint32_t)RESET == flag_status));
 
         if ((uint32_t)RESET != flag_status){        
             error_status = SUCCESS;
@@ -197,7 +221,7 @@ ErrStatus rtc_register_sync_wait(void)
         /* wait until RSYNF flag to be set */
         do{
             flag_status = RTC_STAT & RTC_STAT_RSYNF;
-        }while((--time_index > 0U) && ((uint32_t)RESET == flag_status));
+        }while((--time_index > 0x00U) && ((uint32_t)RESET == flag_status));
 
         if ((uint32_t)RESET != flag_status){  
             error_status = SUCCESS;
@@ -235,7 +259,7 @@ ErrStatus rtc_register_sync_wait(void)
 */
 void rtc_current_time_get(rtc_parameter_struct* rtc_initpara_struct)
 {
-    uint32_t temp_tr = 0U, temp_dr = 0U, temp_pscr = 0U, temp_ctlr = 0U;
+    uint32_t temp_tr = 0x00U, temp_dr = 0x00U, temp_pscr = 0x00U, temp_ctlr = 0x00U;
 
     temp_tr = (uint32_t)RTC_TIME;   
     temp_dr = (uint32_t)RTC_DATE;
@@ -264,7 +288,7 @@ void rtc_current_time_get(rtc_parameter_struct* rtc_initpara_struct)
 */
 uint32_t rtc_subsecond_get(void)
 {
-    uint32_t reg = 0U;
+    uint32_t reg = 0x00U;
     /* if BPSHAD bit is reset, reading RTC_SS will lock RTC_TIME and RTC_DATE automatically */
     reg = (uint32_t)RTC_SS;
     /* read RTC_DATE to unlock the 3 shadow registers */
@@ -293,7 +317,7 @@ uint32_t rtc_subsecond_get(void)
 */
 void rtc_alarm_config(rtc_alarm_struct* rtc_alarm_time)
 {
-    uint32_t reg_alrm0td = 0U;
+    uint32_t reg_alrm0td = 0x00U;
 
     reg_alrm0td = (rtc_alarm_time->rtc_alarm_mask | \
                  rtc_alarm_time->rtc_weekday_or_date | \
@@ -316,11 +340,12 @@ void rtc_alarm_config(rtc_alarm_struct* rtc_alarm_time)
 /*!
     \brief      configure subsecond of RTC alarm
     \param[in]  mask_subsecond: alarm subsecond mask
+                only one parameter can be selected which is shown as below:
       \arg        RTC_MASKSSC_0_14: mask alarm subsecond configuration
       \arg        RTC_MASKSSC_1_14: mask RTC_ALRM0SS_SSC[14:1], and RTC_ALRM0SS_SSC[0] is to be compared
       \arg        RTC_MASKSSC_2_14: mask RTC_ALRM0SS_SSC[14:2], and RTC_ALRM0SS_SSC[1:0] is to be compared
       \arg        RTC_MASKSSC_3_14: mask RTC_ALRM0SS_SSC[14:3], and RTC_ALRM0SS_SSC[2:0] is to be compared
-      \arg        RTC_MASKSSC_4_14: mask RTC_ALRM0SS_SSC[14:4]], and RTC_ALRM0SS_SSC[3:0] is to be compared
+      \arg        RTC_MASKSSC_4_14: mask RTC_ALRM0SS_SSC[14:4], and RTC_ALRM0SS_SSC[3:0] is to be compared
       \arg        RTC_MASKSSC_5_14: mask RTC_ALRM0SS_SSC[14:5], and RTC_ALRM0SS_SSC[4:0] is to be compared
       \arg        RTC_MASKSSC_6_14: mask RTC_ALRM0SS_SSC[14:6], and RTC_ALRM0SS_SSC[5:0] is to be compared
       \arg        RTC_MASKSSC_7_14: mask RTC_ALRM0SS_SSC[14:7], and RTC_ALRM0SS_SSC[6:0] is to be compared
@@ -346,6 +371,52 @@ void rtc_alarm_subsecond_config(uint32_t mask_subsecond,  uint32_t subsecond)
 
     /* enable the write protection */
     RTC_WPK = RTC_LOCK_KEY;
+}
+
+/*!
+    \brief      get RTC alarm
+    \param[in]  none
+    \param[out] rtc_alarm_time: pointer to a rtc_alarm_struct structure which contains 
+                parameters for RTC alarm configuration
+                members of the structure and the member values are shown as below:
+                  rtc_alarm_mask: RTC_ALARM_NONE_MASK, RTC_ALARM_DATE_MASK, RTC_ALARM_HOUR_MASK
+                                  RTC_ALARM_MINUTE_MASK, RTC_ALARM_SECOND_MASK, RTC_ALARM_ALL_MASK
+                  rtc_weekday_or_date: RTC_ALARM_DATE_SELECTED, RTC_ALARM_WEEKDAY_SELECTED
+                  rtc_alarm_day: 1) 0x1 - 0x31(BCD format) if RTC_ALARM_DATE_SELECTED is set
+                                 2) RTC_MONDAY, RTC_TUESDAY, RTC_WEDSDAY, RTC_THURSDAY, RTC_FRIDAY,
+                                    RTC_SATURDAY, RTC_SUNDAY if RTC_ALARM_WEEKDAY_SELECTED is set
+                  rtc_alarm_hour: 0x0 - 0x12(BCD format) or 0x0 - 0x23(BCD format) depending on the rtc_display_format
+                  rtc_alarm_minute: 0x0 - 0x59(BCD format)
+                  rtc_alarm_second: 0x0 - 0x59(BCD format)
+                  rtc_am_pm: RTC_AM, RTC_PM
+    \retval     none
+*/
+void rtc_alarm_get(rtc_alarm_struct* rtc_alarm_time)
+{
+    uint32_t reg_alrm0td = 0x00U;
+
+    /* get the value of RTC_ALRM0TD register */
+    reg_alrm0td = RTC_ALRM0TD;
+
+    /* get alarm parameters and construct the rtc_alarm_struct structure */
+    rtc_alarm_time->rtc_alarm_mask = reg_alrm0td & RTC_ALARM_ALL_MASK; 
+    rtc_alarm_time->rtc_am_pm = (uint32_t)(reg_alrm0td & RTC_ALRM0TD_PM);
+    rtc_alarm_time->rtc_weekday_or_date = (uint32_t)(reg_alrm0td & RTC_ALRM0TD_DOWS);
+    rtc_alarm_time->rtc_alarm_day = (uint8_t)GET_ALRM0TD_DAY(reg_alrm0td);
+    rtc_alarm_time->rtc_alarm_hour = (uint8_t)GET_ALRM0TD_HR(reg_alrm0td);
+    rtc_alarm_time->rtc_alarm_minute = (uint8_t)GET_ALRM0TD_MN(reg_alrm0td);
+    rtc_alarm_time->rtc_alarm_second = (uint8_t)GET_ALRM0TD_SC(reg_alrm0td);  
+}
+
+/*!
+    \brief      get RTC alarm subsecond
+    \param[in]  none
+    \param[out] none
+    \retval     RTC alarm subsecond value
+*/
+uint32_t rtc_alarm_subsecond_get(void)
+{
+    return ((uint32_t)(RTC_ALRM0SS & RTC_ALRM0SS_SSC));
 }
 
 /*!
@@ -388,7 +459,7 @@ ErrStatus rtc_alarm_disable(void)
     /* wait until ALRM0WF flag to be set after the alarm is disabled */
     do{
         flag_status = RTC_STAT & RTC_STAT_ALRM0WF;
-    }while((--time_index > 0U) && ((uint32_t)RESET == flag_status));
+    }while((--time_index > 0x00U) && ((uint32_t)RESET == flag_status));
     
     if ((uint32_t)RESET != flag_status){     
         error_status = SUCCESS;
@@ -401,54 +472,9 @@ ErrStatus rtc_alarm_disable(void)
 }
 
 /*!
-    \brief      get RTC alarm
-    \param[in]  none
-    \param[out] rtc_alarm_time: pointer to a rtc_alarm_struct structure which contains 
-                parameters for RTC alarm configuration
-                members of the structure and the member values are shown as below:
-                  rtc_alarm_mask: RTC_ALARM_NONE_MASK, RTC_ALARM_DATE_MASK, RTC_ALARM_HOUR_MASK
-                                  RTC_ALARM_MINUTE_MASK, RTC_ALARM_SECOND_MASK, RTC_ALARM_ALL_MASK
-                  rtc_weekday_or_date: RTC_ALARM_DATE_SELECTED, RTC_ALARM_WEEKDAY_SELECTED
-                  rtc_alarm_day: 1) 0x1 - 0x31(BCD format) if RTC_ALARM_DATE_SELECTED is set
-                                 2) RTC_MONDAY, RTC_TUESDAY, RTC_WEDSDAY, RTC_THURSDAY, RTC_FRIDAY,
-                                    RTC_SATURDAY, RTC_SUNDAY if RTC_ALARM_WEEKDAY_SELECTED is set
-                  rtc_alarm_hour: 0x0 - 0x12(BCD format) or 0x0 - 0x23(BCD format) depending on the rtc_display_format
-                  rtc_alarm_minute: 0x0 - 0x59(BCD format)
-                  rtc_alarm_second: 0x0 - 0x59(BCD format)
-                  rtc_am_pm: RTC_AM, RTC_PM
-    \retval     none
-*/
-void rtc_alarm_get(rtc_alarm_struct* rtc_alarm_time)
-{
-    uint32_t reg_alrm0td = 0U;
-
-    /* get the value of RTC_ALRM0TD register */
-    reg_alrm0td = RTC_ALRM0TD;
-
-    /* get alarm parameters and construct the rtc_alarm_struct structure */
-    rtc_alarm_time->rtc_alarm_mask = reg_alrm0td & RTC_ALARM_ALL_MASK; 
-    rtc_alarm_time->rtc_am_pm = (uint32_t)(reg_alrm0td & RTC_ALRM0TD_PM);
-    rtc_alarm_time->rtc_weekday_or_date = (uint32_t)(reg_alrm0td & RTC_ALRM0TD_DOWS);
-    rtc_alarm_time->rtc_alarm_day = (uint8_t)GET_ALRM0TD_DAY(reg_alrm0td);
-    rtc_alarm_time->rtc_alarm_hour = (uint8_t)GET_ALRM0TD_HR(reg_alrm0td);
-    rtc_alarm_time->rtc_alarm_minute = (uint8_t)GET_ALRM0TD_MN(reg_alrm0td);
-    rtc_alarm_time->rtc_alarm_second = (uint8_t)GET_ALRM0TD_SC(reg_alrm0td);  
-}
-
-/*!
-    \brief      get RTC alarm subsecond
-    \param[in]  none
-    \param[out] none
-    \retval     RTC alarm subsecond value
-*/
-uint32_t rtc_alarm_subsecond_get(void)
-{
-    return ((uint32_t)(RTC_ALRM0SS & RTC_ALRM0SS_SSC));
-}
-
-/*!
     \brief      enable RTC time-stamp
     \param[in]  edge: specify which edge to detect of time-stamp
+                only one parameter can be selected which is shown as below:
       \arg        RTC_TIMESTAMP_RISING_EDGE: rising edge is valid event edge for timestamp event
       \arg        RTC_TIMESTAMP_FALLING_EDGE: falling edge is valid event edge for timestamp event
     \param[out] none
@@ -456,7 +482,7 @@ uint32_t rtc_alarm_subsecond_get(void)
 */
 void rtc_timestamp_enable(uint32_t edge)
 {
-    uint32_t reg_ctl = 0U;
+    uint32_t reg_ctl = 0x00U;
 
     /* clear the bits to be configured in RTC_CTL */
     reg_ctl = (uint32_t)(RTC_CTL & (uint32_t)(~(RTC_CTL_TSEG | RTC_CTL_TSEN)));
@@ -512,7 +538,7 @@ void rtc_timestamp_disable(void)
 */
 void rtc_timestamp_get(rtc_timestamp_struct* rtc_timestamp)
 {
-    uint32_t temp_tts = 0U, temp_dts = 0U;
+    uint32_t temp_tts = 0x00U, temp_dts = 0x00U;
 
     /* get the value of time_stamp registers */
     temp_tts = (uint32_t)RTC_TTS;
@@ -599,6 +625,7 @@ void rtc_tamper_enable(rtc_tamper_struct* rtc_tamper)
 /*!
     \brief      disable RTC tamper
     \param[in]  source: specify which tamper source to be disabled
+                only one parameter can be selected which is shown as below:
       \arg        RTC_TAMPER0
       \arg        RTC_TAMPER1
     \param[out] none
@@ -614,6 +641,7 @@ void rtc_tamper_disable(uint32_t source)
 /*!
     \brief      enable specified RTC interrupt
     \param[in]  interrupt: specify which interrupt source to be enabled
+                only one parameter can be selected which is shown as below:
       \arg        RTC_INT_TIMESTAMP: timestamp interrupt
       \arg        RTC_INT_ALARM: alarm interrupt
       \arg        RTC_INT_TAMP: tamp interrupt
@@ -638,6 +666,7 @@ void rtc_interrupt_enable(uint32_t interrupt)
 /*!
     \brief      disble specified RTC interrupt
     \param[in]  interrupt: specify which interrupt source to be disabled
+                only one parameter can be selected which is shown as below:
       \arg        RTC_INT_TIMESTAMP: timestamp interrupt
       \arg        RTC_INT_ALARM: alarm interrupt
       \arg        RTC_INT_TAMP: tamp interrupt
@@ -662,6 +691,7 @@ void rtc_interrupt_disable(uint32_t interrupt)
 /*!
     \brief      check specified flag
     \param[in]  flag: specify which flag to check
+                only one parameter can be selected which is shown as below:
       \arg        RTC_FLAG_RECALIBRATION: recalibration pending flag
       \arg        RTC_FLAG_TAMP1: tamper 1 event flag
       \arg        RTC_FLAG_TAMP0: tamper 0 event flag
@@ -689,6 +719,7 @@ FlagStatus rtc_flag_get(uint32_t flag)
 /*!
     \brief      clear specified flag
     \param[in]  flag: specify which flag to clear
+                only one parameter can be selected which is shown as below:
       \arg        RTC_FLAG_TAMP1: tamper 1 event flag
       \arg        RTC_FLAG_TAMP0: tamper 0 event flag
       \arg        RTC_FLAG_TIMESTAMP_OVERFLOW: time-stamp overflow event flag
@@ -706,6 +737,7 @@ void rtc_flag_clear(uint32_t flag)
 /*!
     \brief      configure rtc alternate output source
     \param[in]  source: specify signal to output
+                only one parameter can be selected which is shown as below:
       \arg        RTC_CALIBRATION_512HZ: when the LXTAL freqency is 32768Hz and the RTC_PSC 
                                          is the default value, output 512Hz signal
       \arg        RTC_CALIBRATION_1HZ: when the LXTAL freqency is 32768Hz and the RTC_PSC 
@@ -713,6 +745,7 @@ void rtc_flag_clear(uint32_t flag)
       \arg        RTC_ALARM_HIGH: when the  alarm flag is set, the output pin is high
       \arg        RTC_ALARM_LOW: when the  Alarm flag is set, the output pin is low
     \param[in]  mode: specify the output pin (PC13) mode when output alarm signal
+                only one parameter can be selected which is shown as below:
       \arg        RTC_ALARM_OUTPUT_OD: open drain mode
       \arg        RTC_ALARM_OUTPUT_PP: push pull mode
     \param[out] none
@@ -737,10 +770,51 @@ void rtc_alter_output_config(uint32_t source, uint32_t mode)
     /* enable the write protection */
     RTC_WPK = RTC_LOCK_KEY;
 }
+/*!
+    \brief      configure RTC calibration register
+    \param[in]  window: select calibration window
+                only one parameter can be selected which is shown as below:
+      \arg        RTC_CALIBRATION_WINDOW_32S: 2exp20 RTCCLK cycles, 32s if RTCCLK = 32768 Hz
+      \arg        RTC_CALIBRATION_WINDOW_16S: 2exp19 RTCCLK cycles, 16s if RTCCLK = 32768 Hz
+      \arg        RTC_CALIBRATION_WINDOW_8S: 2exp18 RTCCLK cycles, 8s if RTCCLK = 32768 Hz
+    \param[in]  plus: add RTC clock or not
+                only one parameter can be selected which is shown as below:
+      \arg        RTC_CALIBRATION_PLUS_SET: add one RTC clock every 2048 rtc clock
+      \arg        RTC_CALIBRATION_PLUS_RESET: no effect
+    \param[in]  minus: the RTC clock to minus during the calibration window(0x0 - 0x1FF)
+    \param[out] none
+    \retval     ErrStatus: ERROR or SUCCESS
+*/
+ErrStatus rtc_calibration_config(uint32_t window, uint32_t plus, uint32_t minus)
+{
+    uint32_t time_index = RTC_HRFC_TIMEOUT;
+    ErrStatus error_status = ERROR;
+    uint32_t flag_status = RESET;
+    
+    /* disable the write protection */
+    RTC_WPK = RTC_UNLOCK_KEY1;
+    RTC_WPK = RTC_UNLOCK_KEY2;    
+    
+    /* check if a calibration operation is ongoing */        
+    do{
+        flag_status = RTC_STAT & RTC_STAT_SCPF;
+    }while((--time_index > 0x00U) && ((uint32_t)RESET != flag_status));
+    
+    if((uint32_t)RESET == flag_status){
+        RTC_HRFC = (uint32_t)(window | plus | HRFC_CMSK(minus));
+        error_status = SUCCESS;
+    }
+
+    /* enable the write protection */
+    RTC_WPK = RTC_LOCK_KEY;
+
+    return error_status;
+}
 
 /*!
     \brief      ajust the daylight saving time by adding or substracting one hour from the current time
     \param[in]  operation: hour ajustment operation
+                only one parameter can be selected which is shown as below:
       \arg        RTC_CTL_A1H: add one hour
       \arg        RTC_CTL_S1H: substract one hour
     \param[out] none
@@ -756,6 +830,45 @@ void rtc_hour_adjust(uint32_t operation)
 
     /* enable the write protection */
     RTC_WPK = RTC_LOCK_KEY;
+}
+
+/*!
+    \brief      ajust RTC second or subsecond value of current time
+    \param[in]  add: add 1s to current time or not
+                only one parameter can be selected which is shown as below:
+      \arg        RTC_SHIFT_ADD1S_RESET: no effect
+      \arg        RTC_SHIFT_ADD1S_SET: add 1s to current time
+    \param[in]  minus: number of subsecond to minus from current time(0x0 - 0x7FFF)
+    \param[out] none
+    \retval     ErrStatus: ERROR or SUCCESS
+*/
+ErrStatus rtc_second_adjust(uint32_t add, uint32_t minus)
+{
+    uint32_t time_index = RTC_SHIFTCTL_TIMEOUT;
+    ErrStatus error_status = ERROR;
+    uint32_t flag_status = RESET;
+    uint32_t temp=0U;    
+
+    /* disable the write protection */
+    RTC_WPK = RTC_UNLOCK_KEY1;
+    RTC_WPK = RTC_UNLOCK_KEY2;
+    
+    /* check if a shift operation is ongoing */    
+    do{
+        flag_status = RTC_STAT & RTC_STAT_SOPF;
+    }while((--time_index > 0x00U) && ((uint32_t)RESET != flag_status));
+
+    temp = RTC_CTL & RTC_CTL_REFEN;    
+    /* check if the function of reference clock detection is disabled */
+    if(((uint32_t)RESET == flag_status) && (RESET == temp)){  
+        RTC_SHIFTCTL = (uint32_t)(add | SHIFTCTL_SFS(minus));
+        error_status = rtc_register_sync_wait();        
+    }
+
+    /* enable the write protection */
+    RTC_WPK = RTC_LOCK_KEY;
+
+    return error_status;
 }
 
 /*!
@@ -844,83 +957,6 @@ ErrStatus rtc_refclock_detection_disable(void)
         RTC_CTL &= (uint32_t)~RTC_CTL_REFEN;
         /* exit init mode */
         rtc_init_mode_exit();
-    }
-
-    /* enable the write protection */
-    RTC_WPK = RTC_LOCK_KEY;
-
-    return error_status;
-}
-
-/*!
-    \brief      ajust RTC second or subsecond value of current time
-    \param[in]  add: add 1s to current time or not
-      \arg        RTC_SHIFT_ADD1S_RESET: no effect
-      \arg        RTC_SHIFT_ADD1S_SET: add 1s to current time
-    \param[in]  minus: number of subsecond to minus from current time(0x0 - 0x7FFF)
-    \param[out] none
-    \retval     ErrStatus: ERROR or SUCCESS
-*/
-ErrStatus rtc_second_ajust(uint32_t add, uint32_t minus)
-{
-    uint32_t time_index = RTC_SHIFTCTL_TIMEOUT;
-    ErrStatus error_status = ERROR;
-    uint32_t flag_status = RESET;
-    uint32_t temp=0U;    
-
-    /* disable the write protection */
-    RTC_WPK = RTC_UNLOCK_KEY1;
-    RTC_WPK = RTC_UNLOCK_KEY2;
-    
-    /* check if a shift operation is ongoing */    
-    do{
-        flag_status = RTC_STAT & RTC_STAT_SOPF;
-    }while((--time_index > 0U) && ((uint32_t)RESET != flag_status));
-
-    temp = RTC_CTL & RTC_CTL_REFEN;    
-    /* check if the function of reference clock detection is disabled */
-    if(((uint32_t)RESET == flag_status) && (RESET == temp)){  
-        RTC_SHIFTCTL = (uint32_t)(add | SHIFTCTL_SFS(minus));
-        error_status = rtc_register_sync_wait();        
-    }
-
-    /* enable the write protection */
-    RTC_WPK = RTC_LOCK_KEY;
-
-    return error_status;
-}
-
-/*!
-    \brief      configure RTC calibration register
-    \param[in]  window: select calibration window
-      \arg        RTC_CALIBRATION_WINDOW_32S: 2exp20 RTCCLK cycles, 32s if RTCCLK = 32768 Hz
-      \arg        RTC_CALIBRATION_WINDOW_16S: 2exp19 RTCCLK cycles, 16s if RTCCLK = 32768 Hz
-      \arg        RTC_CALIBRATION_WINDOW_8S: 2exp18 RTCCLK cycles, 8s if RTCCLK = 32768 Hz
-    \param[in]  plus: add RTC clock or not
-      \arg        RTC_CALIBRATION_PLUS_SET: add one RTC clock every 2048 rtc clock
-      \arg        RTC_CALIBRATION_PLUS_RESET: no effect
-    \param[in]  minus: the RTC clock to minus during the calibration window(0x0 - 0x1FF)
-    \param[out] none
-    \retval     ErrStatus: ERROR or SUCCESS
-*/
-ErrStatus rtc_calibration_config(uint32_t window, uint32_t plus, uint32_t minus)
-{
-    uint32_t time_index = RTC_HRFC_TIMEOUT;
-    ErrStatus error_status = ERROR;
-    uint32_t flag_status = RESET;
-    
-    /* disable the write protection */
-    RTC_WPK = RTC_UNLOCK_KEY1;
-    RTC_WPK = RTC_UNLOCK_KEY2;    
-    
-    /* check if a calibration operation is ongoing */        
-    do{
-        flag_status = RTC_STAT & RTC_STAT_SCPF;
-    }while((--time_index > 0U) && ((uint32_t)RESET != flag_status));
-    
-    if((uint32_t)RESET == flag_status){
-        RTC_HRFC = (uint32_t)(window | plus | HRFC_CMSK(minus));
-        error_status = SUCCESS;
     }
 
     /* enable the write protection */
