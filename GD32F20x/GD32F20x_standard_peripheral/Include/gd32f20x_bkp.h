@@ -1,16 +1,15 @@
 /*!
-    \file  gd32f20x_bkp.h
-    \brief definitions for the BKP
+    \file    gd32f20x_bkp.h
+    \brief   definitions for the BKP
 
     \version 2015-07-15, V1.0.0, firmware for GD32F20x
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
+    \version 2020-09-30, V2.2.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:

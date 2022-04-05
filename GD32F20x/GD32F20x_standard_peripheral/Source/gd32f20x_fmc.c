@@ -1,16 +1,15 @@
 /*!
-    \file  gd32f20x_fmc.c
-    \brief FMC driver
+    \file    gd32f20x_fmc.c
+    \brief   FMC driver
 
     \version 2015-07-15, V1.0.0, firmware for GD32F20x
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
+    \version 2020-09-30, V2.2.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -167,7 +166,7 @@ void fmc_bank1_lock(void)
 fmc_state_enum fmc_page_erase(uint32_t page_address)
 {
     fmc_state_enum fmc_state;
-    
+    /* flash size is greater than 512k */
     if(FMC_BANK0_SIZE < FMC_SIZE){
         if(FMC_BANK0_END_ADDRESS > page_address){
             fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT);
@@ -224,6 +223,7 @@ fmc_state_enum fmc_page_erase(uint32_t page_address)
 fmc_state_enum fmc_mass_erase(void)
 {
     fmc_state_enum fmc_state;
+    /* flash size is greater than 512k */
     if(FMC_BANK0_SIZE < FMC_SIZE){
         /* wait for the FMC ready */
         fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT);
@@ -323,6 +323,7 @@ fmc_state_enum fmc_bank1_erase(void)
 fmc_state_enum fmc_word_program(uint32_t address, uint32_t data)
 {
     fmc_state_enum fmc_state = FMC_READY;
+    /* flash size is greater than 512k */
     if(FMC_BANK0_SIZE < FMC_SIZE){
         if(FMC_BANK0_END_ADDRESS > address){
             fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT); 
@@ -376,7 +377,8 @@ fmc_state_enum fmc_word_program(uint32_t address, uint32_t data)
 fmc_state_enum fmc_halfword_program(uint32_t address, uint16_t data)
 {
     fmc_state_enum fmc_state = FMC_READY;
-    if(FMC_BANK0_SIZE > FMC_SIZE){
+    /* flash size is greater than 512k */
+    if(FMC_BANK0_SIZE < FMC_SIZE){
         if(FMC_BANK0_END_ADDRESS > address){
             fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT); 
   

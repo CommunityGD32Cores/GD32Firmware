@@ -1,16 +1,16 @@
 /*!
-    \file  gd32f20x_usart.c
-    \brief USART driver
+    \file    gd32f20x_usart.c
+    \brief   USART driver
 
     \version 2015-07-15, V1.0.0, firmware for GD32F20x
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
+    \version 2020-09-30, V2.2.0, firmware for GD32F20x
+    \version 2019-04-11, V2.1.1, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -126,6 +126,7 @@ void usart_baudrate_set(uint32_t usart_periph, uint32_t baudval)
          break;
     case UART4:
          /* get UART4 clock */
+         uclk=rcu_clock_freq_get(CK_APB1);
          break;
     case UART6:
          /* get UART6 clock */
@@ -161,7 +162,7 @@ void usart_parity_config(uint32_t usart_periph, uint32_t paritycfg)
     /* clear USART_CTL0 PM,PCEN Bits */
     USART_CTL0(usart_periph) &= ~(USART_CTL0_PM | USART_CTL0_PCEN);
     /* configure USART parity mode */
-    USART_CTL0(usart_periph) |= paritycfg ;
+    USART_CTL0(usart_periph) |= paritycfg;
 }
 
 /*!

@@ -1,16 +1,15 @@
 /*!
-    \file  gd32f20x_dma.c
-    \brief DMA driver
+    \file    gd32f20x_dma.c
+    \brief   DMA driver
 
     \version 2015-07-15, V1.0.0, firmware for GD32F20x
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
+    \version 2020-09-30, V2.2.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -78,12 +77,12 @@ void dma_struct_para_init(dma_parameter_struct* init_struct)
     /* set the DMA struct with the default values */
     init_struct->periph_addr  = 0U;
     init_struct->periph_width = 0U; 
-    init_struct->periph_inc   = (uint8_t)DMA_PERIPH_INCREASE_DISABLE;
+    init_struct->periph_inc   = DMA_PERIPH_INCREASE_DISABLE;
     init_struct->memory_addr  = 0U;
     init_struct->memory_width = 0U;
-    init_struct->memory_inc   = (uint8_t)DMA_MEMORY_INCREASE_DISABLE;
+    init_struct->memory_inc   = DMA_MEMORY_INCREASE_DISABLE;
     init_struct->number       = 0U;
-    init_struct->direction    = (uint8_t)DMA_PERIPHERAL_TO_MEMORY;
+    init_struct->direction    = DMA_PERIPHERAL_TO_MEMORY;
     init_struct->priority     = DMA_PRIORITY_LOW;
 }
 
@@ -458,7 +457,7 @@ void dma_periph_increase_disable(uint32_t dma_periph, dma_channel_enum channelx)
     \param[out] none
     \retval     none
 */
-void dma_transfer_direction_config(uint32_t dma_periph, dma_channel_enum channelx, uint32_t direction)
+void dma_transfer_direction_config(uint32_t dma_periph, dma_channel_enum channelx, uint8_t direction)
 {
     if(DMA_PERIPHERAL_TO_MEMORY == direction){
         DMA_CHCTL(dma_periph, channelx) &= ~DMA_CHXCTL_DIR;

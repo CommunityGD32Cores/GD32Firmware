@@ -1,16 +1,15 @@
 /*!
-    \file  gd32f20x_exmc.c
-    \brief EXMC driver
+    \file    gd32f20x_exmc.c
+    \brief   EXMC driver
 
     \version 2015-07-15, V1.0.0, firmware for GD32F20x
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
+    \version 2020-09-30, V2.2.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -39,23 +38,22 @@ OF SUCH DAMAGE.
 #include "gd32f20x_exmc.h"
 
 /* EXMC bank0 register reset value */
-#define BANK0_SNCTL0_REGION_RESET         ((uint32_t)0x000030DBU)
-#define BANK0_SNCTL1_2_3_REGION_RESET     ((uint32_t)0x000030D2U)
+#define BANK0_SNCTL_RESET                 ((uint32_t)0x000030DAU)
 #define BANK0_SNTCFG_RESET                ((uint32_t)0x0FFFFFFFU)
 #define BANK0_SNWTCFG_RESET               ((uint32_t)0x0FFFFFFFU)
 
 /* EXMC bank1/2 register reset mask*/
-#define BANK1_2_NPCTL_RESET               ((uint32_t)0x00000018U)
-#define BANK1_2_NPINTEN_RESET             ((uint32_t)0x00000040U)
-#define BANK1_2_NPCTCFG_RESET             ((uint32_t)0xFCFCFCFCU)
-#define BANK1_2_NPATCFG_RESET             ((uint32_t)0xFCFCFCFCU)
+#define BANK1_2_NPCTL_RESET               ((uint32_t)0x00000008U)
+#define BANK1_2_NPINTEN_RESET             ((uint32_t)0x00000042U)
+#define BANK1_2_NPCTCFG_RESET             ((uint32_t)0xFFFFFFFFU)
+#define BANK1_2_NPATCFG_RESET             ((uint32_t)0xFFFFFFFFU)
 
 /* EXMC bank3 register reset mask*/
-#define BANK3_NPCTL_RESET                 ((uint32_t)0x00000018U)
-#define BANK3_NPINTEN_RESET               ((uint32_t)0x00000040U)
-#define BANK3_NPCTCFG_RESET               ((uint32_t)0xFCFCFCFCU)
-#define BANK3_NPATCFG_RESET               ((uint32_t)0xFCFCFCFCU)
-#define BANK3_PIOTCFG3_RESET              ((uint32_t)0xFCFCFCFCU)
+#define BANK3_NPCTL_RESET                 ((uint32_t)0x00000008U)
+#define BANK3_NPINTEN_RESET               ((uint32_t)0x00000043U)
+#define BANK3_NPCTCFG_RESET               ((uint32_t)0xFFFFFFFFU)
+#define BANK3_NPATCFG_RESET               ((uint32_t)0xFFFFFFFFU)
+#define BANK3_PIOTCFG3_RESET              ((uint32_t)0xFFFFFFFFU)
 
 /* EXMC SDRAM device register reset mask */
 #define SDRAM_DEVICE_SDCTL_RESET          ((uint32_t)0x000002D0U)
@@ -136,14 +134,49 @@ OF SUCH DAMAGE.
 void exmc_norsram_deinit(uint32_t exmc_norsram_region)
 {
     /* reset the registers */
-    if(EXMC_BANK0_NORSRAM_REGION0 == exmc_norsram_region){
-        EXMC_SNCTL(exmc_norsram_region) = BANK0_SNCTL0_REGION_RESET;
-    }else{
-        EXMC_SNCTL(exmc_norsram_region) = BANK0_SNCTL1_2_3_REGION_RESET;
-    }
-    
+    EXMC_SNCTL(exmc_norsram_region) = BANK0_SNCTL_RESET;
     EXMC_SNTCFG(exmc_norsram_region) = BANK0_SNTCFG_RESET;
     EXMC_SNWTCFG(exmc_norsram_region) = BANK0_SNWTCFG_RESET;
+}
+
+/*!
+    \brief      initialize the struct exmc_norsram_parameter_struct
+    \param[in]  none
+    \param[out] exmc_norsram_init_struct: the initialized struct exmc_norsram_parameter_struct pointer
+    \retval     none
+*/
+void exmc_norsram_struct_para_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct)
+{
+    /* configure the structure with default value */
+    exmc_norsram_init_struct->norsram_region = EXMC_BANK0_NORSRAM_REGION0;
+    exmc_norsram_init_struct->address_data_mux = ENABLE;
+    exmc_norsram_init_struct->memory_type = EXMC_MEMORY_TYPE_SRAM;
+    exmc_norsram_init_struct->databus_width = EXMC_NOR_DATABUS_WIDTH_8B;
+    exmc_norsram_init_struct->burst_mode = DISABLE;
+    exmc_norsram_init_struct->nwait_polarity = EXMC_NWAIT_POLARITY_LOW;
+    exmc_norsram_init_struct->wrap_burst_mode = DISABLE;
+    exmc_norsram_init_struct->nwait_config = EXMC_NWAIT_CONFIG_BEFORE;
+    exmc_norsram_init_struct->memory_write = ENABLE;
+    exmc_norsram_init_struct->nwait_signal = ENABLE;
+    exmc_norsram_init_struct->extended_mode = DISABLE;
+    exmc_norsram_init_struct->asyn_wait = DISABLE;
+    exmc_norsram_init_struct->write_mode = EXMC_ASYN_WRITE;
+
+    /* read/write timing configure */
+    exmc_norsram_init_struct->read_write_timing->asyn_address_setuptime = 0xFU;
+    exmc_norsram_init_struct->read_write_timing->asyn_address_holdtime = 0xFU;
+    exmc_norsram_init_struct->read_write_timing->asyn_data_setuptime = 0xFFU;
+    exmc_norsram_init_struct->read_write_timing->bus_latency = 0xFU;
+    exmc_norsram_init_struct->read_write_timing->syn_clk_division = EXMC_SYN_CLOCK_RATIO_16_CLK;
+    exmc_norsram_init_struct->read_write_timing->syn_data_latency = EXMC_DATALAT_17_CLK;
+    exmc_norsram_init_struct->read_write_timing->asyn_access_mode = EXMC_ACCESS_MODE_A;
+
+    /* write timing configure, when extended mode is used */
+    exmc_norsram_init_struct->write_timing->asyn_address_setuptime = 0xFU;
+    exmc_norsram_init_struct->write_timing->asyn_address_holdtime = 0xFU;
+    exmc_norsram_init_struct->write_timing->asyn_data_setuptime = 0xFFU;
+    exmc_norsram_init_struct->write_timing->bus_latency = 0xFU;
+    exmc_norsram_init_struct->write_timing->asyn_access_mode = EXMC_ACCESS_MODE_A;
 }
 
 /*!
@@ -163,7 +196,21 @@ void exmc_norsram_deinit(uint32_t exmc_norsram_region)
                   memory_type: EXMC_MEMORY_TYPE_SRAM / EXMC_MEMORY_TYPE_PSRAM / EXMC_MEMORY_TYPE_NOR
                   address_data_mux: ENABLE or DISABLE
                   read_write_timing: struct exmc_norsram_timing_parameter_struct set the time
+                    asyn_access_mode: EXMC_ACCESS_MODE_A, EXMC_ACCESS_MODE_B, EXMC_ACCESS_MODE_C, EXMC_ACCESS_MODE_D
+                    syn_data_latency: EXMC_DATALAT_x_CLK, x=2..17
+                    syn_clk_division: EXMC_SYN_CLOCK_RATIO_x_CLK, x=2..16
+                    bus_latency: 0x01U~0x10U 
+                    asyn_data_setuptime: 0x02U~0x100U
+                    asyn_address_holdtime: 0x02U~0x10U
+                    asyn_address_setuptime: 0x01U~0x10U
                   write_timing: struct exmc_norsram_timing_parameter_struct set the time
+                    asyn_access_mode: EXMC_ACCESS_MODE_A, EXMC_ACCESS_MODE_B, EXMC_ACCESS_MODE_C, EXMC_ACCESS_MODE_D
+                    syn_data_latency: EXMC_DATALAT_x_CLK, x=2..17
+                    syn_clk_division: EXMC_SYN_CLOCK_RATIO_x_CLK, x=2..16
+                    bus_latency: 0x01U~0x10U 
+                    asyn_data_setuptime: 0x02U~0x100U
+                    asyn_address_holdtime: 0x02U~0x10U
+                    asyn_address_setuptime: 0x01U~0x10U
     \param[out] none
     \retval     none
 */
@@ -223,46 +270,6 @@ void exmc_norsram_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct)
 }
 
 /*!
-    \brief      initialize the struct exmc_norsram_parameter_struct
-    \param[in]  none
-    \param[out] exmc_norsram_init_struct: the initialized struct exmc_norsram_parameter_struct pointer
-    \retval     none
-*/
-void exmc_norsram_struct_para_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct)
-{
-    /* configure the structure with default value */
-    exmc_norsram_init_struct->norsram_region = EXMC_BANK0_NORSRAM_REGION0;
-    exmc_norsram_init_struct->address_data_mux = ENABLE;
-    exmc_norsram_init_struct->memory_type = EXMC_MEMORY_TYPE_SRAM;
-    exmc_norsram_init_struct->databus_width = EXMC_NOR_DATABUS_WIDTH_8B;
-    exmc_norsram_init_struct->burst_mode = DISABLE;
-    exmc_norsram_init_struct->nwait_polarity = EXMC_NWAIT_POLARITY_LOW;
-    exmc_norsram_init_struct->wrap_burst_mode = DISABLE;
-    exmc_norsram_init_struct->nwait_config = EXMC_NWAIT_CONFIG_BEFORE;
-    exmc_norsram_init_struct->memory_write = ENABLE;
-    exmc_norsram_init_struct->nwait_signal = ENABLE;
-    exmc_norsram_init_struct->extended_mode = DISABLE;
-    exmc_norsram_init_struct->asyn_wait = DISABLE;
-    exmc_norsram_init_struct->write_mode = EXMC_ASYN_WRITE;
-
-    /* read/write timing configure */
-    exmc_norsram_init_struct->read_write_timing->asyn_address_setuptime = 0xFU;
-    exmc_norsram_init_struct->read_write_timing->asyn_address_holdtime = 0xFU;
-    exmc_norsram_init_struct->read_write_timing->asyn_data_setuptime = 0xFFU;
-    exmc_norsram_init_struct->read_write_timing->bus_latency = 0xFU;
-    exmc_norsram_init_struct->read_write_timing->syn_clk_division = EXMC_SYN_CLOCK_RATIO_16_CLK;
-    exmc_norsram_init_struct->read_write_timing->syn_data_latency = EXMC_DATALAT_17_CLK;
-    exmc_norsram_init_struct->read_write_timing->asyn_access_mode = EXMC_ACCESS_MODE_A;
-
-    /* write timing configure, when extended mode is used */
-    exmc_norsram_init_struct->write_timing->asyn_address_setuptime = 0xFU;
-    exmc_norsram_init_struct->write_timing->asyn_address_holdtime = 0xFU;
-    exmc_norsram_init_struct->write_timing->asyn_data_setuptime = 0xFFU;
-    exmc_norsram_init_struct->write_timing->bus_latency = 0xFU;
-    exmc_norsram_init_struct->write_timing->asyn_access_mode = EXMC_ACCESS_MODE_A;
-}
-
-/*!
     \brief      enable EXMC NOR/PSRAM bank region
     \param[in]  exmc_norsram_region: specifie the region of NOR/PSRAM bank
       \arg        EXMC_BANK0_NORSRAM_REGIONx(x=0..3)
@@ -303,6 +310,32 @@ void exmc_nand_deinit(uint32_t exmc_nand_bank)
 }
 
 /*!
+    \brief      initialize the struct exmc_nand_init_struct
+    \param[in]  none
+    \param[out] the initialized struct exmc_nand_init_struct pointer
+    \retval     none
+*/
+void exmc_nand_struct_para_init(exmc_nand_parameter_struct* exmc_nand_init_struct)
+{
+    /* configure the structure with default value */
+    exmc_nand_init_struct->nand_bank = EXMC_BANK1_NAND;
+    exmc_nand_init_struct->wait_feature = DISABLE;
+    exmc_nand_init_struct->databus_width = EXMC_NAND_DATABUS_WIDTH_8B;
+    exmc_nand_init_struct->ecc_logic = DISABLE;
+    exmc_nand_init_struct->ecc_size = EXMC_ECC_SIZE_256BYTES;
+    exmc_nand_init_struct->ctr_latency = 0x0U;
+    exmc_nand_init_struct->atr_latency = 0x0U;
+    exmc_nand_init_struct->common_space_timing->setuptime = 0xFCU;
+    exmc_nand_init_struct->common_space_timing->waittime = 0xFCU;
+    exmc_nand_init_struct->common_space_timing->holdtime = 0xFCU;
+    exmc_nand_init_struct->common_space_timing->databus_hiztime = 0xFCU;
+    exmc_nand_init_struct->attribute_space_timing->setuptime = 0xFCU;
+    exmc_nand_init_struct->attribute_space_timing->waittime = 0xFCU;
+    exmc_nand_init_struct->attribute_space_timing->holdtime = 0xFCU;
+    exmc_nand_init_struct->attribute_space_timing->databus_hiztime = 0xFCU;
+}
+
+/*!
     \brief      initialize EXMC NAND bank
     \param[in]  exmc_nand_parameter_struct: configure the EXMC NAND parameter
                   nand_bank: EXMC_BANK1_NAND or EXMC_BANK2_NAND
@@ -313,7 +346,15 @@ void exmc_nand_deinit(uint32_t exmc_nand_bank)
                   databus_width: EXMC_NAND_DATABUS_WIDTH_8B or EXMC_NAND_DATABUS_WIDTH_16B
                   wait_feature: ENABLE or DISABLE
                   common_space_timing: struct exmc_nand_pccard_timing_parameter_struct set the time
+                    databus_hiztime: 0x01U~0x100U
+                    holdtime: 0x01U~0xFFU
+                    waittime: 0x02U~0x100U
+                    setuptime: 0x01U~0x100U
                   attribute_space_timing: struct exmc_nand_pccard_timing_parameter_struct set the time
+                    databus_hiztime: 0x01U~0x100U
+                    holdtime: 0x01U~0xFFU
+                    waittime: 0x02U~0x100U
+                    setuptime: 0x01U~0x100U
     \param[out] none
     \retval     none
 */
@@ -343,32 +384,6 @@ void exmc_nand_init(exmc_nand_parameter_struct* exmc_nand_init_struct)
     EXMC_NPCTL(exmc_nand_init_struct->nand_bank) = npctl;
     EXMC_NPCTCFG(exmc_nand_init_struct->nand_bank) = npctcfg;
     EXMC_NPATCFG(exmc_nand_init_struct->nand_bank) = npatcfg;
-}
-
-/*!
-    \brief      initialize the struct exmc_nand_init_struct
-    \param[in]  none
-    \param[out] the initialized struct exmc_nand_init_struct pointer
-    \retval     none
-*/
-void exmc_nand_struct_para_init(exmc_nand_parameter_struct* exmc_nand_init_struct)
-{
-    /* configure the structure with default value */
-    exmc_nand_init_struct->nand_bank = EXMC_BANK1_NAND;
-    exmc_nand_init_struct->wait_feature = DISABLE;
-    exmc_nand_init_struct->databus_width = EXMC_NAND_DATABUS_WIDTH_8B;
-    exmc_nand_init_struct->ecc_logic = DISABLE;
-    exmc_nand_init_struct->ecc_size = EXMC_ECC_SIZE_256BYTES;
-    exmc_nand_init_struct->ctr_latency = 0x0U;
-    exmc_nand_init_struct->atr_latency = 0x0U;
-    exmc_nand_init_struct->common_space_timing->setuptime = 0xFCU;
-    exmc_nand_init_struct->common_space_timing->waittime = 0xFCU;
-    exmc_nand_init_struct->common_space_timing->holdtime = 0xFCU;
-    exmc_nand_init_struct->common_space_timing->databus_hiztime = 0xFCU;
-    exmc_nand_init_struct->attribute_space_timing->setuptime = 0xFCU;
-    exmc_nand_init_struct->attribute_space_timing->waittime = 0xFCU;
-    exmc_nand_init_struct->attribute_space_timing->holdtime = 0xFCU;
-    exmc_nand_init_struct->attribute_space_timing->databus_hiztime = 0xFCU;
 }
 
 /*!
@@ -449,8 +464,20 @@ void exmc_pccard_deinit(void)
                   ctr_latency: EXMC_CLE_RE_DELAY_x_HCLK,x=1..16
                   wait_feature: ENABLE or DISABLE
                   common_space_timing: struct exmc_nand_pccard_timing_parameter_struct set the time
+                    databus_hiztime: 0x01U~0x100U
+                    holdtime: 0x01U~0xFFU
+                    waittime: 0x02U~0x100U
+                    setuptime: 0x01U~0x100U
                   attribute_space_timing: struct exmc_nand_pccard_timing_parameter_struct set the time
+                    databus_hiztime: 0x01U~0x100U
+                    holdtime: 0x01U~0xFFU
+                    waittime: 0x02U~0x100U
+                    setuptime: 0x01U~0x100U
                   io_space_timing: exmc_nand_pccard_timing_parameter_struct set the time
+                    databus_hiztime: 0x00U~0xFFU
+                    holdtime: 0x01U~0xFFU
+                    waittime: 0x02U~0x100U
+                    setuptime: 0x01U~0x100U
     \param[out] none
     \retval     none
 */
@@ -559,6 +586,13 @@ void exmc_sdram_deinit(uint32_t exmc_sdram_device)
                   row_address_width: EXMC_SDRAM_ROW_ADDRESS_x, x=11..13
                   column_address_width: EXMC_SDRAM_COW_ADDRESS_x, x=8..11
                   timing: exmc_sdram_timing_parameter_struct set the time
+                    row_to_column_delay: 1U~16U
+                    row_precharge_delay: 1U~16U
+                    write_recovery_delay: 1U~16U
+                    auto_refresh_delay: 1U~16U
+                    row_address_select_delay: 1U~16U
+                    exit_selfrefresh_delay: 1U~16U
+                    load_mode_register_delay: 1U~16U
     \param[out] none
     \retval     none
 */

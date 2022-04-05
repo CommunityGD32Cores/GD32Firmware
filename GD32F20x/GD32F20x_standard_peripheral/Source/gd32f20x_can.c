@@ -1,16 +1,17 @@
 /*!
-    \file  gd32f20x_can.c
-    \brief CAN driver
+    \file    gd32f20x_can.c
+    \brief   CAN driver
 
     \version 2015-07-15, V1.0.0, firmware for GD32F20x
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
+    \version 2019-11-27, V2.1.1, firmware for GD32F20x
+    \version 2020-07-14, V2.1.2, firmware for GD32F20x
+    \version 2020-09-30, V2.2.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -39,6 +40,9 @@ OF SUCH DAMAGE.
 #include "gd32f20x_can.h"
 
 #define CAN_ERROR_HANDLE(s)     do{}while(1)
+    
+#define RFO1_CLEAR_VAL           ((uint32_t)0x00000000U)             /*!< RFO1 clear value */ 
+#define RFF1_CLEAR_VAL           ((uint32_t)0x00000018U)             /*!< RFF1 clear value */ 
 
 /*!
     \brief      deinitialize CAN 
@@ -79,7 +83,7 @@ void can_struct_para_init(can_struct_type_enum type, void* p_struct)
         /* used for can_init() */
         case CAN_INIT_STRUCT:
             ((can_parameter_struct*)p_struct)->auto_bus_off_recovery = DISABLE;
-            ((can_parameter_struct*)p_struct)->auto_retrans = DISABLE;
+            ((can_parameter_struct*)p_struct)->no_auto_retrans = DISABLE;
             ((can_parameter_struct*)p_struct)->auto_wake_up = DISABLE;
             ((can_parameter_struct*)p_struct)->prescaler = 0x03FFU; 
             ((can_parameter_struct*)p_struct)->rec_fifo_overwrite = DISABLE; 
@@ -149,10 +153,10 @@ void can_struct_para_init(can_struct_type_enum type, void* p_struct)
       \arg        time_triggered: ENABLE or DISABLE
       \arg        auto_bus_off_recovery: ENABLE or DISABLE
       \arg        auto_wake_up: ENABLE or DISABLE
-      \arg        auto_retrans: ENABLE or DISABLE
+      \arg        no_auto_retrans: ENABLE or DISABLE
       \arg        rec_fifo_overwrite: ENABLE or DISABLE
       \arg        trans_fifo_order: ENABLE or DISABLE
-      \arg        prescaler: 0x0001 - 0x03FF
+      \arg        prescaler: 0x0001 - 0x0400
     \param[out] none
     \retval     ErrStatus: SUCCESS or ERROR
 */
@@ -198,7 +202,7 @@ ErrStatus can_init(uint32_t can_periph, can_parameter_struct* can_parameter_init
             CAN_CTL(can_periph) &= ~CAN_CTL_AWU;
         }
         /* automatic retransmission mode disable*/
-        if(ENABLE == can_parameter_init->auto_retrans){
+        if(ENABLE == can_parameter_init->no_auto_retrans){
             CAN_CTL(can_periph) |= CAN_CTL_ARD;
         }else{
             CAN_CTL(can_periph) &= ~CAN_CTL_ARD;
@@ -414,7 +418,7 @@ void can_time_trigger_mode_disable(uint32_t can_periph)
       \arg        tx_efid: 0x00000000 - 0x1FFFFFFF
       \arg        tx_ff: CAN_FF_STANDARD, CAN_FF_EXTENDED
       \arg        tx_ft: CAN_FT_DATA, CAN_FT_REMOTE
-      \arg        tx_dlenc: 1 - 7
+      \arg        tx_dlen: 0 - 8
       \arg        tx_data[]: 0x00 - 0xFF
     \param[out] none
     \retval     mailbox_number
@@ -566,7 +570,7 @@ void can_transmission_stop(uint32_t can_periph, uint8_t mailbox_number)
       \arg        rx_efid: 0x00000000 - 0x1FFFFFFF
       \arg        rx_ff: CAN_FF_STANDARD, CAN_FF_EXTENDED
       \arg        rx_ft: CAN_FT_DATA, CAN_FT_REMOTE
-      \arg        rx_dlenc: 1 - 7
+      \arg        rx_dlen: 0 - 8
       \arg        rx_data[]: 0x00 - 0xFF
       \arg        rx_fi: 0 - 27
     \retval     none
@@ -862,12 +866,33 @@ void can_interrupt_disable(uint32_t can_periph, uint32_t interrupt)
 /*!
     \brief      get CAN flag state
     \param[in]  can_periph
-      \arg        CANx(x=0,1) 
+      \arg        CANx(x=0,1)
     \param[in]  flag: CAN flags, refer to can_flag_enum
                 only one parameter can be selected which is shown as below:
+      \arg        CAN_FLAG_RXL: RX level
+      \arg        CAN_FLAG_LASTRX: last sample value of RX pin
+      \arg        CAN_FLAG_RS: receiving state
+      \arg        CAN_FLAG_TS: transmitting state
+      \arg        CAN_FLAG_SLPIF: status change flag of entering sleep working mode
+      \arg        CAN_FLAG_WUIF: status change flag of wakeup from sleep working mode
+      \arg        CAN_FLAG_ERRIF: error flag
+      \arg        CAN_FLAG_SLPWS: sleep working state
+      \arg        CAN_FLAG_IWS: initial working state
+      \arg        CAN_FLAG_TMLS2: transmit mailbox 2 last sending in Tx FIFO
+      \arg        CAN_FLAG_TMLS1: transmit mailbox 1 last sending in Tx FIFO
+      \arg        CAN_FLAG_TMLS0: transmit mailbox 0 last sending in Tx FIFO
+      \arg        CAN_FLAG_TME2: transmit mailbox 2 empty
+      \arg        CAN_FLAG_TME1: transmit mailbox 1 empty
+      \arg        CAN_FLAG_TME0: transmit mailbox 0 empty
       \arg        CAN_FLAG_MTE2: mailbox 2 transmit error
       \arg        CAN_FLAG_MTE1: mailbox 1 transmit error
       \arg        CAN_FLAG_MTE0: mailbox 0 transmit error
+      \arg        CAN_FLAG_MAL2: mailbox 2 arbitration lost
+      \arg        CAN_FLAG_MAL1: mailbox 1 arbitration lost
+      \arg        CAN_FLAG_MAL0: mailbox 0 arbitration lost
+      \arg        CAN_FLAG_MTFNERR2: mailbox 2 transmit finished with no error
+      \arg        CAN_FLAG_MTFNERR1: mailbox 1 transmit finished with no error
+      \arg        CAN_FLAG_MTFNERR0: mailbox 0 transmit finished with no error
       \arg        CAN_FLAG_MTF2: mailbox 2 transmit finished
       \arg        CAN_FLAG_MTF1: mailbox 1 transmit finished
       \arg        CAN_FLAG_MTF0: mailbox 0 transmit finished
@@ -897,9 +922,18 @@ FlagStatus can_flag_get(uint32_t can_periph, can_flag_enum flag)
       \arg        CANx(x=0,1)
     \param[in]  flag: CAN flags, refer to can_flag_enum
                 only one parameter can be selected which is shown as below:
+      \arg        CAN_FLAG_SLPIF: status change flag of entering sleep working mode
+      \arg        CAN_FLAG_WUIF: status change flag of wakeup from sleep working mode
+      \arg        CAN_FLAG_ERRIF: error flag
       \arg        CAN_FLAG_MTE2: mailbox 2 transmit error
       \arg        CAN_FLAG_MTE1: mailbox 1 transmit error
       \arg        CAN_FLAG_MTE0: mailbox 0 transmit error
+      \arg        CAN_FLAG_MAL2: mailbox 2 arbitration lost
+      \arg        CAN_FLAG_MAL1: mailbox 1 arbitration lost
+      \arg        CAN_FLAG_MAL0: mailbox 0 arbitration lost
+      \arg        CAN_FLAG_MTFNERR2: mailbox 2 transmit finished with no error
+      \arg        CAN_FLAG_MTFNERR1: mailbox 1 transmit finished with no error
+      \arg        CAN_FLAG_MTFNERR0: mailbox 0 transmit finished with no error
       \arg        CAN_FLAG_MTF2: mailbox 2 transmit finished
       \arg        CAN_FLAG_MTF1: mailbox 1 transmit finished
       \arg        CAN_FLAG_MTF0: mailbox 0 transmit finished
@@ -912,13 +946,19 @@ FlagStatus can_flag_get(uint32_t can_periph, can_flag_enum flag)
 */
 void can_flag_clear(uint32_t can_periph, can_flag_enum flag)
 {
-    CAN_REG_VAL(can_periph, flag) |= BIT(CAN_BIT_POS(flag));
+    if (flag == CAN_FLAG_RFO1){
+        CAN_REG_VAL(can_periph, flag) = RFO1_CLEAR_VAL;
+    } else if (flag == CAN_FLAG_RFF1){
+        CAN_REG_VAL(can_periph, flag) = RFF1_CLEAR_VAL;
+    } else {
+        CAN_REG_VAL(can_periph, flag) = BIT(CAN_BIT_POS(flag));
+    }
 }
 
 /*!
     \brief      get CAN interrupt flag state
     \param[in]  can_periph
-      \arg        CANx(x=0,1) 
+      \arg        CANx(x=0,1)
     \param[in]  flag: CAN interrupt flags, refer to can_interrupt_flag_enum
                 only one parameter can be selected which is shown as below:
       \arg        CAN_INT_FLAG_SLPIF: status change interrupt flag of sleep working mode entering
@@ -929,20 +969,34 @@ void can_flag_clear(uint32_t can_periph, can_flag_enum flag)
       \arg        CAN_INT_FLAG_MTF0: mailbox 0 transmit finished interrupt flag
       \arg        CAN_INT_FLAG_RFO0: receive FIFO0 overfull interrupt flag
       \arg        CAN_INT_FLAG_RFF0: receive FIFO0 full interrupt flag
+      \arg        CAN_INT_FLAG_RFL0: receive FIFO0 not empty interrupt flag
       \arg        CAN_INT_FLAG_RFO1: receive FIFO1 overfull interrupt flag
       \arg        CAN_INT_FLAG_RFF1: receive FIFO1 full interrupt flag
+      \arg        CAN_INT_FLAG_RFL1: receive FIFO1 not empty interrupt flag
+      \arg        CAN_INT_FLAG_ERRN: error number interrupt flag
+      \arg        CAN_INT_FLAG_BOERR: bus-off error interrupt flag
+      \arg        CAN_INT_FLAG_PERR: passive error interrupt flag
+      \arg        CAN_INT_FLAG_WERR: warning error interrupt flag
     \param[out] none
     \retval     FlagStatus: SET or RESET
 */
 FlagStatus can_interrupt_flag_get(uint32_t can_periph, can_interrupt_flag_enum flag)
-{  
-    FlagStatus ret1 = RESET;
-    FlagStatus ret2 = RESET;
+{
+    uint32_t ret1 = RESET;
+    uint32_t ret2 = RESET;
     
     /* get the staus of interrupt flag */
-    ret1 = (FlagStatus)(CAN_REG_VALS(can_periph, flag) & BIT(CAN_BIT_POS0(flag)));
+    if (flag == CAN_INT_FLAG_RFL0) {
+        ret1 = can_receive_message_length_get(can_periph, CAN_FIFO0);
+    } else if (flag == CAN_INT_FLAG_RFL1) {
+        ret1 = can_receive_message_length_get(can_periph, CAN_FIFO1);
+    } else if (flag == CAN_INT_FLAG_ERRN) {
+        ret1 = can_error_get(can_periph);
+    } else {
+        ret1 = CAN_REG_VALS(can_periph, flag) & BIT(CAN_BIT_POS0(flag));
+    }
     /* get the staus of interrupt enale bit */
-    ret2 = (FlagStatus)(CAN_INTEN(can_periph) & BIT(CAN_BIT_POS1(flag)));
+    ret2 = CAN_INTEN(can_periph) & BIT(CAN_BIT_POS1(flag));
     if(ret1 && ret2){
         return SET;
     }else{
@@ -972,8 +1026,10 @@ FlagStatus can_interrupt_flag_get(uint32_t can_periph, can_interrupt_flag_enum f
 void can_interrupt_flag_clear(uint32_t can_periph, can_interrupt_flag_enum flag)
 {
     if (flag == CAN_INT_FLAG_RFO1){
-        CAN_REG_VALS(can_periph, flag) &= ~BIT(CAN_BIT_POS0(flag));
+        CAN_REG_VALS(can_periph, flag) = RFO1_CLEAR_VAL;
+    } else if (flag == CAN_INT_FLAG_RFF1){
+        CAN_REG_VALS(can_periph, flag) = RFF1_CLEAR_VAL;
     } else {
-        CAN_REG_VALS(can_periph, flag) |= BIT(CAN_BIT_POS0(flag));
+        CAN_REG_VALS(can_periph, flag) = BIT(CAN_BIT_POS0(flag));
     }
 }

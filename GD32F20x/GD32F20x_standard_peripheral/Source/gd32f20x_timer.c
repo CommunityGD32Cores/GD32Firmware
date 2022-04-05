@@ -1,16 +1,15 @@
 /*!
-    \file  gd32f20x_timer.c
-    \brief TIMER driver
+    \file    gd32f20x_timer.c
+    \brief   TIMER driver
 
     \version 2015-07-15, V1.0.0, firmware for GD32F20x
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
+    \version 2020-09-30, V2.2.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -1765,7 +1764,7 @@ void timer_external_trigger_as_external_clock_config(uint32_t timer_periph, uint
         /* reset the CH1CAPFLT bit */
         TIMER_CHCTL0(timer_periph) &= (~(uint32_t)TIMER_CHCTL0_CH1CAPFLT);
         /* set the CH1CAPFLT bit */
-        TIMER_CHCTL0(timer_periph) |= (uint32_t)(extfilter << 8U);
+        TIMER_CHCTL0(timer_periph) |= (uint32_t)(extfilter << 12U);
         /* set the CH1EN bit */
         TIMER_CHCTL2(timer_periph) |= (uint32_t)TIMER_CHCTL2_CH1EN;
     }else{
@@ -1782,12 +1781,12 @@ void timer_external_trigger_as_external_clock_config(uint32_t timer_periph, uint
         /* reset the CH0CAPFLT bit */
         TIMER_CHCTL0(timer_periph) &= (~(uint32_t)TIMER_CHCTL0_CH0CAPFLT);
         /* reset the CH0CAPFLT bit */
-        TIMER_CHCTL0(timer_periph) |= (uint32_t)extfilter;
+        TIMER_CHCTL0(timer_periph) |= (uint32_t)(extfilter << 4U);
         /* set the CH0EN bit */
         TIMER_CHCTL2(timer_periph) |= (uint32_t)TIMER_CHCTL2_CH0EN;
     }
     /* select TIMER input trigger source */
-    timer_input_trigger_source_select(timer_periph,extrigger);
+    timer_input_trigger_source_select(timer_periph, extrigger);
     /* reset the SMC bit */
     TIMER_SMCFG(timer_periph) &= (~(uint32_t)TIMER_SMCFG_SMC);
     /* set the SMC bit */
@@ -1943,7 +1942,7 @@ FlagStatus timer_interrupt_flag_get(uint32_t timer_periph, uint32_t interrupt)
 */
 void timer_interrupt_flag_clear(uint32_t timer_periph, uint32_t interrupt)
 {
-    TIMER_INTF(timer_periph) &= (~(uint32_t)interrupt);
+    TIMER_INTF(timer_periph) = (~(uint32_t)interrupt);
 }
 
 /*!
@@ -1997,5 +1996,5 @@ FlagStatus timer_flag_get(uint32_t timer_periph, uint32_t flag)
 */
 void timer_flag_clear(uint32_t timer_periph, uint32_t flag)
 {
-    TIMER_INTF(timer_periph) &= (~(uint32_t)flag);
+    TIMER_INTF(timer_periph) = (~(uint32_t)flag);
 }

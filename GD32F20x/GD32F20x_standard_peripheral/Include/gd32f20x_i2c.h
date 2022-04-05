@@ -1,16 +1,16 @@
 /*!
-    \file  gd32f20x_i2c.h
-    \brief definitions for the I2C
+    \file    gd32f20x_i2c.h
+    \brief   definitions for the I2C
 
     \version 2015-07-15, V1.0.0, firmware for GD32F20x
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
+    \version 2020-09-30, V2.2.0, firmware for GD32F20x
+    \version 2019-04-16, V2.1.1, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -170,7 +170,7 @@ typedef enum
     I2C_FLAG_RXGC = I2C_REGIDX_BIT(I2C_STAT1_REG_OFFSET, 4U),                  /*!< general call address (00h) received */
     I2C_FLAG_DEFSMB = I2C_REGIDX_BIT(I2C_STAT1_REG_OFFSET, 5U),                /*!< default address of SMBus device */
     I2C_FLAG_HSTSMB = I2C_REGIDX_BIT(I2C_STAT1_REG_OFFSET, 6U),                /*!< SMBus host header detected in slave mode */
-    I2C_FLAG_DUMOD = I2C_REGIDX_BIT(I2C_STAT1_REG_OFFSET, 7U),                 /*!< dual flag in slave mode indicating which address is matched in dual-address mode */
+    I2C_FLAG_DUMOD = I2C_REGIDX_BIT(I2C_STAT1_REG_OFFSET, 7U)                 /*!< dual flag in slave mode indicating which address is matched in dual-address mode */
 }i2c_flag_enum;
 
 /* I2C interrupt flags */
@@ -227,8 +227,8 @@ typedef enum
 #define I2C_DUADEN_ENABLE             ((uint32_t)0x00000001U)                  /*!< dual-address mode enabled */
 
 /* whether or not to stretch SCL low */
-#define I2C_SCLSTRETCH_ENABLE         ((uint32_t)0x00000000U)                  /*!< SCL stretching is enabled */
-#define I2C_SCLSTRETCH_DISABLE        I2C_CTL0_DISSTRC                         /*!< SCL stretching is disabled */
+#define I2C_SCLSTRETCH_DISABLE         ((uint32_t)0x00000000U)                  /*!< SCL stretching is disabled */
+#define I2C_SCLSTRETCH_ENABLE          I2C_CTL0_DISSTRC                         /*!< SCL stretching is enabled */
 
 /* whether or not to response to a general call */
 #define I2C_GCEN_ENABLE               I2C_CTL0_GCEN                            /*!< slave will response to a general call */
@@ -295,8 +295,10 @@ void i2c_ack_config(uint32_t i2c_periph, uint32_t ack);
 void i2c_ackpos_config(uint32_t i2c_periph, uint32_t pos);
 /* master sends slave address */
 void i2c_master_addressing(uint32_t i2c_periph, uint32_t addr, uint32_t trandirection);
-/* dual-address mode switch */
-void i2c_dualaddr_enable(uint32_t i2c_periph, uint32_t dualaddr);
+/* enable dual-address mode */
+void i2c_dualaddr_enable(uint32_t i2c_periph, uint32_t addr);
+/* disable dual-address mode */
+void i2c_dualaddr_disable(uint32_t i2c_periph);
 
 /* function configuration */
 /* enable I2C */

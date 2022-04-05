@@ -1,17 +1,16 @@
 /*!
-    \file  gd32f20x_i2c.c
-    \brief I2C driver
-
+    \file    gd32f20x_i2c.c
+    \brief   I2C driver
 
     \version 2015-07-15, V1.0.0, firmware for GD32F20x
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
+    \version 2020-09-30, V2.2.0, firmware for GD32F20x
+    \version 2019-04-16, V2.1.1, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -44,6 +43,7 @@ OF SUCH DAMAGE.
 #define I2CCLK_MIN                    ((uint32_t)0x00000002U)             /*!< i2cclk minimum value */
 #define I2C_FLAG_MASK                 ((uint32_t)0x0000FFFFU)             /*!< i2c flag mask */
 #define I2C_ADDRESS_MASK              ((uint32_t)0x000003FFU)             /*!< i2c address mask */
+#define I2C_ADDRESS2_MASK             ((uint32_t)0x000000FEU)             /*!< the second i2c address mask */
 
 /* I2C register bit offset */
 #define STAT1_PECV_OFFSET             ((uint32_t)8U)     /* bit offset of PECV in I2C_STAT1 */
@@ -257,22 +257,28 @@ void i2c_master_addressing(uint32_t i2c_periph, uint32_t addr, uint32_t trandire
 }
 
 /*!
-    \brief      dual-address mode switch
+    \brief      enable dual-address mode
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
-    \param[in]  dualaddr:
-                only one parameter can be selected which is shown as below:
-      \arg        I2C_DUADEN_DISABLE: disable dual-address mode  
-      \arg        I2C_DUADEN_ENABLE: enable dual-address mode
+    \param[in]  addr: the second address in dual-address mode
     \param[out] none
     \retval     none
 */
-void i2c_dualaddr_enable(uint32_t i2c_periph, uint32_t dualaddr)
+void i2c_dualaddr_enable(uint32_t i2c_periph, uint32_t addr)
 {
-    if(I2C_DUADEN_ENABLE == dualaddr){
-        I2C_SADDR1(i2c_periph) |= I2C_SADDR1_DUADEN;
-    }else{
-        I2C_SADDR1(i2c_periph) &= ~(I2C_SADDR1_DUADEN);
-    }
+    /* configure address */
+    addr = addr & I2C_ADDRESS2_MASK;
+    I2C_SADDR1(i2c_periph) = (I2C_SADDR1_DUADEN | addr);
+}
+
+/*!
+    \brief      disable dual-address mode
+    \param[in]  i2c_periph: I2Cx(x=0,1,2) 
+    \param[out] none
+    \retval     none
+*/
+void i2c_dualaddr_disable(uint32_t i2c_periph)
+{
+    I2C_SADDR1(i2c_periph) &= ~(I2C_SADDR1_DUADEN);
 }
 
 /*!
@@ -347,8 +353,8 @@ uint8_t i2c_data_receive(uint32_t i2c_periph)
     \param[in]  i2c_periph: I2Cx(x=0,1,2)
     \param[in]  dmastate:
                 only one parameter can be selected which is shown as below:
-      \arg        I2C_DMA_ON: DMA mode enabled
-      \arg        I2C_DMA_OFF: DMA mode disabled
+      \arg        I2C_DMA_ON: DMA mode enable
+      \arg        I2C_DMA_OFF: DMA mode disable
     \param[out] none
     \retval     none
 */
@@ -658,7 +664,7 @@ void i2c_interrupt_disable(uint32_t i2c_periph, i2c_interrupt_enum interrupt)
       \arg        I2C_INT_FLAG_SMBTO: timeout signal in SMBus mode interrupt flag
       \arg        I2C_INT_FLAG_SMBALT: SMBus Alert status interrupt flag
     \param[out] none
-    \retval     none
+    \retval     FlagStatus SET or RESET
 */
 FlagStatus i2c_interrupt_flag_get(uint32_t i2c_periph, i2c_interrupt_flag_enum int_flag)
 {

@@ -1,16 +1,15 @@
 /*!
-    \file  gd32f20x_enet.c
-    \brief ENET driver
+    \file    gd32f20x_enet.c
+    \brief   ENET driver
 
     \version 2015-07-15, V1.0.0, firmware for GD32F20x
     \version 2017-06-05, V2.0.0, firmware for GD32F20x
     \version 2018-10-31, V2.1.0, firmware for GD32F20x
+    \version 2020-09-30, V2.2.0, firmware for GD32F20x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -59,6 +58,12 @@ enet_descriptors_struct  txdesc_tab[ENET_TXBUF_NUM];        /*!< ENET TxDMA desc
 uint8_t rx_buff[ENET_RXBUF_NUM][ENET_RXBUF_SIZE];           /*!< ENET receive buffer */
 #pragma data_alignment=4
 uint8_t tx_buff[ENET_TXBUF_NUM][ENET_TXBUF_SIZE];           /*!< ENET transmit buffer */
+
+#elif defined (__GNUC__)        /* GNU Compiler */
+enet_descriptors_struct  rxdesc_tab[ENET_RXBUF_NUM] __attribute__ ((aligned (4)));        /*!< ENET RxDMA descriptor */ 
+enet_descriptors_struct  txdesc_tab[ENET_TXBUF_NUM] __attribute__ ((aligned (4)));        /*!< ENET TxDMA descriptor */
+uint8_t rx_buff[ENET_RXBUF_NUM][ENET_RXBUF_SIZE] __attribute__ ((aligned (4)));           /*!< ENET receive buffer */
+uint8_t tx_buff[ENET_TXBUF_NUM][ENET_TXBUF_SIZE] __attribute__ ((aligned (4)));           /*!< ENET transmit buffer */
 
 #endif /* __CC_ARM */
 
@@ -3064,7 +3069,7 @@ static void enet_default_init(void)
 */
 static void enet_delay(uint32_t ncount)
 {
-    uint32_t delay_time = 0U; 
+    __IO uint32_t delay_time = 0U; 
     
     for(delay_time = ncount; delay_time != 0U; delay_time--){
     }
