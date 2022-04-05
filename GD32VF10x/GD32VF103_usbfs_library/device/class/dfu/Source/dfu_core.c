@@ -3,6 +3,7 @@
     \brief   USB DFU device class core functions
 
     \version 2020-08-04, V1.1.0, firmware for GD32VF103
+    \version 2020-12-11, V1.1.1, firmware for GD32VF103
 */
 
 /*
@@ -45,7 +46,7 @@ OF SUCH DAMAGE.
 static uint8_t dfu_init(usb_dev *udev, uint8_t config_index);
 static uint8_t dfu_deinit(usb_dev *udev, uint8_t config_index);
 static uint8_t dfu_req_handler(usb_dev *udev, usb_req *req);
-static uint8_t dfu_data_in(usb_dev *udev, uint8_t ep_num);
+static uint8_t dfu_ctlx_in(usb_dev *udev);
 static void dfu_detach(usb_dev *udev, usb_req *req);
 static void dfu_dnload(usb_dev *udev, usb_req *req);
 static void dfu_upload(usb_dev *udev, usb_req *req);
@@ -103,7 +104,7 @@ const usb_dfu_desc_config_set dfu_config_desc =
         .wTotalLength         = USB_DFU_CONFIG_DESC_SIZE,
         .bNumInterfaces       = 0x01U,
         .bConfigurationValue  = 0x01U,
-        .iConfiguration       = 0x00U,
+        .iConfiguration       = 0x04U,
         .bmAttributes         = 0x80U,
         .bMaxPower            = 0x32U
     },
@@ -180,7 +181,7 @@ static usb_desc_str serial_string =
      }
 };
 
-/* USB config string */
+/* USB configure string */
 static const usb_desc_str config_string = 
 {
     .header = 
@@ -222,7 +223,7 @@ usb_class_core dfu_class = {
     .init            = dfu_init,
     .deinit          = dfu_deinit,
     .req_proc        = dfu_req_handler,
-    .data_in         = dfu_data_in
+    .ctlx_in         = dfu_ctlx_in
 };
 
 /*!
@@ -299,11 +300,9 @@ static uint8_t dfu_req_handler (usb_dev *udev, usb_req *req)
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t dfu_data_in (usb_dev *udev, uint8_t ep_num)
+static uint8_t dfu_ctlx_in (usb_dev *udev)
 {
-    if (0U == ep_num) {
-        dfu_getstatus_complete(udev);
-    }
+    dfu_getstatus_complete(udev);
 
     return USBD_OK;
 }

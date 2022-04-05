@@ -103,7 +103,6 @@ typedef struct
     __IO uint32_t DIEPTFLEN[15];                    /*!< USB device IN endpoint transmit FIFO length register 104h */
 } usb_gr;
 
-
 typedef struct
 {
     __IO uint32_t HCTL;                             /*!< USB host control register                             400h */
@@ -302,9 +301,7 @@ typedef struct _usb_regs
 #define HNPTFLEN_HNPTXFD          BITS(16, 31)        /*!< non-periodic Tx FIFO depth */
 #define HNPTFLEN_HNPTXRSAR        BITS(0, 15)         /*!< non-periodic Tx RAM start address */
 
-/**
-  * @brief USB IN endpoint 0 transmit FIFO length register bits definitions
-  */
+/* USB IN endpoint 0 transmit FIFO length register bits definitions */
 #define DIEP0TFLEN_IEP0TXFD       BITS(16, 31)        /*!< IN Endpoint 0 Tx FIFO depth */
 #define DIEP0TFLEN_IEP0TXRSAR     BITS(0, 15)         /*!< IN Endpoint 0 TX RAM start address */
 
@@ -355,7 +352,6 @@ typedef struct _usb_regs
 #define HPTFQSTAT_EPNUM           BITS(27, 30)        /*!< endpoint number */
 #define HPTFQSTAT_TYPE            BITS(25, 26)        /*!< token type */
 #define HPTFQSTAT_TMF             BIT(24)             /*!< terminate flag */
-
 
 #define TFQSTAT_TXFS              BITS(0, 15)
 #define TFQSTAT_CNUM              BITS(27, 30)
@@ -431,7 +427,6 @@ typedef struct _usb_regs
 
 /* host channel-x DMA address register bits definitions */
 #define HCHDMAADDR_DMAADDR        BITS(0, 31)         /*!< DMA address */
-
 
 #define PORT_SPEED(x)             (((uint32_t)(x) << 17) & HPCS_PS) /*!< Port speed */
 

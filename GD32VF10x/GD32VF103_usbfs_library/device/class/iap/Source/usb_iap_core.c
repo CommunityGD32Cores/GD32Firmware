@@ -3,6 +3,7 @@
     \brief   IAP driver
 
     \version 2020-08-04, V1.1.0, firmware for GD32VF103
+    \version 2020-12-11, V1.1.1, firmware for GD32VF103
 */
 
 /*
@@ -258,7 +259,7 @@ uint8_t iap_report_send (usb_dev *udev, uint8_t *report, uint32_t len)
 
 /*!
     \brief      initialize the IAP device
-    \param[in]  pudev: pointer to USB device instance
+    \param[in]  udev: pointer to USB device instance
     \param[in]  config_index: configuration index
     \param[out] none
     \retval     USB device operation status
@@ -372,47 +373,45 @@ static uint8_t iap_data_out (usb_dev *udev ,uint8_t ep_num)
 {
     usbd_iap_handler *iap = (usbd_iap_handler *)udev->dev.class_data[USBD_IAP_INTERFACE];
 
-    if ((IAP_OUT_EP & 0x7FU) == ep_num) {
-        if (0x01U == iap->report_buf[0]) {
-            switch (iap->report_buf[1]) {
-            case IAP_DNLOAD:
-                iap_req_dnload(udev);
-                break;
+    if (0x01U == iap->report_buf[0]) {
+        switch (iap->report_buf[1]) {
+        case IAP_DNLOAD:
+            iap_req_dnload(udev);
+            break;
 
-            case IAP_ERASE:
-                iap_req_erase(udev);
-                break;
+        case IAP_ERASE:
+            iap_req_erase(udev);
+            break;
 
-            case IAP_OPTION_BYTE1:
-                iap_req_optionbyte(udev, 0x01U);
-                break;
+        case IAP_OPTION_BYTE1:
+            iap_req_optionbyte(udev, 0x01U);
+            break;
 
-            case IAP_LEAVE:
-                iap_req_leave(udev);
-                break;
+        case IAP_LEAVE:
+            iap_req_leave(udev);
+            break;
 
-            case IAP_GETBIN_ADDRESS:
-                iap_address_send(udev);
-                break;
+        case IAP_GETBIN_ADDRESS:
+            iap_address_send(udev);
+            break;
 
-            case IAP_OPTION_BYTE2:
-                iap_req_optionbyte(udev, 0x02U);
-                break;
+        case IAP_OPTION_BYTE2:
+            iap_req_optionbyte(udev, 0x02U);
+            break;
 
-            default:
-                break;
-            }
+        default:
+            break;
         }
-
-        usbd_ep_recev(udev, IAP_OUT_EP, iap->report_buf, IAP_OUT_PACKET);
     }
+
+    usbd_ep_recev(udev, IAP_OUT_EP, iap->report_buf, IAP_OUT_PACKET);
 
     return USBD_OK;
 }
 
 /*!
     \brief      handle the IAP_DNLOAD request
-    \param[in]  pudev: pointer to usb device instance
+    \param[in]  udev: pointer to usb device instance
     \param[out] none
     \retval     none
 */
@@ -444,7 +443,7 @@ static void iap_req_dnload(usb_dev *udev)
 
 /*!
     \brief      handle the IAP_ERASE request
-    \param[in]  pudev: pointer to usb device instance
+    \param[in]  udev: pointer to usb device instance
     \param[out] none
     \retval     none
 */

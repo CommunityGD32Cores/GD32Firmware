@@ -52,7 +52,7 @@ usbh_status usbh_msc_scsi_inquiry (usbh_host *puhost, uint8_t lun, scsi_std_inqu
 
     switch (msc->bot.cmd_state) {
     case BOT_CMD_SEND:
-        /* prepare the cbw and relevent field*/
+        /* prepare the cbw and relevant field*/
         msc->bot.cbw.field.dCBWDataTransferLength = STANDARD_INQUIRY_DATA_LEN;
         msc->bot.cbw.field.bmCBWFlags = USB_TRX_IN;
         msc->bot.cbw.field.bCBWCBLength = CBW_LENGTH;
@@ -113,7 +113,7 @@ usbh_status usbh_msc_test_unitready (usbh_host *puhost, uint8_t lun)
 
     switch (msc->bot.cmd_state) {
     case BOT_CMD_SEND:  
-        /* prepare the CBW and relevent field */
+        /* prepare the CBW and relevant field */
         msc->bot.cbw.field.dCBWDataTransferLength = CBW_LENGTH_TEST_UNIT_READY;
         msc->bot.cbw.field.bmCBWFlags = USB_TRX_OUT;
         msc->bot.cbw.field.bCBWCBLength = CBW_LENGTH;
@@ -127,7 +127,7 @@ usbh_status usbh_msc_test_unitready (usbh_host *puhost, uint8_t lun)
         status = USBH_BUSY;
         break;
 
-    case BOT_CMD_WAIT: 
+    case BOT_CMD_WAIT:
         status = usbh_msc_bot_process(puhost, lun);
         break;
 
@@ -153,7 +153,7 @@ usbh_status usbh_msc_read_capacity10 (usbh_host *puhost, uint8_t lun, scsi_capac
 
     switch (msc->bot.cmd_state) {
     case BOT_CMD_SEND:
-        /* prepare the CBW and relevent field */
+        /* prepare the CBW and relevant field */
         msc->bot.cbw.field.dCBWDataTransferLength = READ_CAPACITY10_DATA_LEN;
         msc->bot.cbw.field.bmCBWFlags = USB_TRX_IN;
         msc->bot.cbw.field.bCBWCBLength = CBW_LENGTH;
@@ -200,10 +200,9 @@ usbh_status usbh_msc_mode_sense6 (usbh_host *puhost, uint8_t lun)
     usbh_status status = USBH_FAIL;
     usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
 
-
     switch (msc->bot.cmd_state) {
     case BOT_CMD_SEND:
-        /* prepare the CBW and relevent field */
+        /* prepare the CBW and relevant field */
         msc->bot.cbw.field.dCBWDataTransferLength = XFER_LEN_MODE_SENSE6;
         msc->bot.cbw.field.bmCBWFlags = USB_TRX_IN;
         msc->bot.cbw.field.bCBWCBLength = CBW_LENGTH;
@@ -236,7 +235,6 @@ usbh_status usbh_msc_mode_sense6 (usbh_host *puhost, uint8_t lun)
         break;
     }
 
-
     return status;
 }
 
@@ -255,7 +253,7 @@ usbh_status usbh_msc_request_sense (usbh_host *puhost, uint8_t lun, msc_scsi_sen
 
     switch (msc->bot.cmd_state) {
     case BOT_CMD_SEND:
-        /* prepare the cbw and relevent field */
+        /* prepare the cbw and relevant field */
         msc->bot.cbw.field.dCBWDataTransferLength = ALLOCATION_LENGTH_REQUEST_SENSE;
         msc->bot.cbw.field.bmCBWFlags = USB_TRX_IN;
         msc->bot.cbw.field.bCBWCBLength = CBW_LENGTH;
@@ -322,7 +320,7 @@ usbh_status usbh_msc_write10 (usbh_host *puhost, uint8_t lun, uint8_t *data_buf,
         msc->bot.cbw.field.CBWCB[4] = (((uint8_t*)&addr)[1]);
         msc->bot.cbw.field.CBWCB[5] = (((uint8_t*)&addr)[0]);
 
-        /* tranfer length */
+        /* transfer length */
         msc->bot.cbw.field.CBWCB[7] = (((uint8_t *)&sector_num)[1]);
         msc->bot.cbw.field.CBWCB[8] = (((uint8_t *)&sector_num)[0]);
 
@@ -361,7 +359,7 @@ usbh_status usbh_msc_read10 (usbh_host *puhost, uint8_t lun, uint8_t *data_buf, 
 
     switch (msc->bot.cmd_state) {
     case BOT_CMD_SEND:
-        /* prepare the CBW and relevent field */
+        /* prepare the CBW and relevant field */
         msc->bot.cbw.field.dCBWDataTransferLength = sector_num * msc->unit[lun].capacity.block_size;
         msc->bot.cbw.field.bmCBWFlags = USB_TRX_IN;
         msc->bot.cbw.field.bCBWCBLength = CBW_LENGTH;
@@ -376,7 +374,7 @@ usbh_status usbh_msc_read10 (usbh_host *puhost, uint8_t lun, uint8_t *data_buf, 
         msc->bot.cbw.field.CBWCB[4] = (((uint8_t*)&addr)[1]);
         msc->bot.cbw.field.CBWCB[5] = (((uint8_t*)&addr)[0]);
 
-        /* tranfer length */
+        /* transfer length */
         msc->bot.cbw.field.CBWCB[7] = (((uint8_t *)&sector_num)[1]);
         msc->bot.cbw.field.CBWCB[8] = (((uint8_t *)&sector_num)[0]);
 

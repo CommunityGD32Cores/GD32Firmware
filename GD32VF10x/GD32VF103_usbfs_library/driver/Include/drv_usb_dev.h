@@ -3,6 +3,7 @@
     \brief   USB device low level driver header file
 
     \version 2020-08-04, V1.1.0, firmware for GD32VF103
+    \version 2020-12-11, V1.1.1, firmware for GD32VF103
 */
 
 /*
@@ -114,6 +115,9 @@ typedef struct _usb_class_core
 
     uint8_t  (*set_intf)              (usb_dev *udev, usb_req *req);            /*!< device set interface callback */
 
+    uint8_t  (*ctlx_in)               (usb_dev *udev);                          /*!< device contrl in callback */
+    uint8_t  (*ctlx_out)              (usb_dev *udev);                          /*!< device contrl out callback */
+
     uint8_t  (*data_in)               (usb_dev *udev, uint8_t ep_num);          /*!< device data in handler */
     uint8_t  (*data_out)              (usb_dev *udev, uint8_t ep_num);          /*!< device data out handler */
 
@@ -153,7 +157,7 @@ typedef struct _usb_core_driver
 /* static inline function definitions */
 
 /*!
-    \brief      config the USB device to be disconnected
+    \brief      configure the USB device to be disconnected
     \param[in]  udev: pointer to USB device
     \param[out] none
     \retval     operation status
@@ -164,7 +168,7 @@ static inline void usb_dev_disconnect (usb_core_driver *udev)
 }
 
 /*!
-    \brief      config the USB device to be connected
+    \brief      configure the USB device to be connected
     \param[in]  udev: pointer to USB device
     \param[out] none
     \retval     operation status

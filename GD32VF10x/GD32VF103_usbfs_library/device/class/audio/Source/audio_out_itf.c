@@ -35,6 +35,7 @@ OF SUCH DAMAGE.
 #include "audio_core.h"
 #include "audio_out_itf.h"
 
+/* local function prototypes ('static') */
 static uint8_t init         (uint32_t audiofreq, uint32_t volume, uint32_t options);
 static uint8_t deinit       (uint32_t options);
 static uint8_t audio_cmd    (uint8_t* pbuf, uint32_t size, uint8_t cmd);

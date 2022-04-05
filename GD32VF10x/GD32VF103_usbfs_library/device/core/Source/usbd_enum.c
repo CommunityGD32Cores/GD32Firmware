@@ -31,6 +31,7 @@ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWIS
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
 OF SUCH DAMAGE.
 */
+
 #include "usbd_enum.h"
 #include "usb_ch9_std.h"
 
@@ -304,46 +305,46 @@ static usb_reqsta _usb_std_getstatus (usb_core_driver *udev, usb_req *req)
     static uint8_t status[2] = {0};
 
     switch(req->bmRequestType & (uint8_t)USB_RECPTYPE_MASK) {
-	case USB_RECPTYPE_DEV:
-		if (((uint8_t)USBD_ADDRESSED == udev->dev.cur_status) || \
-			((uint8_t)USBD_CONFIGURED == udev->dev.cur_status)) {
+    case USB_RECPTYPE_DEV:
+        if (((uint8_t)USBD_ADDRESSED == udev->dev.cur_status) || \
+            ((uint8_t)USBD_CONFIGURED == udev->dev.cur_status)) {
 
-			if (udev->dev.pm.power_mode) {
-				status[0] = USB_STATUS_SELF_POWERED;
-			} else {
-				status[0] = 0U;
-			}
+            if (udev->dev.pm.power_mode) {
+                status[0] = USB_STATUS_SELF_POWERED;
+            } else {
+                status[0] = 0U;
+            }
 
-			if (udev->dev.pm.dev_remote_wakeup) {
-				status[0] |= USB_STATUS_REMOTE_WAKEUP;
-			} else {
-				status[0] = 0U;
-			}
+            if (udev->dev.pm.dev_remote_wakeup) {
+                status[0] |= USB_STATUS_REMOTE_WAKEUP;
+            } else {
+                status[0] = 0U;
+            }
 
-			req_status = REQ_SUPP;
-		}
-		break;
+            req_status = REQ_SUPP;
+        }
+        break;
 
-	case USB_RECPTYPE_ITF:
-		if (((uint8_t)USBD_CONFIGURED == udev->dev.cur_status) && (recp <= USBD_ITF_MAX_NUM)) {
-			req_status = REQ_SUPP;
-		}
-		break;
+    case USB_RECPTYPE_ITF:
+        if (((uint8_t)USBD_CONFIGURED == udev->dev.cur_status) && (recp <= USBD_ITF_MAX_NUM)) {
+            req_status = REQ_SUPP;
+        }
+        break;
 
-	case USB_RECPTYPE_EP:
-		if ((uint8_t)USBD_CONFIGURED == udev->dev.cur_status) {
-			if (0x80U == (recp & 0x80U)) {
-				status[0] = udev->dev.transc_in[EP_ID(recp)].ep_stall;
-			} else {
-				status[0] = udev->dev.transc_out[recp].ep_stall;
-			}
+    case USB_RECPTYPE_EP:
+        if ((uint8_t)USBD_CONFIGURED == udev->dev.cur_status) {
+            if (0x80U == (recp & 0x80U)) {
+                status[0] = udev->dev.transc_in[EP_ID(recp)].ep_stall;
+            } else {
+                status[0] = udev->dev.transc_out[recp].ep_stall;
+            }
 
-			req_status = REQ_SUPP;
-		}
-		break;
+            req_status = REQ_SUPP;
+        }
+        break;
 
-	default:
-		break;
+    default:
+        break;
     }
 
     if (REQ_SUPP == req_status) {
@@ -366,40 +367,40 @@ static usb_reqsta _usb_std_clearfeature (usb_core_driver *udev, usb_req *req)
     uint8_t ep = 0U;
 
     switch(req->bmRequestType & (uint8_t)USB_RECPTYPE_MASK) {
-	case USB_RECPTYPE_DEV:
-		if (((uint8_t)USBD_ADDRESSED == udev->dev.cur_status) || \
-			((uint8_t)USBD_CONFIGURED == udev->dev.cur_status)) {
+    case USB_RECPTYPE_DEV:
+        if (((uint8_t)USBD_ADDRESSED == udev->dev.cur_status) || \
+            ((uint8_t)USBD_CONFIGURED == udev->dev.cur_status)) {
 
-			/* clear device remote wakeup feature */
-			if ((uint16_t)USB_FEATURE_REMOTE_WAKEUP == req->wValue) {
-				udev->dev.pm.dev_remote_wakeup = 0U;
+            /* clear device remote wakeup feature */
+            if ((uint16_t)USB_FEATURE_REMOTE_WAKEUP == req->wValue) {
+                udev->dev.pm.dev_remote_wakeup = 0U;
 
-				return REQ_SUPP;
-			}
-		}
-		break;
+                return REQ_SUPP;
+            }
+        }
+        break;
 
-	case USB_RECPTYPE_ITF:
-		break;
+    case USB_RECPTYPE_ITF:
+        break;
 
-	case USB_RECPTYPE_EP:
-		/* get endpoint address */
-		ep = BYTE_LOW(req->wIndex);
+    case USB_RECPTYPE_EP:
+        /* get endpoint address */
+        ep = BYTE_LOW(req->wIndex);
 
-		if ((uint8_t)USBD_CONFIGURED == udev->dev.cur_status) {
-			/* clear endpoint halt feature */
-			if (((uint16_t)USB_FEATURE_EP_HALT == req->wValue) && (!CTL_EP(ep))) {
-				(void)usbd_ep_stall_clear (udev, ep);
+        if ((uint8_t)USBD_CONFIGURED == udev->dev.cur_status) {
+            /* clear endpoint halt feature */
+            if (((uint16_t)USB_FEATURE_EP_HALT == req->wValue) && (!CTL_EP(ep))) {
+                (void)usbd_ep_stall_clear (udev, ep);
 
-				(void)udev->dev.class_core->req_proc (udev, req);
-			}
+                (void)udev->dev.class_core->req_proc (udev, req);
+            }
 
-			return REQ_SUPP;
-		}
-		break;
+            return REQ_SUPP;
+        }
+        break;
 
-	default:
-		break;
+    default:
+        break;
     }
 
     return REQ_NOTSUPP;
@@ -417,37 +418,37 @@ static usb_reqsta _usb_std_setfeature (usb_core_driver *udev, usb_req *req)
     uint8_t ep = 0U;
 
     switch (req->bmRequestType & (uint8_t)USB_RECPTYPE_MASK) {
-	case USB_RECPTYPE_DEV:
-		if (((uint8_t)USBD_ADDRESSED == udev->dev.cur_status) || \
-			((uint8_t)USBD_CONFIGURED == udev->dev.cur_status)) {
-			/* set device remote wakeup feature */
-			if ((uint16_t)USB_FEATURE_REMOTE_WAKEUP == req->wValue) {
-				udev->dev.pm.dev_remote_wakeup = 1U;
-			}
+    case USB_RECPTYPE_DEV:
+        if (((uint8_t)USBD_ADDRESSED == udev->dev.cur_status) || \
+            ((uint8_t)USBD_CONFIGURED == udev->dev.cur_status)) {
+            /* set device remote wakeup feature */
+            if ((uint16_t)USB_FEATURE_REMOTE_WAKEUP == req->wValue) {
+                udev->dev.pm.dev_remote_wakeup = 1U;
+            }
 
-			return REQ_SUPP;
-		}
-		break;
+            return REQ_SUPP;
+        }
+        break;
 
-	case USB_RECPTYPE_ITF:
-		break;
+    case USB_RECPTYPE_ITF:
+        break;
 
-	case USB_RECPTYPE_EP:
-		/* get endpoint address */
-		ep = BYTE_LOW(req->wIndex);
+    case USB_RECPTYPE_EP:
+        /* get endpoint address */
+        ep = BYTE_LOW(req->wIndex);
 
-		if ((uint8_t)USBD_CONFIGURED == udev->dev.cur_status) {
-			/* set endpoint halt feature */
-			if (((uint16_t)USB_FEATURE_EP_HALT == req->wValue) && (!CTL_EP(ep))) {
-				(void)usbd_ep_stall (udev, ep);
-			}
+        if ((uint8_t)USBD_CONFIGURED == udev->dev.cur_status) {
+            /* set endpoint halt feature */
+            if (((uint16_t)USB_FEATURE_EP_HALT == req->wValue) && (!CTL_EP(ep))) {
+                (void)usbd_ep_stall (udev, ep);
+            }
 
-			return REQ_SUPP;
-		}
-		break;
+            return REQ_SUPP;
+        }
+        break;
 
-	default:
-		break;
+    default:
+        break;
     }
 
     return REQ_NOTSUPP;

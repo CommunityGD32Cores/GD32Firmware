@@ -330,7 +330,7 @@ bot_csw_status usbh_msc_csw_decode (usbh_host *puhost)
     bot_csw_status status = BOT_CSW_CMD_FAILED;
     usbh_msc_handler *msc = (usbh_msc_handler *)puhost->active_class->class_data;
 
-    /* checking if the transfer length is diffrent than 13 */
+    /* checking if the transfer length is different than 13 */
     if (BBB_CSW_LENGTH != usbh_xfercount_get (puhost->data, msc->pipe_in)) {
         status = BOT_CSW_PHASE_ERROR;
     } else {
@@ -352,7 +352,7 @@ bot_csw_status usbh_msc_csw_decode (usbh_host *puhost)
                 }
             }
         } else {
-            /* If the CSW signature is not valid, we sall return the phase error to
+            /* If the CSW signature is not valid, we will return the phase error to
                upper layers for reset recovery */
             status = BOT_CSW_PHASE_ERROR;
         }

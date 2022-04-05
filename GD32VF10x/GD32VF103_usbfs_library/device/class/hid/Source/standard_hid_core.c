@@ -246,7 +246,7 @@ usb_class_core usbd_hid_cb = {
 /*!
     \brief      register HID interface operation functions
     \param[in]  udev: pointer to USB device instance
-    \param[in]  hid_fop: HID operation functuons structure
+    \param[in]  hid_fop: HID operation functions structure
     \param[out] none
     \retval     USB device operation status
 */

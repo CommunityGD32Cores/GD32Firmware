@@ -39,6 +39,7 @@ OF SUCH DAMAGE.
 #include <string.h>
 #include <stdbool.h>
 
+/* local function prototypes ('static') */
 static void usbh_hiddesc_parse (usb_desc_hid *hid_desc, uint8_t *buf);
 static void usbh_hid_itf_deinit (usbh_host *puhost);
 static usbh_status usbh_hid_itf_init (usbh_host *puhost);
@@ -346,7 +347,7 @@ static usbh_status usbh_hid_itf_init (usbh_host *puhost)
             hid_handler.poll = HID_MIN_POLL;
         }
 
-        /* check of available number of endpoints */
+        /* check for available number of endpoints */
         /* find the number of endpoints in the interface descriptor */
         /* choose the lower number in order not to overrun the buffer allocated */
         ep_num = USB_MIN(puhost->dev_prop.cfg_desc_set.itf_desc_set[puhost->dev_prop.cur_itf][0].itf_desc.bNumEndpoints, USBH_MAX_EP_NUM);

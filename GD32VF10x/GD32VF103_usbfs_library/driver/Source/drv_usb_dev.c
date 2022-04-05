@@ -84,7 +84,7 @@ usb_status usb_devcore_init (usb_core_driver *udev)
         /* set Rx FIFO size */
         usb_set_rxfifo(&udev->regs, RX_FIFO_FS_SIZE);
 
-        /* set endpoint 1 to 3's Tx FIFO length and RAM address */
+        /* set endpoint 0 to 3's Tx FIFO length and RAM address */
         for (i = 0U; i < USBFS_MAX_EP_COUNT; i++) {
             usb_set_txfifo(&udev->regs, i, USBFS_TX_FIFO_SIZE[i]);
         }

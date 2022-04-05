@@ -190,4 +190,4 @@ usb_status usb_pipe_ping (usb_core_driver *pudev, uint8_t pipe_num);
 /* stop the USB host and clean up FIFO */
 void usb_host_stop (usb_core_driver *pudev);
 
-#endif  /* __DRV_USB_HOST_H */
+#endif /* __DRV_USB_HOST_H */

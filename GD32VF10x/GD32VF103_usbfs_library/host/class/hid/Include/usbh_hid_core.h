@@ -145,8 +145,8 @@ typedef struct _hid_report_ID
 
 typedef struct  _hid_collection
 {
-    uint32_t                 usage;
-    uint8_t                  type;
+    uint32_t                usage;
+    uint8_t                 type;
     struct _hid_collection  *next_ptr;
 } hid_collection;
 

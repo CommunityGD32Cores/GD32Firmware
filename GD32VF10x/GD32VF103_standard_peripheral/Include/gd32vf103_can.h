@@ -5,6 +5,7 @@
     \version 2019-06-05, V1.0.0, firmware for GD32VF103
     \version 2019-11-27, V1.0.1, firmware for GD32VF103
     \version 2020-08-04, V1.1.0, firmware for GD32VF103
+    \version 2020-12-14, V1.1.1, firmware for GD32VF103
 */
 
 /*
@@ -388,7 +389,7 @@ typedef enum
     /* interrupt flags in RFIFO0 register */
     CAN_INT_FLAG_RFO1  = CAN_REGIDX_BITS(RFIFO1_REG_OFFSET, 4U, 6U),    /*!< receive FIFO1 overfull interrupt flag */
     CAN_INT_FLAG_RFF1  = CAN_REGIDX_BITS(RFIFO1_REG_OFFSET, 3U, 5U),    /*!< receive FIFO1 full interrupt flag */
-    CAN_INT_FLAG_RFL1  = CAN_REGIDX_BITS(RFIFO1_REG_OFFSET, 2U, 4U),    /*!< receive FIFO0 not empty interrupt flag */
+    CAN_INT_FLAG_RFL1  = CAN_REGIDX_BITS(RFIFO1_REG_OFFSET, 2U, 4U),    /*!< receive FIFO1 not empty interrupt flag */
     /* interrupt flags in ERR register */
     CAN_INT_FLAG_ERRN  = CAN_REGIDX_BITS(ERR_REG_OFFSET, 3U, 11U),      /*!< error number interrupt flag */ 
     CAN_INT_FLAG_BOERR = CAN_REGIDX_BITS(ERR_REG_OFFSET, 2U, 10U),      /*!< bus-off error interrupt flag */ 

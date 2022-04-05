@@ -341,4 +341,3 @@ static void usb_core_reset (usb_core_regs *usb_regs)
     /* wait for additional 3 PHY clocks */
     usb_udelay(3U);
 }
-

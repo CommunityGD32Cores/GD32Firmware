@@ -328,7 +328,7 @@ usbh_status usbh_clrdevfeature (usbh_host *puhost, uint8_t feature_selector, uin
         };
 
         usbh_ctlstate_config (puhost, NULL, 0U);
-    } 
+    }
 
     status = usbh_ctl_handler (puhost);
 
@@ -375,7 +375,7 @@ usbh_status usbh_clrfeature (usbh_host *puhost, uint8_t ep_addr, uint8_t pp_num)
 /*!
     \brief      get the next descriptor header
     \param[in]  pbuf: pointer to buffer where the configuration descriptor set is available
-    \param[in]  ptr: data popinter inside the configuration descriptor set
+    \param[in]  ptr: data pointer inside the configuration descriptor set
     \param[out] none
     \retval     return descriptor header
 */
@@ -676,7 +676,7 @@ static void usbh_strdesc_parse (uint8_t *psrc, uint8_t *pdest, uint16_t len)
     if (USB_DESCTYPE_STR == psrc[1]) {
         /* make sure the descriptor is string type */
 
-        /* psrc[0] contains Size of Descriptor, subtract 2 to get the length of string */      
+        /* psrc[0] contains Size of Descriptor, subtract 2 to get the length of string */
         str_len = USB_MIN((uint16_t)psrc[0] - 2U, len);
 
         psrc += 2U; /* adjust the offset ignoring the string len and descriptor type */

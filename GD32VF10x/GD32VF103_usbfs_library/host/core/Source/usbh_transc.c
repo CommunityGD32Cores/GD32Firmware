@@ -368,4 +368,3 @@ static uint32_t usbh_request_submit (usb_core_driver *pudev, uint8_t pp_num)
 
     return (uint32_t)usb_pipe_xfer (pudev, pp_num);
 }
-

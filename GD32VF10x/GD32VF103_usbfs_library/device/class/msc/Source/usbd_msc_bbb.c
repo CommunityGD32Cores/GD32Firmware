@@ -84,7 +84,7 @@ void msc_bbb_reset (usb_core_driver *pudev)
     msc->bbb_state = BBB_IDLE;
     msc->bbb_status = BBB_STATUS_RECOVERY;
 
-    /* prapare endpoint to receive the first BBB command */
+    /* prepare endpoint to receive the first BBB command */
     usbd_ep_recev (pudev, MSC_OUT_EP, (uint8_t *)&msc->bbb_cbw, BBB_CBW_LENGTH);
 }
 
@@ -200,7 +200,7 @@ void msc_bbb_clrfeature (usb_core_driver *pudev, uint8_t ep_num)
 }
 
 /*!
-    \brief      decode the CBW command and set the BBB state machine accordingtly
+    \brief      decode the CBW command and set the BBB state machine accordingly
     \param[in]  pudev: pointer to USB device instance
     \param[out] none
     \retval     none

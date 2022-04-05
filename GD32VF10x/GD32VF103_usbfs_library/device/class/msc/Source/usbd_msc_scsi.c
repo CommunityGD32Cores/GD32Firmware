@@ -49,7 +49,6 @@ static int8_t scsi_mode_sense10         (usb_core_driver *pudev, uint8_t lun, ui
 static int8_t scsi_write10              (usb_core_driver *pudev, uint8_t lun, uint8_t *params);
 static int8_t scsi_read10               (usb_core_driver *pudev, uint8_t lun, uint8_t *params);
 static int8_t scsi_verify10             (usb_core_driver *pudev, uint8_t lun, uint8_t *params);
-
 static int8_t scsi_process_read         (usb_core_driver *pudev, uint8_t lun);
 static int8_t scsi_process_write        (usb_core_driver *pudev, uint8_t lun);
 
@@ -429,7 +428,7 @@ static int8_t scsi_read10 (usb_core_driver *pudev, uint8_t lun, uint8_t *params)
 
         msc->scsi_blk_len = (params[7] << 8U) | params[8];
 
-        if (scsi_check_address_range (pudev, lun, msc->scsi_blk_addr, (uint16_t)msc->scsi_blk_len) < 0U) {
+        if (scsi_check_address_range (pudev, lun, msc->scsi_blk_addr, (uint16_t)msc->scsi_blk_len) < 0) {
             return -1; /* error */
         }
 
@@ -537,7 +536,7 @@ static int8_t scsi_verify10 (usb_core_driver *pudev, uint8_t lun, uint8_t *param
         return -1; /* error, verify mode not supported*/
     }
 
-    if (scsi_check_address_range (pudev, lun, msc->scsi_blk_addr, (uint16_t)msc->scsi_blk_len) < 0U) {
+    if (scsi_check_address_range (pudev, lun, msc->scsi_blk_addr, (uint16_t)msc->scsi_blk_len) < 0) {
         return -1; /* error */
     }
 

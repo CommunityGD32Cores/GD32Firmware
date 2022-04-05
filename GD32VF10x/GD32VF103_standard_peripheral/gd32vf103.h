@@ -36,7 +36,7 @@ OF SUCH DAMAGE.
 #ifndef GD32VF103_H
 #define GD32VF103_H
 
-#ifdef cplusplus
+#ifdef __cplusplus
  extern "C" {
 #endif 
 
@@ -236,7 +236,7 @@ typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrStatus;
 #include "gd32vf103_libopt.h"
 #endif /* USE_STDPERIPH_DRIVER */
 
-#ifdef cplusplus
+#ifdef __cplusplus
 }
 #endif
 #endif 

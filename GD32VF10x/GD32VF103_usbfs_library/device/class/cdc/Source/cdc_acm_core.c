@@ -3,6 +3,7 @@
     \brief   CDC ACM driver
 
     \version 2020-08-04, V1.1.0, firmware for GD32VF103
+    \version 2020-12-11, V1.1.1, firmware for GD32VF103
 */
 
 /*
@@ -259,6 +260,7 @@ usb_desc cdc_desc =
 static uint8_t cdc_acm_init   (usb_dev *udev, uint8_t config_index);
 static uint8_t cdc_acm_deinit (usb_dev *udev, uint8_t config_index);
 static uint8_t cdc_acm_req    (usb_dev *udev, usb_req *req);
+static uint8_t cdc_ctlx_out   (usb_dev *udev);
 static uint8_t cdc_acm_in     (usb_dev *udev, uint8_t ep_num);
 static uint8_t cdc_acm_out    (usb_dev *udev, uint8_t ep_num);
 
@@ -272,7 +274,7 @@ usb_class_core cdc_class =
     .deinit    = cdc_acm_deinit,
 
     .req_proc  = cdc_acm_req,
-
+    .ctlx_out  = cdc_ctlx_out,
     .data_in   = cdc_acm_in,
     .data_out  = cdc_acm_out
 };
@@ -326,6 +328,7 @@ void cdc_acm_data_receive (usb_dev *udev)
     usb_cdc_handler *cdc = (usb_cdc_handler *)udev->dev.class_data[CDC_COM_INTERFACE];
 
     cdc->packet_receive = 0U;
+    cdc->packet_sent = 0U;
 
     usbd_ep_recev(udev, CDC_DATA_OUT_EP, (uint8_t*)(cdc->data), USB_CDC_DATA_PACKET_SIZE);
 }
@@ -397,7 +400,7 @@ static uint8_t cdc_acm_req (usb_dev *udev, usb_req *req)
 {
     usb_cdc_handler *cdc = (usb_cdc_handler *)udev->dev.class_data[CDC_COM_INTERFACE];
 
-    usb_transc *transc = &udev->dev.transc_in[0];
+    usb_transc *transc = NULL;
 
     switch (req->bRequest) {
     case SEND_ENCAPSULATED_COMMAND:
@@ -421,6 +424,8 @@ static uint8_t cdc_acm_req (usb_dev *udev, usb_req *req)
         break;
 
     case SET_LINE_CODING:
+        transc = &udev->dev.transc_out[0];
+        
         /* set the value of the current command to be processed */
         udev->dev.class_core->alter_set = req->bRequest;
 
@@ -430,6 +435,8 @@ static uint8_t cdc_acm_req (usb_dev *udev, usb_req *req)
         break;
 
     case GET_LINE_CODING:
+        transc = &udev->dev.transc_in[0];
+        
         cdc->cmd[0] = (uint8_t)(cdc->line_coding.dwDTERate);
         cdc->cmd[1] = (uint8_t)(cdc->line_coding.dwDTERate >> 8);
         cdc->cmd[2] = (uint8_t)(cdc->line_coding.dwDTERate >> 16);
@@ -452,6 +459,33 @@ static uint8_t cdc_acm_req (usb_dev *udev, usb_req *req)
 
     default:
         break;
+    }
+
+    return USBD_OK;
+}
+
+/*!
+    \brief      handle CDC ACM setup data
+    \param[in]  udev: pointer to USB device instance
+    \param[out] none
+    \retval     USB device operation status
+*/
+static uint8_t cdc_ctlx_out (usb_dev *udev)
+{
+    usb_cdc_handler *cdc = (usb_cdc_handler *)udev->dev.class_data[CDC_COM_INTERFACE];
+
+    if (udev->dev.class_core->alter_set != NO_CMD) {
+        /* process the command data */
+        cdc->line_coding.dwDTERate = (uint32_t)((uint32_t)cdc->cmd[0] | 
+                                               ((uint32_t)cdc->cmd[1] << 8U) | 
+                                               ((uint32_t)cdc->cmd[2] << 16U) | 
+                                               ((uint32_t)cdc->cmd[3] << 24U));
+
+        cdc->line_coding.bCharFormat = cdc->cmd[4];
+        cdc->line_coding.bParityType = cdc->cmd[5];
+        cdc->line_coding.bDataBits = cdc->cmd[6];
+
+        udev->dev.class_core->alter_set = NO_CMD;
     }
 
     return USBD_OK;
@@ -490,25 +524,8 @@ static uint8_t cdc_acm_out (usb_dev *udev, uint8_t ep_num)
 {
     usb_cdc_handler *cdc = (usb_cdc_handler *)udev->dev.class_data[CDC_COM_INTERFACE];
 
-    if (0U == ep_num) {
-        if (udev->dev.class_core->alter_set != NO_CMD)
-        {
-            /* Process the command data */
-            cdc->line_coding.dwDTERate = (uint32_t)((uint32_t)cdc->cmd[0] | 
-                                                   ((uint32_t)cdc->cmd[1] << 8U) | 
-                                                   ((uint32_t)cdc->cmd[2] << 16U) | 
-                                                   ((uint32_t)cdc->cmd[3] << 24U));
-
-            cdc->line_coding.bCharFormat = cdc->cmd[4];
-            cdc->line_coding.bParityType = cdc->cmd[5];
-            cdc->line_coding.bDataBits = cdc->cmd[6];
-
-            udev->dev.class_core->alter_set = NO_CMD;
-        }
-    } else {
-        cdc->packet_receive = 1U;
-        cdc->receive_length = ((usb_core_driver *)udev)->dev.transc_out[ep_num].xfer_count;
-    }
+    cdc->packet_receive = 1U;
+    cdc->receive_length = ((usb_core_driver *)udev)->dev.transc_out[ep_num].xfer_count;
 
     return USBD_OK;
 }

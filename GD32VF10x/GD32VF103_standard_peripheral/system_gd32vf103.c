@@ -5,6 +5,7 @@
 
     \version 2019-06-05, V1.0.0, firmware for GD32VF103
     \version 2020-08-04, V1.1.0, firmware for GD32VF103
+    \version 2021-05-19, V1.1.1, firmware for GD32VF103
 */
 
 /*
@@ -186,9 +187,11 @@ void SystemInit(void)
 */
 void SystemCoreClockUpdate(void)
 {
-    uint32_t scss;
-    uint32_t pllsel, predv0sel, pllmf, ck_src;
-    uint32_t predv0, predv1, pll1mf;
+    uint32_t scss = 0U;
+    uint32_t pllsel = 0U, predv0sel = 0U, pllmf = 0U, ck_src = 0U;
+    uint32_t predv0 = 0U, predv1 = 0U, pll1mf = 0U,idx = 0U,clk_exp = 0U;
+    /* exponent of AHB clock divider */
+    const uint8_t ahb_exp[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
 
     scss = GET_BITS(RCU_CFG0, 2, 3);
 
@@ -259,6 +262,10 @@ void SystemCoreClockUpdate(void)
             SystemCoreClock = IRC8M_VALUE;
             break;
     }
+    /* calculate AHB clock frequency */
+    idx = GET_BITS(RCU_CFG0, 4, 7);
+    clk_exp = ahb_exp[idx];
+    SystemCoreClock >>= clk_exp;
 }
 
 #ifdef __SYSTEM_CLOCK_HXTAL

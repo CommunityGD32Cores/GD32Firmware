@@ -291,7 +291,7 @@ static uint8_t printer_req(usb_dev *udev, usb_req *req)
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t  printer_in (usb_dev *udev, uint8_t ep_num)
+static uint8_t printer_in (usb_dev *udev, uint8_t ep_num)
 {
      return USBD_OK;
 }
@@ -303,7 +303,7 @@ static uint8_t  printer_in (usb_dev *udev, uint8_t ep_num)
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t  printer_out (usb_dev *udev, uint8_t ep_num)
+static uint8_t printer_out (usb_dev *udev, uint8_t ep_num)
 {
      return USBD_OK;
 }

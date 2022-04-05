@@ -661,7 +661,7 @@ void i2c_interrupt_disable(uint32_t i2c_periph, i2c_interrupt_enum interrupt)
     \arg        I2C_INT_FLAG_ADDSEND: address is sent in master mode or received and matches in slave mode interrupt flag
     \arg        I2C_INT_FLAG_BTC: byte transmission finishes
     \arg        I2C_INT_FLAG_ADD10SEND: header of 10-bit address is sent in master mode interrupt flag
-    \arg        I2C_INT_FLAG_STPDET: etop condition detected in slave mode interrupt flag
+    \arg        I2C_INT_FLAG_STPDET: stop condition detected in slave mode interrupt flag
     \arg        I2C_INT_FLAG_RBNE: I2C_DATA is not Empty during receiving interrupt flag
     \arg        I2C_INT_FLAG_TBE: I2C_DATA is empty during transmitting interrupt flag
     \arg        I2C_INT_FLAG_BERR: a bus error occurs indication a unexpected start or stop condition on I2C bus interrupt flag

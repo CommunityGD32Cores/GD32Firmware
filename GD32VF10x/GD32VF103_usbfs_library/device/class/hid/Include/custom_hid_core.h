@@ -3,6 +3,7 @@
     \brief   definitions for HID core
 
     \version 2020-08-04, V1.1.0, firmware for GD32VF103
+    \version 2020-12-08, V1.1.1, firmware for GD32VF103
 */
 
 /*
@@ -38,7 +39,7 @@ OF SUCH DAMAGE.
 #include "usbd_enum.h"
 #include "usb_hid.h"
 
-#define DESC_LEN_REPORT             95U
+#define DESC_LEN_REPORT             96U
 #define DESC_LEN_CONFIG             41U
 
 #define NO_CMD                      0xFFU

@@ -210,35 +210,35 @@ usb_status usb_pipe_init (usb_core_driver *pudev, uint8_t pipe_num)
 
     /* enable channel interrupts required for this transfer */
     switch (pp->ep.type) {
-        case USB_EPTYPE_CTRL:
-        case USB_EPTYPE_BULK:
-            pp_inten |= HCHINTEN_STALLIE | HCHINTEN_USBERIE \
-                        | HCHINTEN_DTERIE | HCHINTEN_NAKIE;
+    case USB_EPTYPE_CTRL:
+    case USB_EPTYPE_BULK:
+        pp_inten |= HCHINTEN_STALLIE | HCHINTEN_USBERIE \
+                    | HCHINTEN_DTERIE | HCHINTEN_NAKIE;
 
-            if (!pp->ep.dir) {
-                pp_inten |= HCHINTEN_NYETIE;
+        if (!pp->ep.dir) {
+            pp_inten |= HCHINTEN_NYETIE;
 
-                if (pp->ping) {
-                    pp_inten |= HCHINTEN_ACKIE;
-                }
+            if (pp->ping) {
+                pp_inten |= HCHINTEN_ACKIE;
             }
-            break;
+        }
+        break;
 
-        case USB_EPTYPE_INTR:
-            pp_inten |= HCHINTEN_STALLIE | HCHINTEN_USBERIE | HCHINTEN_DTERIE \
-                         | HCHINTEN_NAKIE | HCHINTEN_REQOVRIE;
-            break;
+    case USB_EPTYPE_INTR:
+        pp_inten |= HCHINTEN_STALLIE | HCHINTEN_USBERIE | HCHINTEN_DTERIE \
+                     | HCHINTEN_NAKIE | HCHINTEN_REQOVRIE;
+        break;
 
-        case USB_EPTYPE_ISOC:
-            pp_inten |= HCHINTEN_REQOVRIE | HCHINTEN_ACKIE;
+    case USB_EPTYPE_ISOC:
+        pp_inten |= HCHINTEN_REQOVRIE | HCHINTEN_ACKIE;
 
-            if (pp->ep.dir) {
-                pp_inten |= HCHINTEN_USBERIE;
-            }
-            break;
+        if (pp->ep.dir) {
+            pp_inten |= HCHINTEN_USBERIE;
+        }
+        break;
 
-        default:
-            break;
+    default:
+        break;
     }
 
     pudev->regs.pr[pipe_num]->HCHINTEN = pp_inten;
@@ -324,32 +324,32 @@ usb_status usb_pipe_xfer (usb_core_driver *pudev, uint8_t pipe_num)
     if (USB_USE_FIFO == pudev->bp.transfer_mode) {
         if ((0U == pp->ep.dir) && (pp->xfer_len > 0U)) {
             switch (pp->ep.type) {
-                /* non-periodic transfer */
-                case USB_EPTYPE_CTRL:
-                case USB_EPTYPE_BULK:
-                    dword_len = (uint16_t)((pp->xfer_len + 3U) / 4U);
+            /* non-periodic transfer */
+            case USB_EPTYPE_CTRL:
+            case USB_EPTYPE_BULK:
+                dword_len = (uint16_t)((pp->xfer_len + 3U) / 4U);
 
-                    /* check if there is enough space in fifo space */
-                    if (dword_len > (pudev->regs.gr->HNPTFQSTAT & HNPTFQSTAT_NPTXFS)) {
-                        /* need to process data in nptxfempty interrupt */
-                        pudev->regs.gr->GINTEN |= GINTEN_NPTXFEIE;
-                    }
-                    break;
+                /* check if there is enough space in fifo space */
+                if (dword_len > (pudev->regs.gr->HNPTFQSTAT & HNPTFQSTAT_NPTXFS)) {
+                    /* need to process data in nptxfempty interrupt */
+                    pudev->regs.gr->GINTEN |= GINTEN_NPTXFEIE;
+                }
+                break;
 
-                /* periodic transfer */
-                case USB_EPTYPE_INTR:
-                case USB_EPTYPE_ISOC:
-                    dword_len = (uint16_t)((pp->xfer_len + 3U) / 4U);
+            /* periodic transfer */
+            case USB_EPTYPE_INTR:
+            case USB_EPTYPE_ISOC:
+                dword_len = (uint16_t)((pp->xfer_len + 3U) / 4U);
 
-                    /* check if there is enough space in fifo space */
-                    if (dword_len > (pudev->regs.hr->HPTFQSTAT & HPTFQSTAT_PTXFS)) {
-                        /* need to process data in ptxfempty interrupt */
-                        pudev->regs.gr->GINTEN |= GINTEN_PTXFEIE;
-                    }
-                    break;
+                /* check if there is enough space in fifo space */
+                if (dword_len > (pudev->regs.hr->HPTFQSTAT & HPTFQSTAT_PTXFS)) {
+                    /* need to process data in ptxfempty interrupt */
+                    pudev->regs.gr->GINTEN |= GINTEN_PTXFEIE;
+                }
+                break;
 
-                default:
-                    break;
+            default:
+                break;
             }
 
             /* write packet into the tx fifo. */

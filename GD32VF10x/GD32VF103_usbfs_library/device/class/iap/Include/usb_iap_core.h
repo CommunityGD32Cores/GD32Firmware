@@ -81,4 +81,4 @@ extern usb_class_core iap_class;
 /* send iap report */
 uint8_t iap_report_send (usb_dev *udev, uint8_t *report, uint32_t len);
 
-#endif  /* __USB_IAP_CORE_H */
+#endif /* __USB_IAP_CORE_H */

@@ -3,6 +3,7 @@
     \brief   USB device mode interrupt routines
 
     \version 2020-08-04, V1.1.0, firmware for GD32VF103
+    \version 2021-05-19, V1.1.1, firmware for GD32VF103
 */
 
 /*
@@ -36,13 +37,13 @@ OF SUCH DAMAGE.
 #include "drv_usbd_int.h"
 #include "usbd_transc.h"
 
+/* local function prototypes ('static') */
 static uint32_t usbd_int_epout                 (usb_core_driver *udev);
 static uint32_t usbd_int_epin                  (usb_core_driver *udev);
 static uint32_t usbd_int_rxfifo                (usb_core_driver *udev);
 static uint32_t usbd_int_reset                 (usb_core_driver *udev);
 static uint32_t usbd_int_enumfinish            (usb_core_driver *udev);
 static uint32_t usbd_int_suspend               (usb_core_driver *udev);
-
 static uint32_t usbd_emptytxfifo_write         (usb_core_driver *udev, uint32_t ep_num);
 
 static const uint8_t USB_SPEED[4] = {
@@ -86,7 +87,7 @@ void usbd_isr (usb_core_driver *udev)
         /* wakeup interrupt */
         if (intr & GINTF_WKUPIF) {
             /* inform upper layer by the resume event */
-            udev->dev.cur_status = udev->dev.backup_status;
+            udev->dev.cur_status = USBD_CONFIGURED;
 
             /* clear interrupt */
             udev->regs.gr->GINTF = GINTF_WKUPIF;
@@ -246,6 +247,8 @@ static uint32_t usbd_int_epin (usb_core_driver *udev)
     return 1U;
 }
 
+
+
 /*!
     \brief      handle the RX status queue level interrupt
     \param[in]  udev: pointer to USB device instance
@@ -296,12 +299,6 @@ static uint32_t usbd_int_rxfifo (usb_core_driver *udev)
             break;
 
         case RSTAT_SETUP_UPDT:
-#ifdef GD32F10X_CL
-    #ifdef CDC_DATA_IN_EP
-            udev->regs.dr->DAEPINTEN |= (uint32_t)(1U << (EP_ID(CDC_DATA_IN_EP) + 16U));
-    #endif /* CDC_DATA_IN_EP */
-#endif /* GD32F10X_CL */
-
             if ((0U == transc->ep_addr.num) && (8U == bcount) && (DPID_DATA0 == data_PID)) {
                 /* copy the setup packet received in FIFO into the setup buffer in RAM */
                 (void)usb_rxfifo_read (&udev->regs, (uint8_t *)&udev->dev.control.req, (uint16_t)bcount);
@@ -488,3 +485,5 @@ static uint32_t usbd_emptytxfifo_write (usb_core_driver *udev, uint32_t ep_num)
 
     return 1U;
 }
+
+
