@@ -3,10 +3,11 @@
     \brief   USB device low level interrupt routines
 
     \version 2020-08-01, V3.0.0, firmware for GD32F30x
+    \version 2022-06-10, V3.1.0, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -121,7 +122,7 @@ void usbd_isr (void)
 
                     if (USBD_EPxCS(ep_num) & EPxCS_SETUP) {
 
-                        if (ep_num == 0U) {
+                        if (0U == ep_num) {
                             udev->ep_transc[ep_num][TRANSC_SETUP](udev, ep_num);
                         } else {
                             return;
@@ -151,7 +152,7 @@ void usbd_isr (void)
 
                     usb_transc *transc = &udev->transc_in[ep_num];
 
-                    if (transc->xfer_len == 0U) {
+                    if (0U == transc->xfer_len) {
                         if (udev->ep_transc[ep_num][TRANSC_IN]) {
                             udev->ep_transc[ep_num][TRANSC_IN](udev, ep_num);
                         }

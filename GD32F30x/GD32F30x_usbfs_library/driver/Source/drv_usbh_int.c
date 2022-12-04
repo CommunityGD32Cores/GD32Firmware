@@ -4,10 +4,11 @@
 
     \version 2020-08-01, V3.0.0, firmware for GD32F30x
     \version 2021-08-06, V3.0.1, firmware for GD32F30x
+    \version 2022-06-10, V3.1.0, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -33,10 +34,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#include "drv_usb_core.h"
-#include "drv_usb_host.h"
 #include "drv_usbh_int.h"
-#include "usbh_core.h"
 
 #if defined   (__CC_ARM)        /*!< ARM compiler */
     #pragma O0
@@ -218,11 +216,11 @@ static uint32_t usbh_int_port (usb_core_driver *pudev)
                 port_reset = 1U;
             }
 
-            usbh_int_fop->port_enabled(pudev->host.data);
+            pudev->host.port_enabled = 1;
 
             pudev->regs.gr->GINTEN |= GINTEN_DISCIE | GINTEN_SOFIE;
         } else {
-            usbh_int_fop->port_disabled(pudev->host.data);
+            pudev->host.port_enabled = 0;
         }
     }
 
@@ -300,10 +298,6 @@ static uint32_t usbh_int_pipe_in (usb_core_driver *pudev, uint32_t pp_num)
     if (intr_pp & HCHINTF_REQOVR) {
         usb_pp_halt (pudev, (uint8_t)pp_num, HCHINTF_REQOVR, PIPE_REQOVR);
     } else if (intr_pp & HCHINTF_TF) {
-        if ((uint8_t)USB_USE_DMA == pudev->bp.transfer_mode) {
-            pudev->host.backup_xfercount[pp_num] = pp->xfer_len - (pp_reg->HCHLEN & HCHLEN_TLEN);
-        }
-
         pp->pp_status = PIPE_XF;
         pp->err_count = 0U;
 

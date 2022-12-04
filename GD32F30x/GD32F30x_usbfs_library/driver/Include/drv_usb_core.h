@@ -3,10 +3,11 @@
     \brief   USB core low level driver header file
 
     \version 2020-08-01, V3.0.0, firmware for GD32F30x
+    \version 2022-06-10, V3.1.0, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -73,7 +74,6 @@ typedef enum
 typedef enum
 {
     USB_USE_FIFO,                                                       /*!< USB use FIFO transfer mode */
-    USB_USE_DMA                                                         /*!< USB use DMA transfer mode */
 } usb_transfer_mode;
 
 typedef struct
